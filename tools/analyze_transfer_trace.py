@@ -51,6 +51,8 @@ def main():
         row=dict(repeat=int(scored[index]['repeat']),seq=t['seq'],position=t['pos'],wall_ms=(t['end']-t['start'])/1e6,
             fetch_ms=duration(groups['Expert fetch'])/1e6,d2h_ms=duration(groups['D2H'])/1e6,
             dma_h2d_ms=duration(groups['H2D/other'])/1e6,arithmetic_ms=duration(arithmetic)/1e6,
+            cpu_wait_ms=duration(groups['CPU answer wait'])/1e6,
+            host_disk_wait_ms=duration(groups['Host/disk wait'])/1e6,
             fetch_arithmetic_overlap_ms=overlap(groups['Expert fetch'],arithmetic)/1e6,
             d2h_arithmetic_overlap_ms=overlap(groups['D2H'],arithmetic)/1e6,
             cpu_arithmetic_overlap_ms=overlap(t['cpu'],arithmetic)/1e6,

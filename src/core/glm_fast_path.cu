@@ -1039,6 +1039,9 @@ bool Glm5Model::fast_setup(std::string& err) {
                                      "encoder\n", dev_, per, vb >> 20);
             }
         }
+        if(const char* profile=getenv("MAYA_PROFILE_OVERRIDE")) {
+            profile_path_=profile;profile_.clear();
+        }
         // the expert profile (--expert-profile, Strata's profile.bin): read once per half, before the split below
         if (!profile_path_.empty() && profile_.empty()) {
             int64_t pslots = 0;
@@ -4683,12 +4686,14 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
     static const bool components=[]{const char* v=getenv("MAYA_COMPONENT_FETCH");return v && std::atoi(v)>0;}();
-    if(components && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16 || F->kda_graph_on)) {
-        err="maya component fetch requires aligned native weights, prediction and layer graphs off";return false;
+    if(components && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
+        err="maya component fetch requires aligned native weights and prediction off";return false;
     }
     if(components) {
         // Disk source publication is complete. Gate/up needs only the prefix.
         // The original gate/up launch then overlaps ONLY the down suffix copy.
+        // Under capture the event fork/join includes the side stream in the
+        // graph. The join below precedes graph completion and every slot reuse.
         gf::moe_fetch_range(md,g.n_exp_used,0,Ly.down_off,s);
         if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
            !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya down source ready",err))return false;

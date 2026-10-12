@@ -1,0 +1,137 @@
+[
+  {
+    "name": "strata::kernels::glmf::<unnamed>::moe_fetch_kernel(strata::kernels::glmf::MoeDev, int, unsigned long long)",
+    "ms": 11.98571965234375,
+    "calls_per_token": 42.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::mv_kernel_t<(int)12>(strata::kernels::glmf::<unnamed>::MvBatch)",
+    "ms": 3.20124152734375,
+    "calls_per_token": 150.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::moe_cpu_wait_kernel(strata::kernels::glmf::MoeDev, int, float *)",
+    "ms": 2.8043274453125,
+    "calls_per_token": 42.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::moe_route_kernel(strata::kernels::glmf::<unnamed>::RouteArgs)",
+    "ms": 0.97776334765625,
+    "calls_per_token": 42.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",
+    "ms": 0.97560415234375,
+    "calls_per_token": 36.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::hc3_kernel(strata::kernels::glmf::HcArgs)",
+    "ms": 0.82401470703125,
+    "calls_per_token": 90.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",
+    "ms": 0.66632951953125,
+    "calls_per_token": 36.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::mla_split_kernel(const float *, const unsigned short *, const int *, int, int, int, int, float *, bool)",
+    "ms": 0.57925184375,
+    "calls_per_token": 11.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::mv_kernel(strata::kernels::glmf::<unnamed>::MvBatch)",
+    "ms": 0.5221813984375,
+    "calls_per_token": 98.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::headwise_gemv_kernel(const unsigned short *, const float *, int, int, float *, block_q8_1 *)",
+    "ms": 0.26440787109375,
+    "calls_per_token": 22.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::kda_prep_kernel(strata::kernels::glmf::KdaPrepArgs)",
+    "ms": 0.24616086328125,
+    "calls_per_token": 34.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::kda_rec_kernel(const float *, const float *, const float *, const float *, const float *, float *, const float *, const float *, float, int, block_q8_1 *)",
+    "ms": 0.22541644921875,
+    "calls_per_token": 34.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::dsa_select_kernel(const float *, int, int, int, int, int, int *)",
+    "ms": 0.18395737109375,
+    "calls_per_token": 11.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",
+    "ms": 0.10648607421875,
+    "calls_per_token": 3.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::dsa_score_kernel(const float *, const float *, const float *, int, int, int, float *)",
+    "ms": 0.1062656953125,
+    "calls_per_token": 11.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",
+    "ms": 0.07238393359375,
+    "calls_per_token": 3.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",
+    "ms": 0.06710059765625,
+    "calls_per_token": 3.0
+  },
+  {
+    "name": "void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",
+    "ms": 0.04324764453125,
+    "calls_per_token": 3.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::dsa_prep_kernel(strata::kernels::glmf::DsaPrepArgs)",
+    "ms": 0.0386983125,
+    "calls_per_token": 11.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::moe_wait_kernel(strata::kernels::glmf::MoeDev, int)",
+    "ms": 0.03584421875,
+    "calls_per_token": 42.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::mla_combine_kernel(const float *, int, int, int, float *)",
+    "ms": 0.0227382890625,
+    "calls_per_token": 11.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::argmax_kernel(const float *, int, int *)",
+    "ms": 0.01086441796875,
+    "calls_per_token": 1.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::head_prep_kernel(const float *, const float *, float, int, float *, block_q8_1 *)",
+    "ms": 0.00487830078125,
+    "calls_per_token": 1.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::swiglu_q8_kernel(const float *, const float *, float, int, block_q8_1 *)",
+    "ms": 0.00306851953125,
+    "calls_per_token": 3.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::hc_post_kernel(const float *, const float *, const float *, const float *, int, float *)",
+    "ms": 0.000887125,
+    "calls_per_token": 1.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::tab_update_kernel(unsigned long long *, const int *, const unsigned long long *, int)",
+    "ms": 0.00088625,
+    "calls_per_token": 1.0
+  },
+  {
+    "name": "strata::kernels::glmf::<unnamed>::embed_streams_kernel(const float *, float *, int)",
+    "ms": 0.00080276171875,
+    "calls_per_token": 1.0
+  }
+]
