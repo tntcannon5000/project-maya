@@ -69,6 +69,19 @@ per iteration; do not launch the full previous suite.
   fetched misses opportunistically. This is a real admission distinction,
   not evidence that Qwen's cache hit rate transfers to GLM. A dynamic margin
   is a possible next policy; it is not claimed implemented or measured here.
+- Captured-only overlap 40.37/43.65 TPS; combined transition + captured-only
+  overlap 40.70/45.20 TPS. Baseline39.86/43.30: repeat +4.4%, first +2.1%.
+  Same demand383.00MB and same changed-victim count as the transition prototype.
+- All overlap-only compared logits remain exact. All transition variants
+  share the SAME numerical difference from the hybrid baseline (max5.314,
+  greedy top1 98.83% across256 forced inputs). Moving scoring/adding overlap
+  introduces no additional discrepancy. Controlled GPU-only qualification
+  follows; these hybrid differences are not declared numerical parity.
+- Teardown now joins the component side stream before releasing pinned
+  expert sources, including an error before the normal consumer join.
+- Held-out web continuation plus STOP/recovery selected as one workload
+  pair; no complete writing/coding suite. Long-context GPU-only comparison
+  will combine ownership, mixed-format, prefill-pressure and parity checks.
 
 Correctness qualification: transport-only outputs must be exact. Residency
 can change CPU/GPU assignment; compare controlled GPU-only backends if it

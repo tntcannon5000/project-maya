@@ -23,7 +23,10 @@ def main():
     ap.add_argument('--exe', type=Path)
     ap.add_argument('--env', action='append', default=[])
     ap.add_argument('--cancel-smoke', action='store_true')
+    ap.add_argument('--task', action='append', choices=[name for name,_ in PROMPTS],
+                    help='Select one or two tasks instead of the historical full matrix')
     a = ap.parse_args()
+    if a.task and len(a.task)>2: ap.error('Select at most two tasks per iteration')
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=True)
     if a.mode == 'trace':
         cmd = [str(NSYS), 'profile', '--show-output=true', '--trace=cuda,nvtx', '--sample=none',
@@ -33,6 +36,7 @@ def main():
         if a.exe:cmd += ['--exe',str(a.exe.resolve())]
         for setting in a.env:cmd += ['--env',setting]
         if a.cancel_smoke:cmd += ['--cancel-smoke']
+        for task in a.task or []:cmd += ['--task',task]
         with (out/'profiler-output.txt').open('w') as log:
             subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True, cwd=ROOT)
         subprocess.run([str(NSYS), 'export', '--type', 'sqlite', '--output', str(out/'timeline.sqlite'),
@@ -69,7 +73,7 @@ def main():
             if a.cancel_smoke:
                 requests += [('cancel','Write a long Python web server implementation.',1024,-2),
                              ('recovery','Explain the purpose of a database index.',32,-2)]
-            requests += [(name, q, a.tokens, repeat) for repeat in range(a.repeats) for name,q in PROMPTS]
+            requests += [(name, q, a.tokens, repeat) for repeat in range(a.repeats) for name,q in PROMPTS if not a.task or name in a.task]
             for name,q,n,repeat in requests:
                 ids=tok.encode('[gMASK]<sop><|user|>\n'+q+'<|assistant|>\n</think>', parse_special=True)
                 start=time.perf_counter_ns(); arrivals=[]; output=[]

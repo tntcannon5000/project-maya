@@ -3105,6 +3105,9 @@ void Glm5Model::fast_destroy() {
                      100.0 * (double) spec_hits_ / (double) spec_steps_);
     if (F->cs) cudaStreamSynchronize(F->cs);
     if (F->copy) cudaStreamSynchronize(F->copy);
+    // Also cover an error before the component-copy fork could be joined.
+    // The side stream must finish before its pinned RAM and VRAM are freed.
+    if (F->ps) cudaStreamSynchronize(F->ps);
     if (F->kda_graphs.captures || F->kda_graphs.replays)
         std::fprintf(stderr, "glm KDA graphs: %llu captures, %llu replays, %llu invalidations\n",
                      (unsigned long long) F->kda_graphs.captures,
@@ -3139,7 +3142,6 @@ void Glm5Model::fast_destroy() {
     for (uint8_t* p : F->pool_more) cudaFree(p);
     if (F->xpool) cudaFree(F->xpool);
     if (F->arena) cudaFree(F->arena);
-    if (F->ps) cudaStreamSynchronize(F->ps);
     if (F->ev_hop) cudaEventDestroy(F->ev_hop);
     if (F->ev_done) cudaEventDestroy(F->ev_done);
     if (F->ev_pred) cudaEventDestroy(F->ev_pred);
