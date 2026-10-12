@@ -3027,6 +3027,10 @@ void Glm5Model::fast_destroy() {
     F->quit.store(true);
     if (F->svc.joinable()) F->svc.join();
     if (F->dma_completion_thread.joinable()) F->dma_completion_thread.join();
+    // H3 may keep copy-back live beside the last token. Join it before any RAM
+    // tier or GPU source can be released, including cancellation/early teardown.
+    if (F->copy) cudaStreamSynchronize(F->copy);
+    F->deferred_copies.clear(); // unsent moves have no consumers after teardown
     {
         std::lock_guard<std::mutex> lk(F->ah_mu);
         F->ah_quit = true;

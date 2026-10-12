@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_transfer_lab.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\full-cpu-admission\\tokens.txt",
+    "30",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\full-cpu-admission\\fixed",
+    "2"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_CPU_PLAN": "012233445",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_RAM_GB": "101",
+    "STRATA_GLM_PREFILL": "auto",
+    "STRATA_GLM_TIER_DIAG": "1",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "STRATA_GLM_PROMOTE_MIN": "4"
+  },
+  "binary_sha256": "898092b37e3b7d89972be22775c57dac8a79fb4dc96120aaf1c88cfaae79fc5b",
+  "tokens_sha256": "2a0610733575eb3c1daa3ddd6330122956eb50d65ed2a3b9da9e211172e39ae9"
+}
