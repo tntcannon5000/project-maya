@@ -55,6 +55,20 @@ per iteration; do not launch the full previous suite.
 - Two diagnostic captures selected: transition and bounded overlap, to locate
   costs. No full workload suite. Nsight event export is substantial overhead;
   these captures remain separate from unprofiled throughput evidence.
+- Transition after CPU publication: 40.07/43.54 TPS. Transition plus all-layer
+  bounded overlap: 40.29/44.70 TPS. Mechanisms may complement one another;
+  isolated overlap was indistinguishable from fresh baseline.
+- Overlap trace: arithmetic 9.08ms (no prior >11ms contention), overlap0.65ms,
+  idle1.97ms. Gap attribution: uncaptured work grows0.877->1.653ms; internal
+  graph gaps0.097->0.090ms. This specifically motivates restricting component
+  overlap to captured recurrent layers, avoiding event costs on MLA layers.
+- Strata source comparison: `Strata-v042-fast/src/program/generate.cpp` adapt
+  logic ranks incoming/victim frequency differences, requires a gain margin
+  (default1.5), and budgets swaps. Its `ExpertCache::admit` does not itself
+  evict; adaptive replacement is managed by the serve loop. Maya promotes
+  fetched misses opportunistically. This is a real admission distinction,
+  not evidence that Qwen's cache hit rate transfers to GLM. A dynamic margin
+  is a possible next policy; it is not claimed implemented or measured here.
 
 Correctness qualification: transport-only outputs must be exact. Residency
 can change CPU/GPU assignment; compare controlled GPU-only backends if it

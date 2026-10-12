@@ -4679,10 +4679,14 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
     static const int overlap_blocks=[] { const char* v=getenv("MAYA_OVERLAP_BLOCKS"); return v ? std::max(0,std::atoi(v)) : 0; }();
-    if (overlap_blocks && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
+    static const bool captured_only=[] { const char* v=getenv("MAYA_OVERLAP_CAPTURED_ONLY"); return v && std::atoi(v)>0; }();
+    // Uncaptured MLA layers pay host event submission costs; use ordinary
+    // fetch there when restricting overlap to the captured recurrent layers.
+    const bool overlap_enabled=overlap_blocks && (!captured_only || (F->kda_graph_on && Ly.recr));
+    if (overlap_enabled && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
         err="maya overlap requires aligned native weights and expert prediction off"; return false;
     }
-    if (overlap_blocks) {
+    if (overlap_enabled) {
         // Fork only after route and disk-source publication, then join before
         // down reads and all slot reuse. CUDA capture includes this side stream.
         gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
@@ -4723,7 +4727,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, Ly.sh_down.q,
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
-    if (overlap_blocks && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;
+    if (overlap_enabled && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;
     gf::moe_down(Ly.d_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, Ly.down_off, F->hq,
                  Ly.sh_down.q != nullptr ? F->sh_out : nullptr, io.ffn, s);
     if (F->prof_on) F->mark("moe_down");
