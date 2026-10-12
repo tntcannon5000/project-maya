@@ -1,0 +1,134 @@
+ds4: CUDA backend initialized on NVIDIA GeForce RTX 5090 (sm_120) dev=0
+ds4: GLM SSD streaming request adjusted to fit memory: full layers 0 -> 0, cache 2800 -> 2575 experts, prefill reserve 0.00 -> 0.00 GiB
+ds4: GLM SSD streaming decode map: global 8.24 GiB (6.12 GiB beyond the active layer window)
+ds4: SSD streaming initial cuda model map (134 spans, 8.01 GiB tensor span)
+ds4: loading 79.73 GiB into owned pinned expert RAM (126 spans)
+ds4: pinned expert source ready: 79.73 GiB in 42.30s
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA startup model preparation covered 8.01 GiB of tensor spans in 4.030s
+ds4: cuda backend initialized for graph diagnostics
+ds4: memory: KV 1.46 GiB (raw 0.00 + compressed 1.46) + buffers 3.16 GiB + resident model 8.24 GiB + expert cache 16.97 GiB = 29.84 GiB planned
+ds4: memory detail: ctx=131072 prefill_cap=2048 raw_kv_rows=0 compressed_kv_rows=131072 backend=cuda
+
+WARM_BENCH task=0 scored=0
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned prefill pipeline: two raw layer buffers, 3.797 GiB
+ds4: pipeline pinned prefill: 111 compact experts, raw MMQ
+ds4: reclaimed GLM53 prefill workspace 897.88 MiB for decode experts
+ds4: exact cooperative HC mixer enabled
+ds4: exact GLM53 HC collapse/weighted RMS fusion enabled
+ds4: exact KDA shared Q8 input enabled
+ds4: pinned mapped actual-route readback enabled
+ds4: reclaimed prefill expanded weights 2588.00 MiB for decode experts
+ds4: decode cache budget free=17985.00 MiB reserve=700.00 MiB q8_f16=0.00 MiB q8_f32=0.00 MiB tmp=2.16 MiB tensor_scratch=0.00 MiB
+ds4: CUDA SSD expert cache: 2560 slots, 16.88 GiB
+ds4: pinned expert batched copies enabled
+ds4: pinned predictor top-6
+ds4: pinned predictor mapped ID publication enabled
+ds4: pinned component staging enabled (whole gate/up, deferred down)
+ds4: pinned prediction stream-ordered publication enabled
+ds4: resident gate mapped remap enabled
+ds4: GLM prefill: 10.48 t/s, generation: 33.42 t/s
+
+WARM_BENCH task=1 scored=1
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned predictor probes=2583 predicted=15498 matched_top8=11854 uploaded_bytes=14857666560
+ds4: pinned predictor uploaded_experts=3435 used_at_next_layer=1836 (last unobserved batch included in uploads)
+ds4: pinned predictor component_uploads=3435 omitted_down_bytes=9454878720
+ds4: pinned demand layers=2646 address_hits=18456 uploaded_experts=2712 uploaded_bytes=24634195968 (address hits include ordered predictions)
+ds4: pinned components layers=2646 down_uploads=4688 down_backfills=1976 down_bytes=12903776256
+ds4: resident gate overlap layers=2592 experts=16620
+ds4: reclaimed GLM53 prefill workspace 897.88 MiB for decode experts
+ds4: reclaimed prefill expanded weights 0.00 MiB for decode experts
+ds4: decode cache budget free=17985.00 MiB reserve=700.00 MiB q8_f16=0.00 MiB q8_f32=0.00 MiB tmp=3.75 MiB tensor_scratch=0.00 MiB
+ds4: CUDA SSD expert cache: 2560 slots, 16.88 GiB
+ds4: pinned predictor top-6
+ds4: pinned predictor mapped ID publication enabled
+ds4: GLM prefill: 22.28 t/s, generation: 30.60 t/s
+
+WARM_BENCH task=2 scored=1
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned predictor probes=10455 predicted=62730 matched_top8=47556 uploaded_bytes=106456154112
+ds4: pinned predictor uploaded_experts=24612 used_at_next_layer=15806 (last unobserved batch included in uploads)
+ds4: pinned predictor component_uploads=24612 omitted_down_bytes=67744825344
+ds4: pinned demand layers=10710 address_hits=67946 uploaded_experts=17734 uploaded_bytes=169319989248 (address hits include ordered predictions)
+ds4: pinned components layers=10710 down_uploads=33647 down_backfills=15913 down_bytes=92613771264
+ds4: resident gate overlap layers=10610 experts=52140
+ds4: reclaimed GLM53 prefill workspace 897.88 MiB for decode experts
+ds4: reclaimed prefill expanded weights 0.00 MiB for decode experts
+ds4: decode cache budget free=17985.00 MiB reserve=700.00 MiB q8_f16=0.00 MiB q8_f32=0.00 MiB tmp=3.75 MiB tensor_scratch=0.00 MiB
+ds4: CUDA SSD expert cache: 2560 slots, 16.88 GiB
+ds4: pinned predictor top-6
+ds4: pinned predictor mapped ID publication enabled
+ds4: GLM prefill: 19.24 t/s, generation: 30.58 t/s
+
+WARM_BENCH task=3 scored=1
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned predictor probes=10455 predicted=62730 matched_top8=42269 uploaded_bytes=110976172032
+ds4: pinned predictor uploaded_experts=25657 used_at_next_layer=14234 (last unobserved batch included in uploads)
+ds4: pinned predictor component_uploads=25657 omitted_down_bytes=70621200384
+ds4: pinned demand layers=10710 address_hits=67662 uploaded_experts=18018 uploaded_bytes=167049953280 (address hits include ordered predictions)
+ds4: pinned components layers=10710 down_uploads=32376 down_backfills=14358 down_bytes=89115328512
+ds4: resident gate overlap layers=10612 experts=53428
+ds4: reclaimed GLM53 prefill workspace 897.88 MiB for decode experts
+ds4: reclaimed prefill expanded weights 0.00 MiB for decode experts
+ds4: decode cache budget free=17985.00 MiB reserve=700.00 MiB q8_f16=0.00 MiB q8_f32=0.00 MiB tmp=3.75 MiB tensor_scratch=0.00 MiB
+ds4: CUDA SSD expert cache: 2560 slots, 16.88 GiB
+ds4: pinned predictor top-6
+ds4: pinned predictor mapped ID publication enabled
+ds4: GLM prefill: 19.27 t/s, generation: 30.84 t/s
+
+WARM_BENCH prefill=2048 scored=0 offset=76982
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned predictor probes=10455 predicted=62730 matched_top8=44830 uploaded_bytes=102152404992
+ds4: pinned predictor uploaded_experts=23617 used_at_next_layer=13514 (last unobserved batch included in uploads)
+ds4: pinned predictor component_uploads=23617 omitted_down_bytes=65006075904
+ds4: pinned demand layers=10710 address_hits=67564 uploaded_experts=18116 uploaded_bytes=165764530176 (address hits include ordered predictions)
+ds4: pinned components layers=10710 down_uploads=31755 down_backfills=13639 down_bytes=87406018560
+ds4: resident gate overlap layers=10620 experts=54050
+ds4: moe gateup y-indirect q8 staging engage (flat-pool p5b, first n_tokens=2048 n_assign=16384)
+ds4: GLM prefill: 891.60 t/s, generation: 20618.56 t/s
+
+WARM_BENCH prefill=2048 scored=1 offset=0
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: GLM prefill: 955.90 t/s, generation: 20366.60 t/s
+
+WARM_BENCH prefill=8192 scored=1 offset=997
+ds4: using GPU graph generation with graph prefill
+ds4: using GLM full-attention argmax generation path
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: GLM prefill: 819.38 t/s, generation: 20533.88 t/s
