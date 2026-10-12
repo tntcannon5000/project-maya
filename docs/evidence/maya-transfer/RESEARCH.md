@@ -96,3 +96,34 @@ Strata's own prior early-shared overlap retest also failed to improve throughput
 despite token agreement (GLM-CONTINUOUS-RND round 20). Its host timings cannot
 be substituted for our CUDA timings. This reinforces the need to verify
 independent work and actual critical-path reduction in Maya.
+
+## Dependencies tested and stronger mechanisms
+
+- Expanded H1 backing (101 GiB requested, 97.82 GiB actually pinned): 37.43 /
+  41.24 TPS. Windows pinning fallback reduces Q2_K class from 10384 to 10059
+  slots. Measured minimum physical availability 12.17 GiB, commit availability
+  22.87 GiB. This is a bounded shadow tier, not a claim every model byte has
+  a RAM duplicate. Repeated demotion traffic is below 1 MB/token.
+- More CPU with expanded H1: 36.70 / 41.05; adding admission: 34.56 / 41.00.
+  Their original gains are **not additive** once demotion is nearly gone.
+- DMA + resident compute: 29.93 / 32.26. Expanded H1 + DMA + resident:
+  36.74 / 40.09. Neither beats its simpler counterpart. Real DMA engagement
+  is counted in bytes; explicit route submission fixes the earlier stalls.
+- Original overlap trace: 1.037 ms/token fetch/arithmetic intersection,
+  versus zero control. Arithmetic grows 9.154→10.257 ms, GPU-inactive gaps
+  1.942→4.169 ms, wall 33.591→34.680 ms. Real overlap was insufficient.
+- H3 refinement: table publication alone was incomplete scheduling because
+  the next embedding upload still followed bulk D2H. `layers` scheduling
+  queues copy-back after embedding submission; protected slots/events remain
+  owned until completion. 34.34 / 37.00 TPS, all 39,649,280 logits exact.
+  Its pending queue also has a fallback before another boundary and explicit
+  drain before prefill lending. Trace and combination qualification pending.
+
+Long-context harness correction: the first `baseline16k` attempt mistakenly
+used `forward(vector)` for the prompt, which serially decoded it. It was
+stopped and has no valid scored results. Corrected driver calls `prefill`
+for the prefix and `forward` only for its last token, mirroring the server.
+A separate baseline worktree at 615973d adds only the test driver/CMake target
+(commit 4bf9d4c); engine sources unchanged. Its extra transfer CSV counters
+are unavailable (zero placeholders), not zero-byte measurements. The 8K
+fixture now contains frozen baseline Python source rather than repeated text.

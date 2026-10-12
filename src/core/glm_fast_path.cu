@@ -1402,6 +1402,14 @@ bool Glm5Model::fast_setup(std::string& err) {
             }
         }
         F->rc.assign(cls_stride.size(), FastState::RamClass{});
+        if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr) {
+            // Explicit experiments must still leave physical RAM AND Windows
+            // commit headroom. Treat an unreadable capacity measurement as an
+            // error instead of pinning optimistically.
+            const int64_t available = avail_ram_now();
+            if (available <= 0) { err = "maya shadow: cannot establish RAM headroom"; return false; }
+            budget = std::min(budget,std::max<int64_t>(0,available-head_b-unseen_pf));
+        }
         std::vector<int64_t> cls_n(cls_stride.size(), 0), cls_cap(cls_stride.size(), 0);
         for (size_t c = 0; c < cls_stride.size() && wsum > 0; ++c) {
             int64_t n = (int64_t) ((double) budget * cls_weight[c] / wsum / (double) cls_stride[c]);
@@ -1423,6 +1431,17 @@ bool Glm5Model::fast_setup(std::string& err) {
                 cls_cap[c] = all;
             }
             cls_n[c] = std::min<int64_t>(n, cls_cap[c]);
+        }
+        if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr) {
+            // Proportional placement can hit one class's cap while leaving a
+            // different class short and some of the explicit budget unused.
+            // Redistribute ONLY that unused budget; never exceed it.
+            int64_t unused = budget;
+            for (size_t c=0;c<cls_n.size();++c) unused -= cls_n[c]*(int64_t)cls_stride[c];
+            for (size_t c=0;c<cls_n.size() && unused>0;++c) {
+                const int64_t add = std::min(cls_cap[c]-cls_n[c],unused/(int64_t)cls_stride[c]);
+                cls_n[c]+=add; unused-=add*(int64_t)cls_stride[c];
+            }
         }
         // parallel load: take the planned size from the budget and let the next part plan; every part pins once all
         // have planned (a later part's measurement then sees no tier half pinned)
@@ -1502,6 +1521,9 @@ bool Glm5Model::fast_setup(std::string& err) {
                 return false;
             }
             R.base = (uint8_t*) p;
+            if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr && n != cls_n[c])
+                std::fprintf(stderr,"maya shadow: class %zu pinning fallback %lld -> %lld slots\n",c,
+                             (long long)cls_n[c],(long long)n);
             R.n = (int) n;
             R.key.assign((size_t) n, -1);
             R.st.assign((size_t) n, FastState::kRFree);
@@ -3900,6 +3922,12 @@ void Glm5Model::fast_ahead_reader() {
 bool Glm5Model::fast_boundary(std::string& err) {
     FastState* F = fast_;
     if (F == nullptr || F->lp.empty() || F->rc.empty()) return true;
+    // Any alternate caller that has not entered fast_layers must issue pending
+    // moves before querying their (not yet recorded) events or lending slots.
+    if (!F->deferred_copies.empty()) {
+        if (!F->submit_demotions(err)) return false;
+        if (F->bg_hold && !glmfast::cuda_ok(cudaStreamSynchronize(F->copy),"maya lending deferred copies",err)) return false;
+    }
     // Also catches an asynchronous failure before waiting for routes that may never have been published.
     if (!glmfast::cuda_ok(cudaStreamSynchronize(F->cs), "glm boundary compute", err) || !F->route_ok(err))
         return false;
@@ -3910,6 +3938,9 @@ bool Glm5Model::fast_boundary(std::string& err) {
     // D2H work. Ownership still reserves BOTH slots until the recorded event.
     // This tests copy-queue ordering, not an assumption that Async means overlap.
     static const bool defer_demotions = getenv("MAYA_DEFER_DEMOTIONS") != nullptr;
+    static const bool layer_demotions = [] {
+        const char* v=getenv("MAYA_DEFER_DEMOTIONS");return v && std::strcmp(v,"layers")==0;
+    }();
     struct PendingDemotion { void* dst; const void* src; size_t bytes; cudaEvent_t ev; };
     std::vector<PendingDemotion> pending_demotions;
     int nu = 0;
@@ -4385,6 +4416,10 @@ bool Glm5Model::fast_boundary(std::string& err) {
     flush();
     if (!ok) return false;
     for (const auto& move : pending_demotions) {
+        if (layer_demotions) {
+            F->deferred_copies.push_back({move.dst,move.src,move.bytes,move.ev});
+            continue;
+        }
         if (!glmfast::cuda_ok(cudaMemcpyAsync(move.dst, move.src, move.bytes, cudaMemcpyDeviceToHost, F->copy),
                              "glm deferred demotion copy", err) ||
             !glmfast::cuda_ok(cudaEventRecord(move.ev, F->copy), "glm deferred demotion record", err)) return false;
@@ -4403,6 +4438,31 @@ bool Glm5Model::fast_boundary(std::string& err) {
         std::fprintf(stderr, "maya shadow: retained=%llu hits=%llu avoided_bytes=%llu budget_bytes=%llu\n",
                      (unsigned long long)F->shadow_kept, (unsigned long long)F->shadow_hits,
                      (unsigned long long)F->shadow_avoided_bytes, (unsigned long long)shadow_budget);
+        if (shadow_budget && getenv("MAYA_SHADOW_VERIFY") != nullptr) {
+            size_t shadow_bytes = 0;
+            for (size_t c=0;c<F->rc.size();++c) {
+                const auto& R=F->rc[c]; bool checked=false;
+                for (int rs=0;rs<R.n;++rs) {
+                    const int key=R.key[(size_t)rs];
+                    if (R.st[(size_t)rs]!=FastState::kRHold || key<0 || F->ram_of[(size_t)key]!=rs) continue;
+                    const int vs=F->slot_of[(size_t)key]; if(vs<0)continue;
+                    const int il=key/g.n_expert; const auto& P=F->lp[(size_t)il];
+                    if (P.st[(size_t)vs]!=FastState::kResident || P.key[(size_t)vs]!=key%g.n_expert) {
+                        err="maya shadow: inconsistent dual ownership";return false;
+                    }
+                    shadow_bytes+=R.stride;
+                    if (!checked) {
+                        std::vector<uint8_t> verify(F->L[(size_t)il].blob);
+                        if(!glmfast::cuda_ok(cudaMemcpy(verify.data(),P.slot_ptr(vs),verify.size(),cudaMemcpyDeviceToHost),"maya shadow verification",err))return false;
+                        if(std::memcmp(verify.data(),R.base+(size_t)rs*R.stride,verify.size())!=0) {
+                            err="maya shadow: immutable weight copies differ";return false;
+                        }
+                        checked=true;
+                    }
+                }
+            }
+            std::fprintf(stderr,"maya shadow verified all live dual owners and sampled bytes per class; duplicate_bytes=%llu\n",(unsigned long long)shadow_bytes);
+        }
         // per RAM class: slots, held, free, and how many of its layers' experts are in no tier at all
         for (size_t c = 0; c < F->rc.size(); ++c) {
             const auto& R = F->rc[c];
@@ -4722,6 +4782,13 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
     FastState* F = fast_;
     const Glm5Geometry& g = g_;
     cudaStream_t s = F->cs;
+    if (!F->deferred_copies.empty()) {
+        // The embedding upload is ahead of us. Submit it before bulk D2H so
+        // the first dependent compute can run while copy-back owns its slots.
+        const auto qe=cudaStreamQuery(s);
+        if (qe!=cudaSuccess && qe!=cudaErrorNotReady) return glmfast::cuda_ok(qe,"maya embedding submit",err);
+        if (!F->submit_demotions(err)) return false;
+    }
     static const bool dumps = getenv("GLM_CB_DIR") != nullptr;
     bool pf_pending = false;
     float* Rc = state_;

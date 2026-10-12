@@ -7,6 +7,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#ifdef MAYA_BASELINE_DRIVER
+#define LAB_METRIC(stats,field) 0ull
+#else
+#define LAB_METRIC(stats,field) ((stats).field)
+#endif
 
 int main(int argc, char** argv) {
     if(argc != 6) { std::fprintf(stderr,"PACK TOKEN_FILE PROMPT_COUNT OUTPUT_PREFIX REPEATS\n"); return 2; }
@@ -28,7 +33,10 @@ int main(int argc, char** argv) {
     for(int r=0;r<repeats;++r) {
         m.reset();
         auto t=Clock::now();
-        if(!m.forward(std::vector<int32_t>(ids.begin(),ids.begin()+prompt),logits,err)) return 5;
+        if(prompt>=128) {
+            if(!m.prefill(std::vector<int32_t>(ids.begin(),ids.begin()+prompt-1),err,ids[prompt-1]) ||
+               !m.forward({ids[prompt-1]},logits,err)) { std::fprintf(stderr,"%s\n",err.c_str());return 5; }
+        } else if(!m.forward(std::vector<int32_t>(ids.begin(),ids.begin()+prompt),logits,err)) return 5;
         std::fprintf(stderr,"prefill repeat=%d tokens=%d ms=%.6f\n",r,prompt,
             std::chrono::duration<double,std::milli>(Clock::now()-t).count());
         for(size_t i=prompt;i<ids.size();++i) {
@@ -42,11 +50,11 @@ int main(int argc, char** argv) {
                 (unsigned long long)(after.hits-before.hits),(unsigned long long)(after.ram_hits-before.ram_hits),
                 (unsigned long long)(after.cpu_experts-before.cpu_experts),(unsigned long long)(after.promotions-before.promotions),
                 (unsigned long long)(after.disk_reads-before.disk_reads),(long long)after.pool_slots,(long long)after.ram_slots,
-                after.pool_gb,after.ram_gb,(unsigned long long)(after.fetch_bytes-before.fetch_bytes),
-                (unsigned long long)(after.demotion_bytes-before.demotion_bytes),(unsigned long long)(after.demotions-before.demotions),
-                (unsigned long long)(after.shadow_hits-before.shadow_hits),(unsigned long long)(after.shadow_avoided_bytes-before.shadow_avoided_bytes),
-                (unsigned long long)(after.predicted_bytes-before.predicted_bytes), (unsigned long long)(after.predicted_used_bytes-before.predicted_used_bytes),
-                (unsigned long long)(after.dma_bytes-before.dma_bytes));
+                after.pool_gb,after.ram_gb,(unsigned long long)(LAB_METRIC(after,fetch_bytes)-LAB_METRIC(before,fetch_bytes)),
+                (unsigned long long)(LAB_METRIC(after,demotion_bytes)-LAB_METRIC(before,demotion_bytes)),(unsigned long long)(LAB_METRIC(after,demotions)-LAB_METRIC(before,demotions)),
+                (unsigned long long)(LAB_METRIC(after,shadow_hits)-LAB_METRIC(before,shadow_hits)),(unsigned long long)(LAB_METRIC(after,shadow_avoided_bytes)-LAB_METRIC(before,shadow_avoided_bytes)),
+                (unsigned long long)(LAB_METRIC(after,predicted_bytes)-LAB_METRIC(before,predicted_bytes)), (unsigned long long)(LAB_METRIC(after,predicted_used_bytes)-LAB_METRIC(before,predicted_used_bytes)),
+                (unsigned long long)(LAB_METRIC(after,dma_bytes)-LAB_METRIC(before,dma_bytes)));
         }
         std::fflush(times); std::fflush(dump);
     }

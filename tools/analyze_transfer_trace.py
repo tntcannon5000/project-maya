@@ -20,14 +20,23 @@ def main():
     def find(s):
         i=bisect.bisect_right(starts,s)-1
         return tokens[i] if i>=0 and s<tokens[i]['end'] else None
+    def attach(event):
+        # Transfers can cross a host-range boundary. Include their intersecting
+        # time in every affected token; charge bytes once, at copy start only.
+        i=max(0,bisect.bisect_right(starts,event['start'])-1)
+        while i<len(tokens) and tokens[i]['start']<event['end']:
+            t=tokens[i]
+            if t['end']>event['start']:
+                e=event.copy()
+                e['start']=max(t['start'],e['start']);e['end']=min(t['end'],e['end'])
+                if not (t['start']<=event['start']<t['end']):e['bytes']=0
+                t['events'].append(e)
+            i+=1
     for r in db.execute('select start,end,streamId,demangledName from CUPTI_ACTIVITY_KIND_KERNEL order by start'):
-        t=find(r['start'])
-        if t is None:continue
         name=strings[r['demangledName']];cat='DMA readiness wait' if 'moe_dma_wait' in name else category(name,0)
-        t['events'].append(dict(start=r['start'],end=r['end'],stage=cat,stream=r['streamId'],bytes=0))
+        attach(dict(start=r['start'],end=r['end'],stage=cat,stream=r['streamId'],bytes=0))
     for r in db.execute('select start,end,streamId,bytes,copyKind from CUPTI_ACTIVITY_KIND_MEMCPY order by start'):
-        t=find(r['start'])
-        if t is not None:t['events'].append(dict(start=r['start'],end=r['end'],stage='D2H' if r['copyKind']==2 else 'H2D/other',stream=r['streamId'],bytes=r['bytes']))
+        attach(dict(start=r['start'],end=r['end'],stage='D2H' if r['copyKind']==2 else 'H2D/other',stream=r['streamId'],bytes=r['bytes']))
     for s,e in cpu:
         t=find(s)
         if t is not None:t['cpu'].append((s,min(e,t['end'])))

@@ -22,6 +22,7 @@ def main():
     ap.add_argument('--tokens', type=int, default=128)
     ap.add_argument('--exe', type=Path)
     ap.add_argument('--env', action='append', default=[])
+    ap.add_argument('--cancel-smoke', action='store_true')
     a = ap.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=True)
     if a.mode == 'trace':
@@ -31,6 +32,7 @@ def main():
                '--mode', 'worker', '--out', str(out), '--repeats', str(a.repeats), '--tokens', str(a.tokens)]
         if a.exe:cmd += ['--exe',str(a.exe.resolve())]
         for setting in a.env:cmd += ['--env',setting]
+        if a.cancel_smoke:cmd += ['--cancel-smoke']
         with (out/'profiler-output.txt').open('w') as log:
             subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True, cwd=ROOT)
         subprocess.run([str(NSYS), 'export', '--type', 'sqlite', '--output', str(out/'timeline.sqlite'),
@@ -64,6 +66,9 @@ def main():
                 if line.startswith('READY'): break
             print('READY', flush=True)
             requests=[('warmup', 'Say hello in five languages.', 64, -1)]
+            if a.cancel_smoke:
+                requests += [('cancel','Write a long Python web server implementation.',1024,-2),
+                             ('recovery','Explain the purpose of a database index.',32,-2)]
             requests += [(name, q, a.tokens, repeat) for repeat in range(a.repeats) for name,q in PROMPTS]
             for name,q,n,repeat in requests:
                 ids=tok.encode('[gMASK]<sop><|user|>\n'+q+'<|assistant|>\n</think>', parse_special=True)
@@ -74,9 +79,12 @@ def main():
                     if not line: raise RuntimeError('engine exited during request')
                     if line.startswith('T '):
                         arrivals.append((time.perf_counter_ns()-start)/1e6); output.append(int(line.split()[1]))
+                        if name=='cancel' and len(output)==8:
+                            p.stdin.write('STOP\n');p.stdin.flush()
                     if line.startswith('ERR'): raise RuntimeError(line)
                     if line.startswith('DONE'): break
                 f=line.split()
+                if name=='cancel' and 'cancel' not in line:raise RuntimeError('STOP did not report cancellation: '+line)
                 row=dict(task=name, repeat=repeat, prompt_ids=ids, output_ids=output,
                          arrivals_ms=arrivals, done=line.strip(), prompt_ms=float(f[3]),
                          decode_ms=float(f[4]), tokens=int(f[1]))

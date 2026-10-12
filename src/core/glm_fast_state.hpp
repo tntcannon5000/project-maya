@@ -385,9 +385,9 @@ struct Glm5Model::FastState {
     uint64_t diag_disk[4] = {0, 0, 0, 0}, diag_drop = 0, diag_ram_evict = 0, diag_lend = 0, diag_lend_park = 0, diag_b = 0;
     uint64_t diag_resident_skip = 0;   // RAM-resident mode: spare refills skipped (no free RAM slot, no drop)
     uint64_t diag_dup = 0, diag_adopt = 0;   // the boundary's clean-up: duplicate RAM copies freed, lost ones adopted
-    uint64_t shadow_kept = 0, shadow_hits = 0, shadow_avoided_bytes = 0;
+    std::atomic<uint64_t> shadow_kept{0}, shadow_hits{0}, shadow_avoided_bytes{0};
     std::atomic<uint64_t> demand_bytes{0};
-    uint64_t demotion_bytes = 0;
+    std::atomic<uint64_t> demotion_bytes{0};
     size_t ram_bytes = 0;
     // ---- demotions VRAM -> RAM (copy stream, D2H) of the victims that make room for spares
     struct Drain {
@@ -395,6 +395,15 @@ struct Glm5Model::FastState {
         cudaEvent_t ev;
     };
     std::vector<Drain> draining;
+    struct DeferredCopy { void* dst; const void* src; size_t bytes; cudaEvent_t ev; };
+    std::vector<DeferredCopy> deferred_copies;
+    bool submit_demotions(std::string& err) {
+        for (const auto& d : deferred_copies) {
+            if (!glmfast::cuda_ok(cudaMemcpyAsync(d.dst,d.src,d.bytes,cudaMemcpyDeviceToHost,copy),"maya scheduled demotion",err) ||
+                !glmfast::cuda_ok(cudaEventRecord(d.ev,copy),"maya scheduled demotion event",err)) return false;
+        }
+        deferred_copies.clear(); return true;
+    }
     // ---- background moves between the tiers (fast_boundary step 5): a promotion (up, RAM -> VRAM) or a demotion
     //      (VRAM -> RAM), both on the copy stream; the expert stays live where it was until its copy landed
     struct BgMove {
