@@ -1,0 +1,16 @@
+{
+  "wall_ms": 24.9005506796875,
+  "fetch_ms": 11.42240833984375,
+  "d2h_ms": 0.68952199609375,
+  "dma_h2d_ms": 0.0043492734375,
+  "arithmetic_ms": 9.30307031640625,
+  "cpu_wait_ms": 3.4169532734375,
+  "host_disk_wait_ms": 0.0324623203125,
+  "fetch_arithmetic_overlap_ms": 0.64493391015625,
+  "d2h_arithmetic_overlap_ms": 0.24776292187500001,
+  "cpu_arithmetic_overlap_ms": 1.4783885703125,
+  "no_gpu_ms": 1.27446326171875,
+  "d2h_bytes": 25499140,
+  "h2d_bytes": 18007.46875,
+  "tokens": 256
+}
