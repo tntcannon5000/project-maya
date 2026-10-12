@@ -8,23 +8,44 @@
 
 namespace strata::core {
 namespace gf=strata::kernels::glmf;
+#if defined(STRATA_USE_HIP)
+bool Glm5Model::transport_probe(const std::string&,std::string& err) {
+    err="CUDA-only diagnostic; HIP transport replay is not implemented";return false;
+}
+#else
+__global__ void probe_stamp(unsigned long long* values,int index) {
+    unsigned long long t;asm volatile("mov.u64 %0, %%globaltimer;" : "=l"(t));values[index]=t;
+}
 bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
     auto* F=fast_;
-    if(!F || n_parts_!=1 || g_.n_embd!=4096 || F->max_pf) {err="probe requires native single-device c1 without prediction";return false;}
+    if(!F || !F->transfer_probe || n_parts_!=1 || g_.n_embd!=4096 || F->max_pf) {err="probe requires recorded native single-device c1 without prediction";return false;}
     if(!glmfast::cuda_ok(cudaDeviceSynchronize(),"probe idle",err))return false;
     while(F->processed.load(std::memory_order_acquire)<F->expected)std::this_thread::yield();
     std::lock_guard<std::mutex> lock(F->mu);
     std::vector<FastState::TransferProbe> records;
-    for(auto& r:F->transfer_probe)if(r.seq)records.push_back(r);
+    for(auto& r:*F->transfer_probe)if(r.seq)records.push_back(r);
     std::sort(records.begin(),records.end(),[](auto&a,auto&b){return a.seq<b.seq;});
     if(records.size()!=336) {err="need eight complete decode tokens";return false;}
     for(size_t i=1;i<records.size();++i)if(records[i].seq!=records[i-1].seq+1){err="non-contiguous routes";return false;}
+    for(const auto&r:records)for(int i=0;i<r.k;++i) {
+        for(auto ptr:{r.src[i],((r.cpu_mask>>i)&1u)?r.cpu_src[i]:0ull})if(ptr) {
+            bool owned=false;
+            for(const auto& rc:F->rc) {
+                const auto base=(unsigned long long)rc.base;
+                if(ptr>=base && ptr-base<(size_t)rc.n*rc.stride && (ptr-base)%rc.stride==0 && r.blob<=rc.stride)owned=true;
+            }
+            if(!owned){err="recorded source is not an owned RAM slot";return false;}
+        }
+    }
     // RAII always joins streams before releasing any replay allocations.
     struct Resources {
         std::vector<void*> memory;cudaStream_t s=nullptr,side=nullptr;
         cudaEvent_t start=nullptr,prefix=nullptr,down0=nullptr,down1=nullptr,end=nullptr;
         cudaGraph_t graph=nullptr;cudaGraphExec_t exec=nullptr;
-        ~Resources(){cudaDeviceSynchronize();if(exec)cudaGraphExecDestroy(exec);if(graph)cudaGraphDestroy(graph);
+        ~Resources(){
+            if(s){cudaStreamCaptureStatus status=cudaStreamCaptureStatusNone;
+                if(cudaStreamIsCapturing(s,&status)==cudaSuccess && status!=cudaStreamCaptureStatusNone){cudaGraph_t abandoned=nullptr;cudaStreamEndCapture(s,&abandoned);if(abandoned)cudaGraphDestroy(abandoned);}}
+            cudaDeviceSynchronize();if(exec)cudaGraphExecDestroy(exec);if(graph)cudaGraphDestroy(graph);
             for(auto e:{start,prefix,down0,down1,end})if(e)cudaEventDestroy(e);
             if(s)cudaStreamDestroy(s);if(side)cudaStreamDestroy(side);for(auto p:memory)cudaFree(p);}
     } z;
@@ -34,9 +55,10 @@ bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
     auto* target=(unsigned char*)alloc(maxblob*8);
     auto* arrays=(unsigned long long*)alloc(24*sizeof(unsigned long long));
     auto* weights=(float*)alloc(8*sizeof(float));auto* flag=(int*)alloc(sizeof(int));
+    auto* stamps=(unsigned long long*)alloc(5*sizeof(unsigned long long));
     auto* x=(float*)alloc(4096*sizeof(float));void* xq=alloc(4096/32*36);
     void* hq=alloc((size_t)8*g_.n_ff_exp/32*36);auto* out=(float*)alloc(4096*sizeof(float));
-    if(!target||!arrays||!weights||!flag||!x||!xq||!hq||!out){err="probe allocation failed";return false;}
+    if(!target||!arrays||!weights||!flag||!x||!xq||!hq||!out||!stamps){err="probe allocation failed";return false;}
     PC(cudaMemset(flag,0,sizeof(int)));PC(cudaMemset(hq,0,(size_t)8*g_.n_ff_exp/32*36));
     PC(cudaStreamCreateWithFlags(&z.s,cudaStreamNonBlocking));PC(cudaStreamCreateWithFlags(&z.side,cudaStreamNonBlocking));
     for(auto*e:{&z.start,&z.prefix,&z.down0,&z.down1,&z.end})PC(cudaEventCreate(e));
@@ -63,22 +85,23 @@ bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
         PC(cudaMemcpy(x,r.x,sizeof(r.x),cudaMemcpyHostToDevice));
         gf::quantize_q8_1(x,xq,4096,z.s);PC(cudaStreamSynchronize(z.s));
         PC(cudaStreamBeginCapture(z.s,cudaStreamCaptureModeThreadLocal));
-        PC(cudaEventRecord(z.start,z.s));
+        probe_stamp<<<1,1,0,z.s>>>(stamps,0);
         if(dma) {
             for(int i=0;i<r.k;++i)if(r.src[i])PC(cudaMemcpyAsync((void*)ptr[i],(void*)r.src[i],r.blob,cudaMemcpyHostToDevice,z.s));
             PC(cudaEventRecord(z.prefix,z.s));
+            probe_stamp<<<1,1,0,z.s>>>(stamps,1);
         } else if(r.split) {
-            gf::moe_fetch_component(d,r.k,0,r.prefix,0,z.s);PC(cudaEventRecord(z.prefix,z.s));
-            PC(cudaStreamWaitEvent(z.side,z.prefix,0));PC(cudaEventRecord(z.down0,z.side));
-            gf::moe_fetch_component(d,r.k,r.prefix,r.blob-r.prefix,32,z.side);PC(cudaEventRecord(z.down1,z.side));
+            gf::moe_fetch_component(d,r.k,0,r.prefix,0,z.s);probe_stamp<<<1,1,0,z.s>>>(stamps,1);PC(cudaEventRecord(z.prefix,z.s));
+            PC(cudaStreamWaitEvent(z.side,z.prefix,0));probe_stamp<<<1,1,0,z.side>>>(stamps,2);
+            gf::moe_fetch_component(d,r.k,r.prefix,r.blob-r.prefix,32,z.side);probe_stamp<<<1,1,0,z.side>>>(stamps,3);PC(cudaEventRecord(z.down1,z.side));
             if(math)gf::moe_gate_up(L.gu_type,d,r.k,4096,g_.n_ff_exp,g_.swiglu_exp,xq,hq,nullptr,0,nullptr,0,nullptr,z.s);
             PC(cudaStreamWaitEvent(z.s,z.down1,0));
-        } else {gf::moe_fetch(d,r.k,r.blob,z.s);PC(cudaEventRecord(z.prefix,z.s));}
+        } else {gf::moe_fetch(d,r.k,r.blob,z.s);probe_stamp<<<1,1,0,z.s>>>(stamps,1);PC(cudaEventRecord(z.prefix,z.s));}
         if(math) {
             if(!r.split)gf::moe_gate_up(L.gu_type,d,r.k,4096,g_.n_ff_exp,g_.swiglu_exp,xq,hq,nullptr,0,nullptr,0,nullptr,z.s);
             gf::moe_down(L.d_type,d,r.k,4096,g_.n_ff_exp,r.prefix,hq,nullptr,out,z.s);
         }
-        PC(cudaEventRecord(z.end,z.s));PC(cudaStreamEndCapture(z.s,&z.graph));
+        probe_stamp<<<1,1,0,z.s>>>(stamps,4);PC(cudaStreamEndCapture(z.s,&z.graph));
         PC(cudaGraphInstantiate(&z.exec,z.graph,nullptr,nullptr,0));
         float cpu_out[4096]{};
         for(int pass=-1;pass<2;++pass) {
@@ -88,9 +111,9 @@ bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
             const double cpu_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-c0).count();
             PC(cudaStreamSynchronize(z.s));
             const double wall=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-begin).count();
-            float prefix=0,tail=0,window=0;PC(cudaEventElapsedTime(&prefix,z.start,z.prefix));
-            if(r.split&&!dma)PC(cudaEventElapsedTime(&tail,z.down0,z.down1));
-            PC(cudaEventElapsedTime(&window,z.start,z.end));
+            unsigned long long ts[5]{};PC(cudaMemcpy(ts,stamps,sizeof(ts),cudaMemcpyDeviceToHost));
+            double prefix=(ts[1]-ts[0])/1e6,tail=0,window=(ts[4]-ts[0])/1e6;
+            if(r.split&&!dma)tail=(ts[3]-ts[2])/1e6;
             if(pass>=0)std::fprintf(raw,"%s,%d,%u,%d,%zu,%d,%.6f,%.6f,%.6f,%.6f,%d,1\n",name,pass,r.seq,r.layer,bytes,nc,prefix+tail,window,cpu_ms,wall,r.split);
         }
         // Check every transferred byte after the measured passes. The source
@@ -108,4 +131,5 @@ bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
     return true;
 #undef PC
 }
+#endif
 }

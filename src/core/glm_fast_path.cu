@@ -3383,7 +3383,8 @@ void Glm5Model::fast_service() {
             static const bool probe=std::getenv("MAYA_TRANSFER_PROBE")!=nullptr;
             if(probe && rq->win_n==0 && miss==0) {
                 const auto& P=F->lp[(size_t)il];const auto& R=F->rc[(size_t)F->layer_rc[(size_t)il]];
-                auto& rec=F->transfer_probe[next%F->transfer_probe.size()];
+                if(!F->transfer_probe)F->transfer_probe=std::make_unique<std::array<FastState::TransferProbe,336>>();
+                auto& rec=(*F->transfer_probe)[next%F->transfer_probe->size()];
                 rec={};rec.seq=next;rec.layer=il;rec.k=K;rec.cpu_mask=cpu;
                 rec.blob=F->L[(size_t)il].blob;rec.prefix=F->L[(size_t)il].down_off;
                 rec.split=F->kda_graph_on && F->L[(size_t)il].recr;
@@ -4709,6 +4710,11 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     if (overlap_enabled && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
         err="maya overlap requires aligned native weights and expert prediction off"; return false;
     }
+    // Diagnostic serialization: wait for the SAME CPU work without adding
+    // its answer yet. n_embd=0 makes moe_cpu_wait a readiness-only fence;
+    // the ordinary end-of-layer call still combines the answer exactly once.
+    static const bool probe_cpu_first=std::getenv("MAYA_PROBE_CPU_FIRST")!=nullptr;
+    if(probe_cpu_first && lane)gf::moe_cpu_wait(md,0,nullptr,s);
     if (overlap_enabled) {
         // Fork only after route and disk-source publication, then join before
         // down reads and all slot reuse. CUDA capture includes this side stream.

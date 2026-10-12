@@ -353,7 +353,7 @@ struct Glm5Model::FastState {
         size_t blob=0, prefix=0;
         bool split=false;
     };
-    std::array<TransferProbe,336> transfer_probe{};
+    std::unique_ptr<std::array<TransferProbe,336>> transfer_probe;
     // ... and the long memory: routes per key across sessions (expert_usage.txt), halved when one passes 2^30 -
     // the warm-up fills the tiers in its order (this user's experts first)
     std::vector<uint32_t> usage;
