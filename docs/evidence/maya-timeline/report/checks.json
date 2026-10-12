@@ -1,0 +1,9 @@
+{
+  "token_count": 381,
+  "kernel_count": 283083,
+  "layer_rows": 17145,
+  "expected_layers": 17145,
+  "all_tokens_45_layers": true,
+  "min_unattributed_ms": 1.7324669999999998,
+  "max_partition_error_ms": 7.105427357601002e-15
+}

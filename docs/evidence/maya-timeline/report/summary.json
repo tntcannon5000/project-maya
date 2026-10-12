@@ -1,0 +1,101 @@
+{
+  "overview": [
+    {
+      "task": "csv",
+      "stock_TPS": 26.279949903845495,
+      "stock_TPS_min": 23.992952070329345,
+      "stock_TPS_max": 29.748071023519564,
+      "trace_TPS": 27.93539938891314,
+      "trace_tokens": 127,
+      "trace_mean_token_ms": 36.04710467716536,
+      "output_ids_equal": false,
+      "stock_repeats_identical": false
+    },
+    {
+      "task": "explanation",
+      "stock_TPS": 29.137484919075185,
+      "stock_TPS_min": 28.036359653926183,
+      "stock_TPS_max": 29.782679510447203,
+      "trace_TPS": 29.697686828611864,
+      "trace_tokens": 127,
+      "trace_mean_token_ms": 33.90789278740157,
+      "output_ids_equal": true,
+      "stock_repeats_identical": false
+    },
+    {
+      "task": "web",
+      "stock_TPS": 26.175512262954832,
+      "stock_TPS_min": 25.256013101556796,
+      "stock_TPS_max": 26.891886213706456,
+      "trace_TPS": 27.57966861304432,
+      "trace_tokens": 127,
+      "trace_mean_token_ms": 36.51486111811024,
+      "output_ids_equal": true,
+      "stock_repeats_identical": true
+    }
+  ],
+  "checks": {
+    "token_count": 381,
+    "kernel_count": 283083,
+    "layer_rows": 17145,
+    "expected_layers": 17145,
+    "all_tokens_45_layers": true,
+    "min_unattributed_ms": 1.7324669999999998,
+    "max_partition_error_ms": 7.105427357601002e-15
+  },
+  "stage_means": {
+    "Expert fetch": 14.318486086614174,
+    "Expert gate/up": 1.100797275590551,
+    "Expert down": 0.7503131128608924,
+    "CPU answer wait": 2.764072866141732,
+    "Host/disk wait": 0.10586979527559054,
+    "Routing": 1.011918404199475,
+    "Dense projections": 3.5312558451443565,
+    "KDA recurrence/prep": 0.4676538031496063,
+    "DSA / MLA": 1.1948706010498689,
+    "Residual/norm": 0.8148494908136483,
+    "Embedding/head": 0.23955759580052494,
+    "Other kernel": 0.003937800524934383,
+    "D2H copies (VRAM to RAM)": 7.170770677165354,
+    "H2D/D2D copies": 0.004270291338582677,
+    "No recorded GPU activity": 2.011329215223097
+  },
+  "traffic": [
+    {
+      "task": "csv",
+      "fetch_MB": 513.8744844094488,
+      "d2h_MB": 413.5068784566929,
+      "d2h_ms": 7.32918737007874,
+      "fetch_payload_GB_s": 35.322059208251424,
+      "d2h_payload_GB_s": 56.41919868836025,
+      "cpu_service_ms": 17.57225860629921,
+      "cpu_during_fetch_ms": 13.881887488188976,
+      "cpu_during_math_ms": 1.0357241417322836,
+      "cpu_during_wait_ms": 2.3967166141732283
+    },
+    {
+      "task": "explanation",
+      "fetch_MB": 463.3864788661417,
+      "d2h_MB": 384.92131373228347,
+      "d2h_ms": 6.81182131496063,
+      "fetch_payload_GB_s": 34.99940086640945,
+      "d2h_payload_GB_s": 56.50784069847672,
+      "cpu_service_ms": 15.792562763779527,
+      "cpu_during_fetch_ms": 12.545572968503937,
+      "cpu_during_math_ms": 0.9401925511811023,
+      "cpu_during_wait_ms": 2.0650882125984253
+    },
+    {
+      "task": "web",
+      "fetch_MB": 533.7458252598425,
+      "d2h_MB": 416.4714794015748,
+      "d2h_ms": 7.371303346456693,
+      "fetch_payload_GB_s": 35.19042741993454,
+      "d2h_payload_GB_s": 56.49902870999987,
+      "cpu_service_ms": 17.714476047244094,
+      "cpu_during_fetch_ms": 14.38747520472441,
+      "cpu_during_math_ms": 0.9288945196850393,
+      "cpu_during_wait_ms": 2.1599802047244094
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+trace/
+**/*.nsys-rep
+**/*.sqlite
+report/kernels.csv
+report/http.*.log

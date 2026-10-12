@@ -32,6 +32,24 @@
 #include <nvtx3/nvToolsExt.h>
 #endif
 
+// Opt-in host ranges only: no CUDA events, arithmetic, scheduling or cache changes.
+static bool maya_timeline_on() {
+    static const bool on = std::getenv("MAYA_TIMELINE") != nullptr;
+    return on;
+}
+struct MayaTimelineRange {
+    explicit MayaTimelineRange(const char* name) {
+#if !defined(STRATA_USE_HIP)
+        if (maya_timeline_on()) nvtxRangePushA(name);
+#endif
+    }
+    ~MayaTimelineRange() {
+#if !defined(STRATA_USE_HIP)
+        if (maya_timeline_on()) nvtxRangePop();
+#endif
+    }
+};
+
 #include <algorithm>
 #include <cctype>
 #include <array>
@@ -3303,6 +3321,15 @@ void Glm5Model::fast_service() {
             const unsigned int miss = rq->miss_mask, fetch = rq->fetch_mask, promo = rq->promo_mask;
             const unsigned int cpu = rq->cpu_mask;   // the CPU lane's experts: not in VRAM, computed below
             const unsigned int skip = rq->skip_mask;   // DISK SKIP: left out of this token (neither hit nor read)
+#if !defined(STRATA_USE_HIP)
+            if (maya_timeline_on()) {
+                char label[192];
+                std::snprintf(label, sizeof(label),
+                    "route=%u layer=%d fetch=%u cpu=%u miss=%u promo=%u blob=%llu",
+                    next, il, fetch, cpu, miss, promo, (unsigned long long)F->L[(size_t)il].blob);
+                nvtxMarkA(label);
+            }
+#endif
             if (skip != 0u) F->disk_skips.fetch_add((uint64_t) std::popcount(skip), std::memory_order_relaxed);
             auto& P = F->lp[(size_t) il];
             auto& R = F->rc[(size_t) F->layer_rc[(size_t) il]];
@@ -3542,6 +3569,10 @@ void Glm5Model::fast_service() {
             continue;
         }
         if (rq->cpu_mask != 0u && F->cpu_ans_h != nullptr) {
+            char trace_name[96] = {};
+            if (maya_timeline_on()) std::snprintf(trace_name, sizeof(trace_name),
+                "CPU experts layer=%d route=%u mask=%u", rq->layer, next, rq->cpu_mask);
+            MayaTimelineRange trace_cpu(trace_name);
             const auto t0 = std::chrono::steady_clock::now();
             const unsigned int cm = rq->cpu_mask;
             int ne = 0;
@@ -4521,6 +4552,9 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
     if (F->prof_on) F->mark("start");
     for (int il = l0_; il < l1_; ++il) {
         const auto& Ly = F->L[(size_t) il];
+        char trace_name[64] = {};
+        if (maya_timeline_on()) std::snprintf(trace_name, sizeof(trace_name), "layer=%d pos=%lld", il, (long long)p);
+        MayaTimelineRange trace_layer(trace_name);
         // a pipelined window's token: is it past a wrong draft by now (its heavy kernels then do nothing)
         if (F->win.pipe_t >= 0 && F->win.from != nullptr && F->win.skip_d != nullptr)
             gf::skip_gate(F->win.from, F->win.pipe_t, F->win.skip_d, s);
@@ -4667,6 +4701,14 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
 }
 
 bool Glm5Model::fast_token(int32_t token, std::string& err) {
+    static uint64_t trace_seq = 0;
+    char trace_name[96] = {};
+    if (maya_timeline_on()) {
+        if (trace_seq == 0) cudaProfilerStart();
+        std::snprintf(trace_name, sizeof(trace_name), "token seq=%llu pos=%lld input=%d",
+            (unsigned long long)trace_seq++, (long long)pos_, token);
+    }
+    MayaTimelineRange trace_token(trace_name);
     FastState* F = fast_;
     const Glm5Geometry& g = g_;
     const int64_t p = pos_++;
