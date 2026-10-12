@@ -6,7 +6,8 @@
 
 namespace strata::core {
 // Causal same-layer next-route reuse, used ONLY for choosing a completed
-// resident to evict. No routing, transfer, CPU placement or weight mutation.
+// resident to evict. Later residency can change CPU/GPU assignment; weights
+// and the required expert set are preserved.
 // Owned by FastState; accessed under its existing service/boundary mutex.
 struct GlmReusePolicy {
     struct Layer {
