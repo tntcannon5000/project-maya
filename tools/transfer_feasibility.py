@@ -1,5 +1,6 @@
 """Lossless compression feasibility on actual expert components, never synthetic zeros."""
 import argparse, hashlib, json, time, zlib
+import lz4.block, zstandard
 from pathlib import Path
 
 def main():
@@ -23,16 +24,18 @@ def main():
                     for comp,start,size in [('gate',gate,gs),('up',up,gs),('down',d,ds)]:
                         f.seek(start+expert*size); raw=f.read(size)
                         assert len(raw)==size and size>0
-                        for level in (1,6):
-                            t=time.perf_counter(); packed=zlib.compress(raw,level); enc=time.perf_counter()-t
-                            t=time.perf_counter(); decoded=zlib.decompress(packed); dec=time.perf_counter()-t
+                        codecs=[('lz4',lz4.block.compress,lz4.block.decompress),
+                                ('zstd1',zstandard.ZstdCompressor(level=1).compress,zstandard.ZstdDecompressor().decompress)]
+                        for level,compress,decompress in codecs:
+                            t=time.perf_counter(); packed=compress(raw); enc=time.perf_counter()-t
+                            t=time.perf_counter(); decoded=decompress(packed); dec=time.perf_counter()-t
                             assert decoded==raw
                             rows.append(dict(layer=il,gu_type=gu,down_type=down,expert=expert,component=comp,
                                 bytes=size,compressed=len(packed),level=level,encode_s=enc,decode_s=dec,
                                 sha256=hashlib.sha256(raw).hexdigest()))
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(rows,indent=2))
-    for level in (1,6):
+    for level in ('lz4','zstd1'):
         r=[x for x in rows if x['level']==level]; n=sum(x['bytes'] for x in r)
         print(level,'ratio',sum(x['compressed'] for x in r)/n,'decode GB/s',n/sum(x['decode_s'] for x in r)/1e9,flush=True)
 

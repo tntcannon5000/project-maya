@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     FILE* times=std::fopen((prefix+".csv").c_str(),"w");
     FILE* dump=std::fopen((prefix+".logits.f32").c_str(),"wb");
     if(!times || !dump) return 4;
-    std::fprintf(times,"repeat,position,input,ms,hits,ram_fetches,cpu_experts,promotions,disk_reads,pool_slots,ram_slots,pool_gib,ram_gib\n");
+    std::fprintf(times,"repeat,position,input,ms,hits,ram_fetches,cpu_experts,promotions,disk_reads,pool_slots,ram_slots,pool_gib,ram_gib,fetch_bytes,demotion_bytes,demotions,shadow_hits,shadow_avoided_bytes\n");
     std::vector<float> logits;
     using Clock=std::chrono::steady_clock;
     for(int r=0;r<repeats;++r) {
@@ -38,11 +38,13 @@ int main(int argc, char** argv) {
             const auto after=m.fast_stats();
             for(float x:logits) if(!std::isfinite(x)) return 7;
             if(std::fwrite(logits.data(),sizeof(float),logits.size(),dump)!=logits.size()) return 8;
-            std::fprintf(times,"%d,%zu,%d,%.6f,%llu,%llu,%llu,%llu,%llu,%lld,%lld,%.6f,%.6f\n",r,i,ids[i],ms,
+            std::fprintf(times,"%d,%zu,%d,%.6f,%llu,%llu,%llu,%llu,%llu,%lld,%lld,%.6f,%.6f,%llu,%llu,%llu,%llu,%llu\n",r,i,ids[i],ms,
                 (unsigned long long)(after.hits-before.hits),(unsigned long long)(after.ram_hits-before.ram_hits),
                 (unsigned long long)(after.cpu_experts-before.cpu_experts),(unsigned long long)(after.promotions-before.promotions),
                 (unsigned long long)(after.disk_reads-before.disk_reads),(long long)after.pool_slots,(long long)after.ram_slots,
-                after.pool_gb,after.ram_gb);
+                after.pool_gb,after.ram_gb,(unsigned long long)(after.fetch_bytes-before.fetch_bytes),
+                (unsigned long long)(after.demotion_bytes-before.demotion_bytes),(unsigned long long)(after.demotions-before.demotions),
+                (unsigned long long)(after.shadow_hits-before.shadow_hits),(unsigned long long)(after.shadow_avoided_bytes-before.shadow_avoided_bytes));
         }
         std::fflush(times); std::fflush(dump);
     }

@@ -616,6 +616,13 @@ bool Glm5Model::fast_setup(std::string& err) {
         return false;
     }
     // an EXL3 pack: its kernels' scratch on the compute stream now (a graph capture cannot allocate it)
+    if (getenv("MAYA_RESIDENT_OVERLAP") != nullptr &&
+        (cudaStreamCreateWithFlags(&F->demand, cudaStreamNonBlocking) != cudaSuccess ||
+         cudaEventCreateWithFlags(&F->demand_start, cudaEventDisableTiming) != cudaSuccess ||
+         cudaEventCreateWithFlags(&F->demand_done, cudaEventDisableTiming) != cudaSuccess)) {
+        err = "maya demand stream/events did not create";
+        return false;
+    }
     if (exl3_ && !strata::kernels::exl3::prepare(F->cs)) {
         err = "glm fast: the EXL3 scratch did not allocate";
         return false;
@@ -3097,6 +3104,9 @@ void Glm5Model::fast_destroy() {
     if (F->cs) cudaStreamDestroy(F->cs);
     if (F->copy) cudaStreamDestroy(F->copy);
     if (F->ps) cudaStreamDestroy(F->ps);
+    if (F->demand) cudaStreamDestroy(F->demand);
+    if (F->demand_start) cudaEventDestroy(F->demand_start);
+    if (F->demand_done) cudaEventDestroy(F->demand_done);
     delete F;
     fast_ = nullptr;
 }
@@ -3186,6 +3196,11 @@ Glm5Model::FastStats Glm5Model::fast_stats() const {
         s.disk_reads += F->disk_reads.load();
         s.disk_skips += F->disk_skips.load();
         s.promotions += F->promotions.load();
+        s.fetch_bytes += F->demand_bytes.load();
+        s.demotions += F->demotions.load();
+        s.demotion_bytes += F->demotion_bytes;
+        s.shadow_hits += F->shadow_hits;
+        s.shadow_avoided_bytes += F->shadow_avoided_bytes;
         s.cpu_experts += F->cpu_experts.load();
         s.cpu_ms += (double) F->cpu_us.load() / 1000.0;
         s.miss_ms += (double) F->miss_us.load() / 1000.0;
@@ -3320,6 +3335,7 @@ void Glm5Model::fast_service() {
             const int il = rq->layer;
             const unsigned int miss = rq->miss_mask, fetch = rq->fetch_mask, promo = rq->promo_mask;
             const unsigned int cpu = rq->cpu_mask;   // the CPU lane's experts: not in VRAM, computed below
+            F->demand_bytes.fetch_add((uint64_t)std::popcount(fetch) * F->L[(size_t)il].blob, std::memory_order_relaxed);
             const unsigned int skip = rq->skip_mask;   // DISK SKIP: left out of this token (neither hit nor read)
 #if !defined(STRATA_USE_HIP)
             if (maya_timeline_on()) {
@@ -3810,6 +3826,12 @@ bool Glm5Model::fast_boundary(std::string& err) {
     const Glm5Geometry& g = g_;
     while (F->processed.load(std::memory_order_acquire) < F->expected) cpu_relax();
     std::lock_guard<std::mutex> lk(F->mu);
+    // Experiment H3: publish small routing-table updates before submitting bulk
+    // D2H work. Ownership still reserves BOTH slots until the recorded event.
+    // This tests copy-queue ordering, not an assumption that Async means overlap.
+    static const bool defer_demotions = getenv("MAYA_DEFER_DEMOTIONS") != nullptr;
+    struct PendingDemotion { void* dst; const void* src; size_t bytes; cudaEvent_t ev; };
+    std::vector<PendingDemotion> pending_demotions;
     int nu = 0;
     bool ok = true;
     const auto flush = [&] {
@@ -3885,9 +3907,24 @@ bool Glm5Model::fast_boundary(std::string& err) {
         const char* v = getenv("STRATA_GLM_TIER_GC");
         return v == nullptr || std::atoi(v) != 0;
     }();
+    // H1: retain immutable backing in the EXISTING tier only. Bound duplication
+    // per size class; release all shadows before prefill borrows GPU capacity.
+    // A retained copy never needs refresh, and no in-flight RAM slot is retained.
+    static const size_t shadow_budget = [] {
+        const char* v = getenv("MAYA_RAM_SHADOW_MB");
+        return v ? (size_t) std::max(0, std::atoi(v)) * 1048576ull : size_t(0);
+    }();
     // (1)
     for (size_t c = 0; c < F->rc.size(); ++c) {
         auto& R = F->rc[c];
+        size_t shadows = 0, free_slots = 0;
+        const size_t shadow_cap = F->ram_bytes ? shadow_budget * (size_t) R.n / F->ram_bytes : 0;
+        for (int s = 0; s < R.n; ++s) {
+            free_slots += R.st[(size_t)s] == FastState::kRFree;
+            const int key = R.key[(size_t)s];
+            shadows += R.st[(size_t)s] == FastState::kRHold && key >= 0 &&
+                       F->ram_of[(size_t)key] == s && F->slot_of[(size_t)key] >= 0;
+        }
         for (int s = 0; s < R.n; ++s) {
             if (R.st[(size_t) s] == FastState::kRLoad) {
                 // a LOOKAHEAD read nobody asked for yet: in the RAM tier once it landed
@@ -3897,6 +3934,13 @@ bool Glm5Model::fast_boundary(std::string& err) {
                 }
             } else if (R.st[(size_t) s] == FastState::kRRelease) {
                 const int key = R.key[(size_t) s];
+                if (shadow_budget && !F->bg_hold && shadows < shadow_cap && free_slots >= 16 &&
+                    key >= 0 && F->ram_of[(size_t)key] == s && F->slot_of[(size_t)key] >= 0) {
+                    R.st[(size_t)s] = FastState::kRHold;
+                    upd(F->rtab_key(key), (unsigned long long)(R.base + (size_t)s * R.stride));
+                    ++shadows; ++F->shadow_kept;
+                    continue;
+                }
                 if (key >= 0) {
                     upd(F->rtab_key(key), 0ull);
                     if (F->ram_of[(size_t) key] == s) F->ram_of[(size_t) key] = -1;
@@ -3906,13 +3950,15 @@ bool Glm5Model::fast_boundary(std::string& err) {
             } else if (R.st[(size_t) s] == FastState::kRNew) {
                 R.st[(size_t) s] = FastState::kRHold;
                 upd(F->rtab_key(R.key[(size_t) s]), (unsigned long long) (R.base + (size_t) s * R.stride));
-            } else if (R.st[(size_t) s] == FastState::kRHold && tier_gc) {
+            } else if (R.st[(size_t) s] == FastState::kRHold && (tier_gc || shadow_budget)) {
                 // exclusive tiers, kept (STRATA_GLM_TIER_GC=0: not): a held copy the tables lost (a route promoted or re-read the expert while its
                 // demotion was still landing, which then held a second copy nothing points at) or of an expert VRAM
                 // holds is freed; one that is the expert's only copy is adopted back.  Such copies piled up to ~12%
                 // of the experts in no tier at all, the RAM tier full of duplicates (chats: ~5 disk reads a token)
                 const int key = R.key[(size_t) s];
                 const int ro = key >= 0 ? F->ram_of[(size_t) key] : -1;
+                if (shadow_budget && !F->bg_hold && key >= 0 && ro == s &&
+                    F->slot_of[(size_t)key] >= 0) continue;
                 if (key >= 0 && ro == s && F->slot_of[(size_t) key] < 0) continue;   // the normal case
                 if (key >= 0 && ro < 0 && F->slot_of[(size_t) key] < 0) {
                     F->ram_of[(size_t) key] = s;
@@ -4000,6 +4046,21 @@ bool Glm5Model::fast_boundary(std::string& err) {
             }
             if (v < 0) break;
             const int vkey = il * g.n_expert + P.key[(size_t) v];
+            const int backing = F->ram_of[(size_t)vkey];
+            if (shadow_budget && backing >= 0 && R.st[(size_t)backing] == FastState::kRHold &&
+                R.key[(size_t)backing] == vkey) {
+                // Compute and CPU service are idle here. The RAM copy is already
+                // published and complete, so the GPU slot can become a spare.
+                upd(F->tab_key(vkey), 0ull);
+                F->slot_of[(size_t)vkey] = -1;
+                P.st[(size_t)v] = FastState::kSpare;
+                P.key[(size_t)v] = -1;
+                P.spare[j] = v;
+                upd(F->spare_key(il,j), (unsigned long long)P.slot_ptr(v));
+                ++P.evictions; ++F->shadow_hits;
+                F->shadow_avoided_bytes += F->L[(size_t)il].blob;
+                continue;
+            }
             // demote it into the RAM tier: a free slot, else the RAM tier's victim (if colder than it)
             int rs = -1;
             uint32_t rc_min = UINT32_MAX;
@@ -4037,14 +4098,19 @@ bool Glm5Model::fast_boundary(std::string& err) {
                 R.tick[(size_t) rs] = F->clock;
                 R.st[(size_t) rs] = FastState::kRDemote;
                 F->ram_of[(size_t) vkey] = rs;
-                cudaMemcpyAsync(R.base + (size_t) rs * R.stride, P.slot_ptr(v),
-                                F->L[(size_t) il].blob, cudaMemcpyDeviceToHost, F->copy);
                 cudaEvent_t ev = F->get_event();
-                cudaEventRecord(ev, F->copy);
+                const PendingDemotion move{R.base + (size_t) rs * R.stride, P.slot_ptr(v), F->L[(size_t) il].blob, ev};
+                if (defer_demotions) pending_demotions.push_back(move);
+                else {
+                    if (!glmfast::cuda_ok(cudaMemcpyAsync(move.dst, move.src, move.bytes, cudaMemcpyDeviceToHost, F->copy),
+                                         "glm demotion copy", err) ||
+                        !glmfast::cuda_ok(cudaEventRecord(ev, F->copy), "glm demotion record", err)) return false;
+                }
                 F->draining.push_back(FastState::Drain{il, v, vkey, F->layer_rc[(size_t) il], rs, ev});
                 P.st[(size_t) v] = FastState::kDraining;
                 P.key[(size_t) v] = -1;
                 F->demotions.fetch_add(1, std::memory_order_relaxed);
+                F->demotion_bytes += F->L[(size_t)il].blob;
             } else {
                 // colder than everything in RAM: dropped (disk only); the slot can be a spare right away - the
                 // table edit that forgets it runs before any route of the next token
@@ -4237,6 +4303,12 @@ bool Glm5Model::fast_boundary(std::string& err) {
         }
     }
     flush();
+    if (!ok) return false;
+    for (const auto& move : pending_demotions) {
+        if (!glmfast::cuda_ok(cudaMemcpyAsync(move.dst, move.src, move.bytes, cudaMemcpyDeviceToHost, F->copy),
+                             "glm deferred demotion copy", err) ||
+            !glmfast::cuda_ok(cudaEventRecord(move.ev, F->copy), "glm deferred demotion record", err)) return false;
+    }
     static const bool diag = getenv("STRATA_GLM_TIER_DIAG") != nullptr;
     if (diag && ++F->diag_b % 64 == 0)
         std::fprintf(stderr, "glm tier diag CUDA%d (%llu boundaries): VRAM drops %llu, RAM evictions %llu, lend drops %llu (to RAM %llu), background promotions %llu / demotions %llu, resident skips %llu | "
@@ -4248,6 +4320,9 @@ bool Glm5Model::fast_boundary(std::string& err) {
                      (unsigned long long) F->diag_disk[0], (unsigned long long) F->diag_disk[1],
                      (unsigned long long) F->diag_disk[2], (unsigned long long) F->diag_disk[3]);
     if (diag && F->diag_b % 64 == 0) {
+        std::fprintf(stderr, "maya shadow: retained=%llu hits=%llu avoided_bytes=%llu budget_bytes=%llu\n",
+                     (unsigned long long)F->shadow_kept, (unsigned long long)F->shadow_hits,
+                     (unsigned long long)F->shadow_avoided_bytes, (unsigned long long)shadow_budget);
         // per RAM class: slots, held, free, and how many of its layers' experts are in no tier at all
         for (size_t c = 0; c < F->rc.size(); ++c) {
             const auto& R = F->rc[c];
@@ -4485,7 +4560,21 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // in VRAM is then pulled over PCIe into its slot, and all 8 run from VRAM
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
-    gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+    const bool overlap = F->demand != nullptr && !Ly.exl3;
+    if (overlap) {
+        // Predicted residents must be ready before the resident half reads them.
+        if (pf_pending) cudaStreamWaitEvent(s, F->ev_pf_prev, 0);
+        pf_pending = false;
+        cudaEventRecord(F->demand_start, s);
+        cudaStreamWaitEvent(F->demand, F->demand_start, 0);
+        gf::moe_fetch(md, g.n_exp_used, Ly.blob, F->demand);
+        cudaEventRecord(F->demand_done, F->demand);
+        md.gate_phase = 1;
+        gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq,
+                       Ly.sh_down.q, Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
+        cudaStreamWaitEvent(s, F->demand_done, 0);
+        md.gate_phase = 2;
+    } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
     if (F->prof_on) F->mark("moe_fetch");
     if (pf && pf_at == 1) issue_prefetch();
     // this layer's own prefetched experts (issued one layer ago) must have landed before they are read

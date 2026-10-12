@@ -190,6 +190,7 @@ void swiglu_q8(const float* gate, const float* up, float limit, int n, void* hq,
 constexpr int kSpares = 3;
 /// The per-device routing state (device memory unless noted).
 struct MoeDev {
+    int gate_phase = 0; // lab: 0 all, 1 resident (+shared), 2 fetched; reduction remains rank ordered
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted

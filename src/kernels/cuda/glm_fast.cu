@@ -3345,6 +3345,7 @@ moe_gate_up_kernel(MoeDev d, int k, int n_embd, int n_ff, float limit,
     if constexpr (!SPLIT)
 #endif
     if (ei == k) {
+        if (d.gate_phase == 2) return;
         const int per = (n_embd + (int) gridDim.x - 1) / (int) gridDim.x;
         const int r1 = min(n_embd, (chunk + 1) * per);
         for (int r = chunk * per + warp; r < r1; r += NW) {
@@ -3355,6 +3356,7 @@ moe_gate_up_kernel(MoeDev d, int k, int n_embd, int n_ff, float limit,
     }
     const unsigned long long ptr = d.plan_ptr[ei];
     if (ptr == 0ull) return;
+    if (d.gate_phase && ((d.fetch_src[ei] != 0ull) != (d.gate_phase == 2))) return;
     __shared__ float sg[GU_ROWS], su[GU_ROWS];
     __shared__ uint32_t s_tab[TabWords<TG>::n > 0 ? TabWords<TG>::n : 1];
 #if defined(STRATA_USE_HIP)
