@@ -1151,6 +1151,24 @@ bool Glm5Model::fast_setup(std::string& err) {
                 }
             }
         }
+        if(const char* path=getenv("MAYA_SLOT_MAP")) {
+            std::ifstream input(path); std::vector<int> replacement((size_t)NL,-1);
+            int layer,slots;size_t bytes=0;
+            if(!input){err="maya slots: cannot open map";return false;}
+            while(input>>layer>>slots) {
+                if(layer<l0_ || layer>=lt_ || !F->L[(size_t)layer].moe || replacement[(size_t)layer]>=0 ||
+                   slots<g.n_exp_used+gf::kSpares+k_extra || slots>g.n_expert+gf::kSpares) {
+                    err="maya slots: invalid or duplicate map entry";return false;
+                }
+                replacement[(size_t)layer]=slots;bytes+=(size_t)slots*slot_stride(layer);
+            }
+            if(!input.eof() || bytes>avail){err="maya slots: malformed map or pool budget exceeded";return false;}
+            for(int il=l0_;il<lt_;++il)if(F->L[(size_t)il].moe){
+                if(replacement[(size_t)il]<0){err="maya slots: incomplete map";return false;}
+                nsl[(size_t)il]=replacement[(size_t)il];
+            }
+            std::fprintf(stderr,"maya slots: applied %s, %llu bytes\n",path,(unsigned long long)bytes);
+        }
         size_t tot = 0, xtot = 0;
         int nmin = INT32_MAX, nmax = 0;
         for (int il = l0_; il < lt_; ++il)
@@ -2502,6 +2520,20 @@ bool Glm5Model::fast_cpu_lane_setup(std::string& err) {
     }
     F->cpu_plan = plan;
     F->cpu_plan_start = plan;
+    if(const char* path=getenv("MAYA_CPU_PLAN_MAP")) {
+        std::ifstream input(path);int il;std::string digits;
+        if(!input){err="maya CPU plan: cannot open map";return false;}
+        F->layer_cpu_plan.assign(F->L.size(),plan);
+        while(input>>il>>digits){
+            if(il<0 || il>=(int)F->L.size() || digits.size()!=9){err="maya CPU plan: invalid entry";return false;}
+            unsigned long long value=0;
+            for(int f=0;f<=8;++f){int take=digits[(size_t)f]-'0';if(take<0 || take>f){err="maya CPU plan: invalid split";return false;}
+                value|=(unsigned long long)take<<(4*f);}
+            F->layer_cpu_plan[(size_t)il]=value;
+        }
+        if(!input.eof()){err="maya CPU plan: malformed map";return false;}
+        std::fprintf(stderr,"maya CPU plan: loaded %s\n",path);
+    }
     if (!cal_key.empty()) F->cal_file = calf, F->cal_key = cal_key;
     F->md.cpu_seq = F->cpu_seq_d;
     F->md.cpu_ans = dp;
@@ -3007,6 +3039,7 @@ void Glm5Model::fast_destroy() {
     // tier or GPU source can be released, including cancellation/early teardown.
     if (F->copy) cudaStreamSynchronize(F->copy);
     F->deferred_copies.clear(); // unsent moves have no consumers after teardown
+    if(F->component_fetches)std::fprintf(stderr,"maya component fetch: %llu layer submissions\n",(unsigned long long)F->component_fetches);
     {
         std::lock_guard<std::mutex> lk(F->ah_mu);
         F->ah_quit = true;
@@ -4605,7 +4638,8 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     md.pf_dst = F->pf_buf[il & 1] + 8;
     md.pf_n = F->pf_n_buf[il & 1];
     // the CPU lane splits this layer's RAM-tier experts when the CPU has a dot product for its types
-    const bool lane = F->cpu_plan != 0ull && F->cpu_fmt[(size_t) il].n_ff > 0;
+    const auto layer_plan=F->layer_cpu_plan.empty()?F->cpu_plan:F->layer_cpu_plan[(size_t)il];
+    const bool lane = layer_plan != 0ull && F->cpu_fmt[(size_t) il].n_ff > 0;
     // STRATA_GLM_PROMOTE_MIN=<n>: a fetched expert is kept in VRAM only when its aged route count clears n.
     // Unset or <= 1: the old rule (keep it whenever a spare is free).
     static const int promote_min = [] {
@@ -4622,7 +4656,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
                   g.n_embd, md, io.sh_g, io.sh_u, g.swiglu_shexp, FFs, F->sh_hq, s,
                   pred ? F->plog : nullptr, pred ? F->L[(size_t) il + 1].router_bias : nullptr,
                   pred ? F->max_pf : 0, n_ah > 0 ? F->alog : nullptr, ah_bias, n_ah,
-                  il == mtp_il_ ? mtp_skip_from() : trunk_skip_from(il), lane ? F->cpu_plan : 0ull, promote_min,
+                  il == mtp_il_ ? mtp_skip_from() : trunk_skip_from(il), lane ? layer_plan : 0ull, promote_min,
                   pf_rank, near_n, 0, nullptr, 0, il == mtp_il_ ? 8 : F->disk_skip_from,
                   il == mtp_il_ ? 0.0f : F->disk_skip_w);
     if (F->prof_on) F->mark("moe_route");
@@ -4648,7 +4682,20 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // in VRAM is then pulled over PCIe into its slot, and all 8 run from VRAM
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
-    gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+    static const bool components=[]{const char* v=getenv("MAYA_COMPONENT_FETCH");return v && std::atoi(v)>0;}();
+    if(components && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16 || F->kda_graph_on)) {
+        err="maya component fetch requires aligned native weights, prediction and layer graphs off";return false;
+    }
+    if(components) {
+        // Disk source publication is complete. Gate/up needs only the prefix.
+        // The original gate/up launch then overlaps ONLY the down suffix copy.
+        gf::moe_fetch_range(md,g.n_exp_used,0,Ly.down_off,s);
+        if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
+           !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya down source ready",err))return false;
+        gf::moe_fetch_range(md,g.n_exp_used,Ly.down_off,Ly.blob-Ly.down_off,F->ps);
+        if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"maya down ready",err))return false;
+        ++F->component_fetches;
+    } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
     if (F->prof_on) F->mark("moe_fetch");
     if (pf && pf_at == 1) issue_prefetch();
     // this layer's own prefetched experts (issued one layer ago) must have landed before they are read
@@ -4681,6 +4728,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, Ly.sh_down.q,
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
+    if(components && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err))return false;
     gf::moe_down(Ly.d_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, Ly.down_off, F->hq,
                  Ly.sh_down.q != nullptr ? F->sh_out : nullptr, io.ffn, s);
     if (F->prof_on) F->mark("moe_down");

@@ -11,9 +11,13 @@ def main():
     p.add_argument('--occupied',default=0,type=int)
     p.add_argument('--corpus',action='store_true',help='Fill context with frozen baseline Python source, not repeated tokens')
     p.add_argument('--trace',action='store_true')
-    a=p.parse_args();out=ROOT/'docs/evidence/maya-transfer'/a.name;out.mkdir(parents=True,exist_ok=True)
+    p.add_argument('--evidence-root',default='docs/evidence/maya-transfer')
+    p.add_argument('--task',choices=['csv','explanation','web'],default='csv')
+    p.add_argument('--route-log',action='store_true')
+    p.add_argument('--hardware',action='store_true')
+    a=p.parse_args();out=ROOT/a.evidence_root/a.name;out.mkdir(parents=True,exist_ok=True)
     source=json.loads((ROOT/'docs/evidence/maya-timeline/stock/requests.json').read_text())
-    row=next(x for x in source if x['task']=='csv')
+    row=next(x for x in source if x['task']==a.task)
     prompt=row['prompt_ids']; continuation=row['output_ids']
     if a.occupied:
         # Reproducible code tokens as filler; natural short prompt follows. This is an occupied-context fixture.
@@ -37,6 +41,7 @@ def main():
     for v in a.env:
         k,val=v.split('=',1);env[k]=val
     if a.trace:env['MAYA_TIMELINE']='1'
+    if a.route_log:env['STRATA_GLM_ROUTE_LOG']=str(out/'routes')
     exe=ROOT/'build'/a.exe
     pack=Path('G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya')
     model=pack.parent/'GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf'
@@ -50,6 +55,10 @@ def main():
     (out/'manifest.json').write_text(json.dumps(dict(command=cmd,env={k:v for k,v in env.items() if k.startswith(('STRATA_','MAYA_'))},
         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),tokens_sha256=hashlib.sha256((out/'tokens.txt').read_bytes()).hexdigest(),weights=weights),indent=2))
     with (out/'engine.log').open('w') as log:
+        gpu_log=(out/'gpu.csv').open('w') if a.hardware else None
+        gpu=None
+        if gpu_log:
+            gpu=subprocess.Popen(['nvidia-smi','--query-gpu=timestamp,clocks.gr,clocks.mem,temperature.gpu,power.draw,memory.used,utilization.gpu','--format=csv','-l','1'],stdout=gpu_log,stderr=subprocess.DEVNULL)
         child=subprocess.Popen(cmd,cwd=ROOT,env=env,stderr=log,stdout=log)
         memory=[];start=time.monotonic()
         while child.poll() is None:
@@ -58,6 +67,7 @@ def main():
                 memory.append(dict(seconds=time.monotonic()-start,available_physical=m.avail_phys,available_commit=m.avail_page))
             time.sleep(1)
         (out/'memory.json').write_text(json.dumps(memory,indent=2))
+        if gpu:gpu.terminate();gpu.wait(timeout=10);gpu_log.close()
         if child.returncode:raise subprocess.CalledProcessError(child.returncode,cmd)
     if a.trace:
         subprocess.run([nsys,'export','--type','sqlite','--output',str(out/'timeline.sqlite'),str(out/'timeline.nsys-rep')],check=True)

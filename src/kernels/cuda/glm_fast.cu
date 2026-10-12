@@ -3315,6 +3315,19 @@ __global__ void __launch_bounds__(256) moe_fetch_kernel(MoeDev d, int k, size_t 
     }
 }
 
+// D3/D4: component-ready streaming and independent experts in a single grid.
+// No arithmetic changes: copy the same packed uint4s to the same reserved slots.
+__global__ void __launch_bounds__(256) moe_fetch_range_kernel(MoeDev d, int k, size_t offset16, size_t n16, bool batched) {
+    const int first=batched ? (int)blockIdx.y : 0;
+    const int last=batched ? first+1 : k;
+    for(int i=first;i<last;++i) {
+        const auto src=d.fetch_src[i]; if(!src)continue;
+        const uint4* from=(const uint4*)src+offset16;
+        uint4* to=(uint4*)d.plan_ptr[i]+offset16;
+        for(size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x;j<n16;j+=(size_t)gridDim.x*blockDim.x)to[j]=from[j];
+    }
+}
+
 constexpr int GU_ROWS = 32;   // h values (gate rows = up rows) per block: one q8_1 block of h
 constexpr int GU_WARPS = 16;  // ... 2 gate + 2 up rows per warp (8 per warp measured 90 vs 65 us a layer: occupancy)
 
@@ -4569,6 +4582,8 @@ void moe_prefetch(const MoeDev& d, size_t blob_bytes, cudaStream_t s) {
 }
 
 void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s) {
+    static const bool batched = []{ const char* v=getenv("MAYA_BATCH_PULL");return v && std::atoi(v)>0; }();
+    if(batched) { moe_fetch_range(d,k,0,blob_bytes,s);return; }
     static int sms = 0;
     if (sms == 0) {
         int dev = 0;
@@ -4578,6 +4593,14 @@ void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s) {
     }
     moe_fetch_kernel<<<sms, 256, 0, s>>>(d, k, (blob_bytes + 15) / 16);
     launch_check("moe_fetch");
+}
+
+void moe_fetch_range(const MoeDev& d, int k, size_t offset, size_t bytes, cudaStream_t s) {
+    static const bool batched = []{ const char* v=getenv("MAYA_BATCH_PULL");return v && std::atoi(v)>0; }();
+    static int sms=0;
+    if(!sms){int dev=0;cudaGetDevice(&dev);cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev);}
+    moe_fetch_range_kernel<<<dim3(std::max(1,sms),batched?k:1),256,0,s>>>(d,k,offset/16,(bytes+15)/16,batched);
+    launch_check("moe_fetch_range");
 }
 
 #if defined(STRATA_USE_HIP)
