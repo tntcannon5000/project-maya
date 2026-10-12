@@ -59,5 +59,8 @@ int main(int argc, char** argv) {
         std::fflush(times); std::fflush(dump);
     }
     std::fclose(times); std::fclose(dump);
+    if(std::getenv("MAYA_TRANSFER_PROBE") && !m.transport_probe(prefix+".transport.csv",err)) {
+        std::fprintf(stderr,"transport replay: %s\n",err.c_str());return 9;
+    }
     return 0;
 }

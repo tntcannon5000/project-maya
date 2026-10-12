@@ -3380,6 +3380,27 @@ void Glm5Model::fast_service() {
             const int il = rq->layer;
             const unsigned int miss = rq->miss_mask, fetch = rq->fetch_mask, promo = rq->promo_mask;
             const unsigned int cpu = rq->cpu_mask;   // the CPU lane's experts: not in VRAM, computed below
+            static const bool probe=std::getenv("MAYA_TRANSFER_PROBE")!=nullptr;
+            if(probe && rq->win_n==0 && miss==0) {
+                const auto& P=F->lp[(size_t)il];const auto& R=F->rc[(size_t)F->layer_rc[(size_t)il]];
+                auto& rec=F->transfer_probe[next%F->transfer_probe.size()];
+                rec={};rec.seq=next;rec.layer=il;rec.k=K;rec.cpu_mask=cpu;
+                rec.blob=F->L[(size_t)il].blob;rec.prefix=F->L[(size_t)il].down_off;
+                rec.split=F->kda_graph_on && F->L[(size_t)il].recr;
+                for(int i=0;i<K;++i) {
+                    rec.w[i]=rq->w[i];rec.cpu_src[i]=rq->cpu_src[i];
+                    const int key=il*g.n_expert+rq->ids[i];
+                    if((fetch>>i)&1u) {
+                        const int rs=F->ram_of[(size_t)key];
+                        if(rs>=0)rec.src[i]=(unsigned long long)(R.base+(size_t)rs*R.stride);
+                    } else if(!((cpu>>i)&1u)) {
+                        const int slot=F->slot_of[(size_t)key];
+                        if(slot>=0)rec.resident[i]=(unsigned long long)P.slot_ptr(slot);
+                    }
+                }
+                if(cpu)std::copy(rq->x,rq->x+4096,rec.x);
+                else std::fill(rec.x,rec.x+4096,0.001f);
+            }
             F->demand_bytes.fetch_add((uint64_t)std::popcount(fetch) * F->L[(size_t)il].blob, std::memory_order_relaxed);
             for (int predicted : F->prefetched_of[(size_t)il]) {
                 if (predicted < 0) continue;

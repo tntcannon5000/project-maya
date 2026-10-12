@@ -136,6 +136,8 @@ public:
         double pool_gb = 0, ram_gb = 0;
     };
     FastStats fast_stats() const;
+    // Offline transport diagnostic while this model's tiers remain allocated.
+    bool transport_probe(const std::string& output, std::string& err);
     /// The CPU LANE (a decode's RAM-tier experts): the share of them copied over PCIe to the GPU instead of computed
     /// on the CPU - 0: the CPU takes every one, 1: none (of f such experts in a route, f - round(share f) go to the
     /// CPU).  pcie_share(): the split in use, as a share; set_pcie_share(s): this split from the next token on, s < 0

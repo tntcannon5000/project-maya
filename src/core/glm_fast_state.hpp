@@ -343,6 +343,17 @@ struct Glm5Model::FastState {
     std::vector<int> slot_of;    // il * n_expert + e -> slot in lp[il], -1 absent
     std::vector<uint32_t> cnt;   // il * n_expert + e -> LFU count (aged), over both tiers
     GlmReusePolicy reuse_policy; // empty unless explicitly enabled
+    // Opt-in transport investigation: last eight tokens, copied by the service
+    // thread under mu. Addresses remain owned by the model until replay ends.
+    struct TransferProbe {
+        unsigned int seq=0; int layer=0, k=0;
+        unsigned long long src[8]{}, resident[8]{}, cpu_src[8]{};
+        float w[8]{}, x[4096]{};
+        unsigned int cpu_mask=0;
+        size_t blob=0, prefix=0;
+        bool split=false;
+    };
+    std::array<TransferProbe,336> transfer_probe{};
     // ... and the long memory: routes per key across sessions (expert_usage.txt), halved when one passes 2^30 -
     // the warm-up fills the tiers in its order (this user's experts first)
     std::vector<uint32_t> usage;
