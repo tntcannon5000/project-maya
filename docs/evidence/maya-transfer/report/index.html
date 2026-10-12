@@ -1,0 +1,510 @@
+<!doctype html><html><meta charset="utf-8"><title>Maya transfer R&D</title><style>body{max-width:1200px;margin:40px auto;font:16px/1.5 system-ui;padding:0 20px;color:#192b3c}table{border-collapse:collapse;font-size:14px;display:block;overflow:auto}td,th{border:1px solid #ccd4dc;padding:8px;text-align:left}th{background:#edf4f6}img{max-width:100%}pre{white-space:pre-wrap;background:#edf4f6;padding:16px}h1,h2{color:#126d5b}</style><body><h1>Maya transfer campaign: results</h1>
+<p>Eight distinct mechanisms were experimentally evaluated. The retained combination is bounded immutable RAM backing plus demotion submission after the embedding upload. This removes copy-back traffic instead of trying only to accelerate it. <strong>60 TPS was not reached.</strong> No changed arithmetic kernels, token speculation, MTP, K4V, expert skipping or new quantization are in the retained implementation.</p>
+<p>The same GSQ-RCO 3.0bit Q4-attention pack was used throughout. The routed weights contain Q2_K, Q3_K and Q4_K (GGML types 10/11/12). c=1; GPU expert pool cap 22 GiB; 2,693 GPU slots; CPU plan 011223344 unless an ablation explicitly changes it. CPU/GPU/hardware clocks were not locked; these are bounded paired screens, not confidence intervals from independent repeated sessions.</p>
+<h2>Controlled fixed-input decode</h2>
+<p>128 saved input tokens per request, two repetitions in one process. First means first scored request after tier warmup, not disk-cold. Repeat benefits from cache adaptation. Short prompt: 30 occupied tokens; long prompt: 8,192 occupied tokens from frozen source code, followed by the same continuation. Context capacity is 131,072, distinct from occupancy. Host logits download is included, output-file writing excluded. No diagnostic CUDA profiler in these timings.</p>
+<table>
+<thead>
+<tr>
+<th>Fixture</th>
+<th>Stock TPS</th>
+<th>Candidate TPS</th>
+<th>Ratio</th>
+<th>Mean ms/token</th>
+<th>p95 ms/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Short, first</td>
+<td>30.52</td>
+<td>38.19</td>
+<td>1.251x</td>
+<td>32.77 → 26.19</td>
+<td>38.68 → 30.56</td>
+</tr>
+<tr>
+<td>Short, repeat</td>
+<td>33.03</td>
+<td>40.96</td>
+<td>1.240x</td>
+<td>30.28 → 24.42</td>
+<td>36.33 → 29.41</td>
+</tr>
+<tr>
+<td>8K, first</td>
+<td>28.90</td>
+<td>35.52</td>
+<td>1.229x</td>
+<td>34.60 → 28.15</td>
+<td>39.77 → 35.74</td>
+</tr>
+<tr>
+<td>8K, repeat</td>
+<td>30.40</td>
+<td>37.27</td>
+<td>1.226x</td>
+<td>32.90 → 26.83</td>
+<td>37.26 → 31.01</td>
+</tr>
+</tbody>
+</table>
+<p>The 8K and diagnostic traces use the pre-cleanup candidate; the short and free-generation qualification uses the cleaned build. Binary hashes are saved per run. Cleanup removed disabled DMA/resident-gate prototypes and restored stock kernels. All 39,649,280 hybrid logits before/after cleanup are bit-identical (cleanup-parity.json). Original pre-cleanup short result: 38.90 / 42.61 TPS. The cleaned repeat is ~4% slower despite identical outputs/traffic, demonstrating run variation; do not interpret the small short-context H3-on-H1 increment as statistically established. H3 has clearer standalone and 8K evidence, so it remains in the candidate.</p>
+<h2>Free generation on the cleaned build</h2>
+<p>Greedy CSV/Python, explanation and HTML/JavaScript prompts, 128 output tokens each, two requests per task after warmup. Different outputs/routes are allowed here; fixed-input tests above control that confounder. These are short throughput workloads, not a webapp-completion quality benchmark.</p>
+<table>
+<thead>
+<tr>
+<th>Task, pooled over two requests</th>
+<th>Stock TPS</th>
+<th>Candidate TPS</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>csv</td>
+<td>28.54</td>
+<td>36.43</td>
+<td>1.277x</td>
+</tr>
+<tr>
+<td>explanation</td>
+<td>30.70</td>
+<td>39.20</td>
+<td>1.277x</td>
+</tr>
+<tr>
+<td>web</td>
+<td>28.48</td>
+<td>36.33</td>
+<td>1.276x</td>
+</tr>
+</tbody>
+</table>
+<h2>Hypotheses, engagement and decisions</h2>
+<table>
+<thead>
+<tr>
+<th>Hypothesis</th>
+<th>First/repeat TPS</th>
+<th>Verified mechanism</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1: RAM backing</td>
+<td>37.43 / 41.24</td>
+<td>Actual copies eliminated; mixed-format bytes and ownership checked</td>
+<td>Retain expanded backing. +10.49 GiB pinned RAM; limited 4 GiB backing gained only ~4%.</td>
+</tr>
+<tr>
+<td>H2: reuse admission</td>
+<td>32.73 / 34.92</td>
+<td>Promotion/D2H counters decrease</td>
+<td>Do not add to retained combination; full-cpu-admission loses first-request speed.</td>
+</tr>
+<tr>
+<td>H3: deferred demotions</td>
+<td>34.34 / 37.00</td>
+<td>Actual D2H/arithmetic overlap 2.33 ms/token; exact logits</td>
+<td>Retain layers scheduling. Table-publication-only attempt was neutral.</td>
+</tr>
+<tr>
+<td>H4: resident gate/up overlap</td>
+<td>29.74 / 31.52</td>
+<td>1.04 ms/token actual fetch/arithmetic overlap; exact logits</td>
+<td>Reject this implementation: extra arithmetic launches and GPU gaps outweigh overlap.</td>
+</tr>
+<tr>
+<td>H5: DMA transport</td>
+<td>29.93 / 32.26</td>
+<td>Byte-exact microbenchmark 57–58 GB/s vs pull 45–53; integrated DMA bytes counted</td>
+<td>Reject integrated DMA and overlap: 29.93/32.26 TPS. DMA-only first request 30.41 TPS.</td>
+</tr>
+<tr>
+<td>H6: next-layer prediction</td>
+<td>34.51 / 36.53</td>
+<td>Useful predicted bytes measured; repeated useful fraction ~63.5%</td>
+<td>Reject tested policy: excessive total H2D even with RAM backing.</td>
+</tr>
+<tr>
+<td>H7: lossless compression</td>
+<td>Feasibility only</td>
+<td>All sampled matrices roundtrip exactly; LZ4 ratio .9712, Zstd .9332</td>
+<td>Reject CPU transport (3.52/1.83 GB/s decompression); GPU codec not built, small optimistic byte benefit.</td>
+</tr>
+<tr>
+<td>H8: CPU assignment</td>
+<td>31.92 / 35.38</td>
+<td>Lower transfer demand, CPU execution counters engaged</td>
+<td>Do not add to expanded backing; full-cpu 36.70/41.05 TPS is not better.</td>
+</tr>
+</tbody>
+</table>
+<p>Each experiment's manifest, counters and notes are preserved in the parent directory. Bounds, dependencies, risks and falsifiers were written before implementation in <a href="../../../MAYA-TRANSFER-CAMPAIGN.md">campaign plan</a>; public/local sources and intermediate decisions are in <a href="../RESEARCH.md">research</a>. Rejected screens were not all taken through long-context/prefill and Nsight qualification: those expensive metrics were reserved for promising mechanisms/complete combinations, not inferred from their flags. H7 is a measured feasibility rejection, not a claim all compression is impossible.</p>
+<h2>Dependencies and ablations</h2>
+<p>H1 → eliminates most D2H; H3 → overlaps remaining D2H. H2 and H8 → reduce transfer demand, but compete with gains already supplied by H1. H4 → requires independent transfer progress; H5 supplied DMA, but the complete combination still lost. H6 → relies on accurate/timely predictions and cheap transfers; H1 removes copy-back overhead but cannot remove wasted prediction uploads. H7 → needs sufficient byte savings plus fast decompression before integration is justified.</p>
+<table>
+<thead>
+<tr>
+<th>Combination/ablation</th>
+<th>First / repeat TPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>combo-policy</td>
+<td>33.15 / 36.16</td>
+</tr>
+<tr>
+<td>combo-no-shadow</td>
+<td>32.98 / 36.12</td>
+</tr>
+<tr>
+<td>shadow-complete</td>
+<td>37.43 / 41.24</td>
+</tr>
+<tr>
+<td>full-cpu</td>
+<td>36.70 / 41.05</td>
+</tr>
+<tr>
+<td>full-cpu-admission</td>
+<td>34.56 / 41.00</td>
+</tr>
+<tr>
+<td>dma-overlap</td>
+<td>29.93 / 32.26</td>
+</tr>
+<tr>
+<td>full-transfer</td>
+<td>36.74 / 40.09</td>
+</tr>
+<tr>
+<td>full-predict</td>
+<td>34.51 / 36.53</td>
+</tr>
+<tr>
+<td>retained-short</td>
+<td>38.90 / 42.61</td>
+</tr>
+</tbody>
+</table>
+<h2>Transfer traffic and capacity</h2>
+<p>Decimal MB/token; no speculative prediction in retained candidate. Demand counters measure complete fetched blobs. Trace-control is instrumented stock scheduling; its workload/slot count matches the first short fixture. Stock v2 has no byte counters, so its zero placeholders are not reported as zero traffic.</p>
+<table>
+<thead>
+<tr>
+<th>Run / repeat</th>
+<th>Demand H2D</th>
+<th>D2H</th>
+<th>Predicted H2D</th>
+<th>Useful prediction</th>
+<th>GPU hits/token</th>
+<th>CPU experts/token</th>
+<th>Disk reads/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trace-control / 0</td>
+<td>466.93</td>
+<td>382.30</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>213.7</td>
+<td>70.2</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>deferred-layers / 1</td>
+<td>403.48</td>
+<td>339.77</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>228.6</td>
+<td>62.5</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>retained-clean / 0</td>
+<td>472.86</td>
+<td>50.02</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>214.6</td>
+<td>70.9</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>retained-clean / 1</td>
+<td>413.79</td>
+<td>0.71</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>228.9</td>
+<td>63.6</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>retained8k-corpus / 0</td>
+<td>520.88</td>
+<td>129.91</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>203.3</td>
+<td>76.6</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>retained8k-corpus / 1</td>
+<td>470.92</td>
+<td>106.36</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>214.9</td>
+<td>70.5</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>full-predict / 1</td>
+<td>228.01</td>
+<td>14.30</td>
+<td>591.58</td>
+<td>375.87</td>
+<td>271.4</td>
+<td>41.7</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Deferred-layers retains stock placement and exact stock logits; its repeat counters provide the scheduling-only reference (403.51 MB demand + 339.78 MB demotion/token). Candidate repeat is 413.79 + 0.71 MB/token: demand is slightly higher, but total bidirectional expert traffic is about 44% lower. Copy-back drops ~99.8%. Counters describe bytes submitted during the scored window; traces separately account for copies crossing token boundaries.</p>
+<p>Stock pinned expert RAM: <strong>87.33 GiB</strong>; candidate: <strong>97.82 GiB</strong> (+10.49). Same <strong>22.00 GiB GPU expert pool</strong>. These are expert allocations, not total process/GPU usage. A 24 GiB duplicate budget is a retention limit inside the RAM tier, not an additional 24 GiB allocation. Windows pinning fallback reduced one class's allocation; not every weight has two copies. The candidate preserves headroom checks and logs actual capacity. Prefill lending releases duplicate backing when needed; this explains why repeated long prompts still cause more demotions than repeated short prompts.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Minimum physical RAM available, GiB</th>
+<th>Minimum commit available, GiB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>retained-clean</td>
+<td>13.40</td>
+<td>24.50</td>
+</tr>
+<tr>
+<td>retained8k-corpus</td>
+<td>10.17</td>
+<td>21.02</td>
+</tr>
+<tr>
+<td>trace-retained</td>
+<td>8.62</td>
+<td>21.31</td>
+</tr>
+</tbody>
+</table>
+<h2>Diagnostic token timelines</h2>
+<p>GPU timestamp interval unions/intersections, not CPU enqueue durations. Stage times overlap and <strong>must not be summed</strong>. D2H-minus-arithmetic-overlap still includes overlap with pulls, so it is not a causal exposed-latency estimate. The wall-time difference measures net removal/overlap including contention. Profiler RAM overhead is recorded separately; GPU slot count stays 2,693. These diagnostic timings are not the unprofiled TPS table.</p>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th>Wall</th>
+<th>Expert fetch</th>
+<th>D2H</th>
+<th>Arithmetic</th>
+<th>D2H∩arithmetic</th>
+<th>CPU∩arithmetic</th>
+<th>No GPU activity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trace-control</td>
+<td>33.591</td>
+<td>13.022</td>
+<td>6.766</td>
+<td>9.154</td>
+<td>0.000</td>
+<td>0.950</td>
+<td>1.942</td>
+</tr>
+<tr>
+<td>trace-deferred-layers</td>
+<td>31.230</td>
+<td>15.724</td>
+<td>12.308</td>
+<td>9.299</td>
+<td>2.333</td>
+<td>0.961</td>
+<td>1.721</td>
+</tr>
+<tr>
+<td>trace-retained / 0</td>
+<td>26.942</td>
+<td>12.919</td>
+<td>1.365</td>
+<td>9.152</td>
+<td>0.447</td>
+<td>0.984</td>
+<td>1.873</td>
+</tr>
+<tr>
+<td>trace-retained / 1</td>
+<td>25.095</td>
+<td>11.052</td>
+<td>0.014</td>
+<td>9.137</td>
+<td>0.006</td>
+<td>1.103</td>
+<td>1.952</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Mean profiled timings" src="mean-timings.png" /></p>
+<p><img alt="Stock individual token" src="../trace-control/timeline-median.png" /></p>
+<p><img alt="Deferred demotions individual token" src="../trace-deferred-layers/timeline-median.png" /></p>
+<p><img alt="Retained individual token" src="../trace-retained/timeline-median.png" /></p>
+<p>Demotion scheduling alone makes copies last longer (bandwidth contention) but overlaps them, reducing wall time. Backing removes the work instead. Once warmed, fetch remains ~11.05 ms and GPU arithmetic ~9.14 ms; serial dependency, CPU answer waits and host gaps remain. Reaching 60 TPS requires a &lt;=16.67 ms loop and thus another substantial change; the present results do not establish it.</p>
+<h2>Prefill and correctness</h2>
+<table>
+<thead>
+<tr>
+<th>8,192 occupied-token prompt</th>
+<th>First prefill ms</th>
+<th>Repeat prefill ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline8k-corpus</td>
+<td>3563.05</td>
+<td>3562.62</td>
+</tr>
+<tr>
+<td>shadow8k-corpus</td>
+<td>3551.80</td>
+<td>3545.83</td>
+</tr>
+<tr>
+<td>retained8k-corpus</td>
+<td>3488.56</td>
+<td>3479.68</td>
+</tr>
+</tbody>
+</table>
+<p>Measured 8K prefill is preserved (about 3.56 s stock vs 3.48 s retained). This is a two-request fixture, not proof at every prompt length. An earlier 16K test used the wrong forward API and was stopped/excluded; corrected driver uses batched prefill followed by the last-token forward. Same corrected driver on the unchanged stock engine supplies the 8K baseline.</p>
+<p>Scheduling-only H3 compares all 39,649,280 logits exactly. Original resident-overlap and completed DMA-only tests also match exactly. RAM-backing ownership is isolated using a GPU-only plan; cold loading and per-class byte checks verify immutable copies independently of CPU/GPU arithmetic placement. No numerical threshold was loosened.</p>
+<table>
+<thead>
+<tr>
+<th>Fixed-input test</th>
+<th>Reference</th>
+<th>Positions</th>
+<th>Bit exact</th>
+<th>Max absolute delta</th>
+<th>RMS delta</th>
+<th>Top-1 agreement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deferred-layers</td>
+<td>fixed-baseline</td>
+<td>256</td>
+<td>True</td>
+<td>0.00000</td>
+<td>0.00000</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>gpu-clean-cold</td>
+<td>gpu-baseline</td>
+<td>128</td>
+<td>True</td>
+<td>0.00000</td>
+<td>0.00000</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>gpu-cold-shadow</td>
+<td>gpu-baseline</td>
+<td>128</td>
+<td>True</td>
+<td>0.00000</td>
+<td>0.00000</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>gpu-shadow</td>
+<td>gpu-baseline</td>
+<td>128</td>
+<td>True</td>
+<td>0.00000</td>
+<td>0.00000</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>retained-clean</td>
+<td>fixed-baseline</td>
+<td>256</td>
+<td>False</td>
+<td>3.50764</td>
+<td>0.14019</td>
+<td>98.83%</td>
+</tr>
+<tr>
+<td>retained8k-corpus</td>
+<td>baseline8k-corpus</td>
+<td>256</td>
+<td>False</td>
+<td>3.46416</td>
+<td>0.16083</td>
+<td>99.61%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hybrid bit-exact parity is not claimed.</strong> Retaining backing changes placement and therefore CPU/GPU assignment. Stock itself changes logits across repeated cache states (max 3.877, RMS .1382; 98.44% top-1 agreement). GPU-only exact comparisons isolate memory/ownership correctness; restoring unchanged arithmetic kernels and exact H3 tests isolate scheduling. This supports retaining the engineering change, but does not turn hybrid numerical differences into a bit-exact parity pass or a broad model-quality guarantee.</p>
+<table>
+<thead>
+<tr>
+<th>Lifecycle request</th>
+<th>Completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>warmup</td>
+<td>DONE 64 13 485.0 1589.0 length 0 0 0 14785 21168</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>DONE 8 15 396.1 182.7 cancel 0 0 0 1453 2352</td>
+</tr>
+<tr>
+<td>recovery</td>
+<td>DONE 32 16 384.1 853.8 length 0 0 0 6072 10416</td>
+</tr>
+</tbody>
+</table>
+<p>Successful process exit checks QUIT/teardown after STOP and recovery. Every 64 diagnostic boundaries, dual-owner mappings are checked and a complete GPU/RAM expert payload is compared per live quant class. Representative short/8K repeated requests exercise eviction pressure and prefill lending; deliberately cold GPU-only execution exercises disk demand. This does not certify all multi-GPU/AMD configurations or untested speculative paths.</p>
+<h2>Retained implementation and rollback</h2>
+<p>Branch: <code>research/maya-transfer-campaign</code>. Baseline: <code>615973d</code> / preserved reproduction branch. All prototypes remain at <code>research/maya-transfer-prototypes</code> (<code>3cf31ef</code>). Retained cleanup checkpoint: <code>84c4f17</code>. Separate unchanged-engine baseline worktree/driver: <code>research/maya-transfer-baseline-tools</code> (<code>4bf9d4c</code>). No external publication.</p>
+<p>Opt-in candidate settings (stock behavior remains available with these MAYA settings unset):</p>
+<pre><code class="language-text">STRATA_GLM_NO_MTP=1
+STRATA_GLM_CPU_PLAN=011223344
+STRATA_GLM_POOL_GB=22
+STRATA_GLM_RAM_GB=101
+STRATA_GLM_USAGE=0
+MAYA_RAM_SHADOW_MB=24576
+MAYA_RAM_SHADOW_EXPAND=1
+MAYA_DEFER_DEMOTIONS=layers
+</code></pre>
+<p>The headroom-limited RAM budget is not a guarantee that every foreground workload fits simultaneously. Use the logged allocation and available-memory record. The standard daily launcher/config was not silently changed.</p>
+<p>Reproduce via <code>tools/run_transfer_lab.py</code>, <code>tools/profile_decode.py</code>, <code>tools/validate_retained_transfer.ps1</code>; summarize via <code>tools/summarize_transfer.py</code> then <code>tools/report_transfer_campaign.py</code>. Evidence includes manifests, per-token CSVs, memory samples, logits locally, CUDA traces locally, exported timing tables, request outputs and failure logs. Rejected prototype flags require the prototype branch. Large logits/traces are retained locally and intentionally not committed.</p>
+<p>Next bottleneck is demand RAM→VRAM traffic and dependent compute, not bulk warm copy-back. Revisit prediction only with materially better usefulness/demand priority; revisit overlap only with lower submission/launch cost. More RAM duplication alone has diminishing returns once demotions are almost zero.</p></body></html>

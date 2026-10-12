@@ -1,0 +1,22 @@
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 8.54 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 1.65
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+glm fast: CUDA0 layers [0,45) expert pool 22.00 GB, 49-87 slots/layer (2693 total)
+maya shadow: class 2 pinning fallback 10384 -> 10059 slots
+glm fast: CUDA0 RAM tier 97.82 GB pinned, 11819 slots
+glm fast: CUDA0 the RAM tier sits on node 0 of 3 seen
+prefill repeat=0 tokens=30 ms=9854.170800
+glm tier diag CUDA0 (64 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 492 / demotions 0, resident skips 0 | disk reads of: never held 5594, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=1527 hits=493 avoided_bytes=4763615232 budget_bytes=25769803776
+maya shadow verified all live dual owners and sampled bytes per class; duplicate_bytes=9672327168
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 490 held, 387 free, 318 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 413 held, 465 free, 371 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 3188 held, 6841 free, 5813 experts in no tier
+glm tier diag clean-up: 0 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (128 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 492 / demotions 0, resident skips 0 | disk reads of: never held 7643, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=5063 hits=3698 avoided_bytes=34402467840 budget_bytes=25769803776
+maya shadow verified all live dual owners and sampled bytes per class; duplicate_bytes=13644201984
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 700 held, 178 free, 124 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 621 held, 257 free, 192 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 5283 held, 4755 free, 4137 experts in no tier
+glm tier diag clean-up: 1 duplicate RAM copies freed, 0 lost copies adopted

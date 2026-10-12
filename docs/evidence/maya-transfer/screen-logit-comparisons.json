@@ -1,6 +1,7 @@
 [
   {
     "experiment": "admission4",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
@@ -9,7 +10,18 @@
     "top1_agreement": 0.98828125
   },
   {
+    "experiment": "baseline8k-corpus",
+    "reference": "baseline8k-corpus",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
     "experiment": "combo-no-shadow",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
@@ -19,6 +31,7 @@
   },
   {
     "experiment": "combo-policy",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
@@ -28,6 +41,7 @@
   },
   {
     "experiment": "cpu-more",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
@@ -37,7 +51,38 @@
   },
   {
     "experiment": "deferred",
+    "reference": "fixed-baseline",
     "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "deferred-layers",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "dma-overlap",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "dma-submit",
+    "reference": "fixed-baseline",
+    "positions": 128,
     "finite": true,
     "exact": true,
     "max_abs": 0.0,
@@ -46,6 +91,7 @@
   },
   {
     "experiment": "fixed-baseline",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": true,
@@ -54,25 +100,88 @@
     "top1_agreement": 1.0
   },
   {
-    "experiment": "gpu-baseline",
-    "positions": 128,
+    "experiment": "full-cpu",
+    "reference": "fixed-baseline",
+    "positions": 256,
     "finite": true,
     "exact": false,
-    "max_abs": 2.0930066108703613,
-    "rms": 0.12306278143696314,
+    "max_abs": 5.015151083469391,
+    "rms": 0.15138650884319044,
     "top1_agreement": 0.9921875
+  },
+  {
+    "experiment": "full-cpu-admission",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.913754343986511,
+    "rms": 0.1739435667578566,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "full-predict",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.646796226501465,
+    "rms": 0.1386356227716428,
+    "top1_agreement": 0.9921875
+  },
+  {
+    "experiment": "full-transfer",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "gpu-baseline",
+    "reference": "gpu-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "gpu-clean-cold",
+    "reference": "gpu-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "gpu-cold-shadow",
+    "reference": "gpu-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
   },
   {
     "experiment": "gpu-shadow",
+    "reference": "gpu-baseline",
     "positions": 128,
     "finite": true,
-    "exact": false,
-    "max_abs": 2.0930066108703613,
-    "rms": 0.12306278143696314,
-    "top1_agreement": 0.9921875
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
   },
   {
     "experiment": "overlap",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": true,
@@ -82,6 +191,7 @@
   },
   {
     "experiment": "predict2",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
@@ -90,12 +200,113 @@
     "top1_agreement": 0.984375
   },
   {
+    "experiment": "retained-clean",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "retained-short",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "retained8k-corpus",
+    "reference": "baseline8k-corpus",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.464163303375244,
+    "rms": 0.16082561389056288,
+    "top1_agreement": 0.99609375
+  },
+  {
+    "experiment": "shadow-complete",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "shadow-full",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
+  },
+  {
     "experiment": "shadow4g",
+    "reference": "fixed-baseline",
     "positions": 256,
     "finite": true,
     "exact": false,
     "max_abs": 5.571172833442688,
     "rms": 0.1536545905761311,
     "top1_agreement": 0.984375
+  },
+  {
+    "experiment": "shadow8k-corpus",
+    "reference": "baseline8k-corpus",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.464163303375244,
+    "rms": 0.16082561389056288,
+    "top1_agreement": 0.99609375
+  },
+  {
+    "experiment": "trace-control",
+    "reference": "fixed-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "trace-deferred-layers",
+    "reference": "fixed-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "trace-overlap",
+    "reference": "fixed-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "trace-retained",
+    "reference": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.507636070251465,
+    "rms": 0.14018552760162808,
+    "top1_agreement": 0.98828125
   }
 ]

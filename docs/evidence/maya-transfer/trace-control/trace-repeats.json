@@ -1,0 +1,16 @@
+{
+  "0": {
+    "wall_ms": 33.59148190625,
+    "fetch_ms": 13.022273671875,
+    "d2h_ms": 6.7656079609375,
+    "dma_h2d_ms": 0.004019515625,
+    "arithmetic_ms": 9.1542808125,
+    "fetch_arithmetic_overlap_ms": 0.0,
+    "d2h_arithmetic_overlap_ms": 0.0,
+    "cpu_arithmetic_overlap_ms": 0.9502449609375,
+    "no_gpu_ms": 1.9424261484375,
+    "d2h_bytes": 382299652,
+    "h2d_bytes": 18391.75,
+    "tokens": 128
+  }
+}

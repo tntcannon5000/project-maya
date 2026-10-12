@@ -48,7 +48,7 @@ complete readiness; H5 may be necessary to avoid SM contention. H6 depends
 on demand-priority/transport behavior. H8 must be recalibrated for retained
 transport. H7 precedes a production codec decision. No exhaustive sweep.
 
-Use fixed input tokens at short and 16K occupied context, plus CSV/explanation/
+Use fixed input tokens at short and representative longer occupied context, plus CSV/explanation/
 web free generation. Record binary/config/weight manifest hashes, same initial
 expert profile, cache slots, memory and CPU plan. Separate stock repeatability,
 placement-sensitive CPU/GPU arithmetic, and scheduling-only parity. Preserve
@@ -62,3 +62,18 @@ Profiler slot changes are documented, not silently normalized away.
 - Campaign opened from the measured baseline; original branch and executable
   retained. No production optimizations yet. Ownership audit located explicit
   RAM release and GC, plus already-asynchronous D2H event ownership.
+
+- Eight mechanisms were screened, with complete DMA/resident-overlap prototypes
+  and measured compression feasibility. Findings and intermediate failures are
+  in `docs/evidence/maya-transfer/RESEARCH.md`.
+- Checkpoint `3cf31ef` preserves the prototypes on
+  `research/maya-transfer-prototypes`. Checkpoint `84c4f17` removes rejected
+  engine mechanisms, restores stock arithmetic kernels, and keeps bounded RAM
+  backing, after-embedding demotion scheduling, counters and ownership checks.
+- The long fixture was corrected from an invalid serial-forward 16K attempt
+  to real batched prefill at 8K occupied context. Invalid output is excluded.
+  Stock engine with the corrected driver is isolated at `4bf9d4c`.
+- Final cleaned-build qualification adds independent free-generation tasks,
+  cold GPU-only exact-logit/weight checks, STOP/recovery and QUIT. The complete
+  results, dependency map, limitations and retained settings are in
+  `docs/evidence/maya-transfer/report/RESULTS.md`.

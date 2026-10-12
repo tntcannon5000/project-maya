@@ -1,0 +1,393 @@
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 8.54 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 1.65
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+glm fast: CUDA0 layers [0,45) expert pool 22.00 GB, 49-87 slots/layer (2693 total)
+glm fast: CUDA0 RAM tier 87.33 GB pinned, 10555 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 7 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 10 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 13 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 16 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 22 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 25 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 28 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 31 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 31 s (3.51 GB/s)
+glm fast: CUDA0 the RAM tier sits on node 0 of 3 seen
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.194 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm tier diag CUDA0 (64 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8092 held, 874 free, 0 experts in no tier
+glm tier diag clean-up: 59 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (128 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8094 held, 877 free, 0 experts in no tier
+glm tier diag clean-up: 190 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (192 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 685 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8099 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 313 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (256 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8092 held, 877 free, 0 experts in no tier
+glm tier diag clean-up: 406 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (320 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 72 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8081 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 546 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (384 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8086 held, 876 free, 0 experts in no tier
+glm tier diag clean-up: 652 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (448 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8102 held, 877 free, 0 experts in no tier
+glm tier diag clean-up: 779 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (512 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8086 held, 875 free, 0 experts in no tier
+glm tier diag clean-up: 850 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (576 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8107 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 960 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (640 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8088 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1032 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (704 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8108 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1116 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (768 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8087 held, 876 free, 0 experts in no tier
+glm tier diag clean-up: 1175 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (832 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8108 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1247 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (896 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8087 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1308 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (960 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 72 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1370 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1024 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8089 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 1404 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1088 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8108 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1459 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1152 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8085 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1496 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1216 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1547 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1280 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8083 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1577 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1344 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8110 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1616 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1408 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 72 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8082 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1648 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1472 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1700 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1536 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8083 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1720 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1600 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1771 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1664 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 72 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8080 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 1798 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1728 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1830 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1792 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8083 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 1862 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1856 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1905 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1920 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8085 held, 877 free, 0 experts in no tier
+glm tier diag clean-up: 1935 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (1984 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 1978 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2048 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8090 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2011 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2112 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2059 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2176 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8088 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2089 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2240 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8112 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2125 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2304 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8085 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2157 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2368 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2196 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2432 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8087 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2234 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2496 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8114 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2267 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2560 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8086 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2300 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2624 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8114 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2338 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2688 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8093 held, 876 free, 0 experts in no tier
+glm tier diag clean-up: 2365 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2752 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2408 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2816 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8095 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2441 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2880 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8114 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2485 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (2944 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8089 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2513 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3008 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8110 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2552 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3072 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8088 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2584 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3136 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2617 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3200 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8093 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2648 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3264 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8115 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2687 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3328 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8092 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2716 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3392 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8114 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2761 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3456 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8098 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2780 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3520 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2819 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3584 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8097 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 2843 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3648 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2883 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3712 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8095 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2917 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3776 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 2956 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3840 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 715 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8101 held, 878 free, 0 experts in no tier
+glm tier diag clean-up: 2974 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3904 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 713 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8112 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3013 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (3968 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8100 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3031 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4032 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 72 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8110 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3068 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4096 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8103 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3094 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4160 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3135 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4224 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8103 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3159 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4288 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8113 held, 877 free, 0 experts in no tier
+glm tier diag clean-up: 3193 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4352 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 717 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8101 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3217 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4416 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3254 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4480 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 684 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8095 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3272 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4544 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8112 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3311 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4608 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 716 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 682 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8099 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3333 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4672 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 714 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3376 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4736 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 717 held, 72 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 683 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8101 held, 880 free, 0 experts in no tier
+glm tier diag clean-up: 3394 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (4800 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+glm tier diag class 0 (3 layers, 14.16 MB): 792 slots, 712 held, 73 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 760 slots, 681 held, 73 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 9003 slots, 8111 held, 879 free, 0 experts in no tier
+glm tier diag clean-up: 3423 duplicate RAM copies freed, 0 lost copies adopted

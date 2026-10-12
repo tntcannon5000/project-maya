@@ -43,6 +43,7 @@ def main():
     rows=[];stages=[]
     excluded={'Expert fetch','CPU answer wait','Host/disk wait','DMA readiness wait','D2H','H2D/other'}
     for index,t in enumerate(tokens):
+        assert t['pos']==int(scored[index]['position']), (index,t['pos'],scored[index]['position'])
         groups=collections.defaultdict(list)
         for e in t['events']:groups[e['stage']].append((max(e['start'],t['start']),min(e['end'],t['end'])))
         arithmetic=[iv for cat,ivs in groups.items() if cat not in excluded for iv in ivs]
@@ -76,7 +77,7 @@ def main():
             ax.broken_barh([((e['start']-base)/1e6,(e['end']-e['start'])/1e6)],(lane-.3,.6),facecolors=COLORS.get(cat,'#688f91'))
         for s,e in t['cpu']:ax.broken_barh([((s-base)/1e6,(e-s)/1e6)],(4.7,.6),facecolors='#7549a5')
         ax.set_yticks(range(6),['D2H','H2D/D2D','Mapped expert pull','GPU waits','GPU arithmetic','CPU service'])
-        ax.set_xlim(0,t['row']['wall_ms']);ax.set_xlabel('ms from token entry');ax.set_title(f'{out.name}: {label}, position {t["pos"]}, {t["row"]["wall_ms"]:.2f} ms (profiled)')
+        ax.set_xlim(0,t['row']['wall_ms']);ax.set_xlabel('ms from token entry');ax.set_title(f'{out.name}: {label}, repeat {t["row"]["repeat"]}, position {t["pos"]}, {t["row"]["wall_ms"]:.2f} ms (profiled)')
         fig.savefig(out/f'timeline-{label}.png',dpi=140);plt.close(fig)
     print(json.dumps(summary,indent=2))
 if __name__=='__main__':main()

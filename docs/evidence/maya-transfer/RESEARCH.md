@@ -127,3 +127,41 @@ A separate baseline worktree at 615973d adds only the test driver/CMake target
 (commit 4bf9d4c); engine sources unchanged. Its extra transfer CSV counters
 are unavailable (zero placeholders), not zero-byte measurements. The 8K
 fixture now contains frozen baseline Python source rather than repeated text.
+
+## Final combination and qualification
+
+These results supersede provisional/incomplete statuses earlier in this log.
+
+- H5 submission handshake completed the DMA path: 30.41 TPS first request,
+  exact fixed-input logits. DMA+resident compute: 29.93/32.26 TPS; adding
+  expanded backing: 36.74/40.09, slower than backing alone. Rejected code is
+  preserved on `research/maya-transfer-prototypes`, not discarded as untested.
+- H6 with expanded backing: 34.51/36.53 TPS. Repeated demand 228.0 MB/token
+  plus predicted 591.6 MB/token, only 375.9 MB useful (63.5%). Removing D2H
+  does not rescue this prediction policy; wasted and early transfers remain.
+- H3 trace: 31.23 ms wall, 2.33 ms D2H/arithmetic overlap. D2H duration itself
+  grows to 12.31 ms under contention; the *wall* time improves. Do not present
+  raw copy duration as exposed critical-path cost or add overlapping stages.
+- H1+H3: 38.90/42.61 TPS short before cleanup; 35.52/37.27 at 8K occupied
+  context. Batched prefill 3488.56/3479.68 ms vs stock 3563.05/3562.62.
+  Relative to H1 alone (37.43/41.24), the scheduling contribution is modest
+  but positive; relative to H3 alone (34.34/37.00), backing remains important.
+- Combined trace first/repeat: 26.94/25.09 ms wall; D2H 50.02/0.711 MB/token.
+  Repeat mapped pull 11.05 ms; GPU arithmetic 9.14 ms. Warm demotion is no
+  longer the main bottleneck. No 60 TPS claim is supported.
+- Cold GPU-only expanded backing with complete per-class sampled payload
+  comparisons matched all 19,824,640 logits to warm GPU baseline exactly.
+  Hybrid placement-sensitive differences are not a bit-exact parity pass.
+- Final report is generated from raw records by
+  `tools/report_transfer_campaign.py`; cleaned short and free-generation
+  results and cancellation/teardown outcome are recorded there. No external
+  publication, no daily launcher override, no altered model bytes.
+
+## Validation scope
+
+The most expensive traces/long-context checks target H1/H3 and the meaningful
+H4/H5 overlap dependency; weak screens were rejected using end-to-end results,
+byte accounting and correctness, without a full profiling/prefill sweep for
+every variant. Compression is a measured sample across all three classes,
+not whole-model compression or a GPU codec benchmark. No confidence interval
+or universal numerical parity is inferred from two repeated requests.

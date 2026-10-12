@@ -1,0 +1,3585 @@
+seq,stage,ms
+30,Other kernel,0.003936
+30,Embedding/head,0.015904
+30,Residual/norm,0.796388
+30,Dense projections,4.033817
+30,KDA recurrence/prep,0.463653
+30,DSA / MLA,1.119303
+30,Routing,1.022469
+30,Host/disk wait,0.05437
+30,Expert fetch,17.347665
+30,Expert gate/up,0.99937
+30,Expert down,0.920838
+30,CPU answer wait,2.966163
+30,H2D/other,0.006176
+30,D2H,7.517458
+31,Other kernel,0.003904
+31,Embedding/head,0.016704
+31,Residual/norm,0.800098
+31,Dense projections,3.647512
+31,KDA recurrence/prep,0.457734
+31,DSA / MLA,1.146599
+31,Routing,1.036581
+31,Host/disk wait,0.03472
+31,Expert fetch,14.645313
+31,Expert gate/up,1.13594
+31,Expert down,0.739014
+31,CPU answer wait,2.407667
+31,H2D/other,0.00592
+31,D2H,14.15283
+32,Other kernel,0.003968
+32,Embedding/head,0.01664
+32,Residual/norm,0.796451
+32,Dense projections,3.57324
+32,KDA recurrence/prep,0.456899
+32,DSA / MLA,1.147879
+32,Routing,0.968263
+32,Host/disk wait,0.034049
+32,Expert fetch,8.939996
+32,Expert gate/up,1.223109
+32,Expert down,0.77738
+32,CPU answer wait,3.366329
+32,H2D/other,0.007104
+32,D2H,7.739217
+33,Other kernel,0.004192
+33,Embedding/head,0.016736
+33,Residual/norm,0.793925
+33,Dense projections,3.82002
+33,KDA recurrence/prep,0.458816
+33,DSA / MLA,1.35537
+33,Routing,0.955176
+33,Host/disk wait,0.034624
+33,Expert fetch,9.986338
+33,Expert gate/up,1.206699
+33,Expert down,0.770054
+33,CPU answer wait,2.55723
+33,H2D/other,0.00576
+33,D2H,4.441661
+34,Other kernel,0.003904
+34,Embedding/head,0.015936
+34,Residual/norm,1.015815
+34,Dense projections,3.619769
+34,KDA recurrence/prep,0.458528
+34,DSA / MLA,1.362344
+34,Routing,0.982439
+34,Host/disk wait,0.033857
+34,Expert fetch,13.191381
+34,Expert gate/up,1.148076
+34,Expert down,0.753124
+34,CPU answer wait,2.670512
+34,H2D/other,0.005888
+34,D2H,6.450026
+35,Other kernel,0.003872
+35,Embedding/head,0.016832
+35,Residual/norm,0.802053
+35,Dense projections,4.208857
+35,KDA recurrence/prep,0.459907
+35,DSA / MLA,1.169225
+35,Routing,0.985992
+35,Host/disk wait,0.0344
+35,Expert fetch,14.731615
+35,Expert gate/up,1.07882
+35,Expert down,0.731077
+35,CPU answer wait,2.28792
+35,H2D/other,0.00384
+35,D2H,7.207056
+36,Other kernel,0.004
+36,Embedding/head,0.016064
+36,Residual/norm,0.798692
+36,Dense projections,3.63858
+36,KDA recurrence/prep,0.46074
+36,DSA / MLA,1.505032
+36,Routing,1.20446
+36,Host/disk wait,0.082752
+36,Expert fetch,13.785879
+36,Expert gate/up,1.108486
+36,Expert down,1.028617
+36,CPU answer wait,2.003052
+36,H2D/other,0.00544
+36,D2H,8.133302
+37,Other kernel,0.003936
+37,Embedding/head,0.016544
+37,Residual/norm,0.797189
+37,Dense projections,3.581724
+37,KDA recurrence/prep,0.455681
+37,DSA / MLA,1.154918
+37,Routing,0.967144
+37,Host/disk wait,0.034272
+37,Expert fetch,10.130691
+37,Expert gate/up,1.195556
+37,Expert down,0.765415
+37,CPU answer wait,2.599023
+37,H2D/other,0.006048
+37,D2H,5.320163
+38,Other kernel,0.003872
+38,Embedding/head,0.016928
+38,Residual/norm,0.797767
+38,Dense projections,4.230965
+38,KDA recurrence/prep,0.45981
+38,DSA / MLA,1.128582
+38,Routing,0.927111
+38,Host/disk wait,0.034112
+38,Expert fetch,8.775609
+38,Expert gate/up,1.61867
+38,Expert down,0.778883
+38,CPU answer wait,2.878643
+38,H2D/other,0.00544
+38,D2H,2.67413
+39,Other kernel,0.003968
+39,Embedding/head,0.015584
+39,Residual/norm,0.796454
+39,Dense projections,3.628759
+39,KDA recurrence/prep,0.67866
+39,DSA / MLA,1.146505
+39,Routing,0.963942
+39,Host/disk wait,0.034081
+39,Expert fetch,11.790796
+39,Expert gate/up,1.393737
+39,Expert down,1.036235
+39,CPU answer wait,2.864336
+39,H2D/other,0.004128
+39,D2H,3.725527
+40,Other kernel,0.004
+40,Embedding/head,0.017216
+40,Residual/norm,0.798724
+40,Dense projections,3.836569
+40,KDA recurrence/prep,0.459458
+40,DSA / MLA,1.137033
+40,Routing,0.956294
+40,Host/disk wait,0.034049
+40,Expert fetch,10.986504
+40,Expert gate/up,1.14628
+40,Expert down,0.754086
+40,CPU answer wait,2.872593
+40,H2D/other,0.008768
+40,D2H,4.060795
+41,Other kernel,0.003936
+41,Embedding/head,0.016928
+41,Residual/norm,0.793255
+41,Dense projections,3.582167
+41,KDA recurrence/prep,0.456449
+41,DSA / MLA,1.161351
+41,Routing,0.956167
+41,Host/disk wait,0.049536
+41,Expert fetch,10.206372
+41,Expert gate/up,1.196166
+41,Expert down,0.764041
+41,CPU answer wait,2.183596
+41,H2D/other,0.005728
+41,D2H,4.493021
+42,Other kernel,0.003904
+42,Embedding/head,0.01648
+42,Residual/norm,0.797636
+42,Dense projections,3.602104
+42,KDA recurrence/prep,0.460548
+42,DSA / MLA,1.149129
+42,Routing,0.948199
+42,Host/disk wait,0.033856
+42,Expert fetch,10.530527
+42,Expert gate/up,1.190888
+42,Expert down,0.76228
+42,CPU answer wait,2.864787
+42,H2D/other,0.005792
+42,D2H,4.280317
+43,Other kernel,0.003936
+43,Embedding/head,0.016768
+43,Residual/norm,0.798149
+43,Dense projections,3.611192
+43,KDA recurrence/prep,0.819847
+43,DSA / MLA,1.183369
+43,Routing,0.946245
+43,Host/disk wait,0.034401
+43,Expert fetch,11.18964
+43,Expert gate/up,1.16231
+43,Expert down,0.753129
+43,CPU answer wait,2.342575
+43,H2D/other,0.00576
+43,D2H,2.150927
+44,Other kernel,0.003936
+44,Embedding/head,0.01664
+44,Residual/norm,0.79325
+44,Dense projections,3.589463
+44,KDA recurrence/prep,0.458179
+44,DSA / MLA,1.14148
+44,Routing,0.947303
+44,Host/disk wait,0.034304
+44,Expert fetch,10.005378
+44,Expert gate/up,1.199048
+44,Expert down,0.770441
+44,CPU answer wait,2.513457
+44,H2D/other,0.005792
+44,D2H,2.654034
+45,Other kernel,0.00384
+45,Embedding/head,0.015776
+45,Residual/norm,0.799011
+45,Dense projections,3.60409
+45,KDA recurrence/prep,0.45501
+45,DSA / MLA,1.134855
+45,Routing,0.949479
+45,Host/disk wait,0.034176
+45,Expert fetch,11.692681
+45,Expert gate/up,1.116297
+45,Expert down,0.748554
+45,CPU answer wait,2.14283
+45,H2D/other,0.008416
+45,D2H,4.323548
+46,Other kernel,0.003968
+46,Embedding/head,0.01632
+46,Residual/norm,0.797796
+46,Dense projections,3.584024
+46,KDA recurrence/prep,0.457379
+46,DSA / MLA,1.146633
+46,Routing,0.94276
+46,Host/disk wait,0.03424
+46,Expert fetch,10.353828
+46,Expert gate/up,1.171721
+46,Expert down,0.762664
+46,CPU answer wait,2.989907
+46,H2D/other,0.004
+46,D2H,2.305231
+47,Other kernel,0.003936
+47,Embedding/head,0.016448
+47,Residual/norm,0.79588
+47,Dense projections,3.642069
+47,KDA recurrence/prep,0.461857
+47,DSA / MLA,1.15623
+47,Routing,0.977001
+47,Host/disk wait,0.053952
+47,Expert fetch,12.676433
+47,Expert gate/up,1.431468
+47,Expert down,0.736482
+47,CPU answer wait,2.814354
+47,H2D/other,0.003584
+47,D2H,2.430352
+48,Other kernel,0.003968
+48,Embedding/head,0.015904
+48,Residual/norm,0.798153
+48,Dense projections,3.626575
+48,KDA recurrence/prep,0.459971
+48,DSA / MLA,1.420619
+48,Routing,0.963595
+48,Host/disk wait,0.034496
+48,Expert fetch,12.370641
+48,Expert gate/up,1.147847
+48,Expert down,0.751686
+48,CPU answer wait,2.269552
+48,H2D/other,0.005792
+48,D2H,3.543351
+49,Other kernel,0.003936
+49,Embedding/head,0.017088
+49,Residual/norm,0.801479
+49,Dense projections,3.598173
+49,KDA recurrence/prep,0.456162
+49,DSA / MLA,1.142246
+49,Routing,0.938625
+49,Host/disk wait,0.03424
+49,Expert fetch,10.345414
+49,Expert gate/up,1.145062
+49,Expert down,1.042245
+49,CPU answer wait,2.868244
+49,H2D/other,0.006912
+49,D2H,1.931533
+50,Other kernel,0.004096
+50,Embedding/head,0.016704
+50,Residual/norm,0.795236
+50,Dense projections,3.554199
+50,KDA recurrence/prep,0.451298
+50,DSA / MLA,1.143078
+50,Routing,0.919175
+50,Host/disk wait,0.033984
+50,Expert fetch,7.689715
+50,Expert gate/up,1.224581
+50,Expert down,0.791848
+50,CPU answer wait,2.102125
+50,H2D/other,0.011584
+50,D2H,1.841837
+51,Other kernel,0.003936
+51,Embedding/head,0.015808
+51,Residual/norm,0.793256
+51,Dense projections,4.314008
+51,KDA recurrence/prep,0.458274
+51,DSA / MLA,1.15249
+51,Routing,0.937063
+51,Host/disk wait,0.049216
+51,Expert fetch,9.409503
+51,Expert gate/up,1.191399
+51,Expert down,0.773287
+51,CPU answer wait,2.842227
+51,H2D/other,0.00592
+51,D2H,1.769516
+52,Other kernel,0.004064
+52,Embedding/head,0.016864
+52,Residual/norm,0.80103
+52,Dense projections,3.588122
+52,KDA recurrence/prep,0.666472
+52,DSA / MLA,1.142278
+52,Routing,0.947013
+52,Host/disk wait,0.034112
+52,Expert fetch,11.531343
+52,Expert gate/up,1.189703
+52,Expert down,0.770116
+52,CPU answer wait,1.913996
+52,H2D/other,0.007968
+52,D2H,4.732415
+53,Other kernel,0.003968
+53,Embedding/head,0.016928
+53,Residual/norm,0.799077
+53,Dense projections,3.591064
+53,KDA recurrence/prep,0.454694
+53,DSA / MLA,1.146216
+53,Routing,0.929576
+53,Host/disk wait,0.049632
+53,Expert fetch,10.12493
+53,Expert gate/up,1.212682
+53,Expert down,1.178055
+53,CPU answer wait,2.137612
+53,H2D/other,0.005984
+53,D2H,2.246414
+54,Other kernel,0.003904
+54,Embedding/head,0.016416
+54,Residual/norm,0.798977
+54,Dense projections,3.647667
+54,KDA recurrence/prep,0.462374
+54,DSA / MLA,1.155177
+54,Routing,0.967783
+54,Host/disk wait,0.034176
+54,Expert fetch,14.578787
+54,Expert gate/up,1.057797
+54,Expert down,0.72138
+54,CPU answer wait,2.591443
+54,H2D/other,0.003552
+54,D2H,2.509871
+55,Other kernel,0.003872
+55,Embedding/head,0.01728
+55,Residual/norm,0.800226
+55,Dense projections,3.625688
+55,KDA recurrence/prep,0.45802
+55,DSA / MLA,1.15591
+55,Routing,0.970793
+55,Host/disk wait,0.03472
+55,Expert fetch,12.724085
+55,Expert gate/up,1.091655
+55,Expert down,0.73978
+55,CPU answer wait,2.504945
+55,H2D/other,0.003904
+55,D2H,2.275376
+56,Other kernel,0.003968
+56,Embedding/head,0.015872
+56,Residual/norm,0.799909
+56,Dense projections,3.603737
+56,KDA recurrence/prep,0.458499
+56,DSA / MLA,1.47182
+56,Routing,1.154789
+56,Host/disk wait,0.034528
+56,Expert fetch,10.9474
+56,Expert gate/up,1.132421
+56,Expert down,0.744836
+56,CPU answer wait,2.956886
+56,H2D/other,0.008096
+56,D2H,2.330032
+57,Other kernel,0.004064
+57,Embedding/head,0.016384
+57,Residual/norm,0.801094
+57,Dense projections,3.656112
+57,KDA recurrence/prep,0.461282
+57,DSA / MLA,1.150217
+57,Routing,0.962345
+57,Host/disk wait,0.03424
+57,Expert fetch,15.291464
+57,Expert gate/up,1.051204
+57,Expert down,0.718116
+57,CPU answer wait,2.090545
+57,H2D/other,0.008224
+57,D2H,0.447907
+58,Other kernel,0.004064
+58,Embedding/head,0.01632
+58,Residual/norm,0.80007
+58,Dense projections,3.632377
+58,KDA recurrence/prep,0.460899
+58,DSA / MLA,1.158375
+58,Routing,0.967363
+58,Host/disk wait,0.034112
+58,Expert fetch,13.186997
+58,Expert gate/up,1.096621
+58,Expert down,0.735142
+58,CPU answer wait,2.846704
+58,H2D/other,0.003936
+58,D2H,3.699129
+59,Other kernel,0.004
+59,Embedding/head,0.015712
+59,Residual/norm,0.801062
+59,Dense projections,3.639766
+59,KDA recurrence/prep,0.458725
+59,DSA / MLA,1.157
+59,Routing,0.962405
+59,Host/disk wait,0.03424
+59,Expert fetch,13.047992
+59,Expert gate/up,1.095113
+59,Expert down,0.734947
+59,CPU answer wait,2.204012
+59,H2D/other,0.006112
+59,D2H,1.066663
+60,Other kernel,0.003968
+60,Embedding/head,0.01632
+60,Residual/norm,0.799168
+60,Dense projections,3.643548
+60,KDA recurrence/prep,0.463107
+60,DSA / MLA,1.163081
+60,Routing,1.291656
+60,Host/disk wait,0.034272
+60,Expert fetch,13.228694
+60,Expert gate/up,1.069061
+60,Expert down,0.724098
+60,CPU answer wait,3.345461
+60,H2D/other,0.005696
+60,D2H,1.716555
+61,Other kernel,0.003968
+61,Embedding/head,0.015968
+61,Residual/norm,0.800358
+61,Dense projections,3.990326
+61,KDA recurrence/prep,0.461576
+61,DSA / MLA,1.150534
+61,Routing,0.970855
+61,Host/disk wait,0.034752
+61,Expert fetch,13.056499
+61,Expert gate/up,1.082756
+61,Expert down,0.735523
+61,CPU answer wait,3.10364
+61,H2D/other,0.010048
+61,D2H,2.685874
+62,Other kernel,0.003936
+62,Embedding/head,0.016512
+62,Residual/norm,0.800578
+62,Dense projections,4.02969
+62,KDA recurrence/prep,0.460805
+62,DSA / MLA,1.161992
+62,Routing,0.95889
+62,Host/disk wait,0.052224
+62,Expert fetch,12.003981
+62,Expert gate/up,1.39367
+62,Expert down,1.109159
+62,CPU answer wait,2.797175
+62,H2D/other,0.003904
+62,D2H,2.17739
+63,Other kernel,0.003872
+63,Embedding/head,0.017664
+63,Residual/norm,0.802436
+63,Dense projections,3.620061
+63,KDA recurrence/prep,0.459714
+63,DSA / MLA,1.164106
+63,Routing,0.947333
+63,Host/disk wait,0.034048
+63,Expert fetch,12.027507
+63,Expert gate/up,1.137894
+63,Expert down,0.753893
+63,CPU answer wait,1.961677
+63,H2D/other,0.003744
+63,D2H,0.872774
+64,Other kernel,0.003872
+64,Embedding/head,0.016608
+64,Residual/norm,0.800965
+64,Dense projections,3.889366
+64,KDA recurrence/prep,0.456226
+64,DSA / MLA,1.156422
+64,Routing,0.946411
+64,Host/disk wait,0.034497
+64,Expert fetch,13.612342
+64,Expert gate/up,1.09681
+64,Expert down,0.74151
+64,CPU answer wait,2.522451
+64,H2D/other,0.003296
+64,D2H,0.878276
+65,Other kernel,0.00384
+65,Embedding/head,0.01648
+65,Residual/norm,0.8002
+65,Dense projections,3.597145
+65,KDA recurrence/prep,0.453731
+65,DSA / MLA,1.500522
+65,Routing,0.928454
+65,Host/disk wait,0.034272
+65,Expert fetch,10.167876
+65,Expert gate/up,1.183046
+65,Expert down,0.766983
+65,CPU answer wait,2.536112
+65,H2D/other,0.003552
+65,D2H,1.1682
+66,Other kernel,0.003936
+66,Embedding/head,0.01712
+66,Residual/norm,0.796131
+66,Dense projections,3.621914
+66,KDA recurrence/prep,0.454692
+66,DSA / MLA,1.162376
+66,Routing,0.949127
+66,Host/disk wait,0.034592
+66,Expert fetch,12.081295
+66,Expert gate/up,1.484075
+66,Expert down,0.742533
+66,CPU answer wait,2.167439
+66,H2D/other,0.003872
+66,D2H,0.874214
+67,Other kernel,0.004032
+67,Embedding/head,0.01648
+67,Residual/norm,0.801222
+67,Dense projections,3.867025
+67,KDA recurrence/prep,0.458722
+67,DSA / MLA,1.183623
+67,Routing,0.954378
+67,Host/disk wait,0.034048
+67,Expert fetch,12.672944
+67,Expert gate/up,1.119878
+67,Expert down,0.747462
+67,CPU answer wait,2.528758
+67,H2D/other,0.003968
+67,D2H,2.278863
+68,Other kernel,0.003905
+68,Embedding/head,0.016096
+68,Residual/norm,0.800325
+68,Dense projections,4.020251
+68,KDA recurrence/prep,0.459813
+68,DSA / MLA,1.152424
+68,Routing,0.957188
+68,Host/disk wait,0.033857
+68,Expert fetch,12.856406
+68,Expert gate/up,1.083528
+68,Expert down,0.730307
+68,CPU answer wait,2.841494
+68,H2D/other,0.00368
+68,D2H,0.879366
+69,Other kernel,0.003936
+69,Embedding/head,0.01584
+69,Residual/norm,0.796772
+69,Dense projections,3.907638
+69,KDA recurrence/prep,0.460227
+69,DSA / MLA,1.150217
+69,Routing,0.969509
+69,Host/disk wait,0.034784
+69,Expert fetch,13.760316
+69,Expert gate/up,1.034052
+69,Expert down,0.715399
+69,CPU answer wait,2.726099
+69,H2D/other,0.008064
+69,D2H,2.099438
+70,Other kernel,0.00384
+70,Embedding/head,0.01648
+70,Residual/norm,0.795718
+70,Dense projections,3.65372
+70,KDA recurrence/prep,0.462214
+70,DSA / MLA,1.17745
+70,Routing,0.964259
+70,Host/disk wait,0.033696
+70,Expert fetch,13.612415
+70,Expert gate/up,1.057956
+70,Expert down,0.725861
+70,CPU answer wait,2.550638
+70,H2D/other,0.00576
+70,D2H,0.878214
+71,Other kernel,0.003872
+71,Embedding/head,0.015872
+71,Residual/norm,1.021636
+71,Dense projections,3.66025
+71,KDA recurrence/prep,0.464166
+71,DSA / MLA,1.177064
+71,Routing,0.97226
+71,Host/disk wait,0.034304
+71,Expert fetch,14.071929
+71,Expert gate/up,1.029255
+71,Expert down,0.715526
+71,CPU answer wait,3.070676
+71,H2D/other,0.006112
+71,D2H,1.172264
+72,Other kernel,0.003872
+72,Embedding/head,0.016129
+72,Residual/norm,0.800044
+72,Dense projections,3.698225
+72,KDA recurrence/prep,0.695075
+72,DSA / MLA,1.168198
+72,Routing,0.996583
+72,Host/disk wait,0.052002
+72,Expert fetch,17.20673
+72,Expert gate/up,1.342637
+72,Expert down,0.706024
+72,CPU answer wait,2.358991
+72,H2D/other,0.00576
+72,D2H,3.408407
+73,Other kernel,0.004032
+73,Embedding/head,0.015649
+73,Residual/norm,0.80106
+73,Dense projections,3.89817
+73,KDA recurrence/prep,0.464869
+73,DSA / MLA,1.156935
+73,Routing,0.982567
+73,Host/disk wait,0.034368
+73,Expert fetch,16.231626
+73,Expert gate/up,1.009733
+73,Expert down,0.707688
+73,CPU answer wait,2.460048
+73,H2D/other,0.005792
+73,D2H,1.512522
+74,Other kernel,0.003904
+74,Embedding/head,0.016896
+74,Residual/norm,0.799366
+74,Dense projections,4.111584
+74,KDA recurrence/prep,0.467299
+74,DSA / MLA,1.163561
+74,Routing,1.320999
+74,Host/disk wait,0.034304
+74,Expert fetch,16.063464
+74,Expert gate/up,0.999656
+74,Expert down,0.693989
+74,CPU answer wait,3.221684
+74,H2D/other,0.003616
+74,D2H,0.886054
+75,Other kernel,0.003872
+75,Embedding/head,0.017216
+75,Residual/norm,0.800901
+75,Dense projections,3.942395
+75,KDA recurrence/prep,0.470213
+75,DSA / MLA,1.183687
+75,Routing,0.993318
+75,Host/disk wait,0.034176
+75,Expert fetch,18.220572
+75,Expert gate/up,0.992708
+75,Expert down,0.96964
+75,CPU answer wait,2.489677
+75,H2D/other,0.004896
+75,D2H,1.105511
+76,Other kernel,0.003936
+76,Embedding/head,0.016064
+76,Residual/norm,0.801255
+76,Dense projections,3.652415
+76,KDA recurrence/prep,0.464065
+76,DSA / MLA,1.162789
+76,Routing,0.961795
+76,Host/disk wait,0.03456
+76,Expert fetch,14.368323
+76,Expert gate/up,1.065927
+76,Expert down,1.098665
+76,CPU answer wait,2.597227
+76,H2D/other,0.003552
+76,D2H,0.883366
+77,Other kernel,0.003936
+77,Embedding/head,0.016704
+77,Residual/norm,0.799874
+77,Dense projections,3.680892
+77,KDA recurrence/prep,0.466563
+77,DSA / MLA,1.16036
+77,Routing,0.978982
+77,Host/disk wait,0.034272
+77,Expert fetch,17.096724
+77,Expert gate/up,0.987653
+77,Expert down,0.698915
+77,CPU answer wait,2.563632
+77,H2D/other,0.003552
+77,D2H,0.588804
+78,Other kernel,0.003936
+78,Embedding/head,0.017089
+78,Residual/norm,0.801766
+78,Dense projections,4.350717
+78,KDA recurrence/prep,0.466403
+78,DSA / MLA,1.164069
+78,Routing,0.985317
+78,Host/disk wait,0.034337
+78,Expert fetch,16.113966
+78,Expert gate/up,1.013506
+78,Expert down,0.704643
+78,CPU answer wait,2.866547
+78,H2D/other,0.006112
+78,D2H,2.09147
+79,Other kernel,0.003936
+79,Embedding/head,0.016224
+79,Residual/norm,0.800133
+79,Dense projections,3.715609
+79,KDA recurrence/prep,0.468387
+79,DSA / MLA,1.177352
+79,Routing,1.216039
+79,Host/disk wait,0.056352
+79,Expert fetch,18.674363
+79,Expert gate/up,0.943241
+79,Expert down,0.684551
+79,CPU answer wait,2.722865
+79,H2D/other,0.004032
+79,D2H,0.775493
+80,Other kernel,0.003904
+80,Embedding/head,0.016544
+80,Residual/norm,0.802565
+80,Dense projections,3.968922
+80,KDA recurrence/prep,0.468388
+80,DSA / MLA,1.175816
+80,Routing,0.99786
+80,Host/disk wait,0.033824
+80,Expert fetch,20.849803
+80,Expert gate/up,0.910634
+80,Expert down,0.664228
+80,CPU answer wait,2.343533
+80,H2D/other,0.007808
+80,D2H,0.299682
+81,Other kernel,0.004032
+81,Embedding/head,0.016288
+81,Residual/norm,0.803143
+81,Dense projections,3.688347
+81,KDA recurrence/prep,0.465923
+81,DSA / MLA,1.165288
+81,Routing,0.975973
+81,Host/disk wait,0.060929
+81,Expert fetch,16.054377
+81,Expert gate/up,0.997995
+81,Expert down,0.707461
+81,CPU answer wait,2.868271
+81,H2D/other,0.005248
+81,D2H,0.878118
+82,Other kernel,0.00384
+82,Embedding/head,0.017504
+82,Residual/norm,0.799656
+82,Dense projections,3.709981
+82,KDA recurrence/prep,0.468513
+82,DSA / MLA,1.159463
+82,Routing,0.983457
+82,Host/disk wait,0.0632
+82,Expert fetch,17.926109
+82,Expert gate/up,1.119269
+82,Expert down,0.975464
+82,CPU answer wait,3.142479
+82,H2D/other,0.006016
+82,D2H,0.737285
+83,Other kernel,0.00384
+83,Embedding/head,0.016992
+83,Residual/norm,0.800325
+83,Dense projections,3.643769
+83,KDA recurrence/prep,0.461701
+83,DSA / MLA,1.17911
+83,Routing,0.96119
+83,Host/disk wait,0.034272
+83,Expert fetch,13.471997
+83,Expert gate/up,1.066918
+83,Expert down,0.719969
+83,CPU answer wait,3.068373
+83,H2D/other,0.00544
+83,D2H,0.779013
+84,Other kernel,0.003969
+84,Embedding/head,0.015904
+84,Residual/norm,0.794821
+84,Dense projections,3.569171
+84,KDA recurrence/prep,0.455779
+84,DSA / MLA,1.159815
+84,Routing,0.932933
+84,Host/disk wait,0.06592
+84,Expert fetch,8.553081
+84,Expert gate/up,1.176043
+84,Expert down,0.764101
+84,CPU answer wait,3.305877
+84,H2D/other,0.005984
+84,D2H,0.598756
+85,Other kernel,0.003872
+85,Embedding/head,0.016384
+85,Residual/norm,0.800103
+85,Dense projections,3.652311
+85,KDA recurrence/prep,0.46106
+85,DSA / MLA,1.163014
+85,Routing,0.958023
+85,Host/disk wait,0.033888
+85,Expert fetch,14.819324
+85,Expert gate/up,1.054508
+85,Expert down,0.719145
+85,CPU answer wait,2.001642
+85,H2D/other,0.005952
+85,D2H,0.147681
+86,Other kernel,0.003904
+86,Embedding/head,0.01648
+86,Residual/norm,0.800646
+86,Dense projections,3.600636
+86,KDA recurrence/prep,0.458241
+86,DSA / MLA,1.161798
+86,Routing,0.938374
+86,Host/disk wait,0.03472
+86,Expert fetch,10.581924
+86,Expert gate/up,1.164356
+86,Expert down,0.75271
+86,CPU answer wait,3.117974
+86,H2D/other,0.00368
+86,D2H,0.584612
+87,Other kernel,0.004
+87,Embedding/head,0.01696
+87,Residual/norm,0.80007
+87,Dense projections,3.672375
+87,KDA recurrence/prep,0.460387
+87,DSA / MLA,1.179271
+87,Routing,0.960645
+87,Host/disk wait,0.03424
+87,Expert fetch,15.007975
+87,Expert gate/up,1.040616
+87,Expert down,0.717829
+87,CPU answer wait,2.814417
+87,H2D/other,0.009952
+87,D2H,0.29821
+88,Other kernel,0.004
+88,Embedding/head,0.016544
+88,Residual/norm,0.799427
+88,Dense projections,3.625586
+88,KDA recurrence/prep,0.459557
+88,DSA / MLA,1.16596
+88,Routing,0.945959
+88,Host/disk wait,0.034112
+88,Expert fetch,12.547569
+88,Expert gate/up,1.08318
+88,Expert down,0.733251
+88,CPU answer wait,2.814357
+88,H2D/other,0.005696
+88,D2H,0.445443
+89,Other kernel,0.004064
+89,Embedding/head,0.016256
+89,Residual/norm,0.801958
+89,Dense projections,3.632022
+89,KDA recurrence/prep,0.462818
+89,DSA / MLA,1.168968
+89,Routing,0.96116
+89,Host/disk wait,0.034305
+89,Expert fetch,13.637914
+89,Expert gate/up,1.065543
+89,Expert down,0.72906
+89,CPU answer wait,2.650644
+89,H2D/other,0.003552
+89,D2H,0.451811
+90,Other kernel,0.00384
+90,Embedding/head,0.015936
+90,Residual/norm,0.799172
+90,Dense projections,3.889854
+90,KDA recurrence/prep,0.465857
+90,DSA / MLA,1.160968
+90,Routing,0.97495
+90,Host/disk wait,0.034272
+90,Expert fetch,16.595757
+90,Expert gate/up,1.198729
+90,Expert down,0.702341
+90,CPU answer wait,3.220117
+90,H2D/other,0.003776
+90,D2H,0.158817
+91,Other kernel,0.003968
+91,Embedding/head,0.016928
+91,Residual/norm,0.799976
+91,Dense projections,3.627446
+91,KDA recurrence/prep,0.462368
+91,DSA / MLA,1.171336
+91,Routing,0.965159
+91,Host/disk wait,0.03472
+91,Expert fetch,13.744956
+91,Expert gate/up,1.054727
+91,Expert down,0.718855
+91,CPU answer wait,2.937618
+91,H2D/other,0.006016
+91,D2H,0.293442
+92,Other kernel,0.003968
+92,Embedding/head,0.016288
+92,Residual/norm,0.800007
+92,Dense projections,3.637429
+92,KDA recurrence/prep,0.461412
+92,DSA / MLA,1.160552
+92,Routing,0.955431
+92,Host/disk wait,0.053984
+92,Expert fetch,13.392791
+92,Expert gate/up,1.072678
+92,Expert down,0.726536
+92,CPU answer wait,2.995313
+92,H2D/other,0.010144
+92,D2H,0.396835
+93,Other kernel,0.003968
+93,Embedding/head,0.015712
+93,Residual/norm,0.802018
+93,Dense projections,3.920637
+93,KDA recurrence/prep,0.461283
+93,DSA / MLA,1.16468
+93,Routing,1.261542
+93,Host/disk wait,0.034593
+93,Expert fetch,12.332335
+93,Expert gate/up,1.127115
+93,Expert down,0.734215
+93,CPU answer wait,2.603378
+93,H2D/other,0.003616
+93,D2H,0.148513
+94,Other kernel,0.003968
+94,Embedding/head,0.016033
+94,Residual/norm,0.798241
+94,Dense projections,3.611254
+94,KDA recurrence/prep,0.811205
+94,DSA / MLA,1.17124
+94,Routing,0.942413
+94,Host/disk wait,0.034688
+94,Expert fetch,11.242823
+94,Expert gate/up,1.129383
+94,Expert down,0.751333
+94,CPU answer wait,2.79423
+94,H2D/other,0.008256
+94,D2H,0.001088
+95,Other kernel,0.003968
+95,Embedding/head,0.015585
+95,Residual/norm,0.799204
+95,Dense projections,3.596218
+95,KDA recurrence/prep,0.457347
+95,DSA / MLA,1.170984
+95,Routing,0.936133
+95,Host/disk wait,0.033984
+95,Expert fetch,11.150413
+95,Expert gate/up,1.171014
+95,Expert down,0.757031
+95,CPU answer wait,2.256749
+95,H2D/other,0.00496
+95,D2H,0.152289
+96,Other kernel,0.004
+96,Embedding/head,0.017152
+96,Residual/norm,0.798311
+96,Dense projections,3.568114
+96,KDA recurrence/prep,0.459683
+96,DSA / MLA,1.153385
+96,Routing,0.920744
+96,Host/disk wait,0.034048
+96,Expert fetch,8.808925
+96,Expert gate/up,1.202502
+96,Expert down,0.776586
+96,CPU answer wait,2.770864
+96,H2D/other,0.00576
+96,D2H,0.152865
+97,Other kernel,0.003936
+97,Embedding/head,0.01664
+97,Residual/norm,1.130502
+97,Dense projections,3.586131
+97,KDA recurrence/prep,0.455779
+97,DSA / MLA,1.162408
+97,Routing,1.164746
+97,Host/disk wait,0.03424
+97,Expert fetch,8.318452
+97,Expert gate/up,1.19713
+97,Expert down,0.774052
+97,CPU answer wait,3.383032
+97,H2D/other,0.006304
+97,D2H,0.460419
+98,Other kernel,0.004
+98,Embedding/head,0.016224
+98,Residual/norm,0.794149
+98,Dense projections,3.589053
+98,KDA recurrence/prep,0.455525
+98,DSA / MLA,1.160199
+98,Routing,0.942371
+98,Host/disk wait,0.06448
+98,Expert fetch,9.957316
+98,Expert gate/up,1.156359
+98,Expert down,0.757668
+98,CPU answer wait,2.7804
+98,H2D/other,0.005696
+98,D2H,1.24292
+99,Other kernel,0.004032
+99,Embedding/head,0.016736
+99,Residual/norm,0.79565
+99,Dense projections,3.588762
+99,KDA recurrence/prep,0.460995
+99,DSA / MLA,1.160519
+99,Routing,0.934246
+99,Host/disk wait,0.033888
+99,Expert fetch,9.688128
+99,Expert gate/up,1.172486
+99,Expert down,0.755397
+99,CPU answer wait,2.842804
+99,H2D/other,0.003936
+99,D2H,0.30301
+100,Other kernel,0.003872
+100,Embedding/head,0.015872
+100,Residual/norm,0.792934
+100,Dense projections,3.53212
+100,KDA recurrence/prep,0.814116
+100,DSA / MLA,1.356427
+100,Routing,0.909189
+100,Host/disk wait,0.03408
+100,Expert fetch,5.741925
+100,Expert gate/up,1.289001
+100,Expert down,1.017766
+100,CPU answer wait,2.665526
+100,H2D/other,0.003264
+100,D2H,0.63834
+101,Other kernel,0.003936
+101,Embedding/head,0.01632
+101,Residual/norm,0.797188
+101,Dense projections,3.870363
+101,KDA recurrence/prep,0.455363
+101,DSA / MLA,1.172136
+101,Routing,0.93258
+101,Host/disk wait,0.03424
+101,Expert fetch,10.330947
+101,Expert gate/up,1.153385
+101,Expert down,0.764712
+101,CPU answer wait,2.354801
+101,H2D/other,0.003552
+101,D2H,0.29277
+102,Other kernel,0.003904
+102,Embedding/head,0.017024
+102,Residual/norm,0.793634
+102,Dense projections,3.549526
+102,KDA recurrence/prep,0.450213
+102,DSA / MLA,1.160584
+102,Routing,0.905666
+102,Host/disk wait,0.054336
+102,Expert fetch,6.69768
+102,Expert gate/up,1.268711
+102,Expert down,0.795523
+102,CPU answer wait,2.231502
+102,H2D/other,0.005824
+102,D2H,0.634884
+103,Other kernel,0.004032
+103,Embedding/head,0.017888
+103,Residual/norm,0.796261
+103,Dense projections,3.625018
+103,KDA recurrence/prep,0.459424
+103,DSA / MLA,1.394218
+103,Routing,0.951338
+103,Host/disk wait,0.03424
+103,Expert fetch,13.731448
+103,Expert gate/up,1.07009
+103,Expert down,0.726019
+103,CPU answer wait,2.306898
+103,H2D/other,0.005984
+103,D2H,0.342466
+104,Other kernel,0.003808
+104,Embedding/head,0.016608
+104,Residual/norm,0.801028
+104,Dense projections,3.60781
+104,KDA recurrence/prep,0.460964
+104,DSA / MLA,1.154564
+104,Routing,0.939235
+104,Host/disk wait,0.034816
+104,Expert fetch,11.400366
+104,Expert gate/up,1.138883
+104,Expert down,0.951527
+104,CPU answer wait,2.57915
+104,H2D/other,0.004672
+104,D2H,0.339395
+105,Other kernel,0.00384
+105,Embedding/head,0.016352
+105,Residual/norm,0.800643
+105,Dense projections,3.991063
+105,KDA recurrence/prep,0.463971
+105,DSA / MLA,1.156361
+105,Routing,0.973478
+105,Host/disk wait,0.034081
+105,Expert fetch,16.807919
+105,Expert gate/up,1.00455
+105,Expert down,0.707075
+105,CPU answer wait,1.814222
+105,H2D/other,0.006048
+105,D2H,0.147489
+106,Other kernel,0.003904
+106,Embedding/head,0.015905
+106,Residual/norm,0.801926
+106,Dense projections,3.610038
+106,KDA recurrence/prep,0.45962
+106,DSA / MLA,1.156133
+106,Routing,0.955045
+106,Host/disk wait,0.034561
+106,Expert fetch,12.102928
+106,Expert gate/up,1.099878
+106,Expert down,0.735589
+106,CPU answer wait,2.961079
+106,H2D/other,0.003584
+106,D2H,0.343747
+107,Other kernel,0.004128
+107,Embedding/head,0.01696
+107,Residual/norm,0.799942
+107,Dense projections,3.661113
+107,KDA recurrence/prep,0.464899
+107,DSA / MLA,1.183814
+107,Routing,0.968195
+107,Host/disk wait,0.0344
+107,Expert fetch,15.259847
+107,Expert gate/up,1.023784
+107,Expert down,0.710117
+107,CPU answer wait,2.726734
+107,H2D/other,0.009952
+107,D2H,0.294562
+108,Other kernel,0.003872
+108,Embedding/head,0.016544
+108,Residual/norm,0.800166
+108,Dense projections,3.653173
+108,KDA recurrence/prep,0.464099
+108,DSA / MLA,1.16596
+108,Routing,0.95841
+108,Host/disk wait,0.034176
+108,Expert fetch,15.76231
+108,Expert gate/up,1.047973
+108,Expert down,0.719234
+108,CPU answer wait,1.906225
+108,H2D/other,0.003872
+108,D2H,0.581859
+109,Other kernel,0.003936
+109,Embedding/head,0.016992
+109,Residual/norm,0.800676
+109,Dense projections,4.046437
+109,KDA recurrence/prep,0.462467
+109,DSA / MLA,1.159301
+109,Routing,0.961029
+109,Host/disk wait,0.034464
+109,Expert fetch,13.479513
+109,Expert gate/up,1.07409
+109,Expert down,0.723044
+109,CPU answer wait,2.609519
+109,H2D/other,0.00576
+109,D2H,0.147137
+110,Other kernel,0.003936
+110,Embedding/head,0.016544
+110,Residual/norm,1.421866
+110,Dense projections,3.623387
+110,KDA recurrence/prep,0.457345
+110,DSA / MLA,1.160809
+110,Routing,0.951559
+110,Host/disk wait,0.034112
+110,Expert fetch,11.333932
+110,Expert gate/up,1.099878
+110,Expert down,0.958566
+110,CPU answer wait,2.917365
+110,H2D/other,0.008096
+110,D2H,0.296834
+111,Other kernel,0.004
+111,Embedding/head,0.016481
+111,Residual/norm,0.797222
+111,Dense projections,4.152799
+111,KDA recurrence/prep,0.460322
+111,DSA / MLA,1.161575
+111,Routing,0.942021
+111,Host/disk wait,0.034528
+111,Expert fetch,11.46392
+111,Expert gate/up,1.136963
+111,Expert down,0.976999
+111,CPU answer wait,2.45931
+111,H2D/other,0.00832
+111,D2H,0.297474
+112,Other kernel,0.004032
+112,Embedding/head,0.017024
+112,Residual/norm,1.016227
+112,Dense projections,3.621146
+112,KDA recurrence/prep,0.460322
+112,DSA / MLA,1.153577
+112,Routing,0.936901
+112,Host/disk wait,0.033824
+112,Expert fetch,11.620461
+112,Expert gate/up,1.145222
+112,Expert down,0.752452
+112,CPU answer wait,2.643858
+112,H2D/other,0.005792
+112,D2H,0.635876
+113,Other kernel,0.003968
+113,Embedding/head,0.016832
+113,Residual/norm,0.795779
+113,Dense projections,3.546354
+113,KDA recurrence/prep,0.452388
+113,DSA / MLA,1.161127
+113,Routing,0.917386
+113,Host/disk wait,0.034144
+113,Expert fetch,8.325172
+113,Expert gate/up,1.224456
+113,Expert down,0.781255
+113,CPU answer wait,2.695731
+113,H2D/other,0.003552
+113,D2H,0.001152
+114,Other kernel,0.003936
+114,Embedding/head,0.015872
+114,Residual/norm,0.799077
+114,Dense projections,3.886559
+114,KDA recurrence/prep,0.457859
+114,DSA / MLA,1.159111
+114,Routing,0.929635
+114,Host/disk wait,0.033984
+114,Expert fetch,12.013552
+114,Expert gate/up,1.129927
+114,Expert down,0.753031
+114,CPU answer wait,2.352014
+114,H2D/other,0.003904
+114,D2H,0.192577
+115,Other kernel,0.004064
+115,Embedding/head,0.01632
+115,Residual/norm,0.798601
+115,Dense projections,4.110903
+115,KDA recurrence/prep,0.457058
+115,DSA / MLA,1.174504
+115,Routing,0.940582
+115,Host/disk wait,0.034368
+115,Expert fetch,9.889089
+115,Expert gate/up,1.157064
+115,Expert down,0.759046
+115,CPU answer wait,3.588981
+115,H2D/other,0.003712
+115,D2H,0.29261
+116,Other kernel,0.004
+116,Embedding/head,0.016736
+116,Residual/norm,0.797609
+116,Dense projections,3.6381
+116,KDA recurrence/prep,0.460261
+116,DSA / MLA,1.157064
+116,Routing,0.958311
+116,Host/disk wait,0.034496
+116,Expert fetch,13.136758
+116,Expert gate/up,1.052487
+116,Expert down,0.729637
+116,CPU answer wait,3.490679
+116,H2D/other,0.00592
+116,D2H,0.001088
+117,Other kernel,0.004
+117,Embedding/head,0.016736
+117,Residual/norm,0.800553
+117,Dense projections,3.912915
+117,KDA recurrence/prep,0.460997
+117,DSA / MLA,1.157673
+117,Routing,0.97063
+117,Host/disk wait,0.03376
+117,Expert fetch,15.906924
+117,Expert gate/up,1.025766
+117,Expert down,0.709284
+117,CPU answer wait,2.920624
+117,H2D/other,0.00576
+117,D2H,0.299266
+118,Other kernel,0.003872
+118,Embedding/head,0.017344
+118,Residual/norm,0.799589
+118,Dense projections,3.608696
+118,KDA recurrence/prep,0.458726
+118,DSA / MLA,1.168167
+118,Routing,0.94791
+118,Host/disk wait,0.034112
+118,Expert fetch,11.401705
+118,Expert gate/up,1.116231
+118,Expert down,0.743878
+118,CPU answer wait,3.694588
+118,H2D/other,0.00544
+118,D2H,0.437891
+119,Other kernel,0.003968
+119,Embedding/head,0.016096
+119,Residual/norm,0.798952
+119,Dense projections,3.952957
+119,KDA recurrence/prep,0.465541
+119,DSA / MLA,1.168038
+119,Routing,0.964579
+119,Host/disk wait,0.034624
+119,Expert fetch,15.281511
+119,Expert gate/up,1.004679
+119,Expert down,0.705927
+119,CPU answer wait,3.350707
+119,H2D/other,0.003904
+119,D2H,0.604388
+120,Other kernel,0.003968
+120,Embedding/head,0.016961
+120,Residual/norm,0.7993
+120,Dense projections,3.921692
+120,KDA recurrence/prep,0.461092
+120,DSA / MLA,1.158693
+120,Routing,0.944967
+120,Host/disk wait,0.033952
+120,Expert fetch,11.873457
+120,Expert gate/up,1.127364
+120,Expert down,0.748966
+120,CPU answer wait,3.147762
+120,H2D/other,0.006112
+120,D2H,0.630308
+121,Other kernel,0.003872
+121,Embedding/head,0.016192
+121,Residual/norm,0.798789
+121,Dense projections,3.601718
+121,KDA recurrence/prep,0.457603
+121,DSA / MLA,1.154215
+121,Routing,1.282124
+121,Host/disk wait,0.0344
+121,Expert fetch,11.981547
+121,Expert gate/up,1.087498
+121,Expert down,0.737161
+121,CPU answer wait,3.234194
+121,H2D/other,0.005504
+121,D2H,0.150753
+122,Other kernel,0.003936
+122,Embedding/head,0.015616
+122,Residual/norm,0.798019
+122,Dense projections,3.601144
+122,KDA recurrence/prep,0.457953
+122,DSA / MLA,1.163302
+122,Routing,0.946024
+122,Host/disk wait,0.034208
+122,Expert fetch,11.440073
+122,Expert gate/up,1.112134
+122,Expert down,0.741061
+122,CPU answer wait,2.579573
+122,H2D/other,0.005632
+122,D2H,0.29261
+123,Other kernel,0.003872
+123,Embedding/head,0.0168
+123,Residual/norm,0.799657
+123,Dense projections,3.586957
+123,KDA recurrence/prep,0.454758
+123,DSA / MLA,1.172201
+123,Routing,0.933927
+123,Host/disk wait,0.034529
+123,Expert fetch,11.135018
+123,Expert gate/up,1.148745
+123,Expert down,0.754756
+123,CPU answer wait,2.52661
+123,H2D/other,0.00832
+123,D2H,0.147841
+124,Other kernel,0.003904
+124,Embedding/head,0.017088
+124,Residual/norm,1.141128
+124,Dense projections,3.629884
+124,KDA recurrence/prep,0.464355
+124,DSA / MLA,1.159624
+124,Routing,0.957544
+124,Host/disk wait,0.034272
+124,Expert fetch,13.360633
+124,Expert gate/up,1.048425
+124,Expert down,0.725544
+124,CPU answer wait,3.308975
+124,H2D/other,0.01088
+124,D2H,0.001088
+125,Other kernel,0.003904
+125,Embedding/head,0.016576
+125,Residual/norm,0.797701
+125,Dense projections,3.587803
+125,KDA recurrence/prep,0.458691
+125,DSA / MLA,1.17476
+125,Routing,0.940803
+125,Host/disk wait,0.034048
+125,Expert fetch,10.740937
+125,Expert gate/up,1.138443
+125,Expert down,0.743654
+125,CPU answer wait,3.407218
+125,H2D/other,0.003584
+125,D2H,0.251297
+126,Other kernel,0.004
+126,Embedding/head,0.017376
+126,Residual/norm,0.802212
+126,Dense projections,3.61954
+126,KDA recurrence/prep,0.462311
+126,DSA / MLA,1.161832
+126,Routing,0.953157
+126,Host/disk wait,0.0344
+126,Expert fetch,14.196001
+126,Expert gate/up,1.073255
+126,Expert down,0.725635
+126,CPU answer wait,2.113297
+126,H2D/other,0.003904
+126,D2H,0.147585
+127,Other kernel,0.004032
+127,Embedding/head,0.016864
+127,Residual/norm,0.80033
+127,Dense projections,3.603222
+127,KDA recurrence/prep,0.459139
+127,DSA / MLA,1.161546
+127,Routing,0.944866
+127,Host/disk wait,0.034176
+127,Expert fetch,11.125897
+127,Expert gate/up,1.14628
+127,Expert down,0.743078
+127,CPU answer wait,2.923762
+127,H2D/other,0.003424
+127,D2H,0.0008
+128,Other kernel,0.003872
+128,Embedding/head,0.01664
+128,Residual/norm,0.796772
+128,Dense projections,3.795899
+128,KDA recurrence/prep,0.457441
+128,DSA / MLA,1.167241
+128,Routing,0.935909
+128,Host/disk wait,0.034112
+128,Expert fetch,10.100674
+128,Expert gate/up,1.488105
+128,Expert down,0.761797
+128,CPU answer wait,2.860785
+128,H2D/other,0.003936
+128,D2H,0.438531
+129,Other kernel,0.004032
+129,Embedding/head,0.017024
+129,Residual/norm,1.164423
+129,Dense projections,4.031651
+129,KDA recurrence/prep,0.462689
+129,DSA / MLA,1.164007
+129,Routing,0.961735
+129,Host/disk wait,0.034369
+129,Expert fetch,14.144409
+129,Expert gate/up,1.04833
+129,Expert down,0.72455
+129,CPU answer wait,3.538294
+129,H2D/other,0.009952
+129,D2H,0.29325
+130,Other kernel,0.003936
+130,Embedding/head,0.016768
+130,Residual/norm,0.801349
+130,Dense projections,3.649661
+130,KDA recurrence/prep,0.459713
+130,DSA / MLA,1.156006
+130,Routing,0.94858
+130,Host/disk wait,0.033984
+130,Expert fetch,13.734038
+130,Expert gate/up,1.343307
+130,Expert down,1.122315
+130,CPU answer wait,2.458956
+130,H2D/other,0.009728
+130,D2H,0.634564
+131,Other kernel,0.003905
+131,Embedding/head,0.01712
+131,Residual/norm,0.799845
+131,Dense projections,4.0822
+131,KDA recurrence/prep,0.464482
+131,DSA / MLA,1.180745
+131,Routing,1.194952
+131,Host/disk wait,0.034304
+131,Expert fetch,14.204798
+131,Expert gate/up,1.045542
+131,Expert down,0.71405
+131,CPU answer wait,3.513721
+131,H2D/other,0.005504
+131,D2H,0.148097
+132,Other kernel,0.00384
+132,Embedding/head,0.016
+132,Residual/norm,1.020707
+132,Dense projections,3.636022
+132,KDA recurrence/prep,0.460387
+132,DSA / MLA,1.185002
+132,Routing,0.955684
+132,Host/disk wait,0.033953
+132,Expert fetch,14.662465
+132,Expert gate/up,1.059653
+132,Expert down,0.721673
+132,CPU answer wait,2.296658
+132,H2D/other,0.003904
+132,D2H,0.001088
+133,Other kernel,0.003968
+133,Embedding/head,0.016832
+133,Residual/norm,0.80071
+133,Dense projections,3.624144
+133,KDA recurrence/prep,0.459424
+133,DSA / MLA,1.176011
+133,Routing,0.948587
+133,Host/disk wait,0.03424
+133,Expert fetch,12.405204
+133,Expert gate/up,1.121541
+133,Expert down,0.737507
+133,CPU answer wait,2.402516
+133,H2D/other,0.003776
+133,D2H,0.148161
+134,Other kernel,0.003936
+134,Embedding/head,0.016289
+134,Residual/norm,0.797863
+134,Dense projections,3.693235
+134,KDA recurrence/prep,0.46666
+134,DSA / MLA,1.173798
+134,Routing,0.985035
+134,Host/disk wait,0.034017
+134,Expert fetch,17.484629
+134,Expert gate/up,0.967363
+134,Expert down,0.688037
+134,CPU answer wait,3.271704
+134,H2D/other,0.005664
+134,D2H,0.152449
+135,Other kernel,0.003808
+135,Embedding/head,0.016352
+135,Residual/norm,0.803812
+135,Dense projections,3.953754
+135,KDA recurrence/prep,0.472801
+135,DSA / MLA,1.204937
+135,Routing,0.985704
+135,Host/disk wait,0.034144
+135,Expert fetch,17.402871
+135,Expert gate/up,1.259141
+135,Expert down,0.693252
+135,CPU answer wait,3.332951
+135,H2D/other,0.008128
+135,D2H,0.339874
+136,Other kernel,0.003968
+136,Embedding/head,0.016768
+136,Residual/norm,0.801769
+136,Dense projections,3.663545
+136,KDA recurrence/prep,0.462564
+136,DSA / MLA,1.18196
+136,Routing,0.965282
+136,Host/disk wait,0.034305
+136,Expert fetch,15.602702
+136,Expert gate/up,1.03821
+136,Expert down,0.714277
+136,CPU answer wait,2.161166
+136,H2D/other,0.004
+136,D2H,0.147873
+137,Other kernel,0.004032
+137,Embedding/head,0.015904
+137,Residual/norm,0.800037
+137,Dense projections,3.902333
+137,KDA recurrence/prep,0.462082
+137,DSA / MLA,1.191082
+137,Routing,0.964164
+137,Host/disk wait,0.03392
+137,Expert fetch,13.034201
+137,Expert gate/up,1.083172
+137,Expert down,0.721767
+137,CPU answer wait,3.187638
+137,H2D/other,0.007904
+137,D2H,0.147297
+138,Other kernel,0.003872
+138,Embedding/head,0.01616
+138,Residual/norm,0.800071
+138,Dense projections,3.646837
+138,KDA recurrence/prep,0.460547
+138,DSA / MLA,1.393161
+138,Routing,0.962823
+138,Host/disk wait,0.034336
+138,Expert fetch,14.48128
+138,Expert gate/up,1.073321
+138,Expert down,0.716164
+138,CPU answer wait,2.346863
+138,H2D/other,0.00384
+138,D2H,0.154145
+139,Other kernel,0.003872
+139,Embedding/head,0.017024
+139,Residual/norm,0.801862
+139,Dense projections,3.623031
+139,KDA recurrence/prep,0.459779
+139,DSA / MLA,1.184361
+139,Routing,1.172268
+139,Host/disk wait,0.03392
+139,Expert fetch,13.27596
+139,Expert gate/up,1.090884
+139,Expert down,0.743332
+139,CPU answer wait,2.3068
+139,H2D/other,0.003488
+139,D2H,0.442691
+140,Other kernel,0.003904
+140,Embedding/head,0.016512
+140,Residual/norm,0.800964
+140,Dense projections,3.598494
+140,KDA recurrence/prep,0.454053
+140,DSA / MLA,1.168165
+140,Routing,0.938209
+140,Host/disk wait,0.034496
+140,Expert fetch,10.703624
+140,Expert gate/up,1.116295
+140,Expert down,0.747493
+140,CPU answer wait,2.484111
+140,H2D/other,0.003488
+140,D2H,0.292098
+141,Other kernel,0.003936
+141,Embedding/head,0.017568
+141,Residual/norm,0.799778
+141,Dense projections,3.889563
+141,KDA recurrence/prep,0.463877
+141,DSA / MLA,1.168775
+141,Routing,0.955977
+141,Host/disk wait,0.033952
+141,Expert fetch,13.315316
+141,Expert gate/up,1.081736
+141,Expert down,0.962693
+141,CPU answer wait,2.81004
+141,H2D/other,0.005952
+141,D2H,0.299874
+142,Other kernel,0.003936
+142,Embedding/head,0.016576
+142,Residual/norm,0.799909
+142,Dense projections,4.329668
+142,KDA recurrence/prep,0.464257
+142,DSA / MLA,1.177736
+142,Routing,0.949635
+142,Host/disk wait,0.05504
+142,Expert fetch,12.59833
+142,Expert gate/up,1.089446
+142,Expert down,0.996199
+142,CPU answer wait,2.792049
+142,H2D/other,0.005728
+142,D2H,0.438275
+143,Other kernel,0.004
+143,Embedding/head,0.016832
+143,Residual/norm,0.799746
+143,Dense projections,3.616596
+143,KDA recurrence/prep,0.461539
+143,DSA / MLA,1.472268
+143,Routing,0.946242
+143,Host/disk wait,0.034208
+143,Expert fetch,12.297526
+143,Expert gate/up,1.124074
+143,Expert down,0.746498
+143,CPU answer wait,2.615411
+143,H2D/other,0.006048
+143,D2H,0.001792
+144,Other kernel,0.003936
+144,Embedding/head,0.016256
+144,Residual/norm,1.021479
+144,Dense projections,3.873335
+144,KDA recurrence/prep,0.45789
+144,DSA / MLA,1.183271
+144,Routing,0.932623
+144,Host/disk wait,0.034113
+144,Expert fetch,10.333795
+144,Expert gate/up,1.183686
+144,Expert down,0.766244
+144,CPU answer wait,2.565783
+144,H2D/other,0.005728
+144,D2H,0.292386
+145,Other kernel,0.004032
+145,Embedding/head,0.015808
+145,Residual/norm,0.797958
+145,Dense projections,3.658999
+145,KDA recurrence/prep,0.465185
+145,DSA / MLA,1.175689
+145,Routing,0.972039
+145,Host/disk wait,0.034049
+145,Expert fetch,15.461351
+145,Expert gate/up,1.018504
+145,Expert down,0.710053
+145,CPU answer wait,2.845553
+145,H2D/other,0.004704
+145,D2H,0.00112
+146,Other kernel,0.004128
+146,Embedding/head,0.016608
+146,Residual/norm,0.800935
+146,Dense projections,3.664377
+146,KDA recurrence/prep,0.462692
+146,DSA / MLA,1.194407
+146,Routing,1.201192
+146,Host/disk wait,0.03408
+146,Expert fetch,14.791653
+146,Expert gate/up,1.030214
+146,Expert down,0.716965
+146,CPU answer wait,2.896947
+146,H2D/other,0.003872
+146,D2H,0.296994
+147,Other kernel,0.003936
+147,Embedding/head,0.015776
+147,Residual/norm,0.799042
+147,Dense projections,3.623862
+147,KDA recurrence/prep,0.4625
+147,DSA / MLA,1.171304
+147,Routing,0.948488
+147,Host/disk wait,0.034624
+147,Expert fetch,12.393782
+147,Expert gate/up,1.109671
+147,Expert down,0.739557
+147,CPU answer wait,2.803989
+147,H2D/other,0.004032
+147,D2H,0.001088
+148,Other kernel,0.003968
+148,Embedding/head,0.016704
+148,Residual/norm,0.799013
+148,Dense projections,3.706838
+148,KDA recurrence/prep,0.469347
+148,DSA / MLA,1.523981
+148,Routing,0.983748
+148,Host/disk wait,0.0344
+148,Expert fetch,17.858427
+148,Expert gate/up,0.968489
+148,Expert down,0.691014
+148,CPU answer wait,2.951891
+148,H2D/other,0.009728
+148,D2H,0.292898
+149,Other kernel,0.004
+149,Embedding/head,0.016512
+149,Residual/norm,0.804482
+149,Dense projections,4.139943
+149,KDA recurrence/prep,0.468993
+149,DSA / MLA,1.185575
+149,Routing,0.986183
+149,Host/disk wait,0.034144
+149,Expert fetch,19.481764
+149,Expert gate/up,1.000167
+149,Expert down,0.933636
+149,CPU answer wait,2.01531
+149,H2D/other,0.003648
+149,D2H,0.147681
+150,Other kernel,0.003872
+150,Embedding/head,0.016288
+150,Residual/norm,0.80202
+150,Dense projections,3.636375
+150,KDA recurrence/prep,0.463332
+150,DSA / MLA,1.941039
+150,Routing,0.959108
+150,Host/disk wait,0.034112
+150,Expert fetch,13.536893
+150,Expert gate/up,1.516231
+150,Expert down,0.733576
+150,CPU answer wait,2.730353
+150,H2D/other,0.010272
+150,D2H,0.153153
+151,Other kernel,0.003904
+151,Embedding/head,0.01712
+151,Residual/norm,0.804806
+151,Dense projections,3.652496
+151,KDA recurrence/prep,0.458819
+151,DSA / MLA,1.191176
+151,Routing,0.95812
+151,Host/disk wait,0.034304
+151,Expert fetch,14.555716
+151,Expert gate/up,1.341416
+151,Expert down,0.729222
+151,CPU answer wait,2.464499
+151,H2D/other,0.0056
+151,D2H,0.001088
+152,Other kernel,0.003936
+152,Embedding/head,0.01696
+152,Residual/norm,0.802594
+152,Dense projections,3.645187
+152,KDA recurrence/prep,0.46269
+152,DSA / MLA,1.161927
+152,Routing,0.947972
+152,Host/disk wait,0.058432
+152,Expert fetch,12.935898
+152,Expert gate/up,1.712234
+152,Expert down,0.733732
+152,CPU answer wait,3.301941
+152,H2D/other,0.00896
+152,D2H,0.296034
+153,Other kernel,0.003936
+153,Embedding/head,0.016609
+153,Residual/norm,0.799301
+153,Dense projections,3.860861
+153,KDA recurrence/prep,0.464002
+153,DSA / MLA,1.172872
+153,Routing,1.369071
+153,Host/disk wait,0.034464
+153,Expert fetch,12.66232
+153,Expert gate/up,1.127561
+153,Expert down,0.740067
+153,CPU answer wait,2.525362
+153,H2D/other,0.003872
+153,D2H,0.588868
+154,Other kernel,0.003968
+154,Embedding/head,0.016385
+154,Residual/norm,0.800295
+154,Dense projections,3.613913
+154,KDA recurrence/prep,0.458466
+154,DSA / MLA,1.166888
+154,Routing,1.180582
+154,Host/disk wait,0.034304
+154,Expert fetch,11.838095
+154,Expert gate/up,1.129708
+154,Expert down,0.740577
+154,CPU answer wait,2.727026
+154,H2D/other,0.005632
+154,D2H,0.001088
+155,Other kernel,0.003936
+155,Embedding/head,0.016352
+155,Residual/norm,0.802214
+155,Dense projections,3.671867
+155,KDA recurrence/prep,0.462852
+155,DSA / MLA,1.19649
+155,Routing,1.187042
+155,Host/disk wait,0.034656
+155,Expert fetch,16.176117
+155,Expert gate/up,1.24743
+155,Expert down,0.714626
+155,CPU answer wait,1.856427
+155,H2D/other,0.006816
+155,D2H,0.001088
+156,Other kernel,0.004128
+156,Embedding/head,0.017248
+156,Residual/norm,0.800803
+156,Dense projections,3.659413
+156,KDA recurrence/prep,0.685188
+156,DSA / MLA,1.170951
+156,Routing,1.186222
+156,Host/disk wait,0.034049
+156,Expert fetch,15.082437
+156,Expert gate/up,1.457415
+156,Expert down,0.718756
+156,CPU answer wait,2.831865
+156,H2D/other,0.008672
+156,D2H,0.001088
+157,Other kernel,0.00416
+157,Embedding/head,0.016608
+157,Residual/norm,0.800581
+157,Dense projections,3.851931
+157,KDA recurrence/prep,0.458821
+157,DSA / MLA,1.157798
+157,Routing,1.162856
+157,Host/disk wait,0.034432
+157,Expert fetch,11.521745
+157,Expert gate/up,1.144775
+157,Expert down,0.978947
+157,CPU answer wait,2.90146
+157,H2D/other,0.014432
+157,D2H,0.147489
+188,Other kernel,0.003936
+188,Embedding/head,0.015808
+188,Residual/norm,0.795334
+188,Dense projections,4.044733
+188,KDA recurrence/prep,0.460676
+188,DSA / MLA,1.143398
+188,Routing,0.951815
+188,Host/disk wait,0.034016
+188,Expert fetch,12.24555
+188,Expert gate/up,1.091281
+188,Expert down,0.966051
+188,CPU answer wait,3.758103
+188,H2D/other,0.009152
+188,D2H,0.001408
+189,Other kernel,0.003872
+189,Embedding/head,0.017344
+189,Residual/norm,0.80058
+189,Dense projections,3.567293
+189,KDA recurrence/prep,0.454786
+189,DSA / MLA,1.14324
+189,Routing,1.259079
+189,Host/disk wait,0.03456
+189,Expert fetch,8.433306
+189,Expert gate/up,1.179084
+189,Expert down,0.765057
+189,CPU answer wait,3.869147
+189,H2D/other,0.005312
+189,D2H,0.001344
+190,Other kernel,0.003904
+190,Embedding/head,0.016353
+190,Residual/norm,0.797095
+190,Dense projections,3.537239
+190,KDA recurrence/prep,0.450148
+190,DSA / MLA,1.138694
+190,Routing,0.897922
+190,Host/disk wait,0.033984
+190,Expert fetch,6.386317
+190,Expert gate/up,1.275048
+190,Expert down,0.810246
+190,CPU answer wait,3.387253
+190,H2D/other,0.004192
+190,D2H,0.001632
+191,Other kernel,0.003936
+191,Embedding/head,0.016384
+191,Residual/norm,0.793796
+191,Dense projections,3.864283
+191,KDA recurrence/prep,0.456643
+191,DSA / MLA,1.13831
+191,Routing,0.924808
+191,Host/disk wait,0.034178
+191,Expert fetch,9.048315
+191,Expert gate/up,1.219916
+191,Expert down,0.780549
+191,CPU answer wait,2.61144
+191,H2D/other,0.003488
+191,D2H,0.002048
+192,Other kernel,0.003904
+192,Embedding/head,0.016992
+192,Residual/norm,0.794759
+192,Dense projections,3.862517
+192,KDA recurrence/prep,0.458306
+192,DSA / MLA,1.122345
+192,Routing,0.920967
+192,Host/disk wait,0.03424
+192,Expert fetch,7.55781
+192,Expert gate/up,1.224234
+192,Expert down,0.780742
+192,CPU answer wait,3.651991
+192,H2D/other,0.006817
+192,D2H,0.001088
+193,Other kernel,0.004032
+193,Embedding/head,0.015872
+193,Residual/norm,0.797379
+193,Dense projections,3.967328
+193,KDA recurrence/prep,0.458498
+193,DSA / MLA,1.142505
+193,Routing,0.930466
+193,Host/disk wait,0.034112
+193,Expert fetch,10.443373
+193,Expert gate/up,1.143749
+193,Expert down,0.761192
+193,CPU answer wait,3.418867
+193,H2D/other,0.00576
+193,D2H,0.00112
+194,Other kernel,0.003968
+194,Embedding/head,0.01696
+194,Residual/norm,0.799363
+194,Dense projections,3.939774
+194,KDA recurrence/prep,0.454593
+194,DSA / MLA,1.144327
+194,Routing,1.136939
+194,Host/disk wait,0.034528
+194,Expert fetch,8.647991
+194,Expert gate/up,1.215654
+194,Expert down,0.786472
+194,CPU answer wait,2.584498
+194,H2D/other,0.005792
+194,D2H,0.00112
+195,Other kernel,0.003936
+195,Embedding/head,0.017088
+195,Residual/norm,0.795594
+195,Dense projections,3.535159
+195,KDA recurrence/prep,0.452097
+195,DSA / MLA,1.149641
+195,Routing,0.912325
+195,Host/disk wait,0.034433
+195,Expert fetch,6.56113
+195,Expert gate/up,1.261549
+195,Expert down,0.792291
+195,CPU answer wait,3.160469
+195,H2D/other,0.005696
+195,D2H,0.00112
+196,Other kernel,0.003968
+196,Embedding/head,0.016992
+196,Residual/norm,0.792357
+196,Dense projections,3.800508
+196,KDA recurrence/prep,0.822982
+196,DSA / MLA,1.130502
+196,Routing,0.899043
+196,Host/disk wait,0.033664
+196,Expert fetch,5.748811
+196,Expert gate/up,1.285894
+196,Expert down,0.810086
+196,CPU answer wait,2.819601
+196,H2D/other,0.003584
+196,D2H,0.001568
+197,Other kernel,0.003904
+197,Embedding/head,0.016608
+197,Residual/norm,0.792101
+197,Dense projections,3.794175
+197,KDA recurrence/prep,0.449667
+197,DSA / MLA,1.129191
+197,Routing,0.904485
+197,Host/disk wait,0.034464
+197,Expert fetch,6.346638
+197,Expert gate/up,1.292424
+197,Expert down,0.816264
+197,CPU answer wait,2.188139
+197,H2D/other,0.005728
+197,D2H,0.001408
+198,Other kernel,0.004
+198,Embedding/head,0.016864
+198,Residual/norm,0.789096
+198,Dense projections,3.521427
+198,KDA recurrence/prep,0.451908
+198,DSA / MLA,1.129417
+198,Routing,0.901605
+198,Host/disk wait,0.033664
+198,Expert fetch,5.936263
+198,Expert gate/up,1.261517
+198,Expert down,0.804613
+198,CPU answer wait,3.468758
+198,H2D/other,0.007904
+198,D2H,0.0016
+199,Other kernel,0.003744
+199,Embedding/head,0.016416
+199,Residual/norm,0.789192
+199,Dense projections,3.544987
+199,KDA recurrence/prep,0.453604
+199,DSA / MLA,1.489415
+199,Routing,0.904516
+199,Host/disk wait,0.034336
+199,Expert fetch,6.318796
+199,Expert gate/up,1.557513
+199,Expert down,0.808293
+199,CPU answer wait,2.558129
+199,H2D/other,0.007744
+199,D2H,0.001088
+200,Other kernel,0.003936
+200,Embedding/head,0.016736
+200,Residual/norm,0.790373
+200,Dense projections,3.519291
+200,KDA recurrence/prep,0.447267
+200,DSA / MLA,1.143368
+200,Routing,0.90388
+200,Host/disk wait,0.03424
+200,Expert fetch,5.312835
+200,Expert gate/up,1.300808
+200,Expert down,0.814503
+200,CPU answer wait,2.363664
+200,H2D/other,0.005696
+200,D2H,0.001088
+201,Other kernel,0.004
+201,Embedding/head,0.015712
+201,Residual/norm,0.792486
+201,Dense projections,3.548028
+201,KDA recurrence/prep,0.456162
+201,DSA / MLA,1.172039
+201,Routing,0.914596
+201,Host/disk wait,0.034208
+201,Expert fetch,7.656086
+201,Expert gate/up,1.228329
+201,Expert down,0.782596
+201,CPU answer wait,3.42639
+201,H2D/other,0.005696
+201,D2H,0.001472
+202,Other kernel,0.003872
+202,Embedding/head,0.01696
+202,Residual/norm,0.790564
+202,Dense projections,3.872321
+202,KDA recurrence/prep,0.456097
+202,DSA / MLA,1.147462
+202,Routing,0.917254
+202,Host/disk wait,0.034528
+202,Expert fetch,6.844236
+202,Expert gate/up,1.264041
+202,Expert down,0.79319
+202,CPU answer wait,3.643546
+202,H2D/other,0.005632
+202,D2H,0.001408
+203,Other kernel,0.003936
+203,Embedding/head,0.016641
+203,Residual/norm,0.798661
+203,Dense projections,3.599714
+203,KDA recurrence/prep,0.457601
+203,DSA / MLA,1.143527
+203,Routing,0.931332
+203,Host/disk wait,0.033728
+203,Expert fetch,10.413703
+203,Expert gate/up,1.141799
+203,Expert down,0.753544
+203,CPU answer wait,3.336243
+203,H2D/other,0.008544
+203,D2H,0.00112
+204,Other kernel,0.003968
+204,Embedding/head,0.01664
+204,Residual/norm,0.797443
+204,Dense projections,3.576886
+204,KDA recurrence/prep,0.458533
+204,DSA / MLA,1.147881
+204,Routing,0.93457
+204,Host/disk wait,0.034176
+204,Expert fetch,8.96662
+204,Expert gate/up,1.167239
+204,Expert down,0.761382
+204,CPU answer wait,4.730914
+204,H2D/other,0.00784
+204,D2H,0.0008
+205,Other kernel,0.004
+205,Embedding/head,0.015584
+205,Residual/norm,0.80042
+205,Dense projections,3.611293
+205,KDA recurrence/prep,0.46074
+205,DSA / MLA,1.138024
+205,Routing,0.948485
+205,Host/disk wait,0.034208
+205,Expert fetch,11.942451
+205,Expert gate/up,1.132069
+205,Expert down,0.749192
+205,CPU answer wait,3.172117
+205,H2D/other,0.003584
+205,D2H,0.001088
+206,Other kernel,0.003968
+206,Embedding/head,0.015712
+206,Residual/norm,0.800678
+206,Dense projections,3.840568
+206,KDA recurrence/prep,0.460643
+206,DSA / MLA,1.143686
+206,Routing,0.940743
+206,Host/disk wait,0.034208
+206,Expert fetch,10.433826
+206,Expert gate/up,1.15505
+206,Expert down,0.760168
+206,CPU answer wait,3.808312
+206,H2D/other,0.005664
+206,D2H,0.001088
+207,Other kernel,0.003936
+207,Embedding/head,0.016352
+207,Residual/norm,0.798821
+207,Dense projections,3.603202
+207,KDA recurrence/prep,0.460641
+207,DSA / MLA,1.143815
+207,Routing,0.935685
+207,Host/disk wait,0.03408
+207,Expert fetch,11.086478
+207,Expert gate/up,1.122728
+207,Expert down,0.759588
+207,CPU answer wait,4.094904
+207,H2D/other,0.008832
+207,D2H,0.001184
+208,Other kernel,0.004
+208,Embedding/head,0.01696
+208,Residual/norm,0.795175
+208,Dense projections,3.548854
+208,KDA recurrence/prep,0.450499
+208,DSA / MLA,1.153001
+208,Routing,0.917381
+208,Host/disk wait,0.034048
+208,Expert fetch,8.141144
+208,Expert gate/up,1.211626
+208,Expert down,0.784261
+208,CPU answer wait,2.77237
+208,H2D/other,0.00832
+208,D2H,0.001152
+209,Other kernel,0.003776
+209,Embedding/head,0.016352
+209,Residual/norm,0.795466
+209,Dense projections,3.591824
+209,KDA recurrence/prep,0.460129
+209,DSA / MLA,1.155335
+209,Routing,0.937031
+209,Host/disk wait,0.034144
+209,Expert fetch,9.746014
+209,Expert gate/up,1.162438
+209,Expert down,0.758216
+209,CPU answer wait,4.03283
+209,H2D/other,0.00336
+209,D2H,0.00112
+210,Other kernel,0.003776
+210,Embedding/head,0.016704
+210,Residual/norm,0.800711
+210,Dense projections,3.816729
+210,KDA recurrence/prep,0.454402
+210,DSA / MLA,1.677579
+210,Routing,0.923271
+210,Host/disk wait,0.034336
+210,Expert fetch,8.755163
+210,Expert gate/up,1.21489
+210,Expert down,0.76948
+210,CPU answer wait,3.187924
+210,H2D/other,0.00816
+210,D2H,0.001056
+211,Other kernel,0.003936
+211,Embedding/head,0.016544
+211,Residual/norm,0.796674
+211,Dense projections,3.57785
+211,KDA recurrence/prep,0.451649
+211,DSA / MLA,1.148551
+211,Routing,0.928011
+211,Host/disk wait,0.033856
+211,Expert fetch,10.114118
+211,Expert gate/up,1.162437
+211,Expert down,0.759907
+211,CPU answer wait,2.863606
+211,H2D/other,0.007841
+211,D2H,0.001024
+212,Other kernel,0.003904
+212,Embedding/head,0.015904
+212,Residual/norm,0.801061
+212,Dense projections,3.628797
+212,KDA recurrence/prep,0.460225
+212,DSA / MLA,1.157642
+212,Routing,0.953992
+212,Host/disk wait,0.034049
+212,Expert fetch,13.147096
+212,Expert gate/up,1.087209
+212,Expert down,0.733378
+212,CPU answer wait,2.871411
+212,H2D/other,0.007648
+212,D2H,0.00112
+213,Other kernel,0.003968
+213,Embedding/head,0.016256
+213,Residual/norm,0.800325
+213,Dense projections,3.836955
+213,KDA recurrence/prep,0.460579
+213,DSA / MLA,1.13479
+213,Routing,0.939272
+213,Host/disk wait,0.034528
+213,Expert fetch,10.807051
+213,Expert gate/up,1.167368
+213,Expert down,0.761539
+213,CPU answer wait,3.711193
+213,H2D/other,0.005856
+213,D2H,0.001536
+214,Other kernel,0.003968
+214,Embedding/head,0.016736
+214,Residual/norm,0.797574
+214,Dense projections,3.570489
+214,KDA recurrence/prep,0.456194
+214,DSA / MLA,1.144872
+214,Routing,0.919109
+214,Host/disk wait,0.034496
+214,Expert fetch,8.191001
+214,Expert gate/up,1.193863
+214,Expert down,1.18609
+214,CPU answer wait,3.213206
+214,H2D/other,0.006144
+214,D2H,0.00112
+215,Other kernel,0.003936
+215,Embedding/head,0.016704
+215,Residual/norm,1.009196
+215,Dense projections,3.882488
+215,KDA recurrence/prep,0.466404
+215,DSA / MLA,1.150503
+215,Routing,0.955206
+215,Host/disk wait,0.034368
+215,Expert fetch,12.759161
+215,Expert gate/up,1.327752
+215,Expert down,0.732166
+215,CPU answer wait,3.908345
+215,H2D/other,0.008
+215,D2H,0.001088
+216,Other kernel,0.003936
+216,Embedding/head,0.017184
+216,Residual/norm,0.80058
+216,Dense projections,3.598164
+216,KDA recurrence/prep,0.456774
+216,DSA / MLA,1.130729
+216,Routing,0.935942
+216,Host/disk wait,0.034304
+216,Expert fetch,10.901194
+216,Expert gate/up,1.138663
+216,Expert down,0.74967
+216,CPU answer wait,3.293303
+216,H2D/other,0.003968
+216,D2H,0.001088
+217,Other kernel,0.003936
+217,Embedding/head,0.016192
+217,Residual/norm,0.799461
+217,Dense projections,3.602624
+217,KDA recurrence/prep,0.458884
+217,DSA / MLA,1.144421
+217,Routing,0.945541
+217,Host/disk wait,0.034208
+217,Expert fetch,11.465678
+217,Expert gate/up,1.117353
+217,Expert down,0.746596
+217,CPU answer wait,3.673784
+217,H2D/other,0.008064
+217,D2H,0.001088
+218,Other kernel,0.003968
+218,Embedding/head,0.016288
+218,Residual/norm,0.795526
+218,Dense projections,3.598483
+218,KDA recurrence/prep,0.456997
+218,DSA / MLA,1.359307
+218,Routing,0.93847
+218,Host/disk wait,0.052
+218,Expert fetch,10.691434
+218,Expert gate/up,1.150603
+218,Expert down,0.745858
+218,CPU answer wait,3.39212
+218,H2D/other,0.00432
+218,D2H,0.154497
+219,Other kernel,0.003968
+219,Embedding/head,0.016064
+219,Residual/norm,0.799045
+219,Dense projections,3.871351
+219,KDA recurrence/prep,0.458242
+219,DSA / MLA,1.149384
+219,Routing,0.941609
+219,Host/disk wait,0.034561
+219,Expert fetch,9.507234
+219,Expert gate/up,1.418917
+219,Expert down,0.75847
+219,CPU answer wait,3.9423
+219,H2D/other,0.004
+219,D2H,0.001408
+220,Other kernel,0.004032
+220,Embedding/head,0.01712
+220,Residual/norm,0.792963
+220,Dense projections,3.554777
+220,KDA recurrence/prep,0.456962
+220,DSA / MLA,1.147272
+220,Routing,0.925926
+220,Host/disk wait,0.034528
+220,Expert fetch,7.606355
+220,Expert gate/up,1.195077
+220,Expert down,0.774086
+220,CPU answer wait,4.393122
+220,H2D/other,0.003712
+220,D2H,0.001121
+221,Other kernel,0.004
+221,Embedding/head,0.016833
+221,Residual/norm,0.794819
+221,Dense projections,3.573175
+221,KDA recurrence/prep,0.455746
+221,DSA / MLA,1.148521
+221,Routing,0.931529
+221,Host/disk wait,0.03456
+221,Expert fetch,9.089566
+221,Expert gate/up,1.195751
+221,Expert down,0.769957
+221,CPU answer wait,3.143127
+221,H2D/other,0.004736
+221,D2H,0.001088
+222,Other kernel,0.00416
+222,Embedding/head,0.016768
+222,Residual/norm,0.799338
+222,Dense projections,3.613046
+222,KDA recurrence/prep,0.457925
+222,DSA / MLA,1.158212
+222,Routing,0.950084
+222,Host/disk wait,0.034208
+222,Expert fetch,12.297235
+222,Expert gate/up,1.111243
+222,Expert down,0.746886
+222,CPU answer wait,3.057171
+222,H2D/other,0.007584
+222,D2H,0.00112
+223,Other kernel,0.003808
+223,Embedding/head,0.01664
+223,Residual/norm,0.797604
+223,Dense projections,3.574807
+223,KDA recurrence/prep,0.454662
+223,DSA / MLA,1.158442
+223,Routing,0.926149
+223,Host/disk wait,0.034496
+223,Expert fetch,8.991329
+223,Expert gate/up,1.196841
+223,Expert down,1.03626
+223,CPU answer wait,3.170391
+223,H2D/other,0.003937
+223,D2H,0.001056
+224,Other kernel,0.003968
+224,Embedding/head,0.01664
+224,Residual/norm,0.79437
+224,Dense projections,3.598648
+224,KDA recurrence/prep,0.45863
+224,DSA / MLA,1.161895
+224,Routing,0.940325
+224,Host/disk wait,0.034273
+224,Expert fetch,10.578822
+224,Expert gate/up,1.151849
+224,Expert down,0.756197
+224,CPU answer wait,3.181112
+224,H2D/other,0.0056
+224,D2H,0.001088
+225,Other kernel,0.004224
+225,Embedding/head,0.016416
+225,Residual/norm,1.150821
+225,Dense projections,3.59266
+225,KDA recurrence/prep,0.45751
+225,DSA / MLA,1.192233
+225,Routing,0.93697
+225,Host/disk wait,0.034305
+225,Expert fetch,9.814882
+225,Expert gate/up,1.147911
+225,Expert down,0.752582
+225,CPU answer wait,3.808025
+225,H2D/other,0.00592
+225,D2H,0.001088
+226,Other kernel,0.003904
+226,Embedding/head,0.016064
+226,Residual/norm,0.797289
+226,Dense projections,3.630231
+226,KDA recurrence/prep,0.461411
+226,DSA / MLA,1.156745
+226,Routing,0.951429
+226,Host/disk wait,0.033888
+226,Expert fetch,12.297082
+226,Expert gate/up,1.106472
+226,Expert down,1.026822
+226,CPU answer wait,3.874424
+226,H2D/other,0.008544
+226,D2H,0.001056
+227,Other kernel,0.00384
+227,Embedding/head,0.015712
+227,Residual/norm,0.799332
+227,Dense projections,3.642809
+227,KDA recurrence/prep,0.463588
+227,DSA / MLA,1.158983
+227,Routing,0.95399
+227,Host/disk wait,0.034112
+227,Expert fetch,13.494173
+227,Expert gate/up,1.061956
+227,Expert down,1.007307
+227,CPU answer wait,3.907417
+227,H2D/other,0.005728
+227,D2H,0.001376
+228,Other kernel,0.004064
+228,Embedding/head,0.016384
+228,Residual/norm,0.7986
+228,Dense projections,3.628245
+228,KDA recurrence/prep,0.462948
+228,DSA / MLA,1.160166
+228,Routing,0.960199
+228,Host/disk wait,0.033984
+228,Expert fetch,13.110491
+228,Expert gate/up,1.072199
+228,Expert down,0.736355
+228,CPU answer wait,3.842365
+228,H2D/other,0.007713
+228,D2H,0.001088
+229,Other kernel,0.004128
+229,Embedding/head,0.016608
+229,Residual/norm,0.802215
+229,Dense projections,3.903674
+229,KDA recurrence/prep,0.458147
+229,DSA / MLA,1.172713
+229,Routing,0.94836
+229,Host/disk wait,0.0344
+229,Expert fetch,12.411985
+229,Expert gate/up,1.502732
+229,Expert down,0.747237
+229,CPU answer wait,2.522866
+229,H2D/other,0.009889
+229,D2H,0.001088
+230,Other kernel,0.004032
+230,Embedding/head,0.01568
+230,Residual/norm,0.798888
+230,Dense projections,3.634454
+230,KDA recurrence/prep,0.466307
+230,DSA / MLA,1.181512
+230,Routing,0.960554
+230,Host/disk wait,0.034688
+230,Expert fetch,12.543252
+230,Expert gate/up,1.076489
+230,Expert down,1.019975
+230,CPU answer wait,3.476567
+230,H2D/other,0.005696
+230,D2H,0.001088
+231,Other kernel,0.003968
+231,Embedding/head,0.015584
+231,Residual/norm,0.800488
+231,Dense projections,3.633558
+231,KDA recurrence/prep,0.462562
+231,DSA / MLA,1.170089
+231,Routing,0.960358
+231,Host/disk wait,0.034272
+231,Expert fetch,13.350199
+231,Expert gate/up,1.071468
+231,Expert down,0.732039
+231,CPU answer wait,3.514903
+231,H2D/other,0.009088
+231,D2H,0.001088
+232,Other kernel,0.003904
+232,Embedding/head,0.016128
+232,Residual/norm,0.799941
+232,Dense projections,3.674674
+232,KDA recurrence/prep,0.463943
+232,DSA / MLA,1.165224
+232,Routing,0.969931
+232,Host/disk wait,0.0344
+232,Expert fetch,16.548302
+232,Expert gate/up,1.036651
+232,Expert down,0.709637
+232,CPU answer wait,1.973934
+232,H2D/other,0.005728
+232,D2H,0.001088
+233,Other kernel,0.003872
+233,Embedding/head,0.017504
+233,Residual/norm,0.802277
+233,Dense projections,3.898811
+233,KDA recurrence/prep,0.462499
+233,DSA / MLA,1.167784
+233,Routing,0.963205
+233,Host/disk wait,0.034208
+233,Expert fetch,14.573928
+233,Expert gate/up,1.0826
+233,Expert down,0.729827
+233,CPU answer wait,2.341741
+233,H2D/other,0.003584
+233,D2H,0.00112
+234,Other kernel,0.004
+234,Embedding/head,0.016864
+234,Residual/norm,0.801827
+234,Dense projections,3.611733
+234,KDA recurrence/prep,0.458244
+234,DSA / MLA,1.161513
+234,Routing,0.943721
+234,Host/disk wait,0.034304
+234,Expert fetch,11.128839
+234,Expert gate/up,1.375918
+234,Expert down,0.737284
+234,CPU answer wait,3.06303
+234,H2D/other,0.009216
+234,D2H,0.001088
+235,Other kernel,0.004096
+235,Embedding/head,0.017408
+235,Residual/norm,0.800423
+235,Dense projections,3.623702
+235,KDA recurrence/prep,0.462309
+235,DSA / MLA,1.163751
+235,Routing,1.172583
+235,Host/disk wait,0.03408
+235,Expert fetch,13.246492
+235,Expert gate/up,1.111976
+235,Expert down,0.734276
+235,CPU answer wait,2.502639
+235,H2D/other,0.003552
+235,D2H,0.001408
+236,Other kernel,0.004
+236,Embedding/head,0.017121
+236,Residual/norm,0.799302
+236,Dense projections,3.637175
+236,KDA recurrence/prep,0.46186
+236,DSA / MLA,1.40068
+236,Routing,0.965479
+236,Host/disk wait,0.033856
+236,Expert fetch,14.409479
+236,Expert gate/up,1.044068
+236,Expert down,0.721668
+236,CPU answer wait,2.47189
+236,H2D/other,0.00384
+236,D2H,0.001088
+237,Other kernel,0.003968
+237,Embedding/head,0.016032
+237,Residual/norm,0.801539
+237,Dense projections,3.670234
+237,KDA recurrence/prep,0.467425
+237,DSA / MLA,1.173638
+237,Routing,0.978216
+237,Host/disk wait,0.034208
+237,Expert fetch,15.501896
+237,Expert gate/up,1.008327
+237,Expert down,0.702053
+237,CPU answer wait,3.108633
+237,H2D/other,0.005792
+237,D2H,0.001248
+238,Other kernel,0.004
+238,Embedding/head,0.016672
+238,Residual/norm,0.801543
+238,Dense projections,3.704405
+238,KDA recurrence/prep,0.467682
+238,DSA / MLA,1.164011
+238,Routing,0.985577
+238,Host/disk wait,0.034368
+238,Expert fetch,17.989945
+238,Expert gate/up,0.953386
+238,Expert down,0.680998
+238,CPU answer wait,2.473138
+238,H2D/other,0.00368
+238,D2H,0.001184
+239,Other kernel,0.003904
+239,Embedding/head,0.016224
+239,Residual/norm,0.800616
+239,Dense projections,3.649144
+239,KDA recurrence/prep,0.461025
+239,DSA / MLA,1.171782
+239,Routing,0.962215
+239,Host/disk wait,0.034016
+239,Expert fetch,15.333641
+239,Expert gate/up,1.044484
+239,Expert down,0.724613
+239,CPU answer wait,2.522228
+239,H2D/other,0.01072
+239,D2H,0.001184
+240,Other kernel,0.003968
+240,Embedding/head,0.017056
+240,Residual/norm,0.801355
+240,Dense projections,4.379511
+240,KDA recurrence/prep,0.463427
+240,DSA / MLA,1.16593
+240,Routing,0.971559
+240,Host/disk wait,0.034052
+240,Expert fetch,15.490856
+240,Expert gate/up,0.998986
+240,Expert down,0.703909
+240,CPU answer wait,3.288594
+240,H2D/other,0.003776
+240,D2H,0.001088
+241,Other kernel,0.003936
+241,Embedding/head,0.017152
+241,Residual/norm,0.801161
+241,Dense projections,3.855799
+241,KDA recurrence/prep,0.460832
+241,DSA / MLA,1.402604
+241,Routing,0.953386
+241,Host/disk wait,0.034241
+241,Expert fetch,13.467991
+241,Expert gate/up,1.117006
+241,Expert down,0.736227
+241,CPU answer wait,2.008238
+241,H2D/other,0.003552
+241,D2H,0.001088
+242,Other kernel,0.003904
+242,Embedding/head,0.015809
+242,Residual/norm,0.79367
+242,Dense projections,3.559511
+242,KDA recurrence/prep,0.454913
+242,DSA / MLA,1.168745
+242,Routing,0.933546
+242,Host/disk wait,0.033985
+242,Expert fetch,8.53919
+242,Expert gate/up,1.200043
+242,Expert down,1.066025
+242,CPU answer wait,2.972852
+242,H2D/other,0.006017
+242,D2H,0.001088
+243,Other kernel,0.003904
+243,Embedding/head,0.015936
+243,Residual/norm,0.798051
+243,Dense projections,3.619157
+243,KDA recurrence/prep,0.458146
+243,DSA / MLA,1.162794
+243,Routing,0.949802
+243,Host/disk wait,0.034305
+243,Expert fetch,12.217458
+243,Expert gate/up,1.090761
+243,Expert down,0.735812
+243,CPU answer wait,2.610964
+243,H2D/other,0.008192
+243,D2H,0.00112
+244,Other kernel,0.003872
+244,Embedding/head,0.016256
+244,Residual/norm,0.799139
+244,Dense projections,3.843128
+244,KDA recurrence/prep,0.455012
+244,DSA / MLA,1.379465
+244,Routing,0.93396
+244,Host/disk wait,0.034273
+244,Expert fetch,9.708964
+244,Expert gate/up,1.182885
+244,Expert down,0.758916
+244,CPU answer wait,3.08457
+244,H2D/other,0.008544
+244,D2H,0.001088
+245,Other kernel,0.003904
+245,Embedding/head,0.01712
+245,Residual/norm,0.80183
+245,Dense projections,4.348476
+245,KDA recurrence/prep,0.461442
+245,DSA / MLA,1.18116
+245,Routing,0.949607
+245,Host/disk wait,0.033856
+245,Expert fetch,12.870453
+245,Expert gate/up,1.072262
+245,Expert down,0.731177
+245,CPU answer wait,2.899409
+245,H2D/other,0.003936
+245,D2H,0.001184
+246,Other kernel,0.003904
+246,Embedding/head,0.015681
+246,Residual/norm,0.802468
+246,Dense projections,3.906429
+246,KDA recurrence/prep,0.458273
+246,DSA / MLA,1.166824
+246,Routing,0.946888
+246,Host/disk wait,0.034304
+246,Expert fetch,13.299997
+246,Expert gate/up,1.10628
+246,Expert down,0.735524
+246,CPU answer wait,2.477361
+246,H2D/other,0.008704
+246,D2H,0.001088
+247,Other kernel,0.003904
+247,Embedding/head,0.015968
+247,Residual/norm,0.802472
+247,Dense projections,3.641786
+247,KDA recurrence/prep,0.807491
+247,DSA / MLA,1.167593
+247,Routing,1.165034
+247,Host/disk wait,0.034176
+247,Expert fetch,14.281157
+247,Expert gate/up,1.066466
+247,Expert down,0.726818
+247,CPU answer wait,2.558612
+247,H2D/other,0.003905
+247,D2H,0.001088
+248,Other kernel,0.003936
+248,Embedding/head,0.016705
+248,Residual/norm,0.800775
+248,Dense projections,3.915257
+248,KDA recurrence/prep,0.464323
+248,DSA / MLA,1.154506
+248,Routing,0.965574
+248,Host/disk wait,0.034016
+248,Expert fetch,16.125133
+248,Expert gate/up,1.013448
+248,Expert down,0.708231
+248,CPU answer wait,2.65717
+248,H2D/other,0.005984
+248,D2H,0.001088
+249,Other kernel,0.003968
+249,Embedding/head,0.017248
+249,Residual/norm,0.800711
+249,Dense projections,3.616091
+249,KDA recurrence/prep,0.460482
+249,DSA / MLA,1.176808
+249,Routing,0.948904
+249,Host/disk wait,0.034336
+249,Expert fetch,12.862548
+249,Expert gate/up,1.084843
+249,Expert down,0.722501
+249,CPU answer wait,3.086098
+249,H2D/other,0.003872
+249,D2H,0.001056
+250,Other kernel,0.003872
+250,Embedding/head,0.017056
+250,Residual/norm,0.800938
+250,Dense projections,3.606326
+250,KDA recurrence/prep,0.458498
+250,DSA / MLA,1.15364
+250,Routing,0.944131
+250,Host/disk wait,0.03424
+250,Expert fetch,12.315927
+250,Expert gate/up,1.104074
+250,Expert down,0.738117
+250,CPU answer wait,2.748401
+250,H2D/other,0.004928
+250,D2H,0.00112
+251,Other kernel,0.003968
+251,Embedding/head,0.01632
+251,Residual/norm,1.144327
+251,Dense projections,3.580671
+251,KDA recurrence/prep,0.452001
+251,DSA / MLA,1.159335
+251,Routing,0.927683
+251,Host/disk wait,0.034337
+251,Expert fetch,9.41258
+251,Expert gate/up,1.18743
+251,Expert down,0.755625
+251,CPU answer wait,2.377258
+251,H2D/other,0.005664
+251,D2H,0.00112
+252,Other kernel,0.004032
+252,Embedding/head,0.016449
+252,Residual/norm,0.795464
+252,Dense projections,3.594614
+252,KDA recurrence/prep,0.457189
+252,DSA / MLA,1.170921
+252,Routing,0.92855
+252,Host/disk wait,0.034112
+252,Expert fetch,10.56407
+252,Expert gate/up,1.174568
+252,Expert down,0.769765
+252,CPU answer wait,1.722507
+252,H2D/other,0.00464
+252,D2H,0.001408
+253,Other kernel,0.003936
+253,Embedding/head,0.01696
+253,Residual/norm,0.798694
+253,Dense projections,3.552952
+253,KDA recurrence/prep,0.450915
+253,DSA / MLA,1.148777
+253,Routing,0.915234
+253,Host/disk wait,0.034144
+253,Expert fetch,7.929274
+253,Expert gate/up,1.229127
+253,Expert down,0.783974
+253,CPU answer wait,1.983886
+253,H2D/other,0.003936
+253,D2H,0.001408
+254,Other kernel,0.003904
+254,Embedding/head,0.016704
+254,Residual/norm,0.794916
+254,Dense projections,3.810417
+254,KDA recurrence/prep,0.455586
+254,DSA / MLA,1.147594
+254,Routing,0.916265
+254,Host/disk wait,0.034112
+254,Expert fetch,8.018199
+254,Expert gate/up,1.64129
+254,Expert down,0.780518
+254,CPU answer wait,2.477489
+254,H2D/other,0.003968
+254,D2H,0.001696
+255,Other kernel,0.003872
+255,Embedding/head,0.015808
+255,Residual/norm,0.792836
+255,Dense projections,3.542141
+255,KDA recurrence/prep,0.45405
+255,DSA / MLA,1.382568
+255,Routing,0.91028
+255,Host/disk wait,0.034433
+255,Expert fetch,7.408945
+255,Expert gate/up,1.253769
+255,Expert down,0.791334
+255,CPU answer wait,2.447824
+255,H2D/other,0.0056
+255,D2H,0.001024
+256,Other kernel,0.003936
+256,Embedding/head,0.016736
+256,Residual/norm,1.13447
+256,Dense projections,3.561336
+256,KDA recurrence/prep,0.454981
+256,DSA / MLA,1.164041
+256,Routing,0.911141
+256,Host/disk wait,0.034176
+256,Expert fetch,7.527092
+256,Expert gate/up,1.225392
+256,Expert down,0.792227
+256,CPU answer wait,3.615863
+256,H2D/other,0.003872
+256,D2H,0.001376
+257,Other kernel,0.004064
+257,Embedding/head,0.016513
+257,Residual/norm,0.793955
+257,Dense projections,3.830328
+257,KDA recurrence/prep,0.456197
+257,DSA / MLA,1.618539
+257,Routing,0.911045
+257,Host/disk wait,0.03392
+257,Expert fetch,6.811021
+257,Expert gate/up,1.562539
+257,Expert down,0.799556
+257,CPU answer wait,2.811379
+257,H2D/other,0.003936
+257,D2H,0.002016
+258,Other kernel,0.003904
+258,Embedding/head,0.016672
+258,Residual/norm,0.789446
+258,Dense projections,3.500025
+258,KDA recurrence/prep,0.447459
+258,DSA / MLA,1.148456
+258,Routing,0.898819
+258,Host/disk wait,0.034272
+258,Expert fetch,4.422785
+258,Expert gate/up,1.319146
+258,Expert down,0.814757
+258,CPU answer wait,2.678706
+258,H2D/other,0.00336
+258,D2H,0.001376
+259,Other kernel,0.004064
+259,Embedding/head,0.016576
+259,Residual/norm,0.794407
+259,Dense projections,3.568188
+259,KDA recurrence/prep,0.455683
+259,DSA / MLA,1.154344
+259,Routing,0.91898
+259,Host/disk wait,0.034144
+259,Expert fetch,8.752382
+259,Expert gate/up,1.202984
+259,Expert down,0.77236
+259,CPU answer wait,2.758992
+259,H2D/other,0.003424
+259,D2H,0.001088
+260,Other kernel,0.003872
+260,Embedding/head,0.016736
+260,Residual/norm,0.794731
+260,Dense projections,3.935995
+260,KDA recurrence/prep,0.446755
+260,DSA / MLA,1.172133
+260,Routing,0.883908
+260,Host/disk wait,0.034208
+260,Expert fetch,5.344836
+260,Expert gate/up,1.329801
+260,Expert down,1.0346
+260,CPU answer wait,1.683274
+260,H2D/other,0.008416
+260,D2H,0.001184
+261,Other kernel,0.003936
+261,Embedding/head,0.017152
+261,Residual/norm,0.793827
+261,Dense projections,3.584152
+261,KDA recurrence/prep,0.456865
+261,DSA / MLA,1.16241
+261,Routing,0.930919
+261,Host/disk wait,0.033953
+261,Expert fetch,11.161129
+261,Expert gate/up,1.124811
+261,Expert down,0.751844
+261,CPU answer wait,2.324337
+261,H2D/other,0.003552
+261,D2H,0.001056
+262,Other kernel,0.004064
+262,Embedding/head,0.016225
+262,Residual/norm,0.79738
+262,Dense projections,3.570838
+262,KDA recurrence/prep,0.454818
+262,DSA / MLA,1.154569
+262,Routing,0.926569
+262,Host/disk wait,0.03376
+262,Expert fetch,9.462782
+262,Expert gate/up,1.195115
+262,Expert down,0.761672
+262,CPU answer wait,2.518224
+262,H2D/other,0.006624
+262,D2H,0.001088
+263,Other kernel,0.004128
+263,Embedding/head,0.016608
+263,Residual/norm,0.798248
+263,Dense projections,3.622745
+263,KDA recurrence/prep,0.458208
+263,DSA / MLA,1.161544
+263,Routing,0.94839
+263,Host/disk wait,0.034048
+263,Expert fetch,12.489744
+263,Expert gate/up,1.090414
+263,Expert down,0.740709
+263,CPU answer wait,2.848047
+263,H2D/other,0.004288
+263,D2H,0.001472
+264,Other kernel,0.003936
+264,Embedding/head,0.015744
+264,Residual/norm,0.802755
+264,Dense projections,3.586136
+264,KDA recurrence/prep,0.456642
+264,DSA / MLA,1.156233
+264,Routing,0.926982
+264,Host/disk wait,0.03472
+264,Expert fetch,11.103436
+264,Expert gate/up,1.144295
+264,Expert down,0.76148
+264,CPU answer wait,2.116943
+264,H2D/other,0.003969
+264,D2H,0.001184
+265,Other kernel,0.004064
+265,Embedding/head,0.016
+265,Residual/norm,0.795844
+265,Dense projections,3.626298
+265,KDA recurrence/prep,0.459621
+265,DSA / MLA,1.165576
+265,Routing,0.959141
+265,Host/disk wait,0.03392
+265,Expert fetch,13.638015
+265,Expert gate/up,1.057443
+265,Expert down,0.723365
+265,CPU answer wait,2.91247
+265,H2D/other,0.005505
+265,D2H,0.001088
+266,Other kernel,0.00432
+266,Embedding/head,0.016512
+266,Residual/norm,0.799172
+266,Dense projections,3.599513
+266,KDA recurrence/prep,0.459938
+266,DSA / MLA,1.15892
+266,Routing,0.941124
+266,Host/disk wait,0.034272
+266,Expert fetch,11.560275
+266,Expert gate/up,1.11463
+266,Expert down,0.741254
+266,CPU answer wait,2.854066
+266,H2D/other,0.005696
+266,D2H,0.001088
+267,Other kernel,0.003936
+267,Embedding/head,0.01632
+267,Residual/norm,0.799652
+267,Dense projections,3.59181
+267,KDA recurrence/prep,0.456066
+267,DSA / MLA,1.152614
+267,Routing,0.946307
+267,Host/disk wait,0.034688
+267,Expert fetch,11.081228
+267,Expert gate/up,1.125736
+267,Expert down,0.738088
+267,CPU answer wait,2.87237
+267,H2D/other,0.005248
+267,D2H,0.001088
+268,Other kernel,0.003904
+268,Embedding/head,0.017409
+268,Residual/norm,0.798694
+268,Dense projections,3.607162
+268,KDA recurrence/prep,0.459041
+268,DSA / MLA,1.155303
+268,Routing,0.946757
+268,Host/disk wait,0.03424
+268,Expert fetch,11.794002
+268,Expert gate/up,1.126087
+268,Expert down,0.743912
+268,CPU answer wait,2.427951
+268,H2D/other,0.006016
+268,D2H,0.001056
+269,Other kernel,0.003904
+269,Embedding/head,0.016737
+269,Residual/norm,0.799209
+269,Dense projections,3.572405
+269,KDA recurrence/prep,0.454147
+269,DSA / MLA,1.158889
+269,Routing,1.107206
+269,Host/disk wait,0.034592
+269,Expert fetch,9.496768
+269,Expert gate/up,1.188554
+269,Expert down,0.772261
+269,CPU answer wait,2.434157
+269,H2D/other,0.003488
+269,D2H,0.001024
+270,Other kernel,0.004128
+270,Embedding/head,0.01648
+270,Residual/norm,0.79911
+270,Dense projections,3.584536
+270,KDA recurrence/prep,0.454948
+270,DSA / MLA,1.154408
+270,Routing,0.926949
+270,Host/disk wait,0.034273
+270,Expert fetch,10.158501
+270,Expert gate/up,1.193647
+270,Expert down,0.768195
+270,CPU answer wait,2.019307
+270,H2D/other,0.008737
+270,D2H,0.001088
+271,Other kernel,0.00384
+271,Embedding/head,0.017088
+271,Residual/norm,0.999908
+271,Dense projections,3.533562
+271,KDA recurrence/prep,0.451877
+271,DSA / MLA,1.147592
+271,Routing,0.912329
+271,Host/disk wait,0.033824
+271,Expert fetch,6.291112
+271,Expert gate/up,1.247336
+271,Expert down,0.790279
+271,CPU answer wait,2.72991
+271,H2D/other,0.004192
+271,D2H,0.001088
+272,Other kernel,0.004032
+272,Embedding/head,0.015937
+272,Residual/norm,0.798404
+272,Dense projections,3.59523
+272,KDA recurrence/prep,0.456004
+272,DSA / MLA,1.160584
+272,Routing,0.932451
+272,Host/disk wait,0.034624
+272,Expert fetch,11.276529
+272,Expert gate/up,1.134564
+272,Expert down,0.755398
+272,CPU answer wait,2.169455
+272,H2D/other,0.003936
+272,D2H,0.154369
+273,Other kernel,0.004032
+273,Embedding/head,0.01664
+273,Residual/norm,0.799016
+273,Dense projections,3.577209
+273,KDA recurrence/prep,0.454308
+273,DSA / MLA,1.174633
+273,Routing,0.930853
+273,Host/disk wait,0.034496
+273,Expert fetch,9.600381
+273,Expert gate/up,1.175463
+273,Expert down,0.762156
+273,CPU answer wait,2.99266
+273,H2D/other,0.006112
+273,D2H,0.001216
+274,Other kernel,0.003936
+274,Embedding/head,0.01664
+274,Residual/norm,0.79389
+274,Dense projections,3.603766
+274,KDA recurrence/prep,0.456708
+274,DSA / MLA,1.155815
+274,Routing,0.935113
+274,Host/disk wait,0.034048
+274,Expert fetch,11.284626
+274,Expert gate/up,1.151587
+274,Expert down,0.761541
+274,CPU answer wait,2.784278
+274,H2D/other,0.00384
+274,D2H,0.001088
+275,Other kernel,0.003968
+275,Embedding/head,0.016992
+275,Residual/norm,1.138372
+275,Dense projections,3.62272
+275,KDA recurrence/prep,0.461121
+275,DSA / MLA,1.158825
+275,Routing,0.956968
+275,Host/disk wait,0.034208
+275,Expert fetch,12.834359
+275,Expert gate/up,1.093259
+275,Expert down,0.724932
+275,CPU answer wait,2.84869
+275,H2D/other,0.003616
+275,D2H,0.001568
+276,Other kernel,0.004
+276,Embedding/head,0.017025
+276,Residual/norm,0.798886
+276,Dense projections,3.873974
+276,KDA recurrence/prep,0.45501
+276,DSA / MLA,1.165544
+276,Routing,0.930307
+276,Host/disk wait,0.034305
+276,Expert fetch,8.819359
+276,Expert gate/up,1.182441
+276,Expert down,0.763652
+276,CPU answer wait,2.964148
+276,H2D/other,0.005696
+276,D2H,0.000768
+277,Other kernel,0.003968
+277,Embedding/head,0.01584
+277,Residual/norm,0.796515
+277,Dense projections,3.628598
+277,KDA recurrence/prep,0.463653
+277,DSA / MLA,1.159496
+277,Routing,0.958405
+277,Host/disk wait,0.034304
+277,Expert fetch,13.798114
+277,Expert gate/up,1.023014
+277,Expert down,0.718276
+277,CPU answer wait,3.090968
+277,H2D/other,0.00576
+277,D2H,0.001216
+278,Other kernel,0.003904
+278,Embedding/head,0.016608
+278,Residual/norm,0.803142
+278,Dense projections,3.969576
+278,KDA recurrence/prep,0.456161
+278,DSA / MLA,1.750695
+278,Routing,1.153379
+278,Host/disk wait,0.03424
+278,Expert fetch,10.869774
+278,Expert gate/up,1.158056
+278,Expert down,0.765026
+278,CPU answer wait,2.221738
+278,H2D/other,0.01008
+278,D2H,0.001408
+279,Other kernel,0.003968
+279,Embedding/head,0.017344
+279,Residual/norm,0.800041
+279,Dense projections,3.602706
+279,KDA recurrence/prep,0.453923
+279,DSA / MLA,1.148584
+279,Routing,0.9378
+279,Host/disk wait,0.034144
+279,Expert fetch,11.788146
+279,Expert gate/up,1.119972
+279,Expert down,1.034955
+279,CPU answer wait,2.376559
+279,H2D/other,0.003584
+279,D2H,0.001664
+280,Other kernel,0.003968
+280,Embedding/head,0.017728
+280,Residual/norm,0.799333
+280,Dense projections,3.597278
+280,KDA recurrence/prep,0.457763
+280,DSA / MLA,1.167719
+280,Routing,0.937697
+280,Host/disk wait,0.03456
+280,Expert fetch,11.463918
+280,Expert gate/up,1.151662
+280,Expert down,0.752166
+280,CPU answer wait,2.429449
+280,H2D/other,0.003936
+280,D2H,0.001696
+281,Other kernel,0.003936
+281,Embedding/head,0.016704
+281,Residual/norm,0.797058
+281,Dense projections,3.590173
+281,KDA recurrence/prep,0.456834
+281,DSA / MLA,1.171528
+281,Routing,0.93809
+281,Host/disk wait,0.034016
+281,Expert fetch,10.967819
+281,Expert gate/up,1.126053
+281,Expert down,0.74746
+281,CPU answer wait,3.12988
+281,H2D/other,0.004352
+281,D2H,0.001792
+282,Other kernel,0.003968
+282,Embedding/head,0.016704
+282,Residual/norm,0.797419
+282,Dense projections,3.613851
+282,KDA recurrence/prep,0.462305
+282,DSA / MLA,1.155975
+282,Routing,0.953317
+282,Host/disk wait,0.033952
+282,Expert fetch,12.032368
+282,Expert gate/up,1.060872
+282,Expert down,0.726277
+282,CPU answer wait,3.721559
+282,H2D/other,0.003776
+282,D2H,0.00112
+283,Other kernel,0.003936
+283,Embedding/head,0.016704
+283,Residual/norm,0.799301
+283,Dense projections,3.591032
+283,KDA recurrence/prep,0.455972
+283,DSA / MLA,1.16532
+283,Routing,1.271338
+283,Host/disk wait,0.034146
+283,Expert fetch,11.899666
+283,Expert gate/up,1.141604
+283,Expert down,0.74455
+283,CPU answer wait,2.025134
+283,H2D/other,0.00368
+283,D2H,0.00112
+284,Other kernel,0.004
+284,Embedding/head,0.017376
+284,Residual/norm,0.801637
+284,Dense projections,3.614518
+284,KDA recurrence/prep,0.459428
+284,DSA / MLA,1.153224
+284,Routing,0.951684
+284,Host/disk wait,0.034176
+284,Expert fetch,13.737377
+284,Expert gate/up,1.084039
+284,Expert down,0.736836
+284,CPU answer wait,2.086702
+284,H2D/other,0.008064
+284,D2H,0.001088
+285,Other kernel,0.004064
+285,Embedding/head,0.016512
+285,Residual/norm,0.801891
+285,Dense projections,3.585018
+285,KDA recurrence/prep,0.457669
+285,DSA / MLA,1.173574
+285,Routing,0.933094
+285,Host/disk wait,0.03408
+285,Expert fetch,11.084494
+285,Expert gate/up,1.172034
+285,Expert down,0.763178
+285,CPU answer wait,2.246572
+285,H2D/other,0.003488
+285,D2H,0.001312
+286,Other kernel,0.004032
+286,Embedding/head,0.01664
+286,Residual/norm,0.797443
+286,Dense projections,3.572733
+286,KDA recurrence/prep,0.453633
+286,DSA / MLA,1.163624
+286,Routing,0.92727
+286,Host/disk wait,0.03424
+286,Expert fetch,9.60151
+286,Expert gate/up,1.168648
+286,Expert down,0.767301
+286,CPU answer wait,2.65157
+286,H2D/other,0.003584
+286,D2H,0.001088
+287,Other kernel,0.003936
+287,Embedding/head,0.016608
+287,Residual/norm,1.041641
+287,Dense projections,3.606616
+287,KDA recurrence/prep,0.458884
+287,DSA / MLA,1.162952
+287,Routing,1.140488
+287,Host/disk wait,0.033889
+287,Expert fetch,12.024722
+287,Expert gate/up,1.094983
+287,Expert down,0.740196
+287,CPU answer wait,3.435159
+287,H2D/other,0.00352
+287,D2H,0.00112
+288,Other kernel,0.003776
+288,Embedding/head,0.015968
+288,Residual/norm,0.801667
+288,Dense projections,3.604089
+288,KDA recurrence/prep,0.456963
+288,DSA / MLA,1.172167
+288,Routing,0.939715
+288,Host/disk wait,0.034081
+288,Expert fetch,11.998709
+288,Expert gate/up,1.109191
+288,Expert down,0.742787
+288,CPU answer wait,2.947253
+288,H2D/other,0.00352
+288,D2H,0.001088
+289,Other kernel,0.003936
+289,Embedding/head,0.01632
+289,Residual/norm,0.79924
+289,Dense projections,4.007326
+289,KDA recurrence/prep,0.680837
+289,DSA / MLA,1.187525
+289,Routing,0.95834
+289,Host/disk wait,0.034208
+289,Expert fetch,12.672536
+289,Expert gate/up,1.074315
+289,Expert down,0.720167
+289,CPU answer wait,3.787732
+289,H2D/other,0.00608
+289,D2H,0.001056
+290,Other kernel,0.003936
+290,Embedding/head,0.0176
+290,Residual/norm,0.799334
+290,Dense projections,3.607608
+290,KDA recurrence/prep,0.459814
+290,DSA / MLA,1.185223
+290,Routing,0.941062
+290,Host/disk wait,0.03453
+290,Expert fetch,12.52764
+290,Expert gate/up,1.091333
+290,Expert down,0.730947
+290,CPU answer wait,2.760885
+290,H2D/other,0.00384
+290,D2H,0.00112
+291,Other kernel,0.004096
+291,Embedding/head,0.016736
+291,Residual/norm,0.79975
+291,Dense projections,3.602548
+291,KDA recurrence/prep,0.457093
+291,DSA / MLA,1.178441
+291,Routing,0.939497
+291,Host/disk wait,0.034304
+291,Expert fetch,11.133776
+291,Expert gate/up,1.131496
+291,Expert down,0.741122
+291,CPU answer wait,2.455122
+291,H2D/other,0.005856
+291,D2H,0.001088
+292,Other kernel,0.003904
+292,Embedding/head,0.016096
+292,Residual/norm,0.79604
+292,Dense projections,3.662035
+292,KDA recurrence/prep,0.465766
+292,DSA / MLA,1.165512
+292,Routing,0.973509
+292,Host/disk wait,0.034337
+292,Expert fetch,15.681164
+292,Expert gate/up,1.012678
+292,Expert down,0.708678
+292,CPU answer wait,2.949041
+292,H2D/other,0.003488
+292,D2H,0.00112
+293,Other kernel,0.003936
+293,Embedding/head,0.01648
+293,Residual/norm,0.799689
+293,Dense projections,3.668537
+293,KDA recurrence/prep,0.467204
+293,DSA / MLA,1.19815
+293,Routing,1.188677
+293,Host/disk wait,0.034304
+293,Expert fetch,16.283823
+293,Expert gate/up,1.021356
+293,Expert down,0.712549
+293,CPU answer wait,2.294989
+293,H2D/other,0.003552
+293,D2H,0.00112
+294,Other kernel,0.00416
+294,Embedding/head,0.01648
+294,Residual/norm,1.082728
+294,Dense projections,3.641017
+294,KDA recurrence/prep,0.462564
+294,DSA / MLA,1.18932
+294,Routing,0.959946
+294,Host/disk wait,0.034528
+294,Expert fetch,14.426655
+294,Expert gate/up,1.072745
+294,Expert down,0.717958
+294,CPU answer wait,2.648017
+294,H2D/other,0.003648
+294,D2H,0.00144
+295,Other kernel,0.003808
+295,Embedding/head,0.015936
+295,Residual/norm,1.019175
+295,Dense projections,3.851964
+295,KDA recurrence/prep,0.4577
+295,DSA / MLA,1.188264
+295,Routing,0.944709
+295,Host/disk wait,0.034464
+295,Expert fetch,10.986508
+295,Expert gate/up,1.143656
+295,Expert down,0.74388
+295,CPU answer wait,3.083858
+295,H2D/other,0.009728
+295,D2H,0.00112
+296,Other kernel,0.004032
+296,Embedding/head,0.015872
+296,Residual/norm,0.8017
+296,Dense projections,3.609013
+296,KDA recurrence/prep,0.456194
+296,DSA / MLA,1.171464
+296,Routing,0.94417
+296,Host/disk wait,0.034304
+296,Expert fetch,11.581583
+296,Expert gate/up,1.122949
+296,Expert down,0.745384
+296,CPU answer wait,2.310419
+296,H2D/other,0.005696
+296,D2H,0.001088
+297,Other kernel,0.003936
+297,Embedding/head,0.01696
+297,Residual/norm,0.800194
+297,Dense projections,3.582555
+297,KDA recurrence/prep,0.457122
+297,DSA / MLA,1.172041
+297,Routing,0.932231
+297,Host/disk wait,0.034496
+297,Expert fetch,9.966695
+297,Expert gate/up,1.164585
+297,Expert down,0.757574
+297,CPU answer wait,2.658575
+297,H2D/other,0.006528
+297,D2H,0.001632
+298,Other kernel,0.004128
+298,Embedding/head,0.016512
+298,Residual/norm,0.798531
+298,Dense projections,3.590424
+298,KDA recurrence/prep,0.455814
+298,DSA / MLA,1.39921
+298,Routing,0.924678
+298,Host/disk wait,0.034656
+298,Expert fetch,10.035495
+298,Expert gate/up,1.697225
+298,Expert down,0.772743
+298,CPU answer wait,2.296303
+298,H2D/other,0.007904
+298,D2H,0.153761
+299,Other kernel,0.003936
+299,Embedding/head,0.018144
+299,Residual/norm,0.800548
+299,Dense projections,3.607324
+299,KDA recurrence/prep,0.455907
+299,DSA / MLA,1.158694
+299,Routing,1.490506
+299,Host/disk wait,0.03392
+299,Expert fetch,11.561581
+299,Expert gate/up,1.130536
+299,Expert down,0.741094
+299,CPU answer wait,2.888756
+299,H2D/other,0.003552
+299,D2H,0.192162
+300,Other kernel,0.003968
+300,Embedding/head,0.016832
+300,Residual/norm,1.362918
+300,Dense projections,4.548738
+300,KDA recurrence/prep,0.465988
+300,DSA / MLA,1.175335
+300,Routing,0.944582
+300,Host/disk wait,0.03424
+300,Expert fetch,10.88561
+300,Expert gate/up,1.120902
+300,Expert down,0.753316
+300,CPU answer wait,3.915802
+300,H2D/other,0.004
+300,D2H,0.001376
+301,Other kernel,0.003936
+301,Embedding/head,0.0168
+301,Residual/norm,0.80196
+301,Dense projections,3.920087
+301,KDA recurrence/prep,0.462754
+301,DSA / MLA,1.177224
+301,Routing,0.94106
+301,Host/disk wait,0.033984
+301,Expert fetch,10.828717
+301,Expert gate/up,1.163813
+301,Expert down,0.763302
+301,CPU answer wait,2.542958
+301,H2D/other,0.006016
+301,D2H,0.147521
+302,Other kernel,0.003968
+302,Embedding/head,0.016992
+302,Residual/norm,0.802468
+302,Dense projections,3.588512
+302,KDA recurrence/prep,0.457955
+302,DSA / MLA,1.171334
+302,Routing,0.917573
+302,Host/disk wait,0.034145
+302,Expert fetch,10.209928
+302,Expert gate/up,1.225574
+302,Expert down,0.777892
+302,CPU answer wait,2.36626
+302,H2D/other,0.0064
+302,D2H,0.149569
+303,Other kernel,0.003872
+303,Embedding/head,0.015968
+303,Residual/norm,0.798179
+303,Dense projections,3.847066
+303,KDA recurrence/prep,0.460358
+303,DSA / MLA,1.505964
+303,Routing,0.956067
+303,Host/disk wait,0.033856
+303,Expert fetch,13.63981
+303,Expert gate/up,1.069481
+303,Expert down,0.734051
+303,CPU answer wait,2.188078
+303,H2D/other,0.00608
+303,D2H,0.001216
+304,Other kernel,0.003904
+304,Embedding/head,0.015713
+304,Residual/norm,0.802468
+304,Dense projections,4.056472
+304,KDA recurrence/prep,0.459651
+304,DSA / MLA,1.480364
+304,Routing,1.174092
+304,Host/disk wait,0.033952
+304,Expert fetch,12.802487
+304,Expert gate/up,1.062218
+304,Expert down,1.016803
+304,CPU answer wait,3.08569
+304,H2D/other,0.00608
+304,D2H,0.147681
+305,Other kernel,0.004032
+305,Embedding/head,0.01568
+305,Residual/norm,1.045158
+305,Dense projections,4.008214
+305,KDA recurrence/prep,0.459752
+305,DSA / MLA,1.178024
+305,Routing,0.942214
+305,Host/disk wait,0.034048
+305,Expert fetch,10.923439
+305,Expert gate/up,1.159268
+305,Expert down,0.755843
+305,CPU answer wait,2.805143
+305,H2D/other,0.009281
+305,D2H,0.00128
+306,Other kernel,0.003937
+306,Embedding/head,0.016832
+306,Residual/norm,0.800748
+306,Dense projections,4.337689
+306,KDA recurrence/prep,0.467586
+306,DSA / MLA,1.40398
+306,Routing,0.977255
+306,Host/disk wait,0.034272
+306,Expert fetch,16.172206
+306,Expert gate/up,0.990824
+306,Expert down,0.70487
+306,CPU answer wait,2.731507
+306,H2D/other,0.006016
+306,D2H,0.001312
+307,Other kernel,0.003937
+307,Embedding/head,0.015744
+307,Residual/norm,0.800651
+307,Dense projections,4.110455
+307,KDA recurrence/prep,0.4672
+307,DSA / MLA,1.193547
+307,Routing,0.985292
+307,Host/disk wait,0.034304
+307,Expert fetch,18.968096
+307,Expert gate/up,1.291725
+307,Expert down,0.695143
+307,CPU answer wait,1.837229
+307,H2D/other,0.005632
+307,D2H,0.001408
+308,Other kernel,0.004096
+308,Embedding/head,0.016993
+308,Residual/norm,0.802182
+308,Dense projections,3.609239
+308,KDA recurrence/prep,0.463431
+308,DSA / MLA,1.182152
+308,Routing,0.943109
+308,Host/disk wait,0.034752
+308,Expert fetch,10.822221
+308,Expert gate/up,1.155237
+308,Expert down,0.754726
+308,CPU answer wait,3.192726
+308,H2D/other,0.00656
+308,D2H,0.001376
+309,Other kernel,0.003904
+309,Embedding/head,0.017024
+309,Residual/norm,0.80314
+309,Dense projections,3.61414
+309,KDA recurrence/prep,0.679013
+309,DSA / MLA,1.491468
+309,Routing,1.162246
+309,Host/disk wait,0.034466
+309,Expert fetch,12.063512
+309,Expert gate/up,1.146439
+309,Expert down,1.100964
+309,CPU answer wait,2.502034
+309,H2D/other,0.00352
+309,D2H,0.00112
+310,Other kernel,0.003968
+310,Embedding/head,0.0168
+310,Residual/norm,0.800803
+310,Dense projections,4.19677
+310,KDA recurrence/prep,0.462019
+310,DSA / MLA,1.189287
+310,Routing,1.27492
+310,Host/disk wait,0.034176
+310,Expert fetch,12.741817
+310,Expert gate/up,1.110374
+310,Expert down,0.747333
+310,CPU answer wait,3.121527
+310,H2D/other,0.003872
+310,D2H,0.00112
+311,Other kernel,0.003968
+311,Embedding/head,0.016672
+311,Residual/norm,0.799234
+311,Dense projections,3.861719
+311,KDA recurrence/prep,0.461478
+311,DSA / MLA,1.173098
+311,Routing,0.939464
+311,Host/disk wait,0.034336
+311,Expert fetch,11.268306
+311,Expert gate/up,1.16791
+311,Expert down,0.756232
+311,CPU answer wait,2.27134
+311,H2D/other,0.005664
+311,D2H,0.001088
+312,Other kernel,0.003904
+312,Embedding/head,0.016736
+312,Residual/norm,0.800262
+312,Dense projections,3.597367
+312,KDA recurrence/prep,0.458181
+312,DSA / MLA,1.172648
+312,Routing,0.939206
+312,Host/disk wait,0.03424
+312,Expert fetch,10.931247
+312,Expert gate/up,1.508521
+312,Expert down,0.751169
+312,CPU answer wait,2.442802
+312,H2D/other,0.008288
+312,D2H,0.398275
+313,Other kernel,0.004064
+313,Embedding/head,0.017216
+313,Residual/norm,1.026313
+313,Dense projections,4.00502
+313,KDA recurrence/prep,0.461217
+313,DSA / MLA,1.182985
+313,Routing,0.95335
+313,Host/disk wait,0.034144
+313,Expert fetch,14.205826
+313,Expert gate/up,1.072013
+313,Expert down,0.730819
+313,CPU answer wait,2.825746
+313,H2D/other,0.009344
+313,D2H,0.147937
+314,Other kernel,0.003904
+314,Embedding/head,0.016128
+314,Residual/norm,1.143749
+314,Dense projections,3.642587
+314,KDA recurrence/prep,0.463492
+314,DSA / MLA,1.379081
+314,Routing,0.958247
+314,Host/disk wait,0.034113
+314,Expert fetch,14.602437
+314,Expert gate/up,1.339205
+314,Expert down,0.729991
+314,CPU answer wait,2.506129
+314,H2D/other,0.00624
+314,D2H,0.001088
+315,Other kernel,0.003904
+315,Embedding/head,0.016608
+315,Residual/norm,0.801252
+315,Dense projections,4.01033
+315,KDA recurrence/prep,0.45914
+315,DSA / MLA,1.175528
+315,Routing,0.944425
+315,Host/disk wait,0.033728
+315,Expert fetch,11.212331
+315,Expert gate/up,1.150218
+315,Expert down,0.757064
+315,CPU answer wait,2.939954
+315,H2D/other,0.003808
+315,D2H,0.001088

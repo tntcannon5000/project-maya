@@ -1,0 +1,7 @@
+{
+  "before_cleanup": "retained-short",
+  "after_cleanup": "retained-clean",
+  "logits": 39649280,
+  "exact": true,
+  "max_abs": 0.0
+}
