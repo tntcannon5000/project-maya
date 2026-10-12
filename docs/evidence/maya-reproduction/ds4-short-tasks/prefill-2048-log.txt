@@ -1,0 +1,42 @@
+ds4: CUDA backend initialized on NVIDIA GeForce RTX 5090 (sm_120) dev=0
+ds4: GLM SSD streaming request adjusted to fit memory: full layers 0 -> 0, cache 2800 -> 2575 experts, prefill reserve 0.00 -> 0.00 GiB
+ds4: GLM SSD streaming decode map: global 8.24 GiB (6.12 GiB beyond the active layer window)
+ds4: SSD streaming initial cuda model map (134 spans, 8.01 GiB tensor span)
+ds4: loading 79.73 GiB into owned pinned expert RAM (126 spans)
+ds4: pinned expert source ready: 79.73 GiB in 40.62s
+ds4: CUDA preparing model tensor mappings
+ds4: CUDA loading model tensors into device cache
+ds4: CUDA startup model preparation covered 8.01 GiB of tensor spans in 4.048s
+ds4: cuda backend initialized for graph diagnostics
+ds4: memory: KV 1.46 GiB (raw 0.00 + compressed 1.46) + buffers 3.16 GiB + resident model 8.24 GiB + expert cache 16.97 GiB = 29.84 GiB planned
+ds4: memory detail: ctx=131072 prefill_cap=2048 raw_kv_rows=0 compressed_kv_rows=131072 backend=cuda
+ds4-bench: context buffers 4736.53 MiB (ctx=131072, backend=cuda, prefill_chunk=2048, raw_kv_rows=0, compressed_kv_rows=131072)
+ds4: GLM SSD streaming decode map: global 8.24 GiB (0.22 GiB beyond the active layer window)
+ds4: GLM session ctx=131072 (model max=1048576); prefill/work cap=4096; dense attention limit=2051
+ds4: GLM graph using compact DSA KV only; expanded full-attention KV cache is skipped
+ds4: GLM graph allocating compact DSA cache: rows=131072 logical_ctx=131072 kv_layers=45 indexer_layers=11 f16 1.46 GiB
+ds4: GLM compact indexed prefill chunk=2048 score_rows=2048 score_scratch=256.00 MiB
+ds4: pinned prefill pipeline: two raw layer buffers, 3.797 GiB
+ds4: pipeline pinned prefill: 288 compact experts, aligned MMQ, direct full-layer repack
+ds4: moe gateup y-indirect q8 staging engage (flat-pool p5b, first n_tokens=2048 n_assign=16384)
+ds4: reclaimed GLM53 prefill workspace 897.88 MiB for decode experts
+ds4: exact cooperative HC mixer enabled
+ds4: exact GLM53 HC collapse/weighted RMS fusion enabled
+ds4: exact KDA shared Q8 input enabled
+ds4: exact selected KV dual-view compaction enabled (4200448-byte independent scratch)
+ds4: exact independent attention score rows enabled
+ds4: pinned mapped actual-route readback enabled
+ds4: reclaimed prefill expanded weights 2588.00 MiB for decode experts
+ds4: decode cache budget free=17647.00 MiB reserve=700.00 MiB q8_f16=0.00 MiB q8_f32=0.00 MiB tmp=336.00 MiB tensor_scratch=0.00 MiB
+ds4: CUDA SSD expert cache: 2510 slots, 16.55 GiB
+ds4: pinned expert batched copies enabled
+ds4: pinned predictor top-6
+ds4: pinned predictor mapped ID publication enabled
+ds4: pinned component staging enabled (whole gate/up, deferred down)
+ds4: pinned prediction stream-ordered publication enabled
+ds4-bench: decode_latency frontier=2048 token=0 ms=225.007600
+ds4: pinned predictor probes=41 predicted=246 matched_top8=203 uploaded_bytes=1064042496
+ds4: pinned predictor uploaded_experts=246 used_at_next_layer=203 (last unobserved batch included in uploads)
+ds4: pinned predictor component_uploads=246 omitted_down_bytes=677117952
+ds4: pinned demand layers=42 address_hits=203 uploaded_experts=133 uploaded_bytes=1500119040 (address hits include ordered predictions)
+ds4: pinned components layers=42 down_uploads=336 down_backfills=203 down_bytes=924844032

@@ -1,0 +1,188 @@
+{
+  "maya_commit": "cd0593f4ec327cf3cfa66a8fcd87e38a5c25f857",
+  "maya_source": "20e27a23491eb08506d1c291def17a30dc89e92d",
+  "maya_binary_sha256": "D72493FB10141D718BA6426953ED108AD43D0CF2D5B94DE5673277FE0B0157DD",
+  "ds4_commit": "fcf2d39e3f4351fe3c90ba08b7dc1a52765c3abc",
+  "ds4_cli_sha256": "8628F874DB2603D0A7F321EF1DA46DE8129B02DD65846357240E458C8FFB360C",
+  "ds4_bench_sha256": "9E0E80552F6EB659F219CA9ED1EE6B9614CD72F1E95769FAF9E6EE4DB9ABC340",
+  "ds4_environment_base": [
+    {
+      "Name": "DS4_CUDA_GLM53_HC_EXACT_ROWS",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_GLM_ATTN_EXACT_ROWS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_GLM_SELECTED_KV_COMPACT",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_GLM53_KDA_SHARED_Q8",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_GLM53_HC_COOPERATIVE",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_GLM53_HC_FUSED_NORM",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_GLM_SHARED_INPUT_PAD",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_BATCH_COPY",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_ORDERED_DEMAND",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_KDA_GRAPH",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_RESIDENT_MAPPED_IDS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_CACHE_RESERVE_MB",
+      "Value": "2560"
+    },
+    {
+      "Name": "DS4_GLM_MEMORY_GUARD_RESERVE_GB",
+      "Value": "2"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_OVERLAP",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREDICT_CORRECTION",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREDICT_MAPPED_IDS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_BENCH_DECODE_TIMINGS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_BENCH_DUMP_DECODE_LOGITS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_EXPERTS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_GLM_ATTN_TC_SCORES",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_GLM53_HC_SPLIT_K",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_ROUTE_MAPPED_IDS",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREDICT",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREFILL_PIPELINE",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_RECLAIM_PREFILL",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_DEVICE_PREDICT",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_HOT_RESIDENCY",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_GLM_SELECTED_KV_PREFETCH",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_Q8_COALESCED",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_BOUNDARY_PREDICT",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREDICT_K",
+      "Value": "6"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_ROUTE_READBACK",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREFILL_DIRECT_REPACK",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_COMPONENT_STAGING",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_GLM53_RECLAIM_WORKSPACE",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_Q8_DECODE_MMA",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_ORDERED_PUBLISH",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_RESIDENT_GATE",
+      "Value": "1"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_DEVICE_CACHE",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_GLM_LORA_ROW_SPLIT",
+      "Value": "0"
+    },
+    {
+      "Name": "DS4_CUDA_PINNED_PREFILL",
+      "Value": "1"
+    }
+  ],
+  "ds4_environment_overrides": {
+    "DS4_CUDA_PINNED_CACHE_RESERVE_MB": "700",
+    "DS4_MTP_SPEC_DISABLE": "1"
+  },
+  "report_settings_environment": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_PCIE_SHARE": "0.10",
+    "STRATA_GLM_RAM_HEADROOM_GB": "4",
+    "STRATA_GLM_RESERVE_MB": "256"
+  },
+  "context_capacity": 131072,
+  "decode_tokens_limit": 256,
+  "gpu": "NVIDIA GeForce RTX 5090, 610.88, 600.00 W",
+  "date": "2026-10-12T17:25:40.4018567+01:00"
+}

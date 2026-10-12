@@ -44,5 +44,10 @@ which is not supplied; cold local cache placement cannot reproduce that exactly.
 
 ## Status
 
-2026-10-12: isolated checkout created; native prerequisite check passes. Stock
-setup/build started. No local Maya inference or performance result yet.
+2026-10-12: stock build, verified Maya-M download, two standard benchmarks,
+one built-in calibration, and fresh DS4 task/prefill comparisons completed.
+See [results](evidence/maya-reproduction/RESULTS.md). Local Maya decode averaged
+26.0 TPS versus the published 32.8; stock prefill measured 1141/2314 TPS at
+2K/8K. The DS4 Q2 model failed Maya's stock packer compatibility check.
+No engine implementation began. Further development and compatibility changes
+are deferred under the user's narrowed reproduction-only instruction.

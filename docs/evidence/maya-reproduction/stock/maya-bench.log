@@ -1,0 +1,29 @@
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 6719 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 103, prestage 1371: 160 experts); disk landing ring 96 experts (823 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 10.66 of 31.84 GB in use - dense weights 6.86, state/KV (131072 ctx) 1.78, activations 0.07, other (context, MTP, scratch, prompt path) 1.96
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+glm fast: CUDA0 layers [0,45) expert pool 20.49 GB, 47-84 slots/layer (2536 total)
+glm fast: CUDA0 RAM tier 85.86 GB pinned, 10642 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.5 of 104.8 GB, 4 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.0 of 104.8 GB, 8 s)
+glm fast: CUDA0 warming the expert tiers 30% (31.4 of 104.8 GB, 11 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.0 of 104.8 GB, 14 s)
+glm fast: CUDA0 warming the expert tiers 50% (52.4 of 104.8 GB, 17 s)
+glm fast: CUDA0 warming the expert tiers 60% (62.9 of 104.8 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 70% (73.3 of 104.8 GB, 22 s)
+glm fast: CUDA0 warming the expert tiers 80% (83.8 of 104.8 GB, 25 s)
+glm fast: CUDA0 warming the expert tiers 90% (94.3 of 104.8 GB, 28 s)
+glm fast: CUDA0 warming the expert tiers 100% (104.8 of 104.8 GB, 31 s)
+glm fast: CUDA0 tiers warm: 12096 experts (104.8 GB) in 31 s (3.43 GB/s)
+glm fast: CUDA0 the RAM tier sits on node 0 of 2 seen
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.171 ms on the CPU vs 0.157 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 0 1 1 2 2 3 3 4
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm stat: decode 31.99 ms/tok (31.26 tok/s) | vram hit 71.35% | ram fetches 56.02/tok | disk 0.00 reads/tok in 2.17 waits/tok, 0.01 ms/tok | promotions 45.28/tok | cpu lane 36.39/tok in 8.81 ms/tok | prompt 45.5 ms/tok | vram 2466/2536 ram 9590/10642
+glm stat: decode 40.07 ms/tok (24.95 tok/s) | vram hit 55.44% | ram fetches 81.92/tok | disk 0.00 reads/tok in 5.94 waits/tok, 0.01 ms/tok | promotions 57.21/tok | cpu lane 61.04/tok in 14.22 ms/tok | prompt 41.8 ms/tok | vram 2468/2536 ram 9591/10642
+glm stat: decode 36.15 ms/tok (27.66 tok/s) | vram hit 63.77% | ram fetches 68.37/tok | disk 0.00 reads/tok in 5.06 waits/tok, 0.01 ms/tok | promotions 52.52/tok | cpu lane 47.60/tok in 11.19 ms/tok | prompt 44.8 ms/tok | vram 2467/2536 ram 9595/10642
+glm stat: decode 39.21 ms/tok (25.50 tok/s) | vram hit 57.35% | ram fetches 78.98/tok | disk 0.00 reads/tok in 5.36 waits/tok, 0.01 ms/tok | promotions 56.13/tok | cpu lane 58.06/tok in 13.50 ms/tok | prompt 44.5 ms/tok | vram 2461/2536 ram 9574/10642
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 0.02 ms/tok (54054.05 tok/s) | vram hit 0.00% | ram fetches 0.00/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 0.00/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 1.0 ms/tok | vram 2228/2536 ram 9811/10642
+glm slots: saved a 2047-token conversation (0.18 GB in 0.1 s); 1 kept, 0.18 GB
+glm stat: decode 0.02 ms/tok (44843.05 tok/s) | vram hit 0.00% | ram fetches 0.00/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 0.00/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 0.9 ms/tok | vram 2237/2536 ram 9787/10642
+glm slots: saved a 2047-token conversation (0.18 GB in 0.1 s); 2 kept, 0.36 GB
+glm stat: decode 0.02 ms/tok (51813.47 tok/s) | vram hit 0.00% | ram fetches 0.00/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 0.00/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 0.4 ms/tok | vram 2146/2536 ram 9899/10642
