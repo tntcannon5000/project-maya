@@ -1,0 +1,4 @@
+*.f32
+*.nsys-rep
+*.sqlite
+*.bin

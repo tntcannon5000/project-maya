@@ -1,0 +1,123 @@
+[
+  {
+    "name": "baseline",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "combined-captured",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.314371824264526,
+    "rms": 0.12727520614607105,
+    "top1": 0.98828125
+  },
+  {
+    "name": "gpu8k-baseline",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\gpu8k-baseline\\fixed.logits.f32",
+    "positions": 128,
+    "logits": 19824640,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "gpu8k-candidate",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\gpu8k-baseline\\fixed.logits.f32",
+    "positions": 128,
+    "logits": 19824640,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "overlap-captured",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "trace-final",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 128,
+    "logits": 19824640,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.234346389770508,
+    "rms": 0.12343320674375297,
+    "top1": 0.984375
+  },
+  {
+    "name": "trace-overlap32",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "trace-transition",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.314371824264526,
+    "rms": 0.12727520614607105,
+    "top1": 0.98828125
+  },
+  {
+    "name": "transition",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.314371824264526,
+    "rms": 0.12727520614607105,
+    "top1": 0.98828125
+  },
+  {
+    "name": "transition-late",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.314371824264526,
+    "rms": 0.12727520614607105,
+    "top1": 0.98828125
+  },
+  {
+    "name": "transition-overlap",
+    "reference": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\baseline\\fixed.logits.f32",
+    "positions": 256,
+    "logits": 39649280,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.314371824264526,
+    "rms": 0.12727520614607105,
+    "top1": 0.98828125
+  }
+]

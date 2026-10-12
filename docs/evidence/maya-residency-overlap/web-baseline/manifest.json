@@ -1,0 +1,74 @@
+{
+  "mode": "stock",
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\strata_retained_r1.exe",
+    "--serve",
+    "--glm-pack",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "--max-context",
+    "131072",
+    "--prefill",
+    "auto",
+    "--expert-profile",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\data\\expert-profile-glm.bin",
+    "--short-read",
+    "0",
+    "--prompt-cache",
+    "0",
+    "--suffix-draft",
+    "0"
+  ],
+  "repeats": 2,
+  "tokens": 128,
+  "binary_sha256": "7b1fe742601acf0eb099a881d44490a565095c1eaee6ea8378b2cb9e87c9ed00",
+  "config": {
+    "exe": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\strata.exe",
+    "args": [
+      "--glm-pack",
+      "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+      "--max-context",
+      "131072",
+      "--prefill",
+      "auto",
+      "--expert-profile",
+      "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\data\\expert-profile-glm.bin"
+    ],
+    "cwd": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya",
+    "tokenizer": "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya/tokenizer",
+    "model_name": "glm-5.3-flash",
+    "gpu": [
+      0
+    ],
+    "sampling": {
+      "temperature": 1.0,
+      "top_p": 0.95
+    },
+    "reasoning_effort": "high",
+    "lib_dirs": [
+      "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.2\\bin",
+      "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.2\\bin\\x64"
+    ],
+    "port": 8085,
+    "log": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya/maya-gsq-q4attn.log",
+    "installer": {
+      "models_dir": "G:\\Models",
+      "quant": "Maya-M",
+      "gguf": null,
+      "gguf_dir": null,
+      "draft": "mtp",
+      "written": "2026-10-12 17:10"
+    }
+  },
+  "environment": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_RAM_GB": "101",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "MAYA_DEFER_DEMOTIONS": "layers",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_CPU_PLAN": "011223344",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_KDA_GRAPH": "1",
+    "MAYA_SHADOW_VERIFY": "1"
+  }
+}

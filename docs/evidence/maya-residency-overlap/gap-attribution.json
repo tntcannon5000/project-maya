@@ -1,0 +1,14 @@
+{
+  "maya-demand/trace-graphs": {
+    "uncaptured": 0.8769583906250038,
+    "graph_boundary": 0.15390446875000083,
+    "inside_graph": 0.09691141406255029,
+    "token_tail": 0.04773696093749998
+  },
+  "maya-residency-overlap/trace-overlap32": {
+    "uncaptured": 1.6528095078125238,
+    "graph_boundary": 0.15682785937500068,
+    "inside_graph": 0.08991590625005347,
+    "token_tail": 0.07011835937500001
+  }
+}

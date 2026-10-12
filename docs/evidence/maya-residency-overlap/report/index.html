@@ -1,0 +1,380 @@
+<!doctype html><meta charset="utf-8"><title>Maya residency and overlap</title><style>body{max-width:1200px;margin:36px auto;padding:0 20px;font:16px/1.5 system-ui}table{border-collapse:collapse;display:block;overflow:auto}th,td{padding:8px;border:1px solid #ddd}img{max-width:100%}</style><h1>Maya: focused residency and overlap results</h1>
+<p>Starting point: retained graph-enabled Maya (<code>3a4f906</code>), keeping the prior
+RAM-backing/demotion improvements. Same GSQ-RCO 3.0bit Q4-attention packed
+weights, c=1, 22 GiB expert pool, no MTP, speculative tokens, K4V, expert
+skipping or further quantization. Nothing published. <strong>60 TPS not reached.</strong></p>
+<p>Retained as an opt-in research candidate: causal next-route reuse for eviction,
+scored after the CPU answer is published, combined with 32-block down-component
+copies restricted to captured recurrent layers. Ordinary fetch remains on
+uncaptured layers. Defaults and the daily configuration are unchanged.</p>
+<h2>Unprofiled results</h2>
+<p>Short fixed-input continuation: 30 prompt tokens and 128 scored tokens per
+request, first then repeated. Comparison uses a fresh same-day graph baseline.
+The experiment sequence was adaptive, one or two targeted cases at a time.</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>First TPS</th>
+<th>Repeat TPS</th>
+<th>Repeat ms/token</th>
+<th>Demand MB/token</th>
+<th>Demotion MB/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>39.86</td>
+<td>43.30</td>
+<td>23.093</td>
+<td>413.79</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td>transition</td>
+<td>39.97</td>
+<td>42.72</td>
+<td>23.410</td>
+<td>383.00</td>
+<td>1.14</td>
+</tr>
+<tr>
+<td>transition-late</td>
+<td>40.07</td>
+<td>43.54</td>
+<td>22.966</td>
+<td>383.00</td>
+<td>1.14</td>
+</tr>
+<tr>
+<td>transition-overlap</td>
+<td>40.29</td>
+<td>44.70</td>
+<td>22.372</td>
+<td>383.00</td>
+<td>1.14</td>
+</tr>
+<tr>
+<td>overlap-captured</td>
+<td>40.37</td>
+<td>43.65</td>
+<td>22.908</td>
+<td>413.79</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td>combined-captured</td>
+<td>40.70</td>
+<td>45.20</td>
+<td>22.122</td>
+<td>383.00</td>
+<td>1.14</td>
+</tr>
+</tbody>
+</table>
+<p>The final combination improves repeated TPS by about 4.4% and reduces repeated demand by 7.4%. Individual mechanisms show much smaller or no reliable throughput gains. Prior run variation was about 4%; these bounded results support a modest candidate, not a precise universal speedup or a large breakthrough.</p>
+<h2>Held-out web generation and lifecycle</h2>
+<table>
+<thead>
+<tr>
+<th>Request</th>
+<th>Repeat</th>
+<th>Tokens</th>
+<th>Baseline TPS</th>
+<th>Candidate TPS</th>
+<th>Same output IDs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>warmup</td>
+<td>-1</td>
+<td>64</td>
+<td>42.55</td>
+<td>42.61</td>
+<td>True</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>-2</td>
+<td>8</td>
+<td>44.10</td>
+<td>47.68</td>
+<td>True</td>
+</tr>
+<tr>
+<td>recovery</td>
+<td>-2</td>
+<td>32</td>
+<td>38.07</td>
+<td>40.01</td>
+<td>True</td>
+</tr>
+<tr>
+<td>web</td>
+<td>0</td>
+<td>128</td>
+<td>37.80</td>
+<td>39.18</td>
+<td>True</td>
+</tr>
+<tr>
+<td>web</td>
+<td>1</td>
+<td>128</td>
+<td>43.29</td>
+<td>44.55</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<p>Both sides ran the same warmup, STOP after eight generated tokens, recovery, then two web requests. All generated token IDs matched. The web prompt asks for an HTML/JavaScript bouncing-ball page; generation is capped at 128 tokens, not a completed webapp or quality benchmark. STOP and subsequent request/teardown succeeded. Pooled web throughput improves about 3.3%.</p>
+<h2>What was learned and retained</h2>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Evidence</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recent-32 frequency</td>
+<td>Offline CSV traffic worsened3.4%; writing improved1.2%.</td>
+<td>Reject; no production implementation.</td>
+</tr>
+<tr>
+<td>Causal transition reuse</td>
+<td>Live repeat demand413.79→383.00MB; 7,815 changed victim choices in13,272 routes.</td>
+<td>Retain opt-in as part of combination.</td>
+</tr>
+<tr>
+<td>Move reuse scoring after CPU publication</td>
+<td>Same measured placement/outputs, repeat42.72→43.54TPS.</td>
+<td>Keep dependency; isolate bookkeeping from required answer.</td>
+</tr>
+<tr>
+<td>Limit overlapping copy blocks to32</td>
+<td>Arithmetic stays near9.1ms instead of prior&gt;11ms; real overlap~0.65ms.</td>
+<td>Resource cap useful; all-layer version still pays gaps.</td>
+</tr>
+<tr>
+<td>Captured-layer-only overlap</td>
+<td>Prior added gaps were almost entirely uncaptured work; final combination45.20TPS.</td>
+<td>Retain opt-in; ordinary fetch elsewhere.</td>
+</tr>
+<tr>
+<td>Strata-style admission margin</td>
+<td>Source uses gain-filtered/budgeted replacement; Maya admits fetched misses opportunistically.</td>
+<td>Future hypothesis, not implemented/measured in this round.</td>
+</tr>
+</tbody>
+</table>
+<p>The transition predictor only ranks eviction victims. It never proactively transfers predicted weights. Training uses observations available so far, with frequency smoothing 16 and per-row aging at 2048 observations. The history persists across requests. This is a limited causal policy, not the future-knowing oracle. Repeated fixtures can reward learned transitions; the held-out web continuation checks some generalization, not broad workload coverage.</p>
+<h2>Diagnostic time and overlap</h2>
+<table>
+<thead>
+<tr>
+<th>Profiled FIRST request</th>
+<th>Wall ms</th>
+<th>Fetch ms</th>
+<th>Arithmetic ms</th>
+<th>CPU-wait ms</th>
+<th>GPU idle ms</th>
+<th>Fetch/math overlap ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prior graph baseline</td>
+<td>26.695</td>
+<td>13.000</td>
+<td>9.278</td>
+<td>3.048</td>
+<td>1.156</td>
+<td>0.000</td>
+</tr>
+<tr>
+<td>Transition before deferred scoring</td>
+<td>26.224</td>
+<td>12.603</td>
+<td>9.101</td>
+<td>3.196</td>
+<td>1.122</td>
+<td>0.000</td>
+</tr>
+<tr>
+<td>All-layer overlap32</td>
+<td>26.591</td>
+<td>12.640</td>
+<td>9.173</td>
+<td>3.280</td>
+<td>1.978</td>
+<td>0.718</td>
+</tr>
+<tr>
+<td>Final combination</td>
+<td>25.841</td>
+<td>12.576</td>
+<td>9.238</td>
+<td>3.361</td>
+<td>1.147</td>
+<td>0.683</td>
+</tr>
+</tbody>
+</table>
+<p>Intervals overlap and are not additive. Profiles are separate from headline TPS; the final capture is one 128-token request, not a repeated warm run. The historical graph trace was recorded earlier and is not a contemporaneous significance test. CPU-wait kernel time is not all removable stall.</p>
+<table>
+<thead>
+<tr>
+<th>Observed copy grid blocks</th>
+<th>Inside captured graph</th>
+<th>Kernel executions, including prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32</td>
+<td>True</td>
+<td>4898</td>
+</tr>
+<tr>
+<td>170</td>
+<td>True</td>
+<td>4898</td>
+</tr>
+</tbody>
+</table>
+<p>Final capture verifies the intended restriction: all component kernels ran as graph nodes, with 32-block down copies and 170-block prefix copies. Measured first-request fetch/arithmetic overlap is 0.683 ms; GPU inactivity returns to 1.147 ms, near the prior graph-only 1.156 ms. Arithmetic stays near 9.24 ms. The earlier added gap has been removed without reviving the &gt;11 ms arithmetic slowdown.</p>
+<table>
+<thead>
+<tr>
+<th>Repeated diagnostic</th>
+<th>Uncaptured gaps ms</th>
+<th>Graph-boundary gaps ms</th>
+<th>Inside-graph gaps ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maya-demand/trace-graphs</td>
+<td>0.877</td>
+<td>0.154</td>
+<td>0.097</td>
+</tr>
+<tr>
+<td>maya-residency-overlap/trace-overlap32</td>
+<td>1.653</td>
+<td>0.157</td>
+<td>0.090</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Final individual token" src="../trace-final/timeline-median.png" /></p>
+<p><img alt="Resource-limited all-layer overlap" src="../trace-overlap32/timeline-median.png" /></p>
+<h2>Numerical, prefill and ownership checks</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Logits compared</th>
+<th>Exact</th>
+<th>Maximum absolute difference</th>
+<th>Top1 agreement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>combined-captured</td>
+<td>39649280</td>
+<td>False</td>
+<td>5.314372</td>
+<td>98.83%</td>
+</tr>
+<tr>
+<td>gpu8k-candidate</td>
+<td>19824640</td>
+<td>True</td>
+<td>0.000000</td>
+<td>100.00%</td>
+</tr>
+<tr>
+<td>overlap-captured</td>
+<td>39649280</td>
+<td>True</td>
+<td>0.000000</td>
+<td>100.00%</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Controlled GPU-only, 8K occupied</th>
+<th>Prefill ms</th>
+<th>Input tokens/s</th>
+<th>Ownership check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gpu8k-baseline</td>
+<td>3743.56</td>
+<td>2188.3</td>
+<td>True</td>
+</tr>
+<tr>
+<td>gpu8k-candidate</td>
+<td>3560.63</td>
+<td>2300.7</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<p>GPU-only comparison uses the same backend for every required expert and matches every compared logit exactly. Q2_K/Q3_K/Q4_K packed expert bytes are unchanged. Normal hybrid placement differs numerically: the residency policy changes CPU/GPU assignment and can change subsequent routes even with fixed input tokens. All scheduling variants of that same residency policy produced identical compared logits to one another. No parity threshold was weakened. This is not a claim of exact hybrid parity. The targeted 8K check found no prefill regression; its single timing pair is not evidence for a prefill optimization.</p>
+<h2>Memory, limitations and PR scope</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expert pool GiB</th>
+<th>Pinned tier GiB</th>
+<th>Minimum free physical GiB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>22.00</td>
+<td>97.82</td>
+<td>12.49</td>
+</tr>
+<tr>
+<td>combined-captured</td>
+<td>22.00</td>
+<td>97.82</td>
+<td>12.52</td>
+</tr>
+<tr>
+<td>gpu8k-candidate</td>
+<td>22.00</td>
+<td>97.82</td>
+<td>12.30</td>
+</tr>
+</tbody>
+</table>
+<p>The transition tables add roughly 15 MiB of ordinary host memory, with no extra expert slots or background uploads. GPU clocks/thermal samples are stored alongside fixed runs; clocks were not locked and minor differences remain uncertain. CUDA/NVIDIA c=1 was built and exercised. AMD, multi-GPU and speculative/concurrent integration are unqualified. The history policy should be reviewed for those future paths separately.</p>
+<p>Research branch: <code>research/maya-residency-overlap</code>. Checkpoints:
+<code>85385a4</code> initial prototypes, <code>e765b0c</code> CPU-answer ordering,
+<code>19dd065</code> captured-layer restriction, <code>276a0aa</code> combined candidate/teardown.
+Baseline rollback: <code>3a4f906</code>. Implementation remains opt-in in
+<a href="../../../../configs/maya-residency-overlap.json">maya-residency-overlap.json</a>.
+Retained implementation/configuration checkpoint: <code>32821bc</code>.</p>
+<p>PR-facing changes are the reuse policy helper and integration, bounded
+component-copy kernel/fork-join, and teardown ordering. Keep experimental
+tools/evidence separate during PR preparation. No PR was opened or published.
+The detailed <a href="../../../MAYA-RESIDENCY-OVERLAP.md">audit</a> preserves failed ideas,
+dependency findings and source references. Remaining demand is still 383 MB/token;
+neither smarter eviction nor overlap has removed the dominant transfer cost.</p>

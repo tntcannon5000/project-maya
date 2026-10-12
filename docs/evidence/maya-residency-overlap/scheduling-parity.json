@@ -1,0 +1,22 @@
+[
+  {
+    "a": "maya-residency-overlap/baseline",
+    "b": "maya-demand/confirm-graphs",
+    "exact": true
+  },
+  {
+    "a": "maya-residency-overlap/combined-captured",
+    "b": "maya-residency-overlap/transition",
+    "exact": true
+  },
+  {
+    "a": "maya-residency-overlap/transition-late",
+    "b": "maya-residency-overlap/transition",
+    "exact": true
+  },
+  {
+    "a": "maya-residency-overlap/transition-overlap",
+    "b": "maya-residency-overlap/transition",
+    "exact": true
+  }
+]

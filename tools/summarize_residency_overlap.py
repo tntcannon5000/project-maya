@@ -16,7 +16,9 @@ for p in sorted(ROOT.iterdir()):
         result['TPS']=1000/result['ms'];rows.append(result)
     manifest=json.loads((p/'manifest.json').read_text())
     reference=baseline
-    if manifest['env'].get('STRATA_GLM_CPU_PLAN')=='000000000':
+    if p.name.startswith('gpu8k'):
+        reference=ROOT/'gpu8k-baseline/fixed.logits.f32'
+    elif manifest['env'].get('STRATA_GLM_CPU_PLAN')=='000000000':
         reference=ROOT.parent/'maya-transfer/gpu-clean-cold/fixed.logits.f32'
     elif manifest['tokens_sha256']!=json.loads((ROOT/'baseline/manifest.json').read_text())['tokens_sha256']:
         continue

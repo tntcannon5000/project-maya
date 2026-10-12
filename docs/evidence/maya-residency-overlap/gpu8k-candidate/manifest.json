@@ -1,0 +1,41 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_transfer_lab.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\gpu8k-candidate\\tokens.txt",
+    "8192",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-residency-overlap\\gpu8k-candidate\\fixed",
+    "1"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_CPU_PLAN": "000000000",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_RAM_GB": "101",
+    "STRATA_GLM_PREFILL": "auto",
+    "STRATA_GLM_TIER_DIAG": "1",
+    "STRATA_GLM_KDA_GRAPH": "1",
+    "MAYA_SHADOW_VERIFY": "1",
+    "MAYA_REUSE_POLICY": "transition",
+    "MAYA_OVERLAP_BLOCKS": "32",
+    "MAYA_OVERLAP_CAPTURED_ONLY": "1",
+    "STRATA_GLM_TIMING": "1",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "MAYA_DEFER_DEMOTIONS": "layers"
+  },
+  "binary_sha256": "e8afa21b7e0d27694101e8ad2c9f8150eca061e26f983b10d978409115c4c0ef",
+  "tokens_sha256": "fb6ecc9c23ec0c0161b074a22433e0d786b2db16bfbe32f7e899ac4edffc8cb1",
+  "weights": {
+    "path": "G:\\Models\\GLM-5.3-Flash-3.0bit-Q4Kattn\\GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf",
+    "size": 113585695168,
+    "mtime_ns": 1791695489255480800,
+    "pack_manifests": {
+      "index.txt": "bc4c257b27616ce4c2bed8ed8f12a760b7600e930b824121626209790cc9feed",
+      "native_experts.txt": "53cc70920b5a5530a7b30867156ad860cf0de5fd16df6c6d0081e63e012780ce"
+    },
+    "expert_profile_sha256": "53b03a13482b6fedc599d149be2d69f88c38d9edc4611a740da46314ab1dc5a7",
+    "experiment_files": {}
+  }
+}

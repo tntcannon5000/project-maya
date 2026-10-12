@@ -1,0 +1,32 @@
+[
+  {
+    "task": "train-writing",
+    "policy": "aged",
+    "MB_per_token": 392.82019705263156
+  },
+  {
+    "task": "train-writing",
+    "policy": "recent32",
+    "MB_per_token": 388.2141372631579
+  },
+  {
+    "task": "train-web",
+    "policy": "aged",
+    "MB_per_token": 447.2469827368421
+  },
+  {
+    "task": "train-web",
+    "policy": "recent32",
+    "MB_per_token": 435.4492092631579
+  },
+  {
+    "task": "retained-routes",
+    "policy": "aged",
+    "MB_per_token": 413.92392425316456
+  },
+  {
+    "task": "retained-routes",
+    "policy": "recent32",
+    "MB_per_token": 428.1020986329114
+  }
+]

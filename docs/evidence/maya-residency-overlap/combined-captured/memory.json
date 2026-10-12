@@ -1,0 +1,287 @@
+[
+  {
+    "seconds": 0.0,
+    "available_physical": 122718007296,
+    "available_commit": 167561297920
+  },
+  {
+    "seconds": 1.0,
+    "available_physical": 121025277952,
+    "available_commit": 160438886400
+  },
+  {
+    "seconds": 2.0,
+    "available_physical": 119505313792,
+    "available_commit": 160441925632
+  },
+  {
+    "seconds": 3.0,
+    "available_physical": 118019317760,
+    "available_commit": 160374198272
+  },
+  {
+    "seconds": 4.0,
+    "available_physical": 117308792832,
+    "available_commit": 119672627200
+  },
+  {
+    "seconds": 5.0,
+    "available_physical": 105272877056,
+    "available_commit": 110043758592
+  },
+  {
+    "seconds": 6.0,
+    "available_physical": 96326520832,
+    "available_commit": 26741485568
+  },
+  {
+    "seconds": 7.0,
+    "available_physical": 75658412032,
+    "available_commit": 26739261440
+  },
+  {
+    "seconds": 8.0,
+    "available_physical": 54768291840,
+    "available_commit": 26739785728
+  },
+  {
+    "seconds": 9.0,
+    "available_physical": 33810628608,
+    "available_commit": 26743853056
+  },
+  {
+    "seconds": 10.0,
+    "available_physical": 19282677760,
+    "available_commit": 26749730816
+  },
+  {
+    "seconds": 11.0,
+    "available_physical": 13664116736,
+    "available_commit": 26071715840
+  },
+  {
+    "seconds": 12.0,
+    "available_physical": 13442826240,
+    "available_commit": 25776816128
+  },
+  {
+    "seconds": 13.0,
+    "available_physical": 13720928256,
+    "available_commit": 26020790272
+  },
+  {
+    "seconds": 14.0,
+    "available_physical": 13727793152,
+    "available_commit": 26022715392
+  },
+  {
+    "seconds": 15.0,
+    "available_physical": 13723459584,
+    "available_commit": 26020470784
+  },
+  {
+    "seconds": 16.0,
+    "available_physical": 13728350208,
+    "available_commit": 26023428096
+  },
+  {
+    "seconds": 17.0,
+    "available_physical": 13734858752,
+    "available_commit": 26023452672
+  },
+  {
+    "seconds": 18.0,
+    "available_physical": 13709983744,
+    "available_commit": 25998528512
+  },
+  {
+    "seconds": 19.0,
+    "available_physical": 13712244736,
+    "available_commit": 25998131200
+  },
+  {
+    "seconds": 20.0,
+    "available_physical": 13716500480,
+    "available_commit": 26002857984
+  },
+  {
+    "seconds": 21.0,
+    "available_physical": 13724364800,
+    "available_commit": 26008731648
+  },
+  {
+    "seconds": 22.0,
+    "available_physical": 13733933056,
+    "available_commit": 26015449088
+  },
+  {
+    "seconds": 23.0,
+    "available_physical": 13730971648,
+    "available_commit": 26010009600
+  },
+  {
+    "seconds": 24.0,
+    "available_physical": 13734043648,
+    "available_commit": 26008317952
+  },
+  {
+    "seconds": 25.0,
+    "available_physical": 13741383680,
+    "available_commit": 26012999680
+  },
+  {
+    "seconds": 26.0,
+    "available_physical": 13740417024,
+    "available_commit": 26015748096
+  },
+  {
+    "seconds": 27.0,
+    "available_physical": 13740318720,
+    "available_commit": 26013220864
+  },
+  {
+    "seconds": 28.0,
+    "available_physical": 13740486656,
+    "available_commit": 26011750400
+  },
+  {
+    "seconds": 29.0,
+    "available_physical": 13745573888,
+    "available_commit": 26014752768
+  },
+  {
+    "seconds": 30.0,
+    "available_physical": 13748764672,
+    "available_commit": 26017722368
+  },
+  {
+    "seconds": 31.0,
+    "available_physical": 13746860032,
+    "available_commit": 26016448512
+  },
+  {
+    "seconds": 32.0,
+    "available_physical": 13748264960,
+    "available_commit": 26017026048
+  },
+  {
+    "seconds": 33.0,
+    "available_physical": 13752836096,
+    "available_commit": 26013954048
+  },
+  {
+    "seconds": 34.0,
+    "available_physical": 13778616320,
+    "available_commit": 26042134528
+  },
+  {
+    "seconds": 35.0,
+    "available_physical": 13780959232,
+    "available_commit": 26045255680
+  },
+  {
+    "seconds": 36.0,
+    "available_physical": 13786476544,
+    "available_commit": 26048966656
+  },
+  {
+    "seconds": 37.0,
+    "available_physical": 13790011392,
+    "available_commit": 26050547712
+  },
+  {
+    "seconds": 38.0,
+    "available_physical": 13783531520,
+    "available_commit": 26042286080
+  },
+  {
+    "seconds": 39.01600000000326,
+    "available_physical": 13781700608,
+    "available_commit": 26038468608
+  },
+  {
+    "seconds": 40.01600000000326,
+    "available_physical": 13786681344,
+    "available_commit": 26044362752
+  },
+  {
+    "seconds": 41.01600000000326,
+    "available_physical": 13785145344,
+    "available_commit": 26046595072
+  },
+  {
+    "seconds": 42.01600000000326,
+    "available_physical": 13784039424,
+    "available_commit": 26043109376
+  },
+  {
+    "seconds": 43.01600000000326,
+    "available_physical": 13782540288,
+    "available_commit": 26038202368
+  },
+  {
+    "seconds": 44.01600000000326,
+    "available_physical": 13749039104,
+    "available_commit": 25968279552
+  },
+  {
+    "seconds": 45.01600000000326,
+    "available_physical": 13812617216,
+    "available_commit": 26704244736
+  },
+  {
+    "seconds": 46.01600000000326,
+    "available_physical": 13741072384,
+    "available_commit": 26597249024
+  },
+  {
+    "seconds": 47.01600000000326,
+    "available_physical": 13742333952,
+    "available_commit": 26600988672
+  },
+  {
+    "seconds": 48.01600000000326,
+    "available_physical": 13748092928,
+    "available_commit": 26664148992
+  },
+  {
+    "seconds": 49.01600000000326,
+    "available_physical": 13723738112,
+    "available_commit": 26669834240
+  },
+  {
+    "seconds": 50.01600000000326,
+    "available_physical": 13723705344,
+    "available_commit": 26672197632
+  },
+  {
+    "seconds": 51.01600000000326,
+    "available_physical": 13701775360,
+    "available_commit": 26668011520
+  },
+  {
+    "seconds": 52.01600000000326,
+    "available_physical": 13698424832,
+    "available_commit": 26672545792
+  },
+  {
+    "seconds": 53.01600000000326,
+    "available_physical": 17240539136,
+    "available_commit": 28637184000
+  },
+  {
+    "seconds": 54.01600000000326,
+    "available_physical": 37727621120,
+    "available_commit": 50848915456
+  },
+  {
+    "seconds": 55.01600000000326,
+    "available_physical": 63606190080,
+    "available_commit": 51449442304
+  },
+  {
+    "seconds": 56.01600000000326,
+    "available_physical": 106522198016,
+    "available_commit": 51513520128
+  }
+]

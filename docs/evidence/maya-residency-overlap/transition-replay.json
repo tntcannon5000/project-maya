@@ -1,0 +1,22 @@
+[
+  {
+    "task": "train-writing",
+    "policy": "aged",
+    "MB_per_token": 392.82019705263156
+  },
+  {
+    "task": "train-writing",
+    "policy": "transition",
+    "MB_per_token": 388.25552842105265
+  },
+  {
+    "task": "retained-routes",
+    "policy": "aged",
+    "MB_per_token": 413.92392425316456
+  },
+  {
+    "task": "retained-routes",
+    "policy": "transition",
+    "MB_per_token": 395.8191894683544
+  }
+]

@@ -83,6 +83,32 @@ per iteration; do not launch the full previous suite.
   pair; no complete writing/coding suite. Long-context GPU-only comparison
   will combine ownership, mixed-format, prefill-pressure and parity checks.
 
+## Final retained result
+
+- Opt-in implementation/configuration checkpoint: `32821bc`. Default engine
+  behavior and daily configuration are unchanged; baseline rollback `3a4f906`.
+- Held-out web: first37.80->39.18 TPS, repeat43.29->44.55, pooled+3.3%.
+  Every generated token ID matches for warmup, cancellation, recovery and
+  both web requests. This is bounded128-token generation, not task completion.
+- Controlled GPU-only8192-occupied context: all19,824,640 logits exact, finite,
+  maximum difference0. Prefill3743.56->3560.63ms; no observed regression, not
+  evidence of a new prefill optimization. Ownership checks verify all live
+  dual owners and sampled bytes across mixed quant classes.
+- Final one-request diagnostic confirms0.683ms fetch/arithmetic overlap,
+ 9.238ms arithmetic and1.147ms idle (prior graph-only first-request1.156ms).
+  All4,898 prefix and4,898 down-component launches are graph nodes. Prefix
+  grids170blocks, down grids32blocks. The unwanted uncaptured-copy gaps are
+  absent. Final trace covers first request only, not a warm-repeat estimate.
+- Same-backend scheduling comparisons are exact: baseline matches retained
+  R1 graphs, and every transition scheduling variant matches the initial
+  transition output. Hybrid-versus-old-placement is still not exact; report
+  preserves that distinction and the original numerical results.
+- No further tests running. VRAM returned to desktop use (~0.7GiB). Final
+  report: `docs/evidence/maya-residency-overlap/report/RESULTS.md`.
+- Remaining opportunities: gain-filtered admission like Strata, more robust
+  reuse estimation across workload changes, and integration with future
+  speculative/concurrent paths. None is claimed implemented or measured.
+
 Correctness qualification: transport-only outputs must be exact. Residency
 can change CPU/GPU assignment; compare controlled GPU-only backends if it
 proves useful, and report hybrid differences without relaxing thresholds.

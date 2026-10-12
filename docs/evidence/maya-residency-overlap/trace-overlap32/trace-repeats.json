@@ -1,0 +1,34 @@
+{
+  "0": {
+    "wall_ms": 26.5906530234375,
+    "fetch_ms": 12.6397200859375,
+    "d2h_ms": 1.2977689375,
+    "dma_h2d_ms": 0.003796296875,
+    "arithmetic_ms": 9.1725386953125,
+    "cpu_wait_ms": 3.27982503125,
+    "host_disk_wait_ms": 0.035281828125,
+    "fetch_arithmetic_overlap_ms": 0.7182730703125,
+    "d2h_arithmetic_overlap_ms": 0.4630563515625,
+    "cpu_arithmetic_overlap_ms": 1.6028535234375,
+    "no_gpu_ms": 1.9780955859375,
+    "d2h_bytes": 50022916,
+    "h2d_bytes": 18240.0625,
+    "tokens": 128
+  },
+  "1": {
+    "wall_ms": 24.2891982578125,
+    "fetch_ms": 10.8573412734375,
+    "d2h_ms": 0.014084109375,
+    "dma_h2d_ms": 0.0037805078125000002,
+    "arithmetic_ms": 9.0798222578125,
+    "cpu_wait_ms": 2.9915646484375,
+    "host_disk_wait_ms": 0.0313978828125,
+    "fetch_arithmetic_overlap_ms": 0.64974775,
+    "d2h_arithmetic_overlap_ms": 0.0087163046875,
+    "cpu_arithmetic_overlap_ms": 1.5449608203125,
+    "no_gpu_ms": 1.9696716328125,
+    "d2h_bytes": 711172,
+    "h2d_bytes": 17935.9375,
+    "tokens": 128
+  }
+}
