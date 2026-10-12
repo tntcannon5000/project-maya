@@ -8,6 +8,7 @@
 #include "strata/kernels/cpu/native_expert.hpp"
 #include "glm_memory.hpp"
 #include "glm_layer_graphs.hpp"
+#include "glm_reuse_policy.hpp"
 
 #include "ggml.h"
 
@@ -341,6 +342,7 @@ struct Glm5Model::FastState {
     std::vector<LayerPool> lp;   // indexed by absolute layer
     std::vector<int> slot_of;    // il * n_expert + e -> slot in lp[il], -1 absent
     std::vector<uint32_t> cnt;   // il * n_expert + e -> LFU count (aged), over both tiers
+    GlmReusePolicy reuse_policy; // empty unless explicitly enabled
     // ... and the long memory: routes per key across sessions (expert_usage.txt), halved when one passes 2^30 -
     // the warm-up fills the tiers in its order (this user's experts first)
     std::vector<uint32_t> usage;

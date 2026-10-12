@@ -1237,6 +1237,10 @@ bool Glm5Model::fast_setup(std::string& err) {
             std::fprintf(stderr, "glm fast: CUDA%d the vision encoder borrows the pool's tail (%.2f GB) while it "
                                  "encodes\n", dev_, (double) xtot / 1073741824.0);
         F->cnt.assign((size_t) NL * g.n_expert, 0);
+        if (const char* policy=getenv("MAYA_REUSE_POLICY"); policy && std::strcmp(policy,"transition")==0) {
+            F->reuse_policy.init(NL,g.n_expert);
+            std::fprintf(stderr,"maya reuse policy: causal transition, smoothing=16, row aging=2048\n");
+        }
         F->usage.assign((size_t) NL * g.n_expert, 0);
         F->pred_of.assign((size_t) NL, std::array<int, 8>{-1, -1, -1, -1, -1, -1, -1, -1});
         F->prefetched_of = F->pred_of;
@@ -3003,6 +3007,9 @@ void Glm5Model::fast_destroy() {
     win_free();
     F->quit.store(true);
     if (F->svc.joinable()) F->svc.join();
+    if (!F->reuse_policy.layers.empty())
+        std::fprintf(stderr,"maya reuse policy: observations=%llu changed_victims=%llu\n",
+            (unsigned long long)F->reuse_policy.observations,(unsigned long long)F->reuse_policy.changed_victims);
     // H3 may keep copy-back live beside the last token. Join it before any RAM
     // tier or GPU source can be released, including cancellation/early teardown.
     if (F->copy) cudaStreamSynchronize(F->copy);
@@ -3444,6 +3451,8 @@ void Glm5Model::fast_service() {
                     F->scratch_uses.fetch_add(1, std::memory_order_relaxed);
                 }
             }
+            if (!F->reuse_policy.layers.empty())
+                F->reuse_policy.observe(il,ids,K,F->cnt.data()+(size_t)il*g.n_expert);
             F->cnt_events += (uint64_t) K;
             if (F->cnt_events >= 32768) {
                 F->cnt_events = 0;
@@ -4104,6 +4113,19 @@ bool Glm5Model::fast_boundary(std::string& err) {
                 }
             }
             if (v < 0) break;
+            if (!F->reuse_policy.layers.empty()) {
+                const auto& score=F->reuse_policy.layers[(size_t)il].score;
+                int chosen=v;
+                for (int s2=0;s2<P.n;++s2) {
+                    if (P.st[(size_t)s2]!=FastState::kResident) continue;
+                    const int e=P.key[(size_t)s2], best=P.key[(size_t)chosen];
+                    if (score[e]<score[best] || (score[e]==score[best] &&
+                        std::make_pair(F->cnt[(size_t)il*g.n_expert+e],P.tick[(size_t)s2])<
+                        std::make_pair(F->cnt[(size_t)il*g.n_expert+best],P.tick[(size_t)chosen]))) chosen=s2;
+                }
+                F->reuse_policy.changed_victims+=chosen!=v;
+                v=chosen;
+            }
             const int vkey = il * g.n_expert + P.key[(size_t) v];
             const int backing = F->ram_of[(size_t)vkey];
             if (shadow_budget && backing >= 0 && R.st[(size_t)backing] == FastState::kRHold &&
@@ -4648,7 +4670,19 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // in VRAM is then pulled over PCIe into its slot, and all 8 run from VRAM
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
-    gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+    static const int overlap_blocks=[] { const char* v=getenv("MAYA_OVERLAP_BLOCKS"); return v ? std::max(0,std::atoi(v)) : 0; }();
+    if (overlap_blocks && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
+        err="maya overlap requires aligned native weights and expert prediction off"; return false;
+    }
+    if (overlap_blocks) {
+        // Fork only after route and disk-source publication, then join before
+        // down reads and all slot reuse. CUDA capture includes this side stream.
+        gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
+        if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
+            !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya overlap fork",err)) return false;
+        gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,Ly.blob-Ly.down_off,overlap_blocks,F->ps);
+        if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"maya down ready",err)) return false;
+    } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
     if (F->prof_on) F->mark("moe_fetch");
     if (pf && pf_at == 1) issue_prefetch();
     // this layer's own prefetched experts (issued one layer ago) must have landed before they are read
@@ -4681,6 +4715,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, Ly.sh_down.q,
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
+    if (overlap_blocks && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;
     gf::moe_down(Ly.d_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, Ly.down_off, F->hq,
                  Ly.sh_down.q != nullptr ? F->sh_out : nullptr, io.ffn, s);
     if (F->prof_on) F->mark("moe_down");

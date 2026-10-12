@@ -3315,6 +3315,25 @@ __global__ void __launch_bounds__(256) moe_fetch_kernel(MoeDev d, int k, size_t 
     }
 }
 
+// Limit competing copy CTAs without changing packed weights or arithmetic.
+__global__ void __launch_bounds__(256) moe_component_kernel(MoeDev d, int k, size_t offset16, size_t n16) {
+    for (int i=0; i<k; ++i) {
+        const auto src=d.fetch_src[i];
+        if (!src) continue;
+        const uint4* from=(const uint4*)src+offset16;
+        uint4* to=(uint4*)d.plan_ptr[i]+offset16;
+        for (size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x; j<n16; j+=(size_t)gridDim.x*blockDim.x)
+            to[j]=from[j];
+    }
+}
+
+void launch_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, int blocks, cudaStream_t s) {
+    static int sms=0;
+    if (!sms) { int dev=0; cudaGetDevice(&dev); cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev); }
+    const int grid=blocks>0 ? std::min(blocks,sms) : sms;
+    moe_component_kernel<<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
+}
+
 constexpr int GU_ROWS = 32;   // h values (gate rows = up rows) per block: one q8_1 block of h
 constexpr int GU_WARPS = 16;  // ... 2 gate + 2 up rows per warp (8 per warp measured 90 vs 65 us a layer: occupancy)
 
@@ -4578,6 +4597,11 @@ void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s) {
     }
     moe_fetch_kernel<<<sms, 256, 0, s>>>(d, k, (blob_bytes + 15) / 16);
     launch_check("moe_fetch");
+}
+
+void moe_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, int blocks, cudaStream_t s) {
+    launch_fetch_component(d,k,offset,bytes,blocks,s);
+    launch_check("moe_component");
 }
 
 #if defined(STRATA_USE_HIP)

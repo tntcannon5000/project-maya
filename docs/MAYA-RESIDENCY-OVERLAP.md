@@ -1,0 +1,47 @@
+# Focused residency and overlap investigation
+
+Start: `3a4f906`, retained graph configuration at `799c34f`. Branch
+`research/maya-residency-overlap`. Previous prototypes remain at `c3cb3a4`.
+No publication, arithmetic changes, speculative tokens or new quantization.
+Keep RAM backing and demotion scheduling. Select one or two targeted runs
+per iteration; do not launch the full previous suite.
+
+## Mechanisms and decision gates
+
+1. Residency: Maya already admits GPU-fetched experts into spare slots and
+   evicts by aged frequency. Simple recency is not a missing magic feature.
+   A recent-32 replay helped writing 1.2% but worsened CSV 3.4%; reject.
+   Next-route transition reuse learns causal expert co-occurrence across
+   consecutive routes of the SAME layer. Smooth sparse rows with frequency;
+   score eviction candidates, without extra prefetch or arithmetic changes.
+   Causal replay: writing 392.82 -> 388.26 MB/token; CSV 413.92 -> 395.82.
+   Replay still simplifies spare admission and CPU identities: test actual
+   demand bytes, changed-victim counters and time. Plausible saving ~0.5ms,
+   not the oracle's 185MB. New history costs ~16MiB at this geometry and some
+   service-thread computation; reject if overhead or altered placement loses.
+
+2. Overlap: reuse the validated GU-prefix/down-suffix event fork/join, but
+   limit competing down-copy CTAs to 32, rather than a full-SM-sized grid.
+   This limits copy blocks, not guaranteed SM affinity. Prefix retains full
+   bandwidth. Same quantized bytes, single original gate/up, down waits for
+   suffix and graph completion protects slot reuse. Native aligned formats
+   only; expert prediction cannot share these events. Plausible saving below
+   1ms if contention falls without starving PCIe. Inspect an actual trace
+   before claiming improved overlap efficiency.
+
+## Chronological checkpoints
+
+- Prior work is committed, with only unrelated `maya-bench.txt` untracked.
+- Recent-frequency and causal transition feasibility results saved under
+  `docs/evidence/maya-residency-overlap`. No model runs used for those screens.
+- First overlap32 run: 40.10/43.34 TPS first/repeated versus previous
+  graph-only 39.31/42.85. Difference is within prior variation; NOT a confirmed
+  gain. Evidence initially landed at `../maya-demand/overlap32` because the
+  runner overrode an explicit evidence root; runner now respects it.
+- Experimental copy kernel compiled after fixing placement of launch-error
+  checking. No arithmetic operations were changed.
+
+Correctness qualification: transport-only outputs must be exact. Residency
+can change CPU/GPU assignment; compare controlled GPU-only backends if it
+proves useful, and report hybrid differences without relaxing thresholds.
+Checkpoint prototypes even when rejected, then keep PR-facing changes small.
