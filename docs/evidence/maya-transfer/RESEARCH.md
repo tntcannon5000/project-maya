@@ -67,3 +67,32 @@ top-1 agreement 98.44%. **Not a parity pass.** Need CPU-off isolation, same
 route/placement controls and ownership checks before retention. No threshold
 has been relaxed. Counters are cumulative; do not divide the 18.04 GB value
 by 256 and call it a decode-only statistic.
+
+## Subsequent screens (still provisional)
+
+| Mechanism | First / repeated TPS | Repeated demand / D2H MB per token | Finding |
+|---|---|---|---|
+| Resident gate/up overlap | 29.74 / 31.52 | 403.5 / 339.8 | Exact logits; slower; trace overlap before rejecting mechanism |
+| Admission count >=4 | 32.73 / 34.92 | 410.8 / 249.1 | Promising reduced churn |
+| Existing prediction, max 2 | 27.67 / 28.98 | 319.2 / 462.3 | Demand drops but migration grows; total prediction-byte counters added for qualification |
+| More CPU: 012233445 | 31.92 / 35.38 | 254.3 / 229.5 | Promising lower transfer demand; arithmetic placement differs |
+| Admission + CPU + 4 GiB shadow | 33.15 / 36.16 | 258.7 / 166.2 | Combination works, not additive |
+| Same combination without shadow | 32.98 / 36.12 | 257.7 / 185.5 | Small shadow has negligible additional speed benefit here |
+
+GPU-only ownership isolation: baseline vs 4 GiB shadow, all **19,824,640
+logits bit-identical**, 128 identical input forwards. This excludes mixed
+CPU/GPU assignment as a confounder for that comparison. Stock hybrid between
+its own repeats has max difference 3.877, RMS .1382 and 98.44% top-1 agreement.
+Do not conflate that observation with a license to ignore arbitrary errors.
+
+H5 isolated transfer test, byte-exact readback for each mixed-format payload:
+DMA ~57–58 GB/s; mapped pull ~45–53 GB/s. This is a feasibility microbenchmark,
+not end-to-end performance. Two first integrated completion schemes stalled
+before producing scored tokens (host callback, then event polling). Both owned
+processes were stopped. Submission ordering is being investigated; these are
+incomplete implementation results, **not** performance rejections of DMA.
+
+Strata's own prior early-shared overlap retest also failed to improve throughput
+despite token agreement (GLM-CONTINUOUS-RND round 20). Its host timings cannot
+be substituted for our CUDA timings. This reinforces the need to verify
+independent work and actual critical-path reduction in Maya.

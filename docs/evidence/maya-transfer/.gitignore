@@ -1,4 +1,5 @@
 *.f32
+*.bin
 *.nsys-rep
 *.sqlite
 public-research/

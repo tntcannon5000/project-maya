@@ -1,0 +1,1 @@
+repeat,position,input,ms,hits,ram_fetches,cpu_experts,promotions,disk_reads,pool_slots,ram_slots,pool_gib,ram_gib,fetch_bytes,demotion_bytes,demotions,shadow_hits,shadow_avoided_bytes,predicted_bytes,predicted_used_bytes,dma_bytes

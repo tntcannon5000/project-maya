@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_transfer_lab.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\dma-event\\tokens.txt",
+    "30",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\dma-event\\fixed",
+    "1"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_CPU_PLAN": "011223344",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_RAM_GB": "87.4",
+    "STRATA_GLM_PREFILL": "auto",
+    "STRATA_GLM_TIER_DIAG": "1",
+    "MAYA_DEMAND_DMA": "1"
+  },
+  "binary_sha256": "23b4f02966122731e4e6896e101db2b04d9084c8c6aa7b3ab2db3d3d093c4bd3",
+  "tokens_sha256": "2a0610733575eb3c1daa3ddd6330122956eb50d65ed2a3b9da9e211172e39ae9"
+}

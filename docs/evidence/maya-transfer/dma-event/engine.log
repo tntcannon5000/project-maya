@@ -1,0 +1,19 @@
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 8.54 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 1.65
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+glm fast: CUDA0 layers [0,45) expert pool 22.00 GB, 49-87 slots/layer (2693 total)
+glm fast: CUDA0 RAM tier 87.33 GB pinned, 10555 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 4 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 7 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 10 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 13 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 16 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 22 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 25 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 28 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 31 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 31 s (3.49 GB/s)
+glm fast: CUDA0 the RAM tier sits on node 0 of 3 seen
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.193 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm fast: token 0 waiting > 10 s - CUDA0 last route seq 1, last answer 0

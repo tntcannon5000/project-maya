@@ -20,6 +20,8 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--repeats', type=int, default=1)
     ap.add_argument('--tokens', type=int, default=128)
+    ap.add_argument('--exe', type=Path)
+    ap.add_argument('--env', action='append', default=[])
     a = ap.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=True)
     if a.mode == 'trace':
@@ -27,6 +29,8 @@ def main():
                '--cpuctxsw=none', '--capture-range=cudaProfilerApi', '--capture-range-end=stop',
                '-o', str(out/'timeline'), sys.executable, str(Path(__file__).resolve()),
                '--mode', 'worker', '--out', str(out), '--repeats', str(a.repeats), '--tokens', str(a.tokens)]
+        if a.exe:cmd += ['--exe',str(a.exe.resolve())]
+        for setting in a.env:cmd += ['--env',setting]
         with (out/'profiler-output.txt').open('w') as log:
             subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True, cwd=ROOT)
         subprocess.run([str(NSYS), 'export', '--type', 'sqlite', '--output', str(out/'timeline.sqlite'),
@@ -35,11 +39,14 @@ def main():
     cfg = json.loads((ROOT/'maya-gsq-q4attn.json').read_text(encoding='utf-8-sig'))
     tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
     exe = ROOT/'build'/('strata-stock-profile-reference.exe' if a.mode == 'stock' else 'strata.exe')
+    if a.exe: exe=a.exe.resolve()
     cmd = [str(exe), '--serve', *SV.engine_args(cfg), '--short-read', '0', '--prompt-cache', '0', '--suffix-draft', '0']
     env = SV.child_env(cfg)
     for k in list(env):
         if k.startswith(('STRATA_GLM_PROF', 'MAYA_TIMELINE', 'STRATA_GLM_NSYS')): del env[k]
     env['STRATA_GLM_NO_MTP'] = '1'
+    for setting in a.env:
+        key,value=setting.split('=',1);env[key]=value
     if a.mode == 'worker':
         env['MAYA_TIMELINE'] = '1'
     manifest = dict(mode=a.mode, command=cmd, repeats=a.repeats, tokens=a.tokens,

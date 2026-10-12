@@ -1,0 +1,101 @@
+[
+  {
+    "experiment": "admission4",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.460457801818848,
+    "rms": 0.15164033510202046,
+    "top1_agreement": 0.98828125
+  },
+  {
+    "experiment": "combo-no-shadow",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 6.914159655570984,
+    "rms": 0.1557553079330133,
+    "top1_agreement": 0.984375
+  },
+  {
+    "experiment": "combo-policy",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.024362862110138,
+    "rms": 0.14626737040296656,
+    "top1_agreement": 0.984375
+  },
+  {
+    "experiment": "cpu-more",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.379409909248352,
+    "rms": 0.16359012919544955,
+    "top1_agreement": 0.9921875
+  },
+  {
+    "experiment": "deferred",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "fixed-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "gpu-baseline",
+    "positions": 128,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.0930066108703613,
+    "rms": 0.12306278143696314,
+    "top1_agreement": 0.9921875
+  },
+  {
+    "experiment": "gpu-shadow",
+    "positions": 128,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.0930066108703613,
+    "rms": 0.12306278143696314,
+    "top1_agreement": 0.9921875
+  },
+  {
+    "experiment": "overlap",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1_agreement": 1.0
+  },
+  {
+    "experiment": "predict2",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.2907609939575195,
+    "rms": 0.13312920847068052,
+    "top1_agreement": 0.984375
+  },
+  {
+    "experiment": "shadow4g",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 5.571172833442688,
+    "rms": 0.1536545905761311,
+    "top1_agreement": 0.984375
+  }
+]

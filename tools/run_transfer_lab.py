@@ -6,6 +6,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--exe',default='maya_transfer_lab.exe')
     p.add_argument('--env',action='append',default=[]);p.add_argument('--repeats',default=2,type=int)
     p.add_argument('--occupied',default=0,type=int)
+    p.add_argument('--trace',action='store_true')
     a=p.parse_args();out=ROOT/'docs/evidence/maya-transfer'/a.name;out.mkdir(parents=True,exist_ok=True)
     source=json.loads((ROOT/'docs/evidence/maya-timeline/stock/requests.json').read_text())
     row=next(x for x in source if x['task']=='csv')
@@ -21,11 +22,17 @@ def main():
     env['PATH']=r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\x64;'+env['PATH']
     for v in a.env:
         k,val=v.split('=',1);env[k]=val
+    if a.trace:env['MAYA_TIMELINE']='1'
     exe=ROOT/'build'/a.exe
     cmd=[str(exe),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(out/'tokens.txt'),str(len(prompt)),str(out/'fixed'),str(a.repeats)]
+    nsys=r'C:\Program Files\NVIDIA Corporation\Nsight Systems 2025.6.3\target-windows-x64\nsys.exe'
+    if a.trace:cmd=[nsys,'profile','--trace=cuda,nvtx','--sample=none','--cpuctxsw=none','--capture-range=cudaProfilerApi',
+        '--capture-range-end=stop','-o',str(out/'timeline'),*cmd]
     (out/'manifest.json').write_text(json.dumps(dict(command=cmd,env={k:v for k,v in env.items() if k.startswith(('STRATA_','MAYA_'))},
         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),tokens_sha256=hashlib.sha256((out/'tokens.txt').read_bytes()).hexdigest()),indent=2))
     with (out/'engine.log').open('w') as log:
         subprocess.run(cmd,cwd=ROOT,env=env,stderr=log,stdout=log,check=True)
+    if a.trace:
+        subprocess.run([nsys,'export','--type','sqlite','--output',str(out/'timeline.sqlite'),str(out/'timeline.nsys-rep')],check=True)
     print('complete',a.name,flush=True)
 if __name__=='__main__':main()

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_transfer_lab.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\gpu-shadow\\tokens.txt",
+    "30",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-transfer\\gpu-shadow\\fixed",
+    "1"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_CPU_PLAN": "000000000",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_RAM_GB": "87.4",
+    "STRATA_GLM_PREFILL": "auto",
+    "STRATA_GLM_TIER_DIAG": "1",
+    "MAYA_RAM_SHADOW_MB": "4096"
+  },
+  "binary_sha256": "f7cfb861a6f0a1e3324d252d6d1d8d86b218c1834fc720784d614040951c7366",
+  "tokens_sha256": "2a0610733575eb3c1daa3ddd6330122956eb50d65ed2a3b9da9e211172e39ae9"
+}

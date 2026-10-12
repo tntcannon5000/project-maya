@@ -3210,6 +3210,9 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
         rq->error = 0;
         rq->miss_mask = s_mask;
         rq->fetch_mask = s_fetch;
+        rq->dma_active = a.d.demand_dma && s_mask == 0u && s_fetch != 0u;
+        rq->dma_done = 0;
+        rq->dma_error = 0;
         rq->promo_mask = s_promo;
         rq->cpu_mask = s_cpu;
         rq->win = a.win;
@@ -3221,6 +3224,10 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
             rq->promo_ptr[i] = s_pp[i];
             rq->pred[i] = s_pred[i];
             rq->cpu_src[i] = s_cs[i];
+            if (rq->dma_active) {
+                rq->dma_src[i] = a.d.fetch_src[i];
+                rq->dma_dst[i] = a.d.plan_ptr[i];
+            }
         }
         rq->pf_n = s_npf;
         for (int i = 0; i < s_npf; ++i) {
@@ -3304,7 +3311,25 @@ __global__ void __launch_bounds__(256) moe_prefetch_kernel(MoeDev d, size_t n16)
 }
 
 // one block per SM, 16-byte loads: the PCIe pull measured 11.5 GB/s (a little over cudaMemcpy's 10.7)
+__global__ void moe_dma_wait_kernel(MoeDev d) {
+    if (d.demand_dma) {
+        const auto* rq = (const MoeRequest*)d.ring + (*d.seq % kRingSize);
+        if (rq->dma_active) {
+            const long long begin = clock64();
+            while (rq->dma_done != *d.seq) {
+                if (clock64() - begin > (1ll << 36)) {
+                    if (threadIdx.x == 0 && blockIdx.x == 0 && d.route_error) *d.route_error = 4 * rq->layer + 4;
+                    return;
+                }
+            }
+            __threadfence_system();
+            if (rq->dma_error && threadIdx.x == 0 && blockIdx.x == 0 && d.route_error) *d.route_error = 4 * rq->layer + 4;
+            return;
+        }
+    }
+}
 __global__ void __launch_bounds__(256) moe_fetch_kernel(MoeDev d, int k, size_t n16) {
+    if (d.demand_dma && ((const MoeRequest*)d.ring)[*d.seq % kRingSize].dma_active) return;
     for (int i = 0; i < k; ++i) {
         const unsigned long long src = d.fetch_src[i];
         if (src == 0ull) continue;
@@ -4578,6 +4603,7 @@ void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s) {
         cudaDeviceGetAttribute(&sms, cudaDevAttrMultiProcessorCount, dev);
         if (sms <= 0) sms = 80;
     }
+    if (d.demand_dma) moe_dma_wait_kernel<<<1, 32, 0, s>>>(d);
     moe_fetch_kernel<<<sms, 256, 0, s>>>(d, k, (blob_bytes + 15) / 16);
     launch_check("moe_fetch");
 }
