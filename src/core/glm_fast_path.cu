@@ -37,6 +37,11 @@ static bool maya_timeline_on() {
     static const bool on = std::getenv("MAYA_TIMELINE") != nullptr;
     return on;
 }
+static bool maya_shadow_expansion_on() {
+    const char* expand=std::getenv("MAYA_RAM_SHADOW_EXPAND");
+    const char* budget=std::getenv("MAYA_RAM_SHADOW_MB");
+    return expand && std::atoi(expand)>0 && budget && std::atoi(budget)>0;
+}
 struct MayaTimelineRange {
     explicit MayaTimelineRange(const char* name) {
 #if !defined(STRATA_USE_HIP)
@@ -616,36 +621,6 @@ bool Glm5Model::fast_setup(std::string& err) {
         return false;
     }
     // an EXL3 pack: its kernels' scratch on the compute stream now (a graph capture cannot allocate it)
-    if (getenv("MAYA_DEMAND_DMA") != nullptr) {
-        if (cudaStreamCreateWithFlags(&F->demand_dma, cudaStreamNonBlocking) != cudaSuccess ||
-            cudaEventCreateWithFlags(&F->dma_complete,cudaEventDisableTiming) != cudaSuccess) {
-            err = "maya DMA stream/event did not create";
-            return false;
-        }
-        F->dma_completion_thread = std::thread([F, dev=dev_] {
-            cudaSetDevice(dev);
-            while (!F->quit.load() || F->dma_pending.load(std::memory_order_acquire)) {
-                auto* rq = F->dma_pending.load(std::memory_order_acquire);
-                if (!rq) { std::this_thread::yield(); continue; }
-                const auto e = cudaEventQuery(F->dma_complete);
-                if (e == cudaErrorNotReady) { cpu_relax(); continue; }
-                rq->dma_error = e != cudaSuccess;
-                const auto seq = rq->seq;
-                // Clear the mailbox before waking the GPU; it may immediately
-                // publish another route. No callback/global driver ordering.
-                F->dma_pending.store(nullptr,std::memory_order_release);
-                std::atomic_thread_fence(std::memory_order_release);
-                rq->dma_done = seq;
-            }
-        });
-    }
-    if (getenv("MAYA_RESIDENT_OVERLAP") != nullptr &&
-        (cudaStreamCreateWithFlags(&F->demand, cudaStreamNonBlocking) != cudaSuccess ||
-         cudaEventCreateWithFlags(&F->demand_start, cudaEventDisableTiming) != cudaSuccess ||
-         cudaEventCreateWithFlags(&F->demand_done, cudaEventDisableTiming) != cudaSuccess)) {
-        err = "maya demand stream/events did not create";
-        return false;
-    }
     if (exl3_ && !strata::kernels::exl3::prepare(F->cs)) {
         err = "glm fast: the EXL3 scratch did not allocate";
         return false;
@@ -1402,13 +1377,16 @@ bool Glm5Model::fast_setup(std::string& err) {
             }
         }
         F->rc.assign(cls_stride.size(), FastState::RamClass{});
-        if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr) {
+        if (maya_shadow_expansion_on()) {
             // Explicit experiments must still leave physical RAM AND Windows
             // commit headroom. Treat an unreadable capacity measurement as an
             // error instead of pinning optimistically.
             const int64_t available = avail_ram_now();
             if (available <= 0) { err = "maya shadow: cannot establish RAM headroom"; return false; }
             budget = std::min(budget,std::max<int64_t>(0,available-head_b-unseen_pf));
+            int64_t minimum=0;
+            for (size_t stride:cls_stride) minimum+=16*(int64_t)stride;
+            if (budget<minimum) { err="maya shadow: insufficient RAM after headroom";return false; }
         }
         std::vector<int64_t> cls_n(cls_stride.size(), 0), cls_cap(cls_stride.size(), 0);
         for (size_t c = 0; c < cls_stride.size() && wsum > 0; ++c) {
@@ -1423,8 +1401,7 @@ bool Glm5Model::fast_setup(std::string& err) {
             // H1 capacity experiment: an explicitly budgeted shadow tier may
             // hold both copies. The ordinary physical/commit headroom and pin
             // allocation checks above still apply; no implicit larger budget.
-            if (const char* shadow = getenv("MAYA_RAM_SHADOW_MB"); shadow && std::atoi(shadow) > 0 &&
-                getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr) {
+            if (maya_shadow_expansion_on()) {
                 int64_t all = 16;
                 for (int il = l0_; il < lt_; ++il)
                     if (F->L[(size_t)il].moe && F->layer_rc[(size_t)il] == (int)c) all += g.n_expert;
@@ -1432,7 +1409,7 @@ bool Glm5Model::fast_setup(std::string& err) {
             }
             cls_n[c] = std::min<int64_t>(n, cls_cap[c]);
         }
-        if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr) {
+        if (maya_shadow_expansion_on()) {
             // Proportional placement can hit one class's cap while leaving a
             // different class short and some of the explicit budget unused.
             // Redistribute ONLY that unused budget; never exceed it.
@@ -1521,7 +1498,7 @@ bool Glm5Model::fast_setup(std::string& err) {
                 return false;
             }
             R.base = (uint8_t*) p;
-            if (getenv("MAYA_RAM_SHADOW_EXPAND") != nullptr && n != cls_n[c])
+            if (maya_shadow_expansion_on() && n != cls_n[c])
                 std::fprintf(stderr,"maya shadow: class %zu pinning fallback %lld -> %lld slots\n",c,
                              (long long)cls_n[c],(long long)n);
             R.n = (int) n;
@@ -3026,7 +3003,6 @@ void Glm5Model::fast_destroy() {
     win_free();
     F->quit.store(true);
     if (F->svc.joinable()) F->svc.join();
-    if (F->dma_completion_thread.joinable()) F->dma_completion_thread.join();
     // H3 may keep copy-back live beside the last token. Join it before any RAM
     // tier or GPU source can be released, including cancellation/early teardown.
     if (F->copy) cudaStreamSynchronize(F->copy);
@@ -3038,8 +3014,6 @@ void Glm5Model::fast_destroy() {
     F->ah_cv.notify_all();
     for (auto& t : F->ah_th) t.join();
     F->workers.reset();
-    if (F->demand_dma) cudaStreamSynchronize(F->demand_dma);
-    if (F->demand) cudaStreamSynchronize(F->demand); // partial/error teardown must not free a fetch source early
     win_lanes_stop();   // (after the service thread: it hands them their routes)
     F->cpu_pool.reset();
     if (F->cpu_ans_h) cudaFreeHost(F->cpu_ans_h);
@@ -3167,11 +3141,6 @@ void Glm5Model::fast_destroy() {
     if (F->cs) cudaStreamDestroy(F->cs);
     if (F->copy) cudaStreamDestroy(F->copy);
     if (F->ps) cudaStreamDestroy(F->ps);
-    if (F->demand) cudaStreamDestroy(F->demand);
-    if (F->demand_dma) cudaStreamDestroy(F->demand_dma);
-    if (F->dma_complete) cudaEventDestroy(F->dma_complete);
-    if (F->demand_start) cudaEventDestroy(F->demand_start);
-    if (F->demand_done) cudaEventDestroy(F->demand_done);
     delete F;
     fast_ = nullptr;
 }
@@ -3264,7 +3233,6 @@ Glm5Model::FastStats Glm5Model::fast_stats() const {
         s.fetch_bytes += F->demand_bytes.load();
         s.predicted_bytes += F->predicted_bytes.load();
         s.predicted_used_bytes += F->predicted_used_bytes.load();
-        s.dma_bytes += F->dma_bytes.load();
         s.demotions += F->demotions.load();
         s.demotion_bytes += F->demotion_bytes;
         s.shadow_hits += F->shadow_hits;
@@ -3385,32 +3353,6 @@ void Glm5Model::fast_service() {
             last_route = std::chrono::steady_clock::now();
         }
         std::atomic_thread_fence(std::memory_order_acquire);
-        // The published route reserves immutable RAM sources until the next
-        // boundary. Submit before CPU expert work so both can progress. The
-        // callback owns only the ring entry, which cannot be reused until the
-        // GPU consumes this sequence. Disk-containing routes use stock pulls.
-        if (rq->error == 0 && rq->dma_active && F->demand_dma) {
-            if (next == 1) std::fprintf(stderr,"maya dma first route: enqueue mask=%u\n",rq->fetch_mask);
-            F->dma_bytes.fetch_add((uint64_t)std::popcount(rq->fetch_mask) * F->L[(size_t)rq->layer].blob, std::memory_order_relaxed);
-            cudaError_t de = cudaSuccess;
-            for (int i = 0; i < K && de == cudaSuccess; ++i)
-                if ((rq->fetch_mask >> i) & 1u) {
-                    if (next == 1) std::fprintf(stderr,"maya dma first copy %d %p -> %p\n",i,(void*)rq->dma_src[i],(void*)rq->dma_dst[i]);
-                    de = cudaMemcpyAsync((void*)rq->dma_dst[i], (const void*)rq->dma_src[i],
-                                         F->L[(size_t)rq->layer].blob, cudaMemcpyHostToDevice, F->demand_dma);
-                    if (next == 1) std::fprintf(stderr,"maya dma first copy returned %d\n",(int)de);
-                }
-            if (de == cudaSuccess) de = cudaEventRecord(F->dma_complete,F->demand_dma);
-            if (next == 1) std::fprintf(stderr,"maya dma first event recorded %d\n",(int)de);
-            if (de == cudaSuccess) F->dma_pending.store(rq,std::memory_order_release);
-            if (de != cudaSuccess) {
-                cudaStreamSynchronize(F->demand_dma);
-                rq->dma_error = 1;
-                std::atomic_thread_fence(std::memory_order_release);
-                rq->dma_done = rq->seq;
-            }
-        }
-        if (F->demand_dma) F->dma_issued.store(next,std::memory_order_release);
         // (the lanes are made at the CPU lane's setup, after this thread started)
         const bool held = win_merge && rq->win_n > 0 && F->cpu_ans_h != nullptr && F->win_lane[0] != nullptr &&
                           F->win_lane[1] != nullptr;
@@ -3941,7 +3883,9 @@ bool Glm5Model::fast_boundary(std::string& err) {
     // Experiment H3: publish small routing-table updates before submitting bulk
     // D2H work. Ownership still reserves BOTH slots until the recorded event.
     // This tests copy-queue ordering, not an assumption that Async means overlap.
-    static const bool defer_demotions = getenv("MAYA_DEFER_DEMOTIONS") != nullptr;
+    static const bool defer_demotions = [] {
+        const char* v=getenv("MAYA_DEFER_DEMOTIONS");return v && v[0] && std::strcmp(v,"0")!=0;
+    }();
     static const bool layer_demotions = [] {
         const char* v=getenv("MAYA_DEFER_DEMOTIONS");return v && std::strcmp(v,"layers")==0;
     }();
@@ -4657,7 +4601,6 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // the prefetch list of THIS route lives in the buffer of this layer's parity (the side stream may still
     // read the previous layer's list while this route writes)
     gf::MoeDev md = F->md;
-    md.demand_dma = F->demand_dma != nullptr;
     md.pf_src = F->pf_buf[il & 1];
     md.pf_dst = F->pf_buf[il & 1] + 8;
     md.pf_n = F->pf_n_buf[il & 1];
@@ -4684,18 +4627,6 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
                   il == mtp_il_ ? 0.0f : F->disk_skip_w);
     if (F->prof_on) F->mark("moe_route");
     ++F->expected;
-    if (md.demand_dma) {
-        // WDDM must see the route and the DMA enqueue before a device spin wait
-        // is submitted. A host-issued transfer behind an already-running wait
-        // stalled in the first prototype. This explicit submission handshake
-        // is measured as part of DMA overhead, never hidden from throughput.
-        const auto qe = cudaStreamQuery(s);
-        if (qe != cudaSuccess && qe != cudaErrorNotReady) return glmfast::cuda_ok(qe,"maya route submission",err);
-        while (F->dma_issued.load(std::memory_order_acquire) < F->expected) {
-            if (!F->route_ok(err)) return false;
-            cpu_relax();
-        }
-    }
     // the side stream copies the next layer's predicted experts while this layer computes.  STRATA_GLM_PREFETCH_AT:
     // when that copy starts - "route" (the default: at once, beside this layer's own PCIe fetch and CPU lane),
     // "fetch" (after this layer's own fetch: the link is free) or "cpu" (after this layer's CPU-lane answer: RAM is
@@ -4717,21 +4648,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // in VRAM is then pulled over PCIe into its slot, and all 8 run from VRAM
     gf::moe_wait(md, g.n_embd, s);
     if (F->prof_on) F->mark("moe_wait");
-    const bool overlap = F->demand != nullptr && !Ly.exl3;
-    if (overlap) {
-        // Predicted residents must be ready before the resident half reads them.
-        if (pf_pending) cudaStreamWaitEvent(s, F->ev_pf_prev, 0);
-        pf_pending = false;
-        cudaEventRecord(F->demand_start, s);
-        cudaStreamWaitEvent(F->demand, F->demand_start, 0);
-        gf::moe_fetch(md, g.n_exp_used, Ly.blob, F->demand);
-        cudaEventRecord(F->demand_done, F->demand);
-        md.gate_phase = 1;
-        gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq,
-                       Ly.sh_down.q, Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
-        cudaStreamWaitEvent(s, F->demand_done, 0);
-        md.gate_phase = 2;
-    } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+    gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
     if (F->prof_on) F->mark("moe_fetch");
     if (pf && pf_at == 1) issue_prefetch();
     // this layer's own prefetched experts (issued one layer ago) must have landed before they are read

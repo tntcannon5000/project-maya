@@ -190,8 +190,6 @@ void swiglu_q8(const float* gate, const float* up, float limit, int n, void* hq,
 constexpr int kSpares = 3;
 /// The per-device routing state (device memory unless noted).
 struct MoeDev {
-    int gate_phase = 0; // lab: 0 all, 1 resident (+shared), 2 fetched; reduction remains rank ordered
-    int demand_dma = 0;
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted
@@ -227,9 +225,6 @@ constexpr int kAhead = 4;
 /// One routing request, written by the device into host-mapped memory.
 struct MoeRequest {
     volatile unsigned int seq;   // written LAST (after a system fence)
-    volatile unsigned int dma_done;
-    int dma_active, dma_error;
-    unsigned long long dma_src[8], dma_dst[8];
     int layer;
     int error;                   // invalid route: no experts or table edits; the host still retires its sequence
     unsigned int miss_mask;      // experts the host must provide (only on disk) - the device waits for these

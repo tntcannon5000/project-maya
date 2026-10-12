@@ -206,13 +206,6 @@ namespace gf = strata::kernels::glmf;
 struct Glm5Model::FastState {
     bool unified_memory = false;   // set only for integrated HIP devices on Linux; CUDA and Windows keep the discrete policy
     cudaStream_t cs = nullptr, copy = nullptr, ps = nullptr;   // ps: the prefetch side stream
-    cudaStream_t demand = nullptr;
-    cudaStream_t demand_dma = nullptr;
-    cudaEvent_t dma_complete = nullptr;
-    std::atomic<gf::MoeRequest*> dma_pending{nullptr};
-    std::atomic<unsigned int> dma_issued{0};
-    std::thread dma_completion_thread;
-    cudaEvent_t demand_start = nullptr, demand_done = nullptr;
     cudaEvent_t ev_hop = nullptr, ev_done = nullptr, ev_pred = nullptr, ev_pf = nullptr, ev_pf_prev = nullptr;
     int max_pf = 0;   // STRATA_GLM_PREFETCH_N: measured a net LOSS on Mercury (the window between routes is shorter than one fetch)
     std::atomic<uint64_t> prefetches{0};
@@ -238,7 +231,7 @@ struct Glm5Model::FastState {
     // prediction quality (the next layer's router on this layer's FFN input)
     std::vector<std::array<int, 8>> pred_of;   // per layer: the prediction made one layer earlier
     std::vector<std::array<int, 8>> prefetched_of;
-    std::atomic<uint64_t> predicted_bytes{0}, predicted_used_bytes{0}, dma_bytes{0};
+    std::atomic<uint64_t> predicted_bytes{0}, predicted_used_bytes{0};
     std::atomic<uint64_t> pred_n{0}, pred_overlap{0}, pred_miss{0}, pred_miss_hit{0};
     // ---- LOOKAHEAD (STRATA_GLM_AHEAD=<n layers>, 0 off): every route also names the top-k of the next n layers' routers
     //      on its FFN input; the disk-only experts among them are read into the RAM tier by the reader threads while

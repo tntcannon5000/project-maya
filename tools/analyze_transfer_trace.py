@@ -42,12 +42,12 @@ def main():
         if t is not None:t['cpu'].append((s,min(e,t['end'])))
     rows=[];stages=[]
     excluded={'Expert fetch','CPU answer wait','Host/disk wait','DMA readiness wait','D2H','H2D/other'}
-    for t in tokens:
+    for index,t in enumerate(tokens):
         groups=collections.defaultdict(list)
         for e in t['events']:groups[e['stage']].append((max(e['start'],t['start']),min(e['end'],t['end'])))
         arithmetic=[iv for cat,ivs in groups.items() if cat not in excluded for iv in ivs]
         gpu=[iv for ivs in groups.values() for iv in ivs]
-        row=dict(seq=t['seq'],position=t['pos'],wall_ms=(t['end']-t['start'])/1e6,
+        row=dict(repeat=int(scored[index]['repeat']),seq=t['seq'],position=t['pos'],wall_ms=(t['end']-t['start'])/1e6,
             fetch_ms=duration(groups['Expert fetch'])/1e6,d2h_ms=duration(groups['D2H'])/1e6,
             dma_h2d_ms=duration(groups['H2D/other'])/1e6,arithmetic_ms=duration(arithmetic)/1e6,
             fetch_arithmetic_overlap_ms=overlap(groups['Expert fetch'],arithmetic)/1e6,
@@ -60,8 +60,14 @@ def main():
         stages.extend(dict(seq=t['seq'],stage=cat,ms=duration(ivs)/1e6) for cat,ivs in groups.items())
     assert len(rows)==len(scored),(len(rows),len(scored))
     write_csv(out/'trace-tokens.csv',rows);write_csv(out/'trace-stages.csv',stages)
-    summary={k:statistics.mean(r[k] for r in rows) for k in rows[0] if k not in ('seq','position')}
+    summary={k:statistics.mean(r[k] for r in rows) for k in rows[0] if k not in ('repeat','seq','position')}
     summary['tokens']=len(rows);(out/'trace-summary.json').write_text(json.dumps(summary,indent=2))
+    by_repeat={}
+    for repeat in sorted({r['repeat'] for r in rows}):
+        subset=[r for r in rows if r['repeat']==repeat]
+        by_repeat[repeat]={k:statistics.mean(r[k] for r in subset) for k in summary if k!='tokens'}
+        by_repeat[repeat]['tokens']=len(subset)
+    (out/'trace-repeats.json').write_text(json.dumps(by_repeat,indent=2))
     ordered=sorted(tokens,key=lambda t:t['row']['wall_ms'])
     for label,idx in [('fast',0),('median',len(ordered)//2),('slow',len(ordered)-1)]:
         t=ordered[idx];base=t['start'];fig,ax=plt.subplots(figsize=(16,5),layout='constrained')
