@@ -1,0 +1,50 @@
+glm pack: CUDA0 dense weights 5.01 GB: | kda q/k/v q12 1836 MB | attn output q12 1008 MB | shared experts q12 567 MB | mla k_b/v_b bf16 352 MB | other q12 340 MB | dense ffn q12 243 MB | kda small bf16 221 MB | mla q/kv q12 185 MB | mla q/kv bf16 176 MB | routers bf16 94 MB | mhc bf16 67 MB | dsa indexer bf16 24 MB | kda small f32 13 MB | norms f32 0 MB | dense ffn f32 0 MB | mla q/kv f32 0 MB | other f32 0 MB | mhc f32 0 MB | dsa indexer f32 0 MB
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 8.54 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 1.65
+glm fast: the expert profile docs/evidence/maya-demand/trained-profile.bin ranks 13248 (layer, expert) pairs
+maya slots: applied docs/evidence/maya-demand/trained-slots.txt, 23617142784 bytes
+glm fast: CUDA0 layers [0,45) expert pool 22.00 GB, 51-74 slots/layer (2656 total)
+glm fast: CUDA0 slots per layer 3:65 4:65 5:66 6:66 7:70 8:71 9:74 10:73 11:65 12:61 13:63 14:60 15:67 16:66 17:69 18:60 19:56 20:55 21:59 22:64 23:65 24:60 25:57 26:59 27:65 28:58 29:64 30:59 31:62 32:51 33:62 34:64 35:58 36:68 37:60 38:65 39:57 40:59 41:67 42:63 43:66 44:72 
+maya shadow: class 2 pinning fallback 10384 -> 10059 slots
+glm fast: CUDA0 RAM tier 97.82 GB pinned, 11819 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.7 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.3 of 107.2 GB, 17 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 20 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 23 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 26 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 29 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 29 s (3.74 GB/s)
+glm fast: CUDA0 the RAM tier sits on node 0 of 3 seen
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.192 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+prefill repeat=0 tokens=30 ms=981.731400
+glm tier diag CUDA0 (64 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=2798 hits=969 avoided_bytes=9161736192 budget_bytes=25769803776
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 839 held, 41 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 815 held, 64 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 9767 held, 289 free, 0 experts in no tier
+glm tier diag clean-up: 0 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (128 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=6064 hits=4055 avoided_bytes=37932564480 budget_bytes=25769803776
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 847 held, 33 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 833 held, 47 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 9930 held, 129 free, 0 experts in no tier
+glm tier diag clean-up: 0 duplicate RAM copies freed, 0 lost copies adopted
+prefill repeat=1 tokens=30 ms=734.816500
+glm tier diag CUDA0 (192 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=9160 hits=7069 avoided_bytes=65907916800 budget_bytes=25769803776
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 852 held, 28 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 837 held, 43 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 10004 held, 55 free, 0 experts in no tier
+glm tier diag clean-up: 0 duplicate RAM copies freed, 0 lost copies adopted
+glm tier diag CUDA0 (256 boundaries): VRAM drops 0, RAM evictions 0, lend drops 0 (to RAM 0), background promotions 0 / demotions 0, resident skips 0 | disk reads of: never held 0, dropped from VRAM 0, evicted from RAM 0, lend-dropped 0
+maya shadow: retained=11887 hits=9794 avoided_bytes=91346436096 budget_bytes=25769803776
+glm tier diag class 0 (3 layers, 14.16 MB): 880 slots, 852 held, 28 free, 0 experts in no tier
+glm tier diag class 1 (3 layers, 10.81 MB): 880 slots, 837 held, 43 free, 0 experts in no tier
+glm tier diag class 2 (36 layers, 8.26 MB): 10059 slots, 10006 held, 53 free, 0 experts in no tier
+glm tier diag clean-up: 0 duplicate RAM copies freed, 0 lost copies adopted
+glm fast timing: 316 tokens, 26.06 ms/token
+glm fast tiers CUDA0: vram hits 69599, ram fetches 14995, disk reads 0 (65.55% vram hit) | promotions 14614 (scratch 442) demotions 2152 drops 0 prefetches 0 | disk waits 60, 0.3 ms

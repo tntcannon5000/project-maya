@@ -1,0 +1,176 @@
+[
+  {
+    "name": "baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "batch-pull",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "components",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "confirm-graphs",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "cpu-plan",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 1.5344572067260742,
+    "rms": 0.08262949875333421,
+    "top1": 0.99609375,
+    "route_top8_exact_fraction": 0.7432188065099458,
+    "route_set_exact_fraction": 0.8966244725738397,
+    "route_selected_overlap": 0.9863245931283906
+  },
+  {
+    "name": "graph-batch",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "graph-components",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "graph-placement",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.4661102294921875,
+    "rms": 0.1258876508402755,
+    "top1": 0.984375
+  },
+  {
+    "name": "graphs",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "lru",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.2020418643951416,
+    "rms": 0.13028378158175233,
+    "top1": 0.99609375,
+    "route_top8_exact_fraction": 0.4914104882459313,
+    "route_set_exact_fraction": 0.7479656419529838,
+    "route_selected_overlap": 0.9636546865581676
+  },
+  {
+    "name": "retained-routes",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0,
+    "route_top8_exact_fraction": 1.0,
+    "route_set_exact_fraction": 1.0,
+    "route_selected_overlap": 1.0
+  },
+  {
+    "name": "selective-predict",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 3.1957080364227295,
+    "rms": 0.12924517563946974,
+    "top1": 0.98828125,
+    "route_top8_exact_fraction": 0.4800331525015069,
+    "route_set_exact_fraction": 0.7479656419529838,
+    "route_selected_overlap": 0.9634286467751657
+  },
+  {
+    "name": "trace-baseline",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "trace-components",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "trace-graphs",
+    "positions": 256,
+    "finite": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "trained-placement",
+    "positions": 256,
+    "finite": true,
+    "exact": false,
+    "max_abs": 2.4661102294921875,
+    "rms": 0.1258876508402755,
+    "top1": 0.984375,
+    "route_top8_exact_fraction": 0.4596895720313442,
+    "route_set_exact_fraction": 0.7391500904159132,
+    "route_selected_overlap": 0.9624020494273658
+  }
+]

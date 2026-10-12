@@ -48,9 +48,11 @@ def main():
     weights=dict(path=str(model),size=model.stat().st_size,mtime_ns=model.stat().st_mtime_ns,
         pack_manifests={n:hashlib.sha256((pack/n).read_bytes()).hexdigest() for n in ('index.txt','native_experts.txt')},
         expert_profile_sha256=hashlib.sha256((ROOT/'data/expert-profile-glm.bin').read_bytes()).hexdigest())
+    weights['experiment_files']={key:dict(path=str(ROOT/env[key]),sha256=hashlib.sha256((ROOT/env[key]).read_bytes()).hexdigest())
+        for key in ('MAYA_PROFILE_OVERRIDE','MAYA_SLOT_MAP','MAYA_CPU_PLAN_MAP') if key in env}
     cmd=[str(exe),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(out/'tokens.txt'),str(len(prompt)),str(out/'fixed'),str(a.repeats)]
     nsys=r'C:\Program Files\NVIDIA Corporation\Nsight Systems 2025.6.3\target-windows-x64\nsys.exe'
-    if a.trace:cmd=[nsys,'profile','--trace=cuda,nvtx','--sample=none','--cpuctxsw=none','--capture-range=cudaProfilerApi',
+    if a.trace:cmd=[nsys,'profile','--trace=cuda,nvtx','--cuda-graph-trace=node','--sample=none','--cpuctxsw=none','--capture-range=cudaProfilerApi',
         '--capture-range-end=stop','-o',str(out/'timeline'),*cmd]
     (out/'manifest.json').write_text(json.dumps(dict(command=cmd,env={k:v for k,v in env.items() if k.startswith(('STRATA_','MAYA_'))},
         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),tokens_sha256=hashlib.sha256((out/'tokens.txt').read_bytes()).hexdigest(),weights=weights),indent=2))

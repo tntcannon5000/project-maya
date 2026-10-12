@@ -1,0 +1,44 @@
+[
+  {
+    "name": "retained-routes",
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "lru",
+    "exact": false,
+    "max_abs": 2.2020418643951416,
+    "rms": 0.13028378158175233,
+    "top1": 0.99609375
+  },
+  {
+    "name": "components",
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "batch-pull",
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "graphs",
+    "exact": true,
+    "max_abs": 0.0,
+    "rms": 0.0,
+    "top1": 1.0
+  },
+  {
+    "name": "selective-predict",
+    "exact": false,
+    "max_abs": 3.1957080364227295,
+    "rms": 0.12924517563946974,
+    "top1": 0.98828125
+  }
+]

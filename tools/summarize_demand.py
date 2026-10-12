@@ -21,8 +21,11 @@ for p in sorted(ROOT.iterdir()):
             ref=reference[:len(z)];delta=z.astype('float64')-ref
             q=dict(name=p.name,positions=len(z),finite=bool(np.isfinite(z).all()),exact=bool(np.array_equal(z,ref)),max_abs=float(abs(delta).max()),rms=float(np.sqrt((delta*delta).mean())),top1=float((ref.argmax(1)==z.argmax(1)).mean()))
             if(p/'routes.0').exists():
-                rr=[tuple(map(int(x) for x in line.split()[:9])) for line in (p/'routes.0').read_text().splitlines()]
-                if len(rr)==len(route_ref):q['route_top8_exact_fraction']=sum(a==b for a,b in zip(rr,route_ref))/len(rr)
+                rr=[tuple(int(x) for x in line.split()[:9]) for line in (p/'routes.0').read_text().splitlines()]
+                if len(rr)==len(route_ref):
+                    q['route_top8_exact_fraction']=sum(a==b for a,b in zip(rr,route_ref))/len(rr)
+                    q['route_set_exact_fraction']=sum(set(a[1:])==set(b[1:]) for a,b in zip(rr,route_ref))/len(rr)
+                    q['route_selected_overlap']=sum(len(set(a[1:]) & set(b[1:]))/8 for a,b in zip(rr,route_ref))/len(rr)
             parity.append(q)
 with (ROOT/'screens.csv').open('w',newline='') as f:
     w=csv.DictWriter(f,fieldnames=list(out[0]));w.writeheader();w.writerows(out)
