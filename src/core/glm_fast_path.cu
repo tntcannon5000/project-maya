@@ -3451,7 +3451,7 @@ void Glm5Model::fast_service() {
                     F->scratch_uses.fetch_add(1, std::memory_order_relaxed);
                 }
             }
-            if (!F->reuse_policy.layers.empty())
+            if (!F->reuse_policy.layers.empty() && rq->win_n>0)
                 F->reuse_policy.observe(il,ids,K,F->cnt.data()+(size_t)il*g.n_expert);
             F->cnt_events += (uint64_t) K;
             if (F->cnt_events >= 32768) {
@@ -3680,6 +3680,14 @@ void Glm5Model::fast_service() {
                                         std::chrono::steady_clock::now() - t0).count(),
                                     std::memory_order_relaxed);
             }
+        }
+        if (!F->reuse_policy.layers.empty() && rq->win_n==0) {
+            // Publish the required CPU answer first. Reuse estimation is for
+            // the next boundary and must not delay this layer's consumer.
+            MayaTimelineRange trace_reuse("Reuse policy after CPU answer");
+            std::lock_guard<std::mutex> lk(F->mu);
+            int ids[8]; for(int i=0;i<K;++i)ids[i]=rq->ids[i];
+            F->reuse_policy.observe(rq->layer,ids,K,F->cnt.data()+(size_t)rq->layer*g.n_expert);
         }
         F->processed.fetch_add(1, std::memory_order_release);
         ++next;

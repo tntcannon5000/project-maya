@@ -40,6 +40,21 @@ per iteration; do not launch the full previous suite.
   runner overrode an explicit evidence root; runner now respects it.
 - Experimental copy kernel compiled after fixing placement of launch-error
   checking. No arithmetic operations were changed.
+- Checkpoint `85385a4`: both opt-in mechanisms, causal replay, preserved
+  previous engine behavior when flags are unset.
+- Fresh same-binary graph baseline 39.86/43.30 TPS. Transition policy
+  39.97/42.72 TPS, repeated demand 413.79 -> 383.00 MB/token, GPU hits
+  228.92 -> 235.62 and CPU experts 63.60 -> 60.46. 7,815 different victim
+  choices across 13,272 observed routes. Mechanism engages, throughput not
+  improved. Low-grid overlap43.34 and fresh baseline43.30 are effectively tied.
+- Follow-up dependency: reuse scoring ran before CPU answers were published.
+  c=1 now scores AFTER publishing the answer, before releasing the service
+  boundary. Merged windows retain their original service ordering. This is
+  not an arithmetic change; the small count-aging-boundary difference is
+  recorded (scoring now sees aged counts at those boundaries).
+- Two diagnostic captures selected: transition and bounded overlap, to locate
+  costs. No full workload suite. Nsight event export is substantial overhead;
+  these captures remain separate from unprofiled throughput evidence.
 
 Correctness qualification: transport-only outputs must be exact. Residency
 can change CPU/GPU assignment; compare controlled GPU-only backends if it

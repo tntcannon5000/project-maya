@@ -14,7 +14,7 @@ COLORS={'Expert fetch':'#e28532','Expert gate/up':'#1769aa','Expert down':'#4098
 
 def category(name, layer):
     for key,cat in [('moe_cpu_wait','CPU answer wait'),('moe_gate_up','Expert gate/up'),
-                    ('moe_down','Expert down'),('moe_fetch','Expert fetch'),('moe_prefetch','Expert fetch'),
+                    ('moe_down','Expert down'),('moe_fetch','Expert fetch'),('moe_component','Expert fetch'),('moe_prefetch','Expert fetch'),
                     ('moe_wait','Host/disk wait'),('moe_route','Routing'),('kda_','KDA recurrence/prep'),
                     ('dsa_','DSA / MLA'),('mla_','DSA / MLA'),('headwise_','DSA / MLA'),
                     ('hc','Residual/norm'),('embed_','Embedding/head'),('head_prep','Embedding/head'),
