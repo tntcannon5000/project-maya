@@ -1,0 +1,16 @@
+[
+  {
+    "name": "baseline vs confirm-graphs",
+    "logits": 39649280,
+    "exact": true,
+    "finite": true,
+    "max_abs": 0.0
+  },
+  {
+    "name": "long-baseline vs long-graphs",
+    "logits": 39649280,
+    "exact": true,
+    "finite": true,
+    "max_abs": 0.0
+  }
+]

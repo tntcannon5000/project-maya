@@ -1,0 +1,649 @@
+<!doctype html><meta charset="utf-8"><title>Maya demand campaign</title><style>body{max-width:1250px;margin:40px auto;font:16px/1.5 system-ui;padding:0 20px;color:#182c3d}table{border-collapse:collapse;display:block;overflow:auto;font-size:14px}td,th{border:1px solid #ccd5df;padding:8px}th{background:#eaf3f0}img{max-width:100%}h1,h2{color:#126c5b}</style><h1>Maya demand-transfer campaign: incremental results</h1>
+<p>This campaign starts from the <strong>previous retained candidate <code>20af539</code></strong>, including expanded immutable RAM backing and after-embedding demotion scheduling. Its gains over stock Maya are not gains of this campaign. Same GSQ-RCO 3.0bit Q4-attention pack, c=1, no speculative token decoding, MTP, K4V, expert skipping or additional quantization. <strong>60 TPS has not been measured.</strong></p>
+<p>Seven distinct hypotheses were exercised. The simplest promising candidate enables Maya's existing KDA layer graph replay. This is a modest scheduling/configuration improvement, not a newly invented graph engine. Rejected policy/transport prototypes remain preserved separately. The preceding campaign's demotion fix was not reimplemented.</p>
+<h2>Baseline versus graph candidate</h2>
+<p>Unprofiled, without route logging. Short fixture: 30 prompt tokens, then 128 forced inputs; two repetitions with tier adaptation. Long fixture: 8,192 actually occupied source-code tokens, then 128 forced inputs. Allocation capacity 131,072 is not occupancy. Both use a 22 GiB expert pool and the previous RAM backing settings.</p>
+<table>
+<thead>
+<tr>
+<th>Fixture</th>
+<th>Retained R1 TPS</th>
+<th>Graph TPS</th>
+<th>Change</th>
+<th>Mean ms/token</th>
+<th>p95 ms/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Short first</td>
+<td>38.22</td>
+<td>39.31</td>
+<td>+2.9%</td>
+<td>26.16 → 25.44</td>
+<td>30.68 → 29.56</td>
+</tr>
+<tr>
+<td>Short repeated</td>
+<td>41.39</td>
+<td>42.85</td>
+<td>+3.5%</td>
+<td>24.16 → 23.34</td>
+<td>28.58 → 27.80</td>
+</tr>
+<tr>
+<td>8K occupied first</td>
+<td>34.66</td>
+<td>35.90</td>
+<td>+3.6%</td>
+<td>28.85 → 27.85</td>
+<td>36.44 → 35.61</td>
+</tr>
+<tr>
+<td>8K occupied repeated</td>
+<td>36.40</td>
+<td>37.81</td>
+<td>+3.9%</td>
+<td>27.47 → 26.45</td>
+<td>31.91 → 30.86</td>
+</tr>
+</tbody>
+</table>
+<p>Short confirmation uses the experimental executable with other new switches off. Final free generation and 8K qualification use <strong>the same preserved R1 executable on both sides</strong>, with only graph replay changed. Prior campaign repeat variation was ~4%; do not sell a single 3–4% difference as a precisely established universal speedup.</p>
+<h2>Writing/coding and workload transitions</h2>
+<p>One process per side: warmup, CSV → explanation → HTML/JavaScript, then repeat. Same greedy prompts and 128-output-token cap. This checks cross-task cache transitions; these are continuations, not completed webapp tasks or a model-quality benchmark.</p>
+<table>
+<thead>
+<tr>
+<th>Task, two requests pooled</th>
+<th>Retained R1 TPS</th>
+<th>Graph TPS</th>
+<th>Change</th>
+<th>Same output IDs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>csv</td>
+<td>36.50</td>
+<td>37.87</td>
+<td>+3.8%</td>
+<td>True</td>
+</tr>
+<tr>
+<td>explanation</td>
+<td>38.92</td>
+<td>40.54</td>
+<td>+4.2%</td>
+<td>True</td>
+</tr>
+<tr>
+<td>web</td>
+<td>36.18</td>
+<td>37.38</td>
+<td>+3.3%</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<h2>Hypotheses/results matrix</h2>
+<p>These screens enabled route logging (which also computes 16 near ranks). They are <strong>diagnostic</strong>, not directly comparable to the unlogged headline. The initial retained route collection overlapped CPU compilation; use it for route/capacity evidence, not a definitive timing baseline.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Mechanism</th>
+<th>First / repeat TPS</th>
+<th>Verified engagement</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Cost/reuse-weighted layer residency</td>
+<td>37.69 / 40.69</td>
+<td>Train writing/web; hold out CSV; same byte pool. Demand falls only ~2%.</td>
+<td>No incremental retention: graph+placement does not materially beat graphs.</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>LRU versus aged-frequency eviction</td>
+<td>37.21 / 39.17</td>
+<td>Actual repeat demand rises, consistent with fixed-route replay.</td>
+<td>Reject.</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Component-ready GU/down streaming</td>
+<td>36.50 / 39.49</td>
+<td>Original single gate/up; down fetch on side stream; graph-compatible fork/join.</td>
+<td>Reject: measured overlap offset by contention and gaps, including with graphs.</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>Independent expert pulls in one grid</td>
+<td>37.30 / 40.27</td>
+<td>Same bytes, destinations and exact logits; no extra host handshake.</td>
+<td>No justified gain alone or with graphs.</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Layer graph replay</td>
+<td>38.85 / 41.91</td>
+<td>34 captures, 10,710 replays; exact logits and ordered routes.</td>
+<td>Simplest candidate; modest gains require workload-specific interpretation.</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>Measured per-layer CPU/GPU balance</td>
+<td>37.54 / 38.90</td>
+<td>Cost model changes seven of 42 plans; actual masks/traffic change.</td>
+<td>Reject: extra complexity without speed gain.</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>Selective rank-0 demand-first prediction</td>
+<td>37.37 / 40.11</td>
+<td>~96% of prefetched bytes selected next, but total H2D rises.</td>
+<td>Reject: selected does not mean avoided GPU demand.</td>
+</tr>
+</tbody>
+</table>
+<p>Mechanisms, source references, pre-experiment bounds and falsifiers: <a href="../../../MAYA-DEMAND-CAMPAIGN.md">campaign plan</a>, <a href="../RESEARCH.md">research/audit</a>. Public grounding reuses archived CUDA/Fiddler/ProMoE material and measured local DS4/Strata failures; publications are not treated as measured gains on this machine.</p>
+<h3>Policy-stage diagnostic checks</h3>
+<p>Separate CUDA-event runs, 128 scored tokens each after skipping the 30 prompt forwards. Event intervals include submission gaps and instrumentation overhead; these are first-request diagnostic intervals, not kernel-only durations, repeated-request numbers or headline throughput. Full stage values are in stage-diagnostics.json. Prediction/placement change CPU assignment and can change routing, so this is an end-to-end mechanism screen rather than an arithmetic-controlled comparison.</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Stream ms/token</th>
+<th>Fetch stage</th>
+<th>CPU-answer wait</th>
+<th>Route stage</th>
+<th>Gate/up</th>
+<th>Down</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>26.660</td>
+<td>12.666</td>
+<td>2.439</td>
+<td>1.183</td>
+<td>1.281</td>
+<td>0.882</td>
+</tr>
+<tr>
+<td>placement</td>
+<td>26.960</td>
+<td>12.492</td>
+<td>2.520</td>
+<td>1.215</td>
+<td>1.328</td>
+<td>0.921</td>
+</tr>
+<tr>
+<td>lru</td>
+<td>26.670</td>
+<td>12.550</td>
+<td>2.457</td>
+<td>1.188</td>
+<td>1.287</td>
+<td>0.921</td>
+</tr>
+<tr>
+<td>batch</td>
+<td>25.780</td>
+<td>12.509</td>
+<td>2.311</td>
+<td>1.137</td>
+<td>1.257</td>
+<td>0.873</td>
+</tr>
+<tr>
+<td>cpu</td>
+<td>26.490</td>
+<td>12.512</td>
+<td>2.534</td>
+<td>1.181</td>
+<td>1.293</td>
+<td>0.902</td>
+</tr>
+</tbody>
+</table>
+<p>The optional prediction event-stage diagnostic was interrupted during model loading and was not rerun. Its completed main experiment already establishes increased total upload traffic and no retained benefit. Following the updated testing instruction, future iterations select one or two decisive tests rather than automatically rerunning this matrix.</p>
+<h2>Dependencies and combinations</h2>
+<table>
+<thead>
+<tr>
+<th>Complete combination</th>
+<th>First / repeat TPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>graphs</td>
+<td>38.85 / 41.91</td>
+</tr>
+<tr>
+<td>graph-batch</td>
+<td>38.61 / 41.69</td>
+</tr>
+<tr>
+<td>graph-components</td>
+<td>39.10 / 41.82</td>
+</tr>
+<tr>
+<td>graph-placement</td>
+<td>39.80 / 42.95</td>
+</tr>
+<tr>
+<td>confirm-graphs</td>
+<td>39.31 / 42.85</td>
+</tr>
+</tbody>
+</table>
+<p>The first three rows use route logging; the last two are unlogged. Compare graph-batch/components against graphs, and graph-placement against confirm-graphs, not across instrumentation groups.</p>
+<p>D1 changes residency and therefore CPU placement; D6 models CPU completion versus added transfer rather than treating every CPU wait as removable. D3 needs low submission overhead, so D3+D5 includes a captured cross-stream event fork/join. D4+D5 tests whether the batched copy mapping becomes useful once host launches are reduced. D1+D5 barely changes the graph-only result. D7 starts predicted movement after demand/CPU work and restricts rank, but still adds uploads. No exhaustive parameter sweep was used.</p>
+<h2>Capacity and transfer accounting</h2>
+<table>
+<thead>
+<tr>
+<th>Fixed-route replay model</th>
+<th>GPU demand MB/token</th>
+<th>Missed experts/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>original-lfu</td>
+<td>411.4</td>
+<td>106.8</td>
+</tr>
+<tr>
+<td>original-lru</td>
+<td>467.1</td>
+<td>119.0</td>
+</tr>
+<tr>
+<td>original-oracle</td>
+<td>228.5</td>
+<td>65.8</td>
+</tr>
+<tr>
+<td>trained-lfu</td>
+<td>401.9</td>
+<td>106.2</td>
+</tr>
+<tr>
+<td>trained-lru</td>
+<td>461.5</td>
+<td>118.9</td>
+</tr>
+<tr>
+<td>trained-oracle</td>
+<td>214.6</td>
+<td>64.1</td>
+</tr>
+</tbody>
+</table>
+<p>Replay includes 316 prompt+continuation histories, simplified spares/admission and a global CPU split. Future-oracle numbers assume inaccessible future knowledge and no migration scheduling costs. They are an <strong>optimistic opportunity estimate, not a rigorous hardware/engine lower bound or achieved TPS</strong>. The remaining traffic is not demonstrably all unavoidable, but the tested causal allocation policy removes only a small fraction. Actual placement changes can alter routing numerically; the replay deliberately fixes routes and is kept separate from real measurements.</p>
+<table>
+<thead>
+<tr>
+<th>Repeat</th>
+<th>Demand MB/token</th>
+<th>Predicted MB</th>
+<th>Selected prediction MB</th>
+<th>Demotion MB</th>
+<th>GPU hits/token</th>
+<th>CPU experts/token</th>
+<th>Pool GiB</th>
+<th>Pinned tier GiB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>413.79</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.71</td>
+<td>228.9</td>
+<td>63.6</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+<tr>
+<td>confirm-graphs</td>
+<td>413.79</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.71</td>
+<td>228.9</td>
+<td>63.6</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+<tr>
+<td>trained-placement</td>
+<td>406.32</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>1.74</td>
+<td>228.8</td>
+<td>63.9</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+<tr>
+<td>lru</td>
+<td>433.82</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>32.26</td>
+<td>224.4</td>
+<td>65.8</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+<tr>
+<td>cpu-plan</td>
+<td>412.11</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.78</td>
+<td>229.0</td>
+<td>63.8</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+<tr>
+<td>selective-predict</td>
+<td>373.29</td>
+<td>79.90</td>
+<td>76.54</td>
+<td>0.88</td>
+<td>236.9</td>
+<td>59.7</td>
+<td>22.00</td>
+<td>97.82</td>
+</tr>
+</tbody>
+</table>
+<p>Prediction engagement distinguishes selected bytes from counterfactual demand saved: an expert otherwise assigned to CPU can be predicted correctly but add a GPU upload. Exact per-expert displaced traffic and prediction deadline distributions were not instrumented after the aggregate screen rejected this variant; do not claim those measurements. Warm demotions remain almost zero in the primary candidate. Graph replay does <strong>not</strong> reduce the ~414 MB/token demand.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Minimum available physical GiB</th>
+<th>Minimum available commit GiB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>12.26</td>
+<td>23.80</td>
+</tr>
+<tr>
+<td>confirm-graphs</td>
+<td>12.13</td>
+<td>23.76</td>
+</tr>
+<tr>
+<td>long-baseline</td>
+<td>11.99</td>
+<td>23.75</td>
+</tr>
+<tr>
+<td>long-graphs</td>
+<td>11.97</td>
+<td>23.67</td>
+</tr>
+<tr>
+<td>trace-baseline</td>
+<td>8.20</td>
+<td>20.24</td>
+</tr>
+<tr>
+<td>trace-graphs</td>
+<td>7.19</td>
+<td>19.38</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Whole-run samples</th>
+<th>Peak VRAM GiB</th>
+<th>Graphics MHz range</th>
+<th>Memory MHz range</th>
+<th>Peak °C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td>30.17</td>
+<td>1065–2632</td>
+<td>405–16701</td>
+<td>46</td>
+</tr>
+<tr>
+<td>confirm-graphs</td>
+<td>30.17</td>
+<td>990–2632</td>
+<td>405–16701</td>
+<td>48</td>
+</tr>
+<tr>
+<td>long-baseline</td>
+<td>30.19</td>
+<td>1020–2632</td>
+<td>405–16701</td>
+<td>56</td>
+</tr>
+<tr>
+<td>long-graphs</td>
+<td>30.19</td>
+<td>990–2632</td>
+<td>405–16701</td>
+<td>56</td>
+</tr>
+<tr>
+<td>trace-baseline</td>
+<td>30.28</td>
+<td>1012–2632</td>
+<td>405–16901</td>
+<td>50</td>
+</tr>
+<tr>
+<td>trace-graphs</td>
+<td>30.28</td>
+<td>1027–2632</td>
+<td>405–16901</td>
+<td>51</td>
+</tr>
+</tbody>
+</table>
+<p>No extra expert RAM/pool capacity is credited to graphs. Hardware samples are in each fixed-run gpu.csv (including loading/prefill/idle). VRAM clocks/thermals were not locked or changed by the campaign; these are bounded trials, not statistical confidence intervals. Profiler overhead and cache capacity are recorded separately.</p>
+<h2>New diagnostic timelines</h2>
+<p>Nsight node-level graph tracing is explicitly enabled; otherwise graph launches could hide their constituent kernels. Stage intervals overlap and must not be summed. CPU-wait kernel time includes polling/overhead; it is not all removable stall. No-GPU gaps are measured from the union of GPU activity within token ranges.</p>
+<table>
+<thead>
+<tr>
+<th>Trace / repeat</th>
+<th>Wall ms</th>
+<th>Pull ms</th>
+<th>Arithmetic ms</th>
+<th>CPU-wait kernel ms</th>
+<th>No-GPU ms</th>
+<th>Pull∩arithmetic ms</th>
+<th>CPU∩arithmetic ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trace-baseline / 0</td>
+<td>27.501</td>
+<td>12.995</td>
+<td>9.269</td>
+<td>2.981</td>
+<td>1.969</td>
+<td>0.000</td>
+<td>1.070</td>
+</tr>
+<tr>
+<td>trace-baseline / 1</td>
+<td>25.222</td>
+<td>11.229</td>
+<td>9.244</td>
+<td>2.698</td>
+<td>2.004</td>
+<td>0.000</td>
+<td>1.002</td>
+</tr>
+<tr>
+<td>trace-graphs / 0</td>
+<td>26.695</td>
+<td>13.000</td>
+<td>9.278</td>
+<td>3.048</td>
+<td>1.156</td>
+<td>0.000</td>
+<td>1.087</td>
+</tr>
+<tr>
+<td>trace-graphs / 1</td>
+<td>24.560</td>
+<td>11.270</td>
+<td>9.288</td>
+<td>2.785</td>
+<td>1.176</td>
+<td>0.000</td>
+<td>1.018</td>
+</tr>
+<tr>
+<td>trace-components / 0</td>
+<td>26.820</td>
+<td>12.877</td>
+<td>11.518</td>
+<td>3.101</td>
+<td>2.014</td>
+<td>2.943</td>
+<td>3.716</td>
+</tr>
+<tr>
+<td>trace-components / 1</td>
+<td>24.587</td>
+<td>11.140</td>
+<td>11.177</td>
+<td>2.712</td>
+<td>2.112</td>
+<td>2.593</td>
+<td>3.358</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Mean diagnostics" src="comparison.png" /></p>
+<p><img alt="Retained token" src="../trace-baseline/timeline-median.png" /></p>
+<p><img alt="Graph token" src="../trace-graphs/timeline-median.png" /></p>
+<p><img alt="Component-streaming token" src="../trace-components/timeline-median.png" /></p>
+<h2>Prefill, numerical and lifecycle qualification</h2>
+<table>
+<thead>
+<tr>
+<th>8K prefill</th>
+<th>First ms</th>
+<th>Repeated ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>long-baseline</td>
+<td>3768.410500</td>
+<td>3578.416700</td>
+</tr>
+<tr>
+<td>long-graphs</td>
+<td>3584.126800</td>
+<td>3578.548700</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Comparison</th>
+<th>Logits</th>
+<th>Exact</th>
+<th>Max absolute difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline vs confirm-graphs</td>
+<td>39649280</td>
+<td>True</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>long-baseline vs long-graphs</td>
+<td>39649280</td>
+<td>True</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p>Scheduling/transport-only screens also compare all logits and actual ordered route IDs. Placement/CPU/prediction variants show hybrid differences; those are recorded in parity.json, not declared bit-exact or excused by weaker thresholds. The final graph candidate preserves backend assignment. Eight experts remain required per route; mixed Q2_K/Q3_K/Q4_K weights are unchanged.</p>
+<table>
+<thead>
+<tr>
+<th>Request</th>
+<th>Engine completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>warmup</td>
+<td>DONE 64 13 455.6 1523.5 length 0 0 0 14785 21168</td>
+</tr>
+<tr>
+<td>cancel</td>
+<td>DONE 8 15 388.8 180.2 cancel 0 0 0 1453 2352</td>
+</tr>
+<tr>
+<td>recovery</td>
+<td>DONE 32 16 378.2 843.4 length 0 0 0 6072 10416</td>
+</tr>
+</tbody>
+</table>
+<p>STOP/recovery and normal teardown completed, with live dual-owner checks and sampled immutable bytes per quant class. Long repeated requests exercise prefill lending. Qualification is c=1 on this NVIDIA/Windows setup, not AMD/multi-GPU certification.</p>
+<h2>Retention, rollback and remaining bottlenecks</h2>
+<p>Research branch: <code>research/maya-demand-campaign</code>. Primary rollback: <code>20af539</code>
+on <code>research/maya-transfer-campaign</code>. Prototypes are preserved at <code>c3cb3a4</code>
+on <code>research/maya-demand-prototypes</code>. The retained engine source matches R1;
+rejected experimental source changes were removed after successful builds.
+Retained configuration/source checkpoint: <code>799c34f</code>.
+The graph candidate adds <code>STRATA_GLM_KDA_GRAPH=1</code> to the previous retained
+settings; it does not replace the model or arithmetic kernels. The daily
+launcher is not silently changed. Nothing is published externally.</p>
+<p>Opt-in configuration: <a href="../../../../configs/maya-demand-graphs.json">maya-demand-graphs.json</a>.
+Launch from the repository with <code>.venv/Scripts/python.exe -m serve.server --engine strata --config configs/maya-demand-graphs.json --port 8085</code>.
+This configuration reserves a 22 GiB expert pool and roughly 98 GiB pinned RAM;
+it is the tested campaign configuration, not a low-memory desktop preset.</p>
+<p>Remaining bottlenecks: substantial demand uploads, required projections and
+expert computation, and a CPU/GPU balancing problem where removing waits can
+cost more transfer time than it saves. The overclocked GPU's VRAM bandwidth
+does not remove the RAM→GPU link limit. Bounded arithmetic inspection found
+no established large redundant-work opportunity, so no generic kernel rewrite
+was undertaken. The oracle reuse opportunity warrants future work, but this
+campaign does not demonstrate a deployable policy achieving it.</p>
+<p>Reproduction: run_demand_lab.py, analyze_demand_routes.py,
+qualify_demand_graphs.ps1, analyze_transfer_trace.py, summarize_demand.py and
+report_demand_campaign.py. Large raw logits/traces remain local. The research
+log records negative results, methodology corrections and uncertainty.</p>

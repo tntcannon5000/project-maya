@@ -109,3 +109,53 @@ stream joins via the down-ready event before the dependent down projection.
 This removes duplicated gate launches from the previous campaign and allows
 graph replay to test the submission-cost dependency. Prediction+D3 remains
 explicitly excluded because it would share event/buffer ownership.
+
+## Complete combinations and traces
+
+- D3+D5 ran successfully: 34 captures, 10,710 graph replays; 39.10/41.82 TPS
+  with route logging. D4+D5: 38.61/41.69. Neither beats simpler D5 reliably.
+- Unlogged D5 confirmation: 39.31/42.85 vs fresh retained 38.22/41.39.
+  D1+D5: 39.80/42.95, not a meaningful extra gain. These changes are small
+  relative to the prior ~4% run variation; final task/8K qualification follows.
+- Traces explicitly set `--cuda-graph-trace=node` to measure constituent
+  kernels rather than treating graph launches as opaque work.
+- Mean first+repeat D3+D5 shows 2.768 ms pull/arithmetic overlap, but GPU
+  arithmetic grows 9.283→11.347 ms versus D5 and inactive gaps grow
+  1.166→2.063 ms. Component copies engage; contention plus scheduling costs
+  consume their benefit even without duplicate gate launches. Reject.
+- Repeated D5 versus retained trace: wall 25.222→24.560 ms, inactive gaps
+  2.004→1.176 ms, pulls 11.229→11.270 ms, arithmetic 9.244→9.288 ms,
+  CPU-wait kernels 2.698→2.785 ms. The demonstrated improvement removes
+  submission gaps; it does not reduce expert traffic or CPU wait.
+- All D3/D4/D5 and graph-combination scheduling-only outputs matched every
+  compared logit and ordered route exactly. Placement variants differ in
+  ordered routes despite identical forced input histories. Route set overlap
+  and exact fractions are recorded separately in parity.json.
+- Prototype checkpoint `c3cb3a4`, branch `research/maya-demand-prototypes`,
+  preserves all implementations. The retained candidate will use the original
+  R1 engine plus its existing graph switch; experimental transfer/policy
+  changes are removed from the final engine, not quietly left enabled.
+
+## Final qualification and retained checkpoint
+
+- Retained configuration/source checkpoint `799c34f` restores the R1 engine
+  source exactly and adds `configs/maya-demand-graphs.json`. Both engine and
+  lab rebuilt successfully. Prototype branch remains at `c3cb3a4`.
+- Short repeated unprofiled performance: 41.39 -> 42.85 TPS. At 8,192 occupied
+  tokens: 36.40 -> 37.81 TPS. Writing/coding free continuations show 3.3–4.2%
+  pooled gains across two requests per task, with identical generated IDs.
+  These are bounded observations, not precise universal speedup estimates.
+- Final short and 8K comparisons each match all 39,649,280 logits exactly,
+  with finite values and zero maximum absolute difference. No thresholds changed.
+- Repeated 8K prefill: 3578.417 -> 3578.549 ms, effectively unchanged.
+  Cancellation at eight tokens, recovery, teardown and dual-owner checks pass.
+- Final stage diagnostics completed baseline/placement/LRU/batched-pull/CPU
+  cases (128 scored tokens each). Optional prediction stage capture stopped
+  during loading; it is explicitly incomplete and not used as evidence. Its
+  earlier complete main experiment already establishes rejection.
+- User updated testing scope: from now on select one or two decisive cases,
+  not automatic full suites. The stage runner now enforces that and timestamps
+  new evidence directories. No rerun of the optional interrupted case.
+- Updated report contains byte accounting, memory/clock ranges, measured
+  component-overlap losses, timelines, dependency findings and negative results.
+  60 TPS was not achieved. No further inference is running; nothing published.

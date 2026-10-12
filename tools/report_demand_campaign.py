@@ -41,15 +41,29 @@ sections.append(tbl(['Task, two requests pooled','Retained R1 TPS','Graph TPS','
 sections.append('## Hypotheses/results matrix\n\nThese screens enabled route logging (which also computes 16 near ranks). They are **diagnostic**, not directly comparable to the unlogged headline. The initial retained route collection overlapped CPU compilation; use it for route/capacity evidence, not a definitive timing baseline.')
 spec=[('D1','Cost/reuse-weighted layer residency','trained-placement','Train writing/web; hold out CSV; same byte pool. Demand falls only ~2%.','No incremental retention: graph+placement does not materially beat graphs.'),
 ('D2','LRU versus aged-frequency eviction','lru','Actual repeat demand rises, consistent with fixed-route replay.','Reject.'),
-('D3','Component-ready GU/down streaming','components','Original single gate/up; down fetch on side stream; graph-compatible fork/join.','Reject standalone; evaluate overlap trace and graph ablation.'),
+('D3','Component-ready GU/down streaming','components','Original single gate/up; down fetch on side stream; graph-compatible fork/join.','Reject: measured overlap offset by contention and gaps, including with graphs.'),
 ('D4','Independent expert pulls in one grid','batch-pull','Same bytes, destinations and exact logits; no extra host handshake.','No justified gain alone or with graphs.'),
 ('D5','Layer graph replay','graphs','34 captures, 10,710 replays; exact logits and ordered routes.','Simplest candidate; modest gains require workload-specific interpretation.'),
 ('D6','Measured per-layer CPU/GPU balance','cpu-plan','Cost model changes seven of 42 plans; actual masks/traffic change.','Reject: extra complexity without speed gain.'),
 ('D7','Selective rank-0 demand-first prediction','selective-predict','~96% of prefetched bytes selected next, but total H2D rises.','Reject: selected does not mean avoided GPU demand.')]
 sections.append(tbl(['ID','Mechanism','First / repeat TPS','Verified engagement','Decision'],[[i,h,pair(n),v,d] for i,h,n,v,d in spec]))
 sections.append('Mechanisms, source references, pre-experiment bounds and falsifiers: [campaign plan](../../../MAYA-DEMAND-CAMPAIGN.md), [research/audit](../RESEARCH.md). Public grounding reuses archived CUDA/Fiddler/ProMoE material and measured local DS4/Strata failures; publications are not treated as measured gains on this machine.')
+stage_results=[]
+for name in ['baseline','placement','lru','batch','cpu','predict']:
+    log=(ROOT/f'stages-{name}'/'engine.log').read_text()
+    header=re.search(r'glm fast prof CUDA0 \((\d+) tokens, ([\d.]+) ms/token',log)
+    if not header and name=='predict':
+        continue  # Optional final diagnostic interrupted during load; main screen is complete.
+    assert header and int(header[1])==128, name
+    stages={k:float(v) for k,v in re.findall(r'^  (\w+)\s+([\d.]+) ms/token',log,re.M)}
+    stage_results.append(dict(name=name,tokens=int(header[1]),stream_ms=float(header[2]),stages=stages))
+(ROOT/'stage-diagnostics.json').write_text(json.dumps(stage_results,indent=2))
+sections.append('### Policy-stage diagnostic checks\n\nSeparate CUDA-event runs, 128 scored tokens each after skipping the 30 prompt forwards. Event intervals include submission gaps and instrumentation overhead; these are first-request diagnostic intervals, not kernel-only durations, repeated-request numbers or headline throughput. Full stage values are in stage-diagnostics.json. Prediction/placement change CPU assignment and can change routing, so this is an end-to-end mechanism screen rather than an arithmetic-controlled comparison.')
+sections.append(tbl(['Policy','Stream ms/token','Fetch stage','CPU-answer wait','Route stage','Gate/up','Down'],[[r['name'],f"{r['stream_ms']:.3f}",*[f"{r['stages'].get(k,0):.3f}" for k in ['moe_fetch','moe_cpu_wait','moe_route','moe_gate_up','moe_down']]] for r in stage_results]))
+sections.append('The optional prediction event-stage diagnostic was interrupted during model loading and was not rerun. Its completed main experiment already establishes increased total upload traffic and no retained benefit. Following the updated testing instruction, future iterations select one or two decisive tests rather than automatically rerunning this matrix.')
 sections.append('## Dependencies and combinations')
 sections.append(tbl(['Complete combination','First / repeat TPS'],[[n,pair(n)] for n in ['graphs','graph-batch','graph-components','graph-placement','confirm-graphs']]))
+sections.append('The first three rows use route logging; the last two are unlogged. Compare graph-batch/components against graphs, and graph-placement against confirm-graphs, not across instrumentation groups.')
 sections.append('D1 changes residency and therefore CPU placement; D6 models CPU completion versus added transfer rather than treating every CPU wait as removable. D3 needs low submission overhead, so D3+D5 includes a captured cross-stream event fork/join. D4+D5 tests whether the batched copy mapping becomes useful once host launches are reduced. D1+D5 barely changes the graph-only result. D7 starts predicted movement after demand/CPU work and restricts rank, but still adds uploads. No exhaustive parameter sweep was used.')
 sections.append('## Capacity and transfer accounting')
 cap=j('route-capacity-study.json')
@@ -64,6 +78,17 @@ mem=[]
 for n in ['baseline','confirm-graphs','long-baseline','long-graphs','trace-baseline','trace-graphs']:
     samples=j(n+'/memory.json');mem.append([n,f'{min(x["available_physical"] for x in samples)/2**30:.2f}',f'{min(x["available_commit"] for x in samples)/2**30:.2f}'])
 sections.append(tbl(['Run','Minimum available physical GiB','Minimum available commit GiB'],mem))
+hardware=[]
+for n in ['baseline','confirm-graphs','long-baseline','long-graphs','trace-baseline','trace-graphs']:
+    samples=list(csv.DictReader((ROOT/n/'gpu.csv').open()))
+    def readings(prefix):
+        key=next(k for k in samples[0] if k.strip().startswith(prefix))
+        return [float(re.search(r'[\d.]+',r[key])[0]) for r in samples if re.search(r'[\d.]+',r[key])]
+    graphics=readings('clocks.current.graphics');memory=readings('clocks.current.memory')
+    hardware.append([n,f'{max(readings("memory.used"))/1024:.2f}',
+        f'{min(graphics):.0f}–{max(graphics):.0f}',f'{min(memory):.0f}–{max(memory):.0f}',
+        f'{max(readings("temperature.gpu")):.0f}'])
+sections.append(tbl(['Whole-run samples','Peak VRAM GiB','Graphics MHz range','Memory MHz range','Peak °C'],hardware))
 sections.append('No extra expert RAM/pool capacity is credited to graphs. Hardware samples are in each fixed-run gpu.csv (including loading/prefill/idle). VRAM clocks/thermals were not locked or changed by the campaign; these are bounded trials, not statistical confidence intervals. Profiler overhead and cache capacity are recorded separately.')
 sections.append('## New diagnostic timelines\n\nNsight node-level graph tracing is explicitly enabled; otherwise graph launches could hide their constituent kernels. Stage intervals overlap and must not be summed. CPU-wait kernel time includes polling/overhead; it is not all removable stall. No-GPU gaps are measured from the union of GPU activity within token ranges.')
 trs=[]
@@ -92,10 +117,18 @@ sections.append('STOP/recovery and normal teardown completed, with live dual-own
 sections.append('''## Retention, rollback and remaining bottlenecks
 
 Research branch: `research/maya-demand-campaign`. Primary rollback: `20af539`
-on `research/maya-transfer-campaign`. Prototypes are preserved separately.
+on `research/maya-transfer-campaign`. Prototypes are preserved at `c3cb3a4`
+on `research/maya-demand-prototypes`. The retained engine source matches R1;
+rejected experimental source changes were removed after successful builds.
+Retained configuration/source checkpoint: `799c34f`.
 The graph candidate adds `STRATA_GLM_KDA_GRAPH=1` to the previous retained
 settings; it does not replace the model or arithmetic kernels. The daily
 launcher is not silently changed. Nothing is published externally.
+
+Opt-in configuration: [maya-demand-graphs.json](../../../../configs/maya-demand-graphs.json).
+Launch from the repository with `.venv/Scripts/python.exe -m serve.server --engine strata --config configs/maya-demand-graphs.json --port 8085`.
+This configuration reserves a 22 GiB expert pool and roughly 98 GiB pinned RAM;
+it is the tested campaign configuration, not a low-memory desktop preset.
 
 Remaining bottlenecks: substantial demand uploads, required projections and
 expert computation, and a CPU/GPU balancing problem where removing waits can
