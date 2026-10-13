@@ -475,10 +475,12 @@ public:
     std::vector<std::pair<int32_t, int32_t>> profile_;     // its ranked (layer, expert) pairs, read by fast_setup
     bool fast_warm(std::string& err);                      // load-time: stream every expert into the tiers
     bool fast_cpu_lane_setup(std::string& err);            // STRATA_GLM_CPU_LANE: the pool, its calibration, the split
-    void fast_cpu_experts(int il, int ne, const uint8_t* const* blob, const float* w, const float* x, float* out);
+    void fast_cpu_experts(int il, int ne, const uint8_t* const* blob, const float* w, const float* x, float* out,
+                          const volatile unsigned int* phase_word=nullptr, unsigned int phase_seq=0);
     // the same on `pool` with the rows act / hq / ff / dn (a verify window's CPU lanes: FastState::win_lane)
     void lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, float* ff, float* dn, int il, int ne,
-                      const uint8_t* const* blob, const float* w, const float* x, float* out);
+                      const uint8_t* const* blob, const float* w, const float* x, float* out,
+                      const volatile unsigned int* phase_word=nullptr, unsigned int phase_seq=0);
     void win_lanes_stop();
     void win_lanes_make(std::shared_ptr<glmfast::Workers> p0, std::shared_ptr<glmfast::Workers> p1,
                         const std::vector<int>& c0, const std::vector<int>& c1);

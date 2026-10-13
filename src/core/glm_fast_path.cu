@@ -43,14 +43,17 @@ static bool maya_shadow_expansion_on() {
     return expand && std::atoi(expand)>0 && budget && std::atoi(budget)>0;
 }
 struct MayaTimelineRange {
-    explicit MayaTimelineRange(const char* name) {
+    bool active=false;
+    explicit MayaTimelineRange(const char* name, bool detail=false) {
 #if !defined(STRATA_USE_HIP)
-        if (maya_timeline_on()) nvtxRangePushA(name);
+        static const bool cpu_detail=std::getenv("MAYA_CPU_STAGE_TRACE")!=nullptr;
+        active=maya_timeline_on() && (!detail || cpu_detail);
+        if (active) nvtxRangePushA(name);
 #endif
     }
     ~MayaTimelineRange() {
 #if !defined(STRATA_USE_HIP)
-        if (maya_timeline_on()) nvtxRangePop();
+        if (active) nvtxRangePop();
 #endif
     }
 };
@@ -1662,7 +1665,8 @@ bool Glm5Model::fast_setup_finish(std::string& err) {
 // lane's own rows; a verify window's second lane: its pool and rows) - each row's dot is one job's, so the answer is
 // the same bit for bit whatever the pool
 void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, float* ff, float* dn, int il, int ne,
-                             const uint8_t* const* blob, const float* w, const float* x, float* out) {
+                             const uint8_t* const* blob, const float* w, const float* x, float* out,
+                             const volatile unsigned int* phase_word, unsigned int phase_seq) {
     FastState* F = fast_;
     const Glm5Geometry& g = g_;
     const auto& Ly = F->L[(size_t) il];
@@ -1759,11 +1763,12 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     const int T = threads * (kSplit > 0 ? kSplit : std::max(1, std::min(8, 48 / std::max(1, threads))));
     kc::native_quant_act(nf, x, act);
     static const bool cpu_pipeline=[] {const char* v=getenv("MAYA_CPU_PIPELINE");return v && std::atoi(v)>0;}();
-    if(cpu_pipeline && ne>1) {
+    static const bool pipeline_single=[] {const char* v=getenv("MAYA_CPU_PIPELINE_SINGLE");return v && std::atoi(v)>0;}();
+    if(cpu_pipeline && phase_word && (ne>1 || (ne==1 && pipeline_single))) {
         // One synchronous pool generation; a ready expert can progress to
         // down while other experts finish GU. No worker waits on a particular
         // unfinished task, and no nested Workers::run is allowed.
-        MayaTimelineRange range("CPU stage expert-ready pipeline");
+        MayaTimelineRange range("CPU stage expert-ready pipeline",true);
         F->cpu_pipeline_batches.fetch_add(1,std::memory_order_relaxed);
         const int pieces=std::max(1,(T+ne-1)/ne);
         std::atomic<int> gu_next{0},down_done{0},combine_next{0};
@@ -1773,8 +1778,8 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
             bool gated=false;
             static const int phase_limit=[] {const char* v=getenv("MAYA_CPU_PHASE_LIMIT");return v?std::max(0,std::atoi(v)):0;}();
             while(true) {
-                if(phase_limit>0 && worker>=phase_limit && F->cpu_phase_word &&
-                    *F->cpu_phase_word!=F->cpu_phase_seq &&
+                if(phase_limit>0 && worker>=phase_limit &&
+                    *phase_word!=phase_seq &&
                     down_done.load(std::memory_order_acquire)!=ne*pieces) {gated=true;cpu_relax();continue;}
                 if(down_done.load(std::memory_order_acquire)==ne*pieces) {
                     const int job=combine_next.fetch_add(1,std::memory_order_relaxed);
@@ -1819,7 +1824,7 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     }
     const int gu_tot = ne * n_ff;
     {
-    MayaTimelineRange range("CPU stage gate-up batch");
+    MayaTimelineRange range("CPU stage gate-up batch",true);
     pool.run(T, [&](int job) {
         const void* a[1] = {act};
         const int q1 = (int) ((int64_t) gu_tot * (job + 1) / T);
@@ -1832,13 +1837,13 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     });
     }
     {
-    MayaTimelineRange range("CPU stage hidden quantization");
+    MayaTimelineRange range("CPU stage hidden quantization",true);
     for (int i = 0; i < ne; ++i)
         kc::native_quant_h(nf, ff + (size_t) i * n_ff, hq + (size_t) i * kc::kNativeHBytes);
     }
     const int dn_tot = ne * n_embd;
     {
-    MayaTimelineRange range("CPU stage down batch");
+    MayaTimelineRange range("CPU stage down batch",true);
     pool.run(T, [&](int job) {
         const int q1 = (int) ((int64_t) dn_tot * (job + 1) / T);
         for (int q = (int) ((int64_t) dn_tot * job / T); q < q1;) {
@@ -1850,7 +1855,7 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
         }
     });
     }
-    MayaTimelineRange combine_range("CPU stage ordered combine");
+    MayaTimelineRange combine_range("CPU stage ordered combine",true);
     for (int r = 0; r < n_embd; ++r) {
         float m = 0.0f;
         for (int i = 0; i < ne; ++i) m += w[i] * dn[(size_t) i * n_embd + r];
@@ -2104,7 +2109,8 @@ void Glm5Model::win_lanes_stop() {
         }
 }
 
-void Glm5Model::fast_cpu_experts(int il, int ne, const uint8_t* const* blob, const float* w, const float* x, float* out) {
+void Glm5Model::fast_cpu_experts(int il, int ne, const uint8_t* const* blob, const float* w, const float* x, float* out,
+                               const volatile unsigned int* phase_word, unsigned int phase_seq) {
     FastState* F = fast_;
     const Glm5Geometry& g = g_;
     const auto& Ly = F->L[(size_t) il];
@@ -2112,7 +2118,7 @@ void Glm5Model::fast_cpu_experts(int il, int ne, const uint8_t* const* blob, con
     namespace kc = strata::kernels::cpu;
     const int n_ff = g.n_ff_exp, n_embd = g.n_embd;
     lane_experts(*F->cpu_pool, F->cpu_act.data(), F->cpu_hq.data(), F->cpu_ff.data(), F->cpu_dn.data(), il, ne, blob, w,
-                 x, out);
+                 x, out,phase_word,phase_seq);
     // STRATA_GLM_CPU_LANE_VERIFY=1 (debug, slow): the same experts in double precision from ggml's dequantised rows;
     // the relative L2 distance of the lane's sum, accumulated and printed every 16 calls
     static const bool verify = getenv("STRATA_GLM_CPU_LANE_VERIFY") != nullptr;
@@ -3462,8 +3468,9 @@ void Glm5Model::fast_service() {
         // in the original ordering and keep their own answer slots.
         const bool cpu_answered_early=early_cpu && rq->win_n==0 && rq->win==0 &&
             rq->miss_mask==0 && rq->cpu_mask!=0 && F->cpu_ans_h!=nullptr;
-        F->cpu_phase_word=(rq->win_n==0 && rq->win==0)?&rq->prefix_ready:nullptr;
-        F->cpu_phase_seq=next;
+        // Per-job lifetime: async window workers never read a mutable global
+        // pointer to another route. Only this synchronous call gets readiness.
+        const volatile unsigned int* phase_word=(rq->win_n==0 && rq->win==0)?&rq->prefix_ready:nullptr;
         gf::MoeRequest early_snapshot;
         if(cpu_answered_early) {
             // No later bookkeeping reads a ring slot after the GPU is allowed
@@ -3477,7 +3484,7 @@ void Glm5Model::fast_service() {
             for(int i=0;i<g.n_exp_used;++i)if((rq->cpu_mask>>i)&1u) {
                 blobs[ne]=(const uint8_t*)rq->cpu_src[i];weights[ne++]=rq->w[i];
             }
-            fast_cpu_experts(rq->layer,ne,blobs,weights,rq->x,F->cpu_ans_h->part);
+            fast_cpu_experts(rq->layer,ne,blobs,weights,rq->x,F->cpu_ans_h->part,phase_word,next);
             std::atomic_thread_fence(std::memory_order_release);F->cpu_ans_h->seq=next;
             F->cpu_experts.fetch_add((uint64_t)ne,std::memory_order_relaxed);
             F->cpu_routes.fetch_add(1,std::memory_order_relaxed);
@@ -3806,7 +3813,7 @@ void Glm5Model::fast_service() {
                 j.seq = next;
                 F->win_lane[rq->win & 1]->push(j);
             } else {
-                fast_cpu_experts(rq->layer, ne, blob, w, rq->x, ans->part);
+                fast_cpu_experts(rq->layer, ne, blob, w, rq->x, ans->part,phase_word,next);
                 std::atomic_thread_fence(std::memory_order_release);
                 ans->seq = next;
                 F->cpu_experts.fetch_add((uint64_t) ne, std::memory_order_relaxed);

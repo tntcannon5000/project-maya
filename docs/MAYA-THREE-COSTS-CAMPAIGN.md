@@ -135,3 +135,29 @@ and logits remain local; manifests and compact results are checkpointed.
   versus original3.211ms: negligible practical gain. Warp route family falls
   ~0.976 to0.793ms, a real but small opportunity. Need unprofiled scheduling
   ablation and simple combined candidate before the final decision.
+
+## Selection and qualification checkpoint
+
+- Scheduling combination without Q4 row sharing:41.60/46.49TPS, exact;
+  7167 expert-pipeline batches and51625 gated callbacks (includes setup).
+- Same GPU changes without CPU pipeline/phase limit:41.76/45.53TPS, exact.
+- Expanding pipeline/phase coverage to one-CPU-expert routes:
+  41.26/46.07TPS, exact;12717 pipeline batches and75757 gated callbacks.
+  Coverage expands as intended, but no further gain: single-expert extension off.
+- Fresh back-to-back baseline confirmation:40.47/44.36TPS; selected
+  candidate40.72/45.90TPS. Warm saving0.756ms/3.47% TPS, first-request
+  gain0.60%. Do not present46.49TPS as a guaranteed result or sum standalone
+  improvements. Original baseline screen43.83 and confirmation44.36 bracket
+  visible run variation.
+- Selected configuration: early CPU answer, PAUSE, two down bands, MLA MoE
+  suffix capture, warp route/publication, multi-expert CPU task pipeline with
+  prefix gate8. No resident GU split, Q4 paired rows, HC split or single-expert
+  pipeline. `run_three_costs.py --candidate` reproduces these opt-ins.
+- Hardened the CPU readiness interface to carry immutable per-job pointer/seq;
+  asynchronous windows/calibration use the existing CPU path. No global
+  readiness context can be accidentally read by a later window job.
+- Detailed CPU-stage NVTX spans are now separately opt-in via
+  MAYA_CPU_STAGE_TRACE. This avoids adding many new host range calls when
+  comparing ordinary whole-token diagnostics against the preserved baseline.
+  Earlier detailed traces retain their actual old instrumentation manifests;
+  unprofiled comparisons remain the headline evidence.

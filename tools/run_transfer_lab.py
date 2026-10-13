@@ -9,6 +9,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--exe',default='maya_transfer_lab.exe')
     p.add_argument('--env',action='append',default=[]);p.add_argument('--repeats',default=2,type=int)
     p.add_argument('--occupied',default=0,type=int)
+    p.add_argument('--tokens',type=int,help='Bound scored continuation for mechanism-only diagnostics')
     p.add_argument('--corpus',action='store_true',help='Fill context with frozen baseline Python source, not repeated tokens')
     p.add_argument('--trace',action='store_true')
     p.add_argument('--evidence-root',default='docs/evidence/maya-transfer')
@@ -19,6 +20,9 @@ def main():
     source=json.loads((ROOT/'docs/evidence/maya-timeline/stock/requests.json').read_text())
     row=next(x for x in source if x['task']==a.task)
     prompt=row['prompt_ids']; continuation=row['output_ids']
+    if a.tokens is not None:
+        if not 0<a.tokens<=len(continuation):p.error('tokens must fit the frozen continuation')
+        continuation=continuation[:a.tokens]
     if a.occupied:
         # Reproducible code tokens as filler; natural short prompt follows. This is an occupied-context fixture.
         prompt=(continuation*((a.occupied//len(continuation))+1))[:a.occupied-len(prompt)]+prompt
