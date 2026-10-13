@@ -1759,6 +1759,8 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     const int T = threads * (kSplit > 0 ? kSplit : std::max(1, std::min(8, 48 / std::max(1, threads))));
     kc::native_quant_act(nf, x, act);
     const int gu_tot = ne * n_ff;
+    {
+    MayaTimelineRange range("CPU stage gate-up batch");
     pool.run(T, [&](int job) {
         const void* a[1] = {act};
         const int q1 = (int) ((int64_t) gu_tot * (job + 1) / T);
@@ -1769,9 +1771,15 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
             q += r1 - r0;
         }
     });
+    }
+    {
+    MayaTimelineRange range("CPU stage hidden quantization");
     for (int i = 0; i < ne; ++i)
         kc::native_quant_h(nf, ff + (size_t) i * n_ff, hq + (size_t) i * kc::kNativeHBytes);
+    }
     const int dn_tot = ne * n_embd;
+    {
+    MayaTimelineRange range("CPU stage down batch");
     pool.run(T, [&](int job) {
         const int q1 = (int) ((int64_t) dn_tot * (job + 1) / T);
         for (int q = (int) ((int64_t) dn_tot * job / T); q < q1;) {
@@ -1782,6 +1790,8 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
             q += r1 - r0;
         }
     });
+    }
+    MayaTimelineRange combine_range("CPU stage ordered combine");
     for (int r = 0; r < n_embd; ++r) {
         float m = 0.0f;
         for (int i = 0; i < ne; ++i) m += w[i] * dn[(size_t) i * n_embd + r];
@@ -3306,6 +3316,7 @@ void Glm5Model::fast_service() {
         w_n = w_held = 0;
     };
     unsigned int polls = 0;
+    static const bool early_cpu=[] { const char* v=getenv("MAYA_CPU_EARLY");return v && std::atoi(v)>0; }();
 #if defined(_WIN32) && defined(STRATA_USE_HIP)
     auto last_kick = last_route;
     unsigned int kick_polls = 0;
@@ -3374,6 +3385,33 @@ void Glm5Model::fast_service() {
             }
             ++next;
             continue;
+        }
+        // c=1 RAM-only CPU requests already own stable backing until the token
+        // boundary. Publish their answer before noncritical cache bookkeeping.
+        // processed remains unpublished until bookkeeping below is complete,
+        // so the boundary cannot reclaim sources early. Window/disk paths stay
+        // in the original ordering and keep their own answer slots.
+        const bool cpu_answered_early=early_cpu && rq->win_n==0 && rq->win==0 &&
+            rq->miss_mask==0 && rq->cpu_mask!=0 && F->cpu_ans_h!=nullptr;
+        gf::MoeRequest early_snapshot;
+        if(cpu_answered_early) {
+            // No later bookkeeping reads a ring slot after the GPU is allowed
+            // to progress. Source pointers themselves remain boundary-owned.
+            std::memcpy(&early_snapshot,rq,sizeof(early_snapshot));rq=&early_snapshot;
+            char name[96]={};if(maya_timeline_on())std::snprintf(name,sizeof(name),
+                "CPU experts early layer=%d route=%u mask=%u",rq->layer,next,rq->cpu_mask);
+            MayaTimelineRange range(name);
+            const auto started=std::chrono::steady_clock::now();
+            int ne=0;const uint8_t* blobs[8];float weights[8];
+            for(int i=0;i<g.n_exp_used;++i)if((rq->cpu_mask>>i)&1u) {
+                blobs[ne]=(const uint8_t*)rq->cpu_src[i];weights[ne++]=rq->w[i];
+            }
+            fast_cpu_experts(rq->layer,ne,blobs,weights,rq->x,F->cpu_ans_h->part);
+            std::atomic_thread_fence(std::memory_order_release);F->cpu_ans_h->seq=next;
+            F->cpu_experts.fetch_add((uint64_t)ne,std::memory_order_relaxed);
+            F->cpu_routes.fetch_add(1,std::memory_order_relaxed);
+            F->cpu_us.fetch_add((uint64_t)std::chrono::duration_cast<std::chrono::microseconds>(
+                std::chrono::steady_clock::now()-started).count(),std::memory_order_relaxed);
         }
         {
             std::lock_guard<std::mutex> lk(F->mu);
@@ -3667,7 +3705,7 @@ void Glm5Model::fast_service() {
             ++next;
             continue;
         }
-        if (rq->cpu_mask != 0u && F->cpu_ans_h != nullptr) {
+        if (!cpu_answered_early && rq->cpu_mask != 0u && F->cpu_ans_h != nullptr) {
             char trace_name[96] = {};
             if (maya_timeline_on()) std::snprintf(trace_name, sizeof(trace_name),
                 "CPU experts layer=%d route=%u mask=%u", rq->layer, next, rq->cpu_mask);
@@ -4709,6 +4747,8 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // Uncaptured MLA layers pay host event submission costs; use ordinary
     // fetch there when restricting overlap to the captured recurrent layers.
     const bool overlap_enabled=overlap_blocks && (!captured_only || (F->kda_graph_on && Ly.recr));
+    static const bool resident_gu=[] { const char* v=getenv("MAYA_RESIDENT_GU");return v && std::atoi(v)>0; }();
+    const bool early_gu=resident_gu && overlap_enabled;
     if (overlap_enabled && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
         err="maya overlap requires aligned native weights and expert prediction off"; return false;
     }
@@ -4720,7 +4760,18 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     if (overlap_enabled) {
         // Fork only after route and disk-source publication, then join before
         // down reads and all slot reuse. CUDA capture includes this side stream.
-        gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
+        if(early_gu) {
+            // Disk answers and immutable rank/source mapping are ready. Prefix
+            // traffic is bounded while resident GU uses the main stream.
+            if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"resident GU fork",err) ||
+               !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"resident GU copy start",err))return false;
+            gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,overlap_blocks,F->ps);
+            if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"resident GU prefix ready",err))return false;
+            auto resident_md=md;resident_md.gu_phase=1;
+            gf::moe_gate_up(Ly.gu_type,resident_md,g.n_exp_used,g.n_embd,g.n_ff_exp,g.swiglu_exp,
+                io.xq,F->hq,Ly.sh_down.q,Ly.sh_down.type,F->sh_hq,FFs,F->sh_out,s);
+            if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"resident GU prefix consumer",err))return false;
+        } else gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
             !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya overlap fork",err)) return false;
         gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,Ly.blob-Ly.down_off,overlap_blocks,F->ps);
@@ -4755,7 +4806,8 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
         if (F->prof_on) F->mark("moe_down");
     } else {
     // (the shared expert's down rides the gate/up launch: sh_out)
-    gf::moe_gate_up(Ly.gu_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, Ly.sh_down.q,
+    auto demand_md=md;if(early_gu)demand_md.gu_phase=2;
+    gf::moe_gate_up(Ly.gu_type, demand_md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, early_gu?nullptr:Ly.sh_down.q,
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
     if (overlap_enabled && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;

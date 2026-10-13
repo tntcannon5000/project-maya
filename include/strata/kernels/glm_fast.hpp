@@ -190,6 +190,9 @@ void swiglu_q8(const float* gate, const float* up, float limit, int n, void* hq,
 constexpr int kSpares = 3;
 /// The per-device routing state (device memory unless noted).
 struct MoeDev {
+    // Decode experiment: 0 all ranks, 1 resident, 2 fetched. Selected only
+    // after moe_wait has published disk sources; no expert prediction.
+    int gu_phase = 0;
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted

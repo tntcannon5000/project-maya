@@ -1235,6 +1235,33 @@ __global__ void __launch_bounds__(256) mv_kernel_t(const __grid_constant__ MvBat
                                J.n_in, lane);
     if (lane == 0) J.y[row] = mv_out(J.alpha, s, J.bias ? J.bias[row] : 0.0f);
 }
+// Two rows share the activation-only Q4_K minimum correction. Each row
+// preserves row_dot<12>'s k order and warp reduction, including tails.
+template<int R>
+__global__ void __launch_bounds__(256) mv_q4_rows_kernel(const __grid_constant__ MvBatch b) {
+    if (b.skip != nullptr && *b.skip) return;
+    const int bid=blockIdx.x; int ji=0;
+    while(ji<b.n-1 && bid>=b.blk_end[ji])++ji;
+    const MvJob& J=b.j[ji]; const int first=ji?b.blk_end[ji-1]:0;
+    const int row=((bid-first)*MV_ROWS+(threadIdx.x>>5))*R, lane=threadIdx.x&31;
+    if(row>=J.n_out)return;
+    float sums[R]={}; const size_t stride=rbytes<12>(J.n_in);
+    using Fm=F<12>;
+    for(int k=lane;k<(J.n_in/Fm::qk)*Fm::ipb;k+=32) {
+        const int block=k/Fm::ipb,iqs=Fm::step*(k%Fm::ipb);
+        const auto x=DecW<12>::load_x((const block_q8_1*)J.xq+block*(Fm::qk/32),iqs);
+#pragma unroll
+        for(int r=0;r<R;++r)if(row+r<J.n_out) {
+            DecW<12> w;w.load((const uint8_t*)J.w+(row+r)*stride,block,iqs);
+            sums[r]+=w.dot(x);
+        }
+    }
+#pragma unroll
+    for(int r=0;r<R;++r) {
+        const float value=warp_sum(sums[r]);
+        if(lane==0 && row+r<J.n_out)J.y[row+r]=mv_out(J.alpha,value,J.bias?J.bias[row+r]:0.0f);
+    }
+}
 template<int T>
 __global__ void __launch_bounds__(256) mv_kernel_t_cols(const __grid_constant__ MvBatch b) {
     if (b.skip != nullptr && *b.skip) return;
@@ -3372,6 +3399,8 @@ moe_gate_up_kernel(MoeDev d, int k, int n_embd, int n_ff, float limit,
         }
         return;
     }
+    // The shared-down block above must run once, independent of rank masks.
+    if (d.gu_phase && ((d.fetch_src[ei] != 0ull) != (d.gu_phase == 2))) return;
     const unsigned long long ptr = d.plan_ptr[ei];
     if (ptr == 0ull) return;
     __shared__ float sg[GU_ROWS], su[GU_ROWS];
@@ -4234,6 +4263,8 @@ bool mv(const MvJob* jobs, int n, cudaStream_t s) {
             mv_kernel_cols<<<acc, 256, 0, s>>>(b);
         }
     }
+    // Decode-only exact-order activation sharing; multicol/prefill unchanged.
+    static const bool q4_rows=[] { const char* v=getenv("MAYA_Q4_ROWS");return v && std::atoi(v)==2; }();
     // one column
     if (typed) {
         for (const int T : kTyped) {
@@ -4243,7 +4274,8 @@ bool mv(const MvJob* jobs, int n, cudaStream_t s) {
             for (int i = 0; i < n; ++i)
                 if (!done[i] && jobs[i].type == T) {
                     b.j[m] = jobs[i];
-                    acc += (jobs[i].n_out + MV_ROWS - 1) / MV_ROWS;
+                    const int rows=(q4_rows && T==12)?2*MV_ROWS:MV_ROWS;
+                    acc += (jobs[i].n_out + rows - 1) / rows;
                     b.blk_end[m++] = acc;
                     done[i] = true;
                 }
@@ -4252,7 +4284,10 @@ bool mv(const MvJob* jobs, int n, cudaStream_t s) {
             switch (T) {
                 case 14: mv_kernel_t<14><<<acc, 256, 0, s>>>(b); break;
                 case 8: mv_kernel_t<8><<<acc, 256, 0, s>>>(b); break;
-                case 12: mv_kernel_t<12><<<acc, 256, 0, s>>>(b); break;
+                case 12:
+                    if(q4_rows)mv_q4_rows_kernel<2><<<acc,256,0,s>>>(b);
+                    else mv_kernel_t<12><<<acc, 256, 0, s>>>(b);
+                    break;
                 case 13: mv_kernel_t<13><<<acc, 256, 0, s>>>(b); break;
             }
         }
