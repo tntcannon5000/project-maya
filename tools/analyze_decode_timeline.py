@@ -20,7 +20,7 @@ def category(name, layer):
                     ('hc','Residual/norm'),('embed_','Embedding/head'),('head_prep','Embedding/head'),
                     ('argmax','Embedding/head')]:
         if key in name: return cat
-    if any(x in name for x in ('mv_kernel','mvc_kernel','quantize_kernel')):
+    if any(x in name for x in ('mv_kernel','mv_q4_rows_kernel','mvc_kernel','quantize_kernel')):
         return 'Embedding/head' if layer < 0 else 'Dense projections'
     return 'Other kernel'
 

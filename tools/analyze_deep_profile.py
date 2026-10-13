@@ -124,7 +124,7 @@ def main():
         for part in ('whole','prefix','down'):
             rows=[r for r in transfer_rows if r['repeat']==rep and r['part']==part]
             nb=sum(r['bytes'] for r in rows);ms=sum(r['ms'] for r in rows)
-            summary[rep]['transfers'][part]=dict(MB_per_token=nb/n/1e6,ms_per_token=ms/n,effective_GB_s=nb/ms/1e6)
+            summary[rep]['transfers'][part]=dict(MB_per_token=nb/n/1e6,ms_per_token=ms/n,effective_GB_s=nb/ms/1e6 if ms else None)
         for field in ('prefix_ready_to_gu_us','down_dependencies_to_start_us'):
             vals=sorted(r[field] for r in ls)
             assert min(vals)>=0,(field,min(vals))

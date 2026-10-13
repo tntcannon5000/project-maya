@@ -3187,6 +3187,12 @@ void Glm5Model::fast_destroy() {
                      (unsigned long long) F->kda_graphs.replays,
                      (unsigned long long) F->kda_graphs.invalidations);
     F->kda_graphs.clear();   // before the graph's buffers and streams are freed
+    if(F->moe_suffix_graphs.captures || F->moe_suffix_graphs.replays)
+        std::fprintf(stderr,"maya MoE suffix graphs: %llu captures, %llu replays, %llu invalidations\n",
+            (unsigned long long)F->moe_suffix_graphs.captures,
+            (unsigned long long)F->moe_suffix_graphs.replays,
+            (unsigned long long)F->moe_suffix_graphs.invalidations);
+    F->moe_suffix_graphs.clear();
     for (auto& R : F->rc)
         if (R.base && R.registered) numa_pinned_free(R.base, (size_t) R.n * R.stride);
         else if (R.base) cudaFreeHost(R.base);
@@ -3490,7 +3496,7 @@ void Glm5Model::fast_service() {
                 auto& rec=(*F->transfer_probe)[next%F->transfer_probe->size()];
                 rec={};rec.seq=next;rec.layer=il;rec.k=K;rec.cpu_mask=cpu;
                 rec.blob=F->L[(size_t)il].blob;rec.prefix=F->L[(size_t)il].down_off;
-                rec.split=F->kda_graph_on && F->L[(size_t)il].recr;
+                rec.split=F->kda_graph_on && (F->L[(size_t)il].recr || F->moe_suffix_graph_on);
                 for(int i=0;i<K;++i) {
                     rec.w[i]=rq->w[i];rec.cpu_src[i]=rq->cpu_src[i];
                     const int key=il*g.n_expert+rq->ids[i];
@@ -4813,7 +4819,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     static const bool captured_only=[] { const char* v=getenv("MAYA_OVERLAP_CAPTURED_ONLY"); return v && std::atoi(v)>0; }();
     // Uncaptured MLA layers pay host event submission costs; use ordinary
     // fetch there when restricting overlap to the captured recurrent layers.
-    const bool overlap_enabled=overlap_blocks && (!captured_only || (F->kda_graph_on && Ly.recr));
+    const bool overlap_enabled=overlap_blocks && (!captured_only || F->moe_graph_body);
     static const bool resident_gu=[] { const char* v=getenv("MAYA_RESIDENT_GU");return v && std::atoi(v)>0; }();
     const bool early_gu=resident_gu && overlap_enabled;
     static const bool down_bands=[] {const char* v=getenv("MAYA_DOWN_BANDS");return v && std::atoi(v)==2;}();
@@ -4935,10 +4941,12 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
     float* Rc = state_;
     float* Ro = state_ + (int64_t) g.hc * g.n_embd;
     const char* graph_opt = getenv("STRATA_GLM_KDA_GRAPH");
-    const bool graphs = graph_opt && std::atoi(graph_opt) != 0 && n_parts_ == 1 && !hop_in &&
+    const bool graphs = graph_opt && std::atoi(graph_opt) != 0 && n_parts_ == 1 && !hop_in && F->win.pipe_t < 0 &&
                         mtp_il_ < 0 && !F->prof_on && !dumps && F->max_pf == 0 && F->n_ahead == 0 &&
                         getenv("GLM_DUMP_H") == nullptr && cap_d_ == nullptr;
     F->kda_graph_on = graphs;
+    static const bool suffix_graph=[] {const char* v=getenv("MAYA_MOE_SUFFIX_GRAPH");return v && std::atoi(v)>0;}();
+    F->moe_suffix_graph_on=graphs && suffix_graph;
     if (F->prof_on) F->mark("start");
     for (int il = l0_; il < l1_; ++il) {
         const auto& Ly = F->L[(size_t) il];
@@ -4951,6 +4959,8 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
         const auto body = [&]() -> bool {
         // ---- the attention-side read (fused with the previous FFN's write)
         gf::HcArgs h;
+        static const bool hc_split=[] {const char* v=getenv("MAYA_HC_SPLIT");return v && std::atoi(v)>0;}();
+        h.split_graph=hc_split && graphs && Ly.recr;
         h.block_out = il == l0_ ? nullptr : F->ffn;
         h.R_old = Rc;
         h.R_new = Ro;
@@ -5060,7 +5070,21 @@ bool Glm5Model::fast_layers(int64_t p, bool hop_in, std::string& err) {
             if (!gf::mv(&dn, 1, s)) { err = "glm fast: dense ffn down"; return false; }
             if (F->prof_on) F->mark("dense_down_mv");
         } else {
-            if (!fast_moe(il, pf_pending, err)) return false;
+            const auto moe_body=[&] {
+                F->moe_graph_body=graphs && (Ly.recr || F->moe_suffix_graph_on);
+                const bool ok=fast_moe(il,pf_pending,err);
+                F->moe_graph_body=false;
+                return ok;
+            };
+            if(F->moe_suffix_graph_on && !Ly.recr) {
+                // Dynamic-position attention and both residual swaps remain
+                // outside capture. This suffix reads fixed FFN input buffers,
+                // owns one route, and joins side transfers before returning.
+                bool replayed=false;
+                const glmfast::LayerGraphs::Key key{F->cpu_plan,F->x,F->ffn};
+                if(!F->moe_suffix_graphs.enqueue(il,key,s,F->expected,1,
+                    moe_body,replayed,err))return false;
+            } else if (!moe_body()) return false;
         }
         if (dumps) fast_dump(s, "ffn_out-" + std::to_string(il), F->ffn, g.n_embd);
         return true;

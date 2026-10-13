@@ -450,3 +450,153 @@ explicit prefix/band metadata or reliable per-route launch order, account for
 both GU/down consumers and each disjoint byte range, then reconcile to engine
 demand. The whole-token activity partition uses all compute/fetch intervals
 and remains suitable for the aggregate overlap conclusion.
+
+## Complete extension: capture the MLA MoE suffix
+
+Follow-up source review on 2026-10-13 considered the parent's working suffix
+implementation, after `c982082`, without executing the engine. Eleven MLA MoE
+layers remain outside the recurrent full-layer graphs: 3, 7, 11, 15, 19, 23,
+27, 31, 35, 39 and 43. Their dynamic-position attention prevents reuse of the
+whole layer, but their exact MoE suffix has a stable boundary: **after the
+FFN-side HC and its host residual-pointer swap, capture only `fast_moe`**.
+The router/shared projections, actual route, disk publication wait, bounded
+prefix/down transfers, unchanged expert arithmetic and CPU-answer addition
+belong inside that suffix. Position-dependent attention and residual state
+ownership remain outside it.
+
+This is a complete extension of captured-only component overlap to the MLA
+layers, without predicting routes or changing bytes. It removes host event
+submission from the overlap fork/join and permits the same exact resident-GU
+and output-row-band machinery there. It does not make attention available to
+hide an as-yet-unknown actual route.
+
+### Measured opportunity budget
+
+A read-only SQLite query against
+`docs/evidence/maya-decode-latest/latest/timeline.sqlite` examined 128 warm
+token windows: the second group of 128 NVTX `token seq=... pos=...` windows
+with position at least 30. For each of the eleven layers, the suffix began
+at the first GPU kernel after the FFN-side `hc3_kernel` preceding its router,
+and ended at its first subsequent `moe_cpu_wait_kernel`. The trace contains
+88 kernels and 77 internal inter-kernel gaps per token in these suffixes;
+none carries a graph execution ID.
+
+| Warm aggregate per token | Time |
+|---|---:|
+| Eleven suffix spans | 4.595456 ms |
+| Gaps between their recorded kernels | 0.167683 ms |
+| Entry gaps from preceding HC end to first suffix kernel | 0.029687 ms |
+| MLA routed GU plus shared down arithmetic | approximately 0.310 ms |
+| MLA routed down arithmetic | approximately 0.200 ms |
+
+The query sums gaps between kernels, not memcpy intervals: another transfer
+could occupy part of a gap. Therefore 0.167683 ms is an **optimistic internal
+submission budget**, not proved removable device inactivity. The external HC
+entry gaps should not be automatically credited to suffix capture. Per-layer
+internal gaps are only about 0.0137–0.0166 ms.
+
+At unchanged arithmetic, newly enabling perfect MLA expert overlap contributes
+at most about 0.510 ms; adding the optimistic internal submission budget gives
+about **0.678 ms/token**. Applied illustratively to the saved 21.950269 ms
+bands-combination repeat, this implies roughly 21.272 ms or 47.0 TPS. These
+are upper bounds with dependent gains: transfer/compute contention, CPU-tail
+exposure and extra launches can consume the opportunity. This extension is
+credible but cannot alone supply a several-ms gain toward 60 TPS.
+
+The parent's completed saved `suffix-bands/summary.json` reports repeat
+45.818367 TPS and 21.825309 ms. Its manifest excludes resident GU, so the
+matching configuration comparator is `bands-no-resident` at 45.707457 TPS
+and 21.878268 ms: only 0.110910 TPS or 0.052959 ms difference. The comparison
+with `bands-combination` at 45.557529 TPS and 21.950269 ms changes resident GU
+as well, and cannot isolate the suffix effect. All 39,649,280 forced-input
+logits are exact, with identical fetch/demotion
+bytes, hits, CPU expert counts, promotions, pool slots and RAM slots. This is
+consistent with the small measured gap budget. A single comparison does not
+establish repeat reliability or prove how much of the change came from newly
+overlapped MLA work; parent tracing/repetition owns that qualification.
+
+### Graph key, scratch and ownership audit
+
+The working implementation uses a separate `moe_suffix_graphs` container and
+key `{cpu_plan, F->x, F->ffn}`. Under the current ordinary-decode contract that
+is sufficient: the activation arena is allocated once in `fast_setup`, and
+`xq`, `rlog`, `sh_g`, `sh_u`, `sh_hq`, `hq`, `sh_out`, route/plan tables and
+scratch share its unchanged lifetime. Router/shared weight pointers and model
+geometry are also stable. Environment-selected pipeline shapes are static
+for the process. `cpu_plan` can change through `set_pcie_share`, and inclusion
+in the key invalidates and recaptures each affected layer.
+
+Expert slot addresses are live device data reached through `tab`, `plan_ptr`
+and `fetch_src`; they are not frozen graph arguments. Thus promotion,
+demotion and `vision_lend`/`vision_reclaim` reallocation of the expert pool
+tail do not inherently require suffix graph invalidation. The existing
+boundary/lending synchronization and table publication still apply. If future
+code reallocates the activation arena, model weights or route buffers in place,
+or changes the scheduling shape in process, add an arena/config generation
+to the key or explicitly clear both graph containers first.
+
+The suffix owns one real route. `LayerGraphs::enqueue` invokes the body once
+at capture, checks exactly one host request increment, and adds one request
+on each successful replay. Failed/abandoned capture restores the prior
+expected count. No host residual swaps occur in `fast_moe`; unlike recurrent
+whole-layer replay, suffix replay requires no swap compensation. `max_pf=0`
+and `n_ahead=0` remove mutable prefetch host state from this boundary.
+
+All prefix/down side-stream work joins before its consumer and before the
+suffix completes. CPU-answer addition follows both output-row bands. The next
+route cannot overwrite the shared plan, `hq`, `sh_out` or output while an
+earlier consumer still uses them. Separate containers avoid nested capture
+inside the recurrent whole-layer graph. Teardown synchronizes compute, copy
+and side streams, then destroys both graph containers before freeing their
+fixed buffers and pinned sources. No new ownership defect was found for the
+ordinary suffix in this bounded review; exact runtime parity remains the
+parent's evidence, not a consequence of this audit.
+
+### Guard findings and subsequent source repairs
+
+Two source guard leaks were identified in the reviewed working tree:
+
+1. `fast_layers` graph eligibility does not explicitly exclude
+   `F->win.pipe_t >= 0`. `win_pipe_part` sets `pipe_t=t`, sets the thread-local
+   `gf::set_skip(W.skip_d)`, then invokes `fast_layers` with no incoming hop
+   on the first/single device. Single-device window execution can therefore
+   satisfy the ordinary graph guard. The skip pointer is baked into router,
+   projection and expert kernel arguments, but absent from graph keys.
+   Reusing a graph captured in ordinary mode can lose window skipping;
+   reusing one first captured in window mode during ordinary decode can keep
+   a stale non-null skip flag. Recurrent full-layer graphs additionally freeze
+   window-specific KDA row pointers. Add an explicit `F->win.pipe_t < 0`
+   eligibility guard before either graph container is used.
+2. `multi_rows` calls `fast_moe_experts` directly, disables/restores only
+   profiling, and leaves `kda_graph_on`/`moe_suffix_graph_on` from a prior
+   `fast_layers` call. The new suffix flag can then enable captured-only
+   component overlap for uncaptured MLA row work, reviving the host event
+   submission cost this restriction was intended to avoid. Its existing
+   per-row stream joins appear to retain scratch safety; this is a
+   performance/scope leak, not a demonstrated arithmetic corruption.
+   Use an explicit caller capture role or scope/reset these flags for direct
+   callers. The asynchronous service probe's route classification should be
+   kept independently valid rather than relying on a transient host scope.
+
+The parent subsequently repaired both in source while this review was active.
+`fast_layers` now explicitly requires `F->win.pipe_t < 0` for graphs. A
+transient `F->moe_graph_body` flag wraps only the actual `fast_moe` body that
+is eligible for capture; `fast_moe_experts` uses it for the captured-only
+overlap gate, and the wrapper resets it on both true and false returns.
+Graph replay skips host code and uses the already captured schedule. Direct
+row/MTP callers therefore cannot inherit ordinary decode's capture role.
+The service probe retains persistent graph eligibility rather than the
+transient host scope, so asynchronous reporting remains possible. These
+repairs address the identified source defects; no additional experiment was
+performed by this research agent.
+
+The usual MTP caller does not introduce the same suffix-flag inheritance:
+`mtp_il_ >= 0` disables ordinary graphs in `fast_layers` before `fast_mtp`
+calls `fast_moe`. MTP remains excluded from this campaign. Source anchors for
+this audit are `src/core/glm_fast_path.cu` (`fast_setup`, `fast_moe`,
+`fast_moe_experts`, `fast_layers`, graph teardown),
+`src/core/glm_layer_graphs.hpp`, `src/core/graph.cpp`,
+`src/core/glm_rows.cu:multi_rows`, `src/core/glm_window.cu:win_pipe_part`,
+`src/core/glm_prefill.cu:vision_lend/vision_reclaim` and
+`src/kernels/cuda/glm_fast.cu:set_skip`. Line numbers are deliberately omitted
+here because the parent's source is still changing.

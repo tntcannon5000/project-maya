@@ -2177,6 +2177,7 @@ __global__ void __launch_bounds__(HC_THREADS) hc2_kernel(const __grid_constant__
 // (8 bf16 per lane per stream segment, uint4) BEFORE it computes its R values, the partial sums are reduced by whole
 // warps (lane = block) instead of one thread walking 32 of them, and the second barrier's total likewise.
 // 32 blocks of 128 embedding values; n_embd == 4096 only.
+template<int PHASE=0>
 __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__ HcArgs a) {
     const int hc = 4;
     const int n_embd = a.n_embd;
@@ -2189,6 +2190,8 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
     __shared__ float smix[HC_MIX + 1];
     __shared__ float s_pre[4];
     __shared__ float s_mixed[HC2_EB];
+    float* part2 = a.part + (size_t) (HC_MIX + 1) * nb;
+    if constexpr(PHASE<=1) {
     // the weights first: warp w owns mix rows w, w + 8, w + 16; per row and stream segment d a lane loads the 4 bf16
     // values j = 4 * lane .. 4 * lane + 3 of [e0, e0 + 128)
     uint2 wv[3][4];
@@ -2233,7 +2236,17 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
     }
     ss = block_sum(ss, sred);
     if (tid == 0) part[(size_t) HC_MIX * nb + b] = ss;
-    grid_barrier(ctr, nb);
+    if constexpr(PHASE==0) grid_barrier(ctr, nb);
+    else return;
+    }
+    if constexpr(PHASE==2) {
+        const float* r=a.block_out?a.R_new:a.R_old;
+        for(int i=tid;i<4*HC2_EB;i+=HC_THREADS)
+            sR[i/HC2_EB][i%HC2_EB]=r[(i/HC2_EB)*n_embd+e0+i%HC2_EB];
+        __syncthreads();
+    }
+    if constexpr(PHASE!=3) {
+    float* part=a.part;
     // the 25 totals: warp w reduces rows w, w + 8, w + 16 (and warp 0 row 24), one partial per lane
     for (int m = warp; m < HC_MIX + 1; m += 8) {
         const float v = lane < (int) nb ? __ldcg(&part[(size_t) m * nb + lane]) : 0.0f;
@@ -2251,6 +2264,7 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
                 a.post[lane] = 2.0f * dsigmoid(smix[hc + lane] * inv * a.w_scale[1] + a.w_base[hc + lane]);
             }
         }
+        if(PHASE==0 || b==0) {
         const int l = lane & 15, d = l >> 2, s = l & 3;
         float c = smix[2 * hc + d + hc * s] * inv * a.w_scale[2] + a.w_base[2 * hc + d + hc * s];
         float mx = fmaxf(c, __shfl_xor_sync(0xffffffffu, c, 4));
@@ -2273,6 +2287,7 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
             c = c / (a.hc_eps + sm);
         }
         if (b == 0 && lane < 16) a.comb[d * hc + s] = c;
+        }
     }
     __syncthreads();
     float ss2 = 0.0f;
@@ -2281,17 +2296,20 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
 #pragma unroll
         for (int s = 0; s < hc; ++s) acc += s_pre[s] * sR[s][tid];
         s_mixed[tid] = acc;
+        if constexpr(PHASE==2)a.x[e0+tid]=acc;
         ss2 = acc * acc;
     }
     ss2 = block_sum(ss2, sred);
-    float* part2 = a.part + (size_t) (HC_MIX + 1) * nb;
     if (tid == 0) part2[b] = ss2;
-    grid_barrier(ctr, nb);
+    if constexpr(PHASE==0)grid_barrier(ctr, nb);
+    else return;
+    }
     const float tot = warp_sum(lane < (int) nb ? __ldcg(&part2[lane]) : 0.0f);
     const float inv2 = rsqrtf(tot / (float) n_embd + a.norm_eps);
     if (tid < HC2_EB) {
         const int e = e0 + tid;
-        const float xv = s_mixed[tid] * inv2 * a.norm_w[e];
+        const float mixed=PHASE==3?a.x[e]:s_mixed[tid];
+        const float xv = mixed * inv2 * a.norm_w[e];
         a.x[e] = xv;
         q8_1_store_warp(xv, (block_q8_1*) a.xq + e / 32, lane);
     }
@@ -4439,13 +4457,19 @@ void hc(const HcArgs& a, cudaStream_t s) {
         cudaGetDevice(&dev);
         cudaDeviceGetAttribute(&sms, cudaDevAttrMultiProcessorCount, dev);
         cudaOccupancyMaxActiveBlocksPerMultiprocessor(&per, hc2_kernel, HC_THREADS, 0);
-        cudaOccupancyMaxActiveBlocksPerMultiprocessor(&per3, hc3_kernel, HC_THREADS, 0);
+        cudaOccupancyMaxActiveBlocksPerMultiprocessor(&per3, hc3_kernel<0>, HC_THREADS, 0);
         mode = (getenv("STRATA_GLM_HC1") == nullptr && per * sms >= a.n_embd / HC2_EB) ? 2 : 1;
         if (mode == 2 && getenv("STRATA_GLM_HC2") == nullptr && a.n_embd == 4096 && per3 * sms >= a.n_embd / HC2_EB)
             mode = 3;
     }
     if (mode == 3) {
-        hc3_kernel<<<a.n_embd / HC2_EB, HC_THREADS, 0, s>>>(a);
+        if(a.split_graph) {
+            // Same32-block reduction tree. Kernel boundaries replace global
+            // grid spins; x temporarily owns the mixed values until phase3.
+            hc3_kernel<1><<<32,HC_THREADS,0,s>>>(a);
+            hc3_kernel<2><<<32,HC_THREADS,0,s>>>(a);
+            hc3_kernel<3><<<32,HC_THREADS,0,s>>>(a);
+        } else hc3_kernel<0><<<a.n_embd / HC2_EB, HC_THREADS, 0, s>>>(a);
         launch_check("hc3");
         return;
     }

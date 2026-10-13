@@ -96,6 +96,7 @@ struct HcArgs {
     void* xq = nullptr;               // n_embd / 32 q8_1 blocks
     float* part = nullptr;            // scratch: (hc*n_embd / 512) * 25 floats
     unsigned int* counter = nullptr;  // zero-initialised; the kernel leaves it zero
+    bool split_graph = false;        // exact32-block HC3 stages, captured decode only
 };
 void hc(const HcArgs& a, cudaStream_t s);
 /// The write half alone (the split boundary / the head): R_new = post (x) block_out + comb . R_old.

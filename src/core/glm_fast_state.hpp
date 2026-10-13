@@ -602,6 +602,9 @@ struct Glm5Model::FastState {
     bool prof_on = false;
     bool kda_graph_on = false;   // experimental, single-device ordinary decode only
     glmfast::LayerGraphs kda_graphs;
+    bool moe_suffix_graph_on = false;
+    bool moe_graph_body = false; // host capture scope, never inferred from last decode
+    glmfast::LayerGraphs moe_suffix_graphs;
     std::vector<cudaEvent_t> pev;
     std::vector<const char*> pname;
     size_t pn = 0;

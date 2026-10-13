@@ -110,3 +110,28 @@ Repaired the detailed analyzer: grid32 no longer implies a down copy, and
 two GU launches/two down row bands are accounted independently. Reconciled
 383MB/token on existing resident and CPU-pipeline traces. Large raw traces
 and logits remain local; manifests and compact results are checkpointed.
+
+## Complete overlap extensions and bounded arithmetic follow-up
+
+- Down bands without resident GU:40.42/45.71TPS, exact. Resident split is
+  unnecessary in this screen; omit its extra launch from the simpler candidate.
+- Captured MLA MoE suffix plus bands:41.53/45.82TPS, exact;11 captures,
+  3465 replays. Matching ablation saves only0.053ms, within variation. Capture
+  excludes dynamic attention, positions and residual swaps; uses immutable
+  FastState input/output buffers, cpu-plan key and exactly one route accounting.
+- Review found and fixed inherited eligibility leaks: exclude pipelined window
+  tokens, and scope captured-only overlap to the actual MoE capture body so
+  multi-row/pre-fill consumers cannot inherit a prior decode mode.
+- HC3 exact three-stage split plus simpler overlap/CPU candidate:
+  39.98/44.83TPS versus41.53/45.82 without split; exact logits. Kernel boundaries
+  replace both grid spins, same32-block reduction and ordered arithmetic;
+  mixed values temporarily use the separately allocated x buffer. Sinkhorn
+  runs only in block0 in phase2; its parallel replication was not a32x latency
+  saving. Negative screen, not a retained optimization.
+- Full diagnostic combination (Q4 rows, warp publication, CPU pipeline/phase
+  gate, down bands, suffix graphs): repeat23.144ms diagnostic loop, overlap
+  1.288ms, fetch10.519ms, arithmetic9.393ms, CPU wait3.410ms. All logits exact.
+  More overlap is real but not a whole-loop win. Q4 row sharing costs3.181ms
+  versus original3.211ms: negligible practical gain. Warp route family falls
+  ~0.976 to0.793ms, a real but small opportunity. Need unprofiled scheduling
+  ablation and simple combined candidate before the final decision.
