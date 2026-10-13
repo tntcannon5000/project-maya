@@ -1762,6 +1762,31 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     const int threads = pool.active();
     const int T = threads * (kSplit > 0 ? kSplit : std::max(1, std::min(8, 48 / std::max(1, threads))));
     kc::native_quant_act(nf, x, act);
+    static const bool single_coarse=[] {const char* v=getenv("MAYA_CPU_SINGLE_COARSE");return v && std::atoi(v)>0;}();
+    if(single_coarse && ne==1 && phase_word) {
+        // Work-conserving GU: even one callback can finish all stripes. No
+        // barrier assumes every worker is scheduled. h publication preserves
+        // the original full-vector quantization; each callback then owns its
+        // down/output stripe and pool.run joins all stores before publication.
+        F->cpu_single_coarse_batches.fetch_add(1,std::memory_order_relaxed);
+        std::atomic<int> next{0},left{threads};std::atomic<bool> ready{false};
+        pool.run(threads,[&](int worker) {
+            for(int j=next.fetch_add(1,std::memory_order_relaxed);j<threads;j=next.fetch_add(1,std::memory_order_relaxed)) {
+                const void* a[1]={act};float* o[1]={ff};
+                kc::native_gu_rows_split(nf,blob[0],blob[0]+Ly.gu_bytes,a,1,o,
+                    (int)((int64_t)n_ff*j/threads),(int)((int64_t)n_ff*(j+1)/threads),g.swiglu_exp);
+                if(left.fetch_sub(1,std::memory_order_acq_rel)==1) {
+                    kc::native_quant_h(nf,ff,hq);ready.store(true,std::memory_order_release);
+                }
+            }
+            while(!ready.load(std::memory_order_acquire))cpu_relax();
+            const int lo=(int)((int64_t)n_embd*worker/threads),hi=(int)((int64_t)n_embd*(worker+1)/threads);
+            const void* h[1]={hq};float* o[1]={dn};
+            kc::native_down_rows_split(nf,blob[0]+Ly.down_off,h,1,o,lo,hi);
+            for(int r=lo;r<hi;++r){float m=0.0f;m+=w[0]*dn[r];out[r]=m;}
+        });
+        return;
+    }
     static const bool cpu_pipeline=[] {const char* v=getenv("MAYA_CPU_PIPELINE");return v && std::atoi(v)>0;}();
     static const bool pipeline_single=[] {const char* v=getenv("MAYA_CPU_PIPELINE_SINGLE");return v && std::atoi(v)>0;}();
     if(cpu_pipeline && phase_word && (ne>1 || (ne==1 && pipeline_single))) {
@@ -3085,6 +3110,8 @@ void Glm5Model::fast_destroy() {
     if (!F->reuse_policy.layers.empty())
         std::fprintf(stderr,"maya reuse policy: observations=%llu changed_victims=%llu\n",
             (unsigned long long)F->reuse_policy.observations,(unsigned long long)F->reuse_policy.changed_victims);
+    if(F->cpu_single_coarse_batches.load())std::fprintf(stderr,"maya CPU single coarse: batches=%llu\n",
+        (unsigned long long)F->cpu_single_coarse_batches.load());
     // H3 may keep copy-back live beside the last token. Join it before any RAM
     // tier or GPU source can be released, including cancellation/early teardown.
     if (F->copy) cudaStreamSynchronize(F->copy);
@@ -4829,6 +4856,11 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     const bool overlap_enabled=overlap_blocks && (!captured_only || F->moe_graph_body);
     static const bool resident_gu=[] { const char* v=getenv("MAYA_RESIDENT_GU");return v && std::atoi(v)>0; }();
     const bool early_gu=resident_gu && overlap_enabled;
+    static const bool gu_bands=[] {const char* v=getenv("MAYA_GU_BANDS");return v && std::atoi(v)==2;}();
+    const bool band_gu=gu_bands && overlap_enabled;
+    if(band_gu && (early_gu || Ly.exl3 || g.n_ff_exp%64 || Ly.down_off!=2*Ly.gu_bytes || Ly.gu_bytes%32)) {
+        err="maya GU bands require equal aligned native matrices and resident GU off";return false;
+    }
     static const bool down_bands=[] {const char* v=getenv("MAYA_DOWN_BANDS");return v && std::atoi(v)==2;}();
     const bool band_down=down_bands && overlap_enabled;
     const size_t down_bytes=Ly.blob-Ly.down_off;
@@ -4857,6 +4889,16 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
             gf::moe_gate_up(Ly.gu_type,resident_md,g.n_exp_used,g.n_embd,g.n_ff_exp,g.swiglu_exp,
                 io.xq,F->hq,Ly.sh_down.q,Ly.sh_down.type,F->sh_hq,FFs,F->sh_out,s);
             if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"resident GU prefix consumer",err))return false;
+        } else if(band_gu) {
+            gf::moe_fetch_gu_band(md,g.n_exp_used,Ly.gu_bytes,0,Ly.gu_bytes/2,0,s);
+            if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"GU band fork",err) ||
+               !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"GU band copy start",err))return false;
+            gf::moe_fetch_gu_band(md,g.n_exp_used,Ly.gu_bytes,Ly.gu_bytes/2,Ly.gu_bytes/2,overlap_blocks,F->ps);
+            if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"GU second band ready",err))return false;
+            auto first=md;first.gu_row_count=g.n_ff_exp/2;
+            gf::moe_gate_up(Ly.gu_type,first,g.n_exp_used,g.n_embd,g.n_ff_exp,g.swiglu_exp,
+                io.xq,F->hq,Ly.sh_down.q,Ly.sh_down.type,F->sh_hq,FFs,F->sh_out,s);
+            if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"GU second band consumer",err))return false;
         } else gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
         if(md.cpu_phase_on)gf::moe_cpu_phase_ready(md,s);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
@@ -4897,7 +4939,8 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     } else {
     // (the shared expert's down rides the gate/up launch: sh_out)
     auto demand_md=md;if(early_gu)demand_md.gu_phase=2;
-    gf::moe_gate_up(Ly.gu_type, demand_md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, early_gu?nullptr:Ly.sh_down.q,
+    if(band_gu){demand_md.gu_row_first=g.n_ff_exp/2;demand_md.gu_row_count=g.n_ff_exp/2;}
+    gf::moe_gate_up(Ly.gu_type, demand_md, g.n_exp_used, g.n_embd, g.n_ff_exp, g.swiglu_exp, io.xq, F->hq, (early_gu||band_gu)?nullptr:Ly.sh_down.q,
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
     if (overlap_enabled && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;

@@ -194,6 +194,9 @@ struct MoeDev {
     // Decode experiment: 0 all ranks, 1 resident, 2 fetched. Selected only
     // after moe_wait has published disk sources; no expert prediction.
     int gu_phase = 0;
+    // Native GU bands preserve complete 32-row h quantization blocks.
+    int gu_row_first = 0;
+    int gu_row_count = 0;
     int down_row_first = 0, down_row_count = 0; // 0 count means full output
     bool cpu_phase_on = false;
     unsigned long long* tab = nullptr;         // [3 tables, see above]
@@ -313,6 +316,7 @@ void moe_wait(const MoeDev& d, int n_embd, cudaStream_t s);
 void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s);
 // Native packed components, offset/bytes aligned to 16; blocks=0 uses the full copy grid.
 void moe_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, int blocks, cudaStream_t s);
+void moe_fetch_gu_band(const MoeDev& d, int k, size_t matrix_bytes, size_t offset, size_t bytes, int blocks, cudaStream_t s);
 void moe_cpu_phase_ready(const MoeDev& d, cudaStream_t s);
 /// The routed gate/up rows of the planned (resident) experts, the clamped swiglu, the q8_1 of h; and (sh_down and
 /// sh_out given) the shared expert's down rows over its h in sh_hq into sh_out, by extra blocks of the same launch.

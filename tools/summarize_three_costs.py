@@ -3,7 +3,8 @@ import argparse,csv,json,statistics
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]/'docs/evidence/maya-three-costs'
-p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--reference',default='baseline');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--reference',default='baseline')
+p.add_argument('--root',type=Path,default=ROOT);a=p.parse_args();ROOT=a.root
 out=ROOT/a.name;rows=list(csv.DictReader((out/'fixed.csv').open()))
 result={}
 for rep in sorted({int(r['repeat']) for r in rows}):

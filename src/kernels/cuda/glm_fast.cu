@@ -3421,6 +3421,28 @@ void launch_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes,
     moe_component_kernel<<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
 }
 
+// One launch copies corresponding native gate AND up rows. No repacking,
+// extra bytes or change to the persistent [gate|up|down] representation.
+__global__ void __launch_bounds__(256) moe_gu_band_fetch_kernel(MoeDev d, int k,
+        size_t matrix16, size_t offset16, size_t n16) {
+    for(int i=0;i<k;++i) {
+        if(!d.fetch_src[i])continue;
+        const auto* from=(const uint4*)d.fetch_src[i];
+        auto* to=(uint4*)d.plan_ptr[i];
+        for(size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x;j<2*n16;j+=(size_t)gridDim.x*blockDim.x) {
+            const size_t at=offset16+(j<n16?j:matrix16+j-n16);
+            to[at]=from[at];
+        }
+    }
+}
+
+void launch_fetch_gu_band(const MoeDev& d, int k, size_t matrix_bytes, size_t offset,
+                      size_t bytes, int blocks, cudaStream_t s) {
+    int dev=0,sms=0;cudaGetDevice(&dev);cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev);
+    const int grid=blocks>0?std::min(blocks,sms):sms;
+    moe_gu_band_fetch_kernel<<<std::max(1,grid),256,0,s>>>(d,k,matrix_bytes/16,offset/16,bytes/16);
+}
+
 __global__ void moe_prefix_ready_kernel(MoeDev d) {
     if(d.skip && *d.skip)return;
     const unsigned int seq=*d.seq;
@@ -3452,15 +3474,15 @@ moe_gate_up_kernel(MoeDev d, int k, int n_embd, int n_ff, float limit,
 #if !defined(STRATA_USE_HIP)
     constexpr int NW = GU_WARPS;
 #endif
-    const int ei = blockIdx.y, chunk = blockIdx.x;
+    const int ei = blockIdx.y, chunk = blockIdx.x + d.gu_row_first / GU_ROWS;
     const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
 #if defined(STRATA_USE_HIP)
     if constexpr (!SPLIT)
 #endif
     if (ei == k) {
         const int per = (n_embd + (int) gridDim.x - 1) / (int) gridDim.x;
-        const int r1 = min(n_embd, (chunk + 1) * per);
-        for (int r = chunk * per + warp; r < r1; r += NW) {
+        const int r1 = min(n_embd, ((int)blockIdx.x + 1) * per);
+        for (int r = (int)blockIdx.x * per + warp; r < r1; r += NW) {
             const float v = any_row_dot(sh_type, sh_down, r, sh_hq, nullptr, n_ff_sh, lane);
             if (lane == 0) sh_out[r] = v;
         }
@@ -4716,6 +4738,9 @@ void moe_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, in
 void moe_cpu_phase_ready(const MoeDev& d,cudaStream_t s) {
     moe_prefix_ready_kernel<<<1,1,0,s>>>(d);launch_check("CPU prefix readiness");
 }
+void moe_fetch_gu_band(const MoeDev& d, int k, size_t matrix_bytes, size_t offset, size_t bytes, int blocks, cudaStream_t s) {
+    launch_fetch_gu_band(d,k,matrix_bytes,offset,bytes,blocks,s);launch_check("GU band fetch");
+}
 
 #if defined(STRATA_USE_HIP)
 namespace {
@@ -4790,7 +4815,7 @@ void moe_gate_up(int gu_type, const MoeDev& d_in, int k, int n_embd, int n_ff, f
     }
 #endif
     const bool sh = sh_down != nullptr && sh_out != nullptr;
-    const dim3 grid((unsigned) (n_ff / GU_ROWS), (unsigned) (k + (sh ? 1 : 0)));
+    const dim3 grid((unsigned) ((d.gu_row_count?d.gu_row_count:n_ff) / GU_ROWS), (unsigned) (k + (sh ? 1 : 0)));
     const auto* X = (const block_q8_1*) xq;
     auto* H = (block_q8_1*) hq;
     const auto* SD = (const uint8_t*) sh_down;

@@ -23,3 +23,21 @@ sharing already failed; revisiting requires a concrete mechanism change.
 Retain immutable manifests, exact logits and traffic counters. Policy changes
 can alter CPU/GPU arithmetic assignment, so distinguish ownership/scheduling
 parity from backend-placement differences. No threshold relaxation.
+
+## First implementation checkpoint
+
+- Fresh preserved baseline: 41.40/45.71 TPS, first/repeated request.
+- Paired gate/up row-band streaming: one paired-range pull per half; each half
+  covers complete 32-row hidden quantization blocks. First GU runs during second
+  prefix fetch; shared down runs once; CPU prefix-ready remains after full prefix.
+  Same persistent bytes/layout and slot lifetime. Screen 41.77/46.88 TPS, all
+  39,649,280 logits exact and all traffic/cache/assignment counters unchanged.
+- Coarse single-expert CPU executor: one worker generation, work-conserving GU
+  claims, last GU completion publishes unchanged whole-vector hidden quant;
+  independent down/output stripes eliminate separate combine scheduling. No
+  fixed worker-arrival barrier and no prefix-phase throttling for this path.
+  Screen 41.81/46.87 TPS, all logits/counters exact; 5605 actual batches.
+- Neither isolated screen establishes a reliable gain yet. Combining next.
+- Research caveat: existing down fetch already overlaps nearly all GU on demand
+  routes. Prefix streaming could merely relocate overlap; any gain needs traced
+  contention/critical-path evidence, not counting overlap twice.

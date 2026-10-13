@@ -450,6 +450,7 @@ struct Glm5Model::FastState {
     //      A split of 3+ GPUs shares one pool across its parts (fast_cpu_lane_setup).
     std::shared_ptr<glmfast::Workers> cpu_pool;
     std::atomic<uint64_t> cpu_pipeline_batches{0}, cpu_phase_gated_callbacks{0};
+    std::atomic<uint64_t> cpu_single_coarse_batches{0};
     // one GPU with a DFlash drafter, on a host of two NUMA nodes or more (STRATA_GLM_WIN_LANES, on): a batched verify
     // window's tokens' CPU-lane experts go to two lane threads, token t to lane t % 2 - lane 0 drives cpu_pool (then
     // pinned to the GPU's node), lane 1 a pool of its own on another node - so the window's tokens run on both
