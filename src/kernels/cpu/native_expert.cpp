@@ -6,6 +6,7 @@
 #include "strata/kernels/cpu/iq_avx512.hpp"
 #include "strata/kernels/cpu/iq_avx2.hpp"
 #include "strata/kernels/cpu/expert_layout.hpp"
+#include "strata/kernels/cpu/q2_pair_avx512.hpp"
 
 #include "ggml.h"
 #include "ggml-cpu.h"
@@ -115,6 +116,8 @@ void native_gu_rows(const NativeFmt& f, const uint8_t* blob, const void* const* 
 void native_gu_rows_split(const NativeFmt& f, const uint8_t* gate_base, const uint8_t* up_base,
                           const void* const* act, int nt, float* const* ff, int r0, int r1,
                           float swiglu_limit) {
+    static const int paired=[] {const char* v=std::getenv("MAYA_CPU_Q2_PAIR");return v?std::atoi(v):0;}();
+    if(nt==1 && (paired&1) && q2_pair_gu_rows(f,gate_base,up_base,act[0],ff[0],r0,r1,swiglu_limit))return;
     const ggml_vec_dot_t dot = traits(f.gu_type)->vec_dot;
     const int n = (int) f.n_embd;
     const bool clamp = swiglu_limit != std::numeric_limits<float>::infinity();
@@ -136,6 +139,8 @@ void native_gu_rows_split(const NativeFmt& f, const uint8_t* gate_base, const ui
 
 void native_down_rows_split(const NativeFmt& f, const uint8_t* down_base, const void* const* hq,
                             int nt, float* const* out, int r0, int r1) {
+    static const int paired=[] {const char* v=std::getenv("MAYA_CPU_Q2_PAIR");return v?std::atoi(v):0;}();
+    if(nt==1 && (paired&2) && q2_pair_down_rows(f,down_base,hq[0],out[0],r0,r1))return;
     const ggml_vec_dot_t dot = traits(f.d_type)->vec_dot;
     const int n = (int) f.n_ff;
     for (int r = r0; r < r1; ++r) {
