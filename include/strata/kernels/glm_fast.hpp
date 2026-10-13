@@ -194,6 +194,7 @@ struct MoeDev {
     // after moe_wait has published disk sources; no expert prediction.
     int gu_phase = 0;
     int down_row_first = 0, down_row_count = 0; // 0 count means full output
+    bool cpu_phase_on = false;
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted
@@ -249,6 +250,7 @@ struct MoeRequest {
     int win;                     // ... and the answer slot they go to: a verify window's token (0: the lone answer)
     int win_n;                   // a batched verify window's tokens (0: not one): their CPU lanes may run at once
     float x[4096];               // the FFN input, written only when cpu_mask != 0
+    volatile unsigned int prefix_ready; // opt-in phase control; route sequence, not a boolean
 };
 /// The host's answer to a request with misses.
 struct MoeResponse {
@@ -310,6 +312,7 @@ void moe_wait(const MoeDev& d, int n_embd, cudaStream_t s);
 void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s);
 // Native packed components, offset/bytes aligned to 16; blocks=0 uses the full copy grid.
 void moe_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, int blocks, cudaStream_t s);
+void moe_cpu_phase_ready(const MoeDev& d, cudaStream_t s);
 /// The routed gate/up rows of the planned (resident) experts, the clamped swiglu, the q8_1 of h; and (sh_down and
 /// sh_out given) the shared expert's down rows over its h in sh_hq into sh_out, by extra blocks of the same launch.
 void moe_gate_up(int gu_type, const MoeDev& d, int k, int n_embd, int n_ff, float limit, const void* xq, void* hq,

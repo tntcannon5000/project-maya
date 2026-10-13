@@ -1764,15 +1764,24 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
         // down while other experts finish GU. No worker waits on a particular
         // unfinished task, and no nested Workers::run is allowed.
         MayaTimelineRange range("CPU stage expert-ready pipeline");
+        F->cpu_pipeline_batches.fetch_add(1,std::memory_order_relaxed);
         const int pieces=std::max(1,(T+ne-1)/ne);
         std::atomic<int> gu_next{0},down_done{0},combine_next{0};
         std::atomic<int> gu_left[8],h_ready[8],down_next[8];
         for(int i=0;i<ne;++i){gu_left[i].store(pieces);h_ready[i].store(0);down_next[i].store(0);}
         pool.run(threads,[&](int worker) {
+            bool gated=false;
+            static const int phase_limit=[] {const char* v=getenv("MAYA_CPU_PHASE_LIMIT");return v?std::max(0,std::atoi(v)):0;}();
             while(true) {
+                if(phase_limit>0 && worker>=phase_limit && F->cpu_phase_word &&
+                    *F->cpu_phase_word!=F->cpu_phase_seq &&
+                    down_done.load(std::memory_order_acquire)!=ne*pieces) {gated=true;cpu_relax();continue;}
                 if(down_done.load(std::memory_order_acquire)==ne*pieces) {
                     const int job=combine_next.fetch_add(1,std::memory_order_relaxed);
-                    if(job>=pieces)return;
+                    if(job>=pieces) {
+                        if(gated)F->cpu_phase_gated_callbacks.fetch_add(1,std::memory_order_relaxed);
+                        return;
+                    }
                     const int end=(int)((int64_t)n_embd*(job+1)/pieces);
                     for(int r=(int)((int64_t)n_embd*job/pieces);r<end;++r) {
                         float sum=0;for(int i=0;i<ne;++i)sum+=w[i]*dn[(size_t)i*n_embd+r];out[r]=sum;
@@ -3168,6 +3177,10 @@ void Glm5Model::fast_destroy() {
     // Also cover an error before the component-copy fork could be joined.
     // The side stream must finish before its pinned RAM and VRAM are freed.
     if (F->ps) cudaStreamSynchronize(F->ps);
+    if(F->cpu_pipeline_batches.load())
+        std::fprintf(stderr,"maya CPU pipeline: %llu batches, %llu phase-gated callbacks\n",
+            (unsigned long long)F->cpu_pipeline_batches.load(),
+            (unsigned long long)F->cpu_phase_gated_callbacks.load());
     if (F->kda_graphs.captures || F->kda_graphs.replays)
         std::fprintf(stderr, "glm KDA graphs: %llu captures, %llu replays, %llu invalidations\n",
                      (unsigned long long) F->kda_graphs.captures,
@@ -3443,6 +3456,8 @@ void Glm5Model::fast_service() {
         // in the original ordering and keep their own answer slots.
         const bool cpu_answered_early=early_cpu && rq->win_n==0 && rq->win==0 &&
             rq->miss_mask==0 && rq->cpu_mask!=0 && F->cpu_ans_h!=nullptr;
+        F->cpu_phase_word=(rq->win_n==0 && rq->win==0)?&rq->prefix_ready:nullptr;
+        F->cpu_phase_seq=next;
         gf::MoeRequest early_snapshot;
         if(cpu_answered_early) {
             // No later bookkeeping reads a ring slot after the GPU is allowed
@@ -4745,6 +4760,8 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     // the prefetch list of THIS route lives in the buffer of this layer's parity (the side stream may still
     // read the previous layer's list while this route writes)
     gf::MoeDev md = F->md;
+    static const int phase_limit=[] {const char* v=getenv("MAYA_CPU_PHASE_LIMIT");return v?std::max(0,std::atoi(v)):0;}();
+    md.cpu_phase_on=phase_limit>0;
     md.pf_src = F->pf_buf[il & 1];
     md.pf_dst = F->pf_buf[il & 1] + 8;
     md.pf_n = F->pf_n_buf[il & 1];
@@ -4828,11 +4845,15 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
                 io.xq,F->hq,Ly.sh_down.q,Ly.sh_down.type,F->sh_hq,FFs,F->sh_out,s);
             if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"resident GU prefix consumer",err))return false;
         } else gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
+        if(md.cpu_phase_on)gf::moe_cpu_phase_ready(md,s);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
             !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya overlap fork",err)) return false;
         gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,band_down?down_bytes/2:down_bytes,overlap_blocks,F->ps);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"maya down ready",err)) return false;
-    } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+    } else {
+        gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
+        if(md.cpu_phase_on)gf::moe_cpu_phase_ready(md,s);
+    }
     if (F->prof_on) F->mark("moe_fetch");
     if (pf && pf_at == 1) issue_prefetch();
     // this layer's own prefetched experts (issued one layer ago) must have landed before they are read

@@ -85,3 +85,28 @@ with CPU improvements, before rejecting the whole overlap direction.
 - GPU early compute and CPU changes can compete for RAM differently: judge
   whole token loop, not sum isolated savings. No new quantization or skipped
   computation in any experiment.
+
+## Second checkpoint
+
+All fixed-input screens below retain exactly all 39,649,280 logits, demand
+bytes, cache counters and CPU assignment totals of baseline. These are single
+screens, not confidence intervals or final retention decisions.
+
+| Mechanism / dependencies | First / repeated TPS | Interpretation |
+|---|---:|---|
+| Early CPU + PAUSE | 39.97 / 44.54 | Simpler CPU support reference |
+| Expert-ready CPU pipeline + early + PAUSE (profiled) | 38.51 / 43.11 | No diagnostic loop improvement; not directly comparable to unprofiled TPS |
+| Prefix-phase CPU gate + pipeline + early + PAUSE | 40.60 / 45.06 | Small possible gain; need actual-gate counters and combined evaluation |
+| Resident GU + two down row bands + early + PAUSE | 40.88 / 45.56 | Strongest initial screen; needs ablation/confirmation |
+| Warp top-k + cooperative publication + early + PAUSE | 40.98 / 44.14 | Mixed timing; require stage attribution before retention |
+
+CPU readiness review found no c=1 publication/deadlock defect. Phase gate is
+eligible only for multi-expert CPU jobs (~17.15 of42 routes/token), although
+readiness kernels launch for all42; do not describe it as controlling every
+CPU expert. Added once-per-gated-callback counters rather than hot spin-loop
+atomics to prove engagement in the combination trial.
+
+Repaired the detailed analyzer: grid32 no longer implies a down copy, and
+two GU launches/two down row bands are accounted independently. Reconciled
+383MB/token on existing resident and CPU-pipeline traces. Large raw traces
+and logits remain local; manifests and compact results are checkpointed.

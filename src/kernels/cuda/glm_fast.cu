@@ -2943,6 +2943,7 @@ struct RouteArgs {
                                 // weights is below this (0: none)
 };
 
+template<bool WARP_SELECT=false>
 __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_constant__ RouteArgs a) {
     const int tid = threadIdx.x, lane = tid & 31;
     // a token past a wrong draft (set_skip): every expert not in VRAM is left out - no fetch, no CPU work, no counts
@@ -2978,7 +2979,33 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
     __shared__ float s_bv[32];
     __shared__ int s_bi[32];
     __syncthreads();
-    topk_argmax(s_sel, E, a.k, s_ids, s_bv, s_bi);
+    if(WARP_SELECT && E==288 && a.k==8 && bad==0 && a.near_n==0 && a.pred_logits==nullptr && a.n_ahead==0) {
+        // Same sigmoid scores, stable lower-id ties and double-normalized
+        // weights; only the selector's synchronization topology changes.
+        if(tid<32) {
+            float values[9];
+#pragma unroll
+            for(int j=0;j<9;++j)values[j]=s_sel[lane+32*j];
+            for(int r=0;r<8;++r) {
+                float best=-INFINITY;int id=0x7fffffff;
+#pragma unroll
+                for(int j=0;j<9;++j) {
+                    const int e=lane+32*j;
+                    if(values[j]>best || (values[j]==best && e<id)){best=values[j];id=e;}
+                }
+#pragma unroll
+                for(int offset=16;offset>0;offset>>=1) {
+                    const float other=__shfl_xor_sync(0xffffffffu,best,offset);
+                    const int oi=__shfl_xor_sync(0xffffffffu,id,offset);
+                    if(other>best || (other==best && oi<id)){best=other;id=oi;}
+                }
+                if(lane==0)s_ids[r]=id;
+#pragma unroll
+                for(int j=0;j<9;++j)if(lane+32*j==id)values[j]=-INFINITY;
+            }
+        }
+        __syncthreads();
+    } else topk_argmax(s_sel, E, a.k, s_ids, s_bv, s_bi);
     if (tid == 0)
         for (int i = 0; i < a.k; ++i)
             if (s_ids[i] < 0 || s_ids[i] >= E) atomicMax(&bad, 1);
@@ -3242,7 +3269,8 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
         rq->win = a.win;
         rq->win_n = a.win_n;
         rq->skip_mask = s_skip;
-        for (int i = 0; i < a.k; ++i) {
+        if(a.d.cpu_phase_on)rq->prefix_ready=0;
+        for (int i = 0; !WARP_SELECT && i < a.k; ++i) {
             rq->ids[i] = s_ids[i];
             rq->w[i] = s_w[i];
             rq->promo_ptr[i] = s_pp[i];
@@ -3250,14 +3278,28 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
             rq->cpu_src[i] = s_cs[i];
         }
         rq->pf_n = s_npf;
-        for (int i = 0; i < s_npf; ++i) {
+        for (int i = 0; !WARP_SELECT && i < s_npf; ++i) {
             rq->pf_ids[i] = s_pfid[i];
             rq->pf_ptr[i] = s_pfptr[i];
         }
-        for (int d2 = 0; d2 < kAhead; ++d2)
+        for (int d2 = 0; !WARP_SELECT && d2 < kAhead; ++d2)
             for (int i = 0; i < 8; ++i) rq->ahead[d2][i] = d2 < a.n_ahead && i < a.k ? s_ah[d2][i] : (short) -1;
-        if (a.near_n > 0)   // the host reads them only for the route log: no extra writes over PCIe without it
+        if (!WARP_SELECT && a.near_n > 0)   // no unused near-field writes
             for (int i = 0; i < 16; ++i) rq->near_ids[i] = i < a.near_n ? (short) s_near[i] : (short) -1;
+    }
+    if (WARP_SELECT) {
+        // Publish independent fields cooperatively. Every writer executes the
+        // system fence below; seq remains last, after CTA completion.
+        if(tid<a.k) {
+            rq->ids[tid]=s_ids[tid];rq->w[tid]=s_w[tid];
+            rq->promo_ptr[tid]=s_pp[tid];rq->pred[tid]=s_pred[tid];rq->cpu_src[tid]=s_cs[tid];
+        }
+        if(tid<s_npf){rq->pf_ids[tid]=s_pfid[tid];rq->pf_ptr[tid]=s_pfptr[tid];}
+        for(int n=tid;n<kAhead*8;n+=ROUTE_THREADS) {
+            const int d2=n/8,i=n%8;
+            rq->ahead[d2][i]=d2<a.n_ahead && i<a.k?s_ah[d2][i]:(short)-1;
+        }
+        if(a.near_n>0 && tid<16)rq->near_ids[tid]=tid<a.near_n?(short)s_near[tid]:(short)-1;
     }
     __threadfence_system();
     __syncthreads();
@@ -3359,6 +3401,13 @@ void launch_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes,
     if (!sms) { int dev=0; cudaGetDevice(&dev); cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev); }
     const int grid=blocks>0 ? std::min(blocks,sms) : sms;
     moe_component_kernel<<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
+}
+
+__global__ void moe_prefix_ready_kernel(MoeDev d) {
+    if(d.skip && *d.skip)return;
+    const unsigned int seq=*d.seq;
+    auto* rq=(MoeRequest*)d.ring+(seq%kRingSize);
+    __threadfence_system();rq->prefix_ready=seq;__threadfence_system();
 }
 
 constexpr int GU_ROWS = 32;   // h values (gate rows = up rows) per block: one q8_1 block of h
@@ -4589,7 +4638,9 @@ void moe_route(const float* logits, const float* bias, int n_expert, int k, floa
         for (int i = 0; i < a.n_ahead; ++i) a.ahead_bias[i] = ahead_bias[i];
     }
     const int blocks = 1 + (n_ff_sh + ROUTE_THREADS - 1) / ROUTE_THREADS;
-    moe_route_kernel<<<blocks, ROUTE_THREADS, 0, s>>>(a);
+    static const bool warp_select=[] {const char* v=getenv("MAYA_ROUTE_WARP");return v && std::atoi(v)>0;}();
+    if(warp_select)moe_route_kernel<true><<<blocks,ROUTE_THREADS,0,s>>>(a);
+    else moe_route_kernel<false><<<blocks, ROUTE_THREADS, 0, s>>>(a);
     launch_check("moe_route");
 }
 
@@ -4637,6 +4688,9 @@ void moe_fetch(const MoeDev& d, int k, size_t blob_bytes, cudaStream_t s) {
 void moe_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes, int blocks, cudaStream_t s) {
     launch_fetch_component(d,k,offset,bytes,blocks,s);
     launch_check("moe_component");
+}
+void moe_cpu_phase_ready(const MoeDev& d,cudaStream_t s) {
+    moe_prefix_ready_kernel<<<1,1,0,s>>>(d);launch_check("CPU prefix readiness");
 }
 
 #if defined(STRATA_USE_HIP)

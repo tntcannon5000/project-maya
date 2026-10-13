@@ -449,6 +449,9 @@ struct Glm5Model::FastState {
     //      weighted sum (cpu_ans_h) before its down combine.  cpu_plan: how many of f RAM-tier experts go to the host.
     //      A split of 3+ GPUs shares one pool across its parts (fast_cpu_lane_setup).
     std::shared_ptr<glmfast::Workers> cpu_pool;
+    const volatile unsigned int* cpu_phase_word = nullptr;
+    unsigned int cpu_phase_seq = 0; // only the synchronous c=1 service lane
+    std::atomic<uint64_t> cpu_pipeline_batches{0}, cpu_phase_gated_callbacks{0};
     // one GPU with a DFlash drafter, on a host of two NUMA nodes or more (STRATA_GLM_WIN_LANES, on): a batched verify
     // window's tokens' CPU-lane experts go to two lane threads, token t to lane t % 2 - lane 0 drives cpu_pool (then
     // pinned to the GPU's node), lane 1 a pool of its own on another node - so the window's tokens run on both
