@@ -75,3 +75,33 @@ parity from backend-placement differences. No threshold relaxation.
 - Online16 GPU-only isolation:9,912,320 logits exact, zero CPU experts. The
   hybrid difference is backend placement, not evidence of lost/corrupted copies.
   Reject its first-request regression and mixed-backend divergence for retention.
+
+## Confirmation and engagement
+
+- Fresh short confirmation: baseline41.38/46.29, coarse CPU41.73/46.68TPS.
+  Warm gain0.84% is smaller than the1.29% movement between baseline runs.
+- 8K occupied confirmation: baseline36.40/42.15, coarse CPU37.36/41.79TPS.
+  Repeat regression0.86%; all39,649,280 logits/counters exact. No reliable
+  general coarse-CPU gain. Do not change daily settings.
+- All-mechanism engagement diagnostic:32 tokens,1344 routes,2688 paired
+  prefix4 launches,2688 down-component4 launches,2688 GU/down launches each.
+  Every phase release follows all fetches on their copy stream. Separate
+  counter run verifies9,263,104 Q2 GU rows,18,495,360 paired down rows,
+  30,848 fallback-tail rows and1682 coarse jobs (includes setup). First-request
+  prefix2,478,080 logits exact. Second-request cache differs from128-token
+  fixture, so no second-request parity claim against that reference.
+- Nsight initially hid child stderr. Fixed the reusable harness with
+  `--show-output=true`; used an unprofiled diagnostic counter run to recover
+  actual helper engagement, without inventing missing trace counters.
+- One remaining targeted check qualifies GU-only (not its failed combination)
+  on short and8K fixtures before final retention decision.
+
+## Final decision
+
+GU-only confirmation41.83/46.73TPS,8K37.68/41.77TPS, all logits/counters exact.
+Like coarseCPU, its small short gain does not generalize to repeated8K context.
+Keep the previously retained configuration, all new flags off. No60TPS claim,
+no default/daily configuration change, no external publication. Six complete
+mechanisms plus combinations/ablations are preserved as opt-in research with
+negative bounds and engagement evidence. No further broad benchmark sweep.
+Final report: `docs/evidence/maya-missing-costs/RESULTS.md`.

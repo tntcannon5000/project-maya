@@ -1,0 +1,12 @@
+# Raw captures and per-event derivatives remain local; preserve compact evidence.
+*.f32
+*.sqlite
+*.nsys-rep
+routes.*
+deep-layers.csv
+deep-kernels.csv
+deep-stages.csv
+deep-transfers.csv
+trace-tokens.csv
+trace-stages.csv
+partition-tokens.csv

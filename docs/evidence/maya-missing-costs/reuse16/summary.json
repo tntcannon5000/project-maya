@@ -1,0 +1,43 @@
+{
+  "0": {
+    "tokens": 128,
+    "TPS": 39.997940106084535,
+    "mean_ms": 25.0012875,
+    "p95_ms": 29.559739999999998,
+    "fetch_bytes": 483529728.0,
+    "demotion_bytes": 48009216.0,
+    "hits": 212.7421875,
+    "cpu_experts": 71.6328125,
+    "promotions": 50.859375,
+    "pool_slots": 2693.0,
+    "ram_slots": 11819.0,
+    "pool_gib": 21.999023,
+    "ram_gib": 97.821899
+  },
+  "1": {
+    "tokens": 128,
+    "TPS": 46.133023636579026,
+    "mean_ms": 21.676446093750002,
+    "p95_ms": 26.09439,
+    "fetch_bytes": 367944192.0,
+    "demotion_bytes": 866304.0,
+    "hits": 238.578125,
+    "cpu_experts": 58.9453125,
+    "promotions": 38.3046875,
+    "pool_slots": 2693.0,
+    "ram_slots": 11819.0,
+    "pool_gib": 21.999023,
+    "ram_gib": 97.821899
+  },
+  "parity": {
+    "reference": "baseline",
+    "count": 39649280,
+    "finite": true,
+    "same_size": true,
+    "exact": false,
+    "max_abs": 3.421887159347534,
+    "mean_abs": 0.0897362232208252,
+    "changed": 39649243,
+    "greedy_agreement": 0.9921875
+  }
+}

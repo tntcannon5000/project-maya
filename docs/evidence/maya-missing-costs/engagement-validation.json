@@ -1,0 +1,21 @@
+{
+  "tokens": 32,
+  "actual_launches": {
+    "route": 1344,
+    "paired_prefix4": 2688,
+    "component4": 2688,
+    "late_phase_publications": 1344,
+    "gu": 2688,
+    "down": 2688
+  },
+  "Q2_rows_including_setup": {
+    "GU": 9263104,
+    "down_pair": 18495360,
+    "down_tail": 30848
+  },
+  "coarse_batches_including_setup": 1682,
+  "full_fetch_before_phase_release": true,
+  "prefix_logit_count": 2478080,
+  "prefix_exact": true,
+  "limitation": "Second request has different cache history from full128-token reference; no second-request numerical claim. Diagnostic flags include counters and profiler, not a TPS qualification."
+}

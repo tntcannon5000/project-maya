@@ -1,0 +1,98 @@
+{
+  "0": {
+    "tokens": 128,
+    "stages_ms": {
+      "Other kernel": 0.05495907812500001,
+      "Embedding/head": 0.016957632812499995,
+      "Residual/norm": 0.831660921875,
+      "Dense GEMV / projections / output head": 3.7602579687499995,
+      "KDA recurrence/prep": 0.47243127343750013,
+      "Activation quantization / SwiGLU": 0.0026245312499999984,
+      "DSA / MLA": 1.2288231328125006,
+      "Routing / shared SwiGLU / publication": 0.8099877109374995,
+      "Host/disk wait": 0.035839015624999984,
+      "Fetch: gate/up prefix": 8.4782135078125,
+      "Expert gate/up + shared down": 1.8266261484375008,
+      "Fetch: down component": 4.076881054687499,
+      "Expert down": 1.016208078125,
+      "CPU answer wait": 3.6826533359375007
+    },
+    "bytes_per_token": 464140800.0,
+    "fetch_ms": 12.5550945625,
+    "effective_GB_s": 36.96832371030578,
+    "ideal_gen5_x16_ms": 7.3655156250000005,
+    "mean_prefix_ready_to_gu_us": 6.2455066964285715,
+    "mean_down_dependencies_to_start_us": 0.29642447916666664,
+    "route_to_fetch_ms_per_token": 0.05209240625,
+    "down_copy_remaining_ms_per_token": 3.390612421875,
+    "overlap_ms": 2.0439198125,
+    "wall_ms": 25.4574607734375,
+    "transfers": {
+      "whole": {
+        "MB_per_token": 0.0,
+        "ms_per_token": 0.0,
+        "effective_GB_s": null
+      },
+      "prefix": {
+        "MB_per_token": 309.4272,
+        "ms_per_token": 8.4782135078125,
+        "effective_GB_s": 36.49674541869808
+      },
+      "down": {
+        "MB_per_token": 154.7136,
+        "ms_per_token": 4.0768810546875,
+        "effective_GB_s": 37.94901002130391
+      }
+    },
+    "prefix_ready_to_gu_us_p95": 20.128,
+    "down_dependencies_to_start_us_p95": 0.352
+  },
+  "1": {
+    "tokens": 128,
+    "stages_ms": {
+      "Other kernel": 0.0535949296875,
+      "Embedding/head": 0.016876132812500003,
+      "Residual/norm": 0.8403661406250003,
+      "Dense GEMV / projections / output head": 3.750996453125,
+      "KDA recurrence/prep": 0.4651964375,
+      "Activation quantization / SwiGLU": 0.0026242578124999966,
+      "DSA / MLA": 1.2093923671874998,
+      "Routing / shared SwiGLU / publication": 0.7974618437500001,
+      "Host/disk wait": 0.03131916406249998,
+      "Fetch: gate/up prefix": 6.8516890625,
+      "Expert gate/up + shared down": 1.773137687500001,
+      "Fetch: down component": 3.3119869218749987,
+      "Expert down": 0.9956932968750005,
+      "CPU answer wait": 3.4619462421875005
+    },
+    "bytes_per_token": 383000064.0,
+    "fetch_ms": 10.163675984375,
+    "effective_GB_s": 37.68322254554359,
+    "ideal_gen5_x16_ms": 6.077881875,
+    "mean_prefix_ready_to_gu_us": 8.231839657738096,
+    "mean_down_dependencies_to_start_us": 0.2809838169642857,
+    "route_to_fetch_ms_per_token": 0.050580015625,
+    "down_copy_remaining_ms_per_token": 2.7045375546875,
+    "overlap_ms": 1.7650481796875,
+    "wall_ms": 22.8977295234375,
+    "transfers": {
+      "whole": {
+        "MB_per_token": 0.0,
+        "ms_per_token": 0.0,
+        "effective_GB_s": null
+      },
+      "prefix": {
+        "MB_per_token": 255.333376,
+        "ms_per_token": 6.8516890625,
+        "effective_GB_s": 37.26575646835258
+      },
+      "down": {
+        "MB_per_token": 127.666688,
+        "ms_per_token": 3.311986921875,
+        "effective_GB_s": 38.5468575243421
+      }
+    },
+    "prefix_ready_to_gu_us_p95": 20.288,
+    "down_dependencies_to_start_us_p95": 0.352
+  }
+}

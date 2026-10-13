@@ -1,0 +1,43 @@
+{
+  "0": {
+    "tokens": 32,
+    "TPS": 34.168099146427494,
+    "mean_ms": 29.267065625,
+    "p95_ms": 33.91834,
+    "fetch_bytes": 986873856.0,
+    "demotion_bytes": 103913472.0,
+    "hits": 230.03125,
+    "cpu_experts": 0.0,
+    "promotions": 81.34375,
+    "pool_slots": 2693.0,
+    "ram_slots": 11819.0,
+    "pool_gib": 21.999023,
+    "ram_gib": 97.821899
+  },
+  "1": {
+    "tokens": 32,
+    "TPS": 45.63430832934508,
+    "mean_ms": 21.9133375,
+    "p95_ms": 26.04636,
+    "fetch_bytes": 678377472.0,
+    "demotion_bytes": 3796992.0,
+    "hits": 264.78125,
+    "cpu_experts": 0.0,
+    "promotions": 62.40625,
+    "pool_slots": 2693.0,
+    "ram_slots": 11819.0,
+    "pool_gib": 21.999023,
+    "ram_gib": 97.821899
+  },
+  "parity": {
+    "reference": "gpu-control",
+    "count": 9912320,
+    "finite": true,
+    "same_size": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "changed": 0,
+    "greedy_agreement": 1.0
+  }
+}
