@@ -1,0 +1,3841 @@
+repeat,position,stage,ms
+0,30,Other kernel,0.00096
+0,30,Embedding/head,0.015872
+0,30,Residual/norm,0.795203
+0,30,Dense GEMV / projections / output head,4.040726
+0,30,KDA recurrence/prep,0.457767
+0,30,Activation quantization / SwiGLU,0.002656
+0,30,DSA / MLA,1.128935
+0,30,Routing / shared SwiGLU / publication,1.346058
+0,30,Host/disk wait,0.029153
+0,30,Fetch: whole expert,5.494627
+0,30,Expert gate/up + shared down,1.143079
+0,30,Expert down,0.696359
+0,30,CPU answer wait,3.6294
+0,30,Fetch: gate/up prefix,8.233234
+0,30,Fetch: down component,3.48767
+0,31,Other kernel,0.00096
+0,31,Embedding/head,0.377442
+0,31,Residual/norm,1.24708
+0,31,Dense GEMV / projections / output head,4.061658
+0,31,KDA recurrence/prep,0.452065
+0,31,Activation quantization / SwiGLU,0.002592
+0,31,DSA / MLA,1.485674
+0,31,Routing / shared SwiGLU / publication,1.437291
+0,31,Host/disk wait,0.029248
+0,31,Fetch: whole expert,3.127476
+0,31,Expert gate/up + shared down,1.790795
+0,31,Expert down,0.733666
+0,31,CPU answer wait,2.941878
+0,31,Fetch: gate/up prefix,7.33627
+0,31,Fetch: down component,4.5992
+0,32,Other kernel,0.000864
+0,32,Embedding/head,0.016512
+0,32,Residual/norm,0.995171
+0,32,Dense GEMV / projections / output head,3.555262
+0,32,KDA recurrence/prep,0.444707
+0,32,Activation quantization / SwiGLU,0.002592
+0,32,DSA / MLA,1.130278
+0,32,Routing / shared SwiGLU / publication,0.972612
+0,32,Host/disk wait,0.028992
+0,32,Fetch: whole expert,1.92286
+0,32,Expert gate/up + shared down,1.40657
+0,32,Expert down,0.766276
+0,32,CPU answer wait,3.592181
+0,32,Fetch: gate/up prefix,4.81587
+0,32,Fetch: down component,2.854612
+0,33,Other kernel,0.000896
+0,33,Embedding/head,0.017216
+0,33,Residual/norm,0.792996
+0,33,Dense GEMV / projections / output head,3.571892
+0,33,KDA recurrence/prep,0.446949
+0,33,Activation quantization / SwiGLU,0.00256
+0,33,DSA / MLA,1.643787
+0,33,Routing / shared SwiGLU / publication,0.976009
+0,33,Host/disk wait,0.028992
+0,33,Fetch: whole expert,2.811728
+0,33,Expert gate/up + shared down,1.305767
+0,33,Expert down,0.758437
+0,33,CPU answer wait,3.468282
+0,33,Fetch: gate/up prefix,4.550237
+0,33,Fetch: down component,2.21803
+0,34,Other kernel,0.000832
+0,34,Embedding/head,0.016608
+0,34,Residual/norm,0.791686
+0,34,Dense GEMV / projections / output head,3.942553
+0,34,KDA recurrence/prep,0.448644
+0,34,Activation quantization / SwiGLU,0.002624
+0,34,DSA / MLA,1.388553
+0,34,Routing / shared SwiGLU / publication,0.986983
+0,34,Host/disk wait,0.029408
+0,34,Fetch: whole expert,3.252468
+0,34,Expert gate/up + shared down,1.230759
+0,34,Expert down,0.739491
+0,34,CPU answer wait,2.637329
+0,34,Fetch: gate/up prefix,5.941285
+0,34,Fetch: down component,2.991378
+0,35,Other kernel,0.000832
+0,35,Embedding/head,0.016288
+0,35,Residual/norm,0.796008
+0,35,Dense GEMV / projections / output head,4.190934
+0,35,KDA recurrence/prep,0.450755
+0,35,Activation quantization / SwiGLU,0.002624
+0,35,DSA / MLA,1.387818
+0,35,Routing / shared SwiGLU / publication,0.98493
+0,35,Host/disk wait,0.029664
+0,35,Fetch: whole expert,3.965466
+0,35,Expert gate/up + shared down,1.261096
+0,35,Expert down,0.726566
+0,35,CPU answer wait,2.748979
+0,35,Fetch: gate/up prefix,7.273967
+0,35,Fetch: down component,3.694712
+0,36,Other kernel,0.000896
+0,36,Embedding/head,0.016289
+0,36,Residual/norm,1.133063
+0,36,Dense GEMV / projections / output head,4.331128
+0,36,KDA recurrence/prep,0.449251
+0,36,Activation quantization / SwiGLU,0.002752
+0,36,DSA / MLA,1.14839
+0,36,Routing / shared SwiGLU / publication,0.995015
+0,36,Host/disk wait,0.028928
+0,36,Fetch: whole expert,4.080443
+0,36,Expert gate/up + shared down,1.326474
+0,36,Expert down,0.746085
+0,36,CPU answer wait,3.513783
+0,36,Fetch: gate/up prefix,5.715396
+0,36,Fetch: down component,3.045589
+0,37,Other kernel,0.000864
+0,37,Embedding/head,0.016768
+0,37,Residual/norm,0.794791
+0,37,Dense GEMV / projections / output head,4.289692
+0,37,KDA recurrence/prep,0.44605
+0,37,Activation quantization / SwiGLU,0.002624
+0,37,DSA / MLA,1.424681
+0,37,Routing / shared SwiGLU / publication,0.963017
+0,37,Host/disk wait,0.029088
+0,37,Fetch: whole expert,2.304686
+0,37,Expert gate/up + shared down,1.547753
+0,37,Expert down,1.177191
+0,37,CPU answer wait,2.3116
+0,37,Fetch: gate/up prefix,5.511201
+0,37,Fetch: down component,2.283535
+0,38,Other kernel,0.000832
+0,38,Embedding/head,0.01712
+0,38,Residual/norm,0.792963
+0,38,Dense GEMV / projections / output head,3.813653
+0,38,KDA recurrence/prep,0.446241
+0,38,Activation quantization / SwiGLU,0.00256
+0,38,DSA / MLA,1.130187
+0,38,Routing / shared SwiGLU / publication,0.944325
+0,38,Host/disk wait,0.029184
+0,38,Fetch: whole expert,3.995642
+0,38,Expert gate/up + shared down,1.298284
+0,38,Expert down,0.769315
+0,38,CPU answer wait,3.48556
+0,38,Fetch: gate/up prefix,2.930515
+0,38,Fetch: down component,1.457676
+0,39,Other kernel,0.0008
+0,39,Embedding/head,0.015712
+0,39,Residual/norm,0.790309
+0,39,Dense GEMV / projections / output head,3.951059
+0,39,KDA recurrence/prep,0.45245
+0,39,Activation quantization / SwiGLU,0.002592
+0,39,DSA / MLA,1.141993
+0,39,Routing / shared SwiGLU / publication,1.187079
+0,39,Host/disk wait,0.029153
+0,39,Fetch: whole expert,3.581655
+0,39,Expert gate/up + shared down,1.188008
+0,39,Expert down,0.736327
+0,39,CPU answer wait,3.603894
+0,39,Fetch: gate/up prefix,5.747076
+0,39,Fetch: down component,2.361776
+0,40,Other kernel,0.00096
+0,40,Embedding/head,0.017568
+0,40,Residual/norm,1.031429
+0,40,Dense GEMV / projections / output head,3.587383
+0,40,KDA recurrence/prep,0.811337
+0,40,Activation quantization / SwiGLU,0.002624
+0,40,DSA / MLA,1.139303
+0,40,Routing / shared SwiGLU / publication,0.966084
+0,40,Host/disk wait,0.02941
+0,40,Fetch: whole expert,3.51058
+0,40,Expert gate/up + shared down,1.255626
+0,40,Expert down,0.748484
+0,40,CPU answer wait,3.286445
+0,40,Fetch: gate/up prefix,4.902111
+0,40,Fetch: down component,2.311539
+0,41,Other kernel,0.000864
+0,41,Embedding/head,0.01648
+0,41,Residual/norm,1.242025
+0,41,Dense GEMV / projections / output head,3.580245
+0,41,KDA recurrence/prep,0.447906
+0,41,Activation quantization / SwiGLU,0.002592
+0,41,DSA / MLA,1.151431
+0,41,Routing / shared SwiGLU / publication,0.965956
+0,41,Host/disk wait,0.029472
+0,41,Fetch: whole expert,1.726665
+0,41,Expert gate/up + shared down,1.30359
+0,41,Expert down,0.748195
+0,41,CPU answer wait,3.189079
+0,41,Fetch: gate/up prefix,5.776358
+0,41,Fetch: down component,2.769104
+0,42,Other kernel,0.000896
+0,42,Embedding/head,0.01664
+0,42,Residual/norm,0.794404
+0,42,Dense GEMV / projections / output head,3.56988
+0,42,KDA recurrence/prep,0.449954
+0,42,Activation quantization / SwiGLU,0.002656
+0,42,DSA / MLA,1.135209
+0,42,Routing / shared SwiGLU / publication,0.971205
+0,42,Host/disk wait,0.060192
+0,42,Fetch: whole expert,3.819579
+0,42,Expert gate/up + shared down,1.264679
+0,42,Expert down,0.746405
+0,42,CPU answer wait,3.222806
+0,42,Fetch: gate/up prefix,4.570174
+0,42,Fetch: down component,2.224074
+0,43,Other kernel,0.000864
+0,43,Embedding/head,0.016544
+0,43,Residual/norm,0.791584
+0,43,Dense GEMV / projections / output head,3.596317
+0,43,KDA recurrence/prep,0.448772
+0,43,Activation quantization / SwiGLU,0.002592
+0,43,DSA / MLA,1.163814
+0,43,Routing / shared SwiGLU / publication,0.969411
+0,43,Host/disk wait,0.029152
+0,43,Fetch: whole expert,3.431096
+0,43,Expert gate/up + shared down,1.183912
+0,43,Expert down,0.740354
+0,43,CPU answer wait,2.901427
+0,43,Fetch: gate/up prefix,5.808389
+0,43,Fetch: down component,2.581971
+0,44,Other kernel,0.000768
+0,44,Embedding/head,0.016
+0,44,Residual/norm,0.792772
+0,44,Dense GEMV / projections / output head,3.578644
+0,44,KDA recurrence/prep,0.444482
+0,44,Activation quantization / SwiGLU,0.002592
+0,44,DSA / MLA,1.149063
+0,44,Routing / shared SwiGLU / publication,0.968965
+0,44,Host/disk wait,0.05904
+0,44,Fetch: whole expert,4.145948
+0,44,Expert gate/up + shared down,1.273223
+0,44,Expert down,0.751494
+0,44,CPU answer wait,3.314548
+0,44,Fetch: gate/up prefix,4.037082
+0,44,Fetch: down component,2.131023
+0,45,Other kernel,0.000896
+0,45,Embedding/head,0.016224
+0,45,Residual/norm,0.793541
+0,45,Dense GEMV / projections / output head,3.602002
+0,45,KDA recurrence/prep,0.446149
+0,45,Activation quantization / SwiGLU,0.002592
+0,45,DSA / MLA,1.136456
+0,45,Routing / shared SwiGLU / publication,0.961605
+0,45,Host/disk wait,0.028992
+0,45,Fetch: whole expert,4.049978
+0,45,Expert gate/up + shared down,1.252872
+0,45,Expert down,0.735461
+0,45,CPU answer wait,2.040238
+0,45,Fetch: gate/up prefix,6.012838
+0,45,Fetch: down component,2.674419
+0,46,Other kernel,0.000896
+0,46,Embedding/head,0.017056
+0,46,Residual/norm,0.796613
+0,46,Dense GEMV / projections / output head,3.571673
+0,46,KDA recurrence/prep,0.449505
+0,46,Activation quantization / SwiGLU,0.002624
+0,46,DSA / MLA,1.161318
+0,46,Routing / shared SwiGLU / publication,0.96106
+0,46,Host/disk wait,0.029217
+0,46,Fetch: whole expert,3.676535
+0,46,Expert gate/up + shared down,1.214665
+0,46,Expert down,0.748583
+0,46,CPU answer wait,2.995697
+0,46,Fetch: gate/up prefix,4.510429
+0,46,Fetch: down component,2.160908
+0,47,Other kernel,0.000864
+0,47,Embedding/head,0.016097
+0,47,Residual/norm,0.795749
+0,47,Dense GEMV / projections / output head,3.650453
+0,47,KDA recurrence/prep,0.452737
+0,47,Activation quantization / SwiGLU,0.002592
+0,47,DSA / MLA,1.156936
+0,47,Routing / shared SwiGLU / publication,0.985317
+0,47,Host/disk wait,0.029248
+0,47,Fetch: whole expert,3.449142
+0,47,Expert gate/up + shared down,1.155081
+0,47,Expert down,1.080805
+0,47,CPU answer wait,2.426925
+0,47,Fetch: gate/up prefix,6.86654
+0,47,Fetch: down component,3.100086
+0,48,Other kernel,0.000864
+0,48,Embedding/head,0.0168
+0,48,Residual/norm,1.137221
+0,48,Dense GEMV / projections / output head,4.021624
+0,48,KDA recurrence/prep,0.446467
+0,48,Activation quantization / SwiGLU,0.002592
+0,48,DSA / MLA,1.149034
+0,48,Routing / shared SwiGLU / publication,0.976262
+0,48,Host/disk wait,0.029536
+0,48,Fetch: whole expert,3.052756
+0,48,Expert gate/up + shared down,1.31108
+0,48,Expert down,0.74698
+0,48,CPU answer wait,3.014517
+0,48,Fetch: gate/up prefix,5.36669
+0,48,Fetch: down component,2.78888
+0,49,Other kernel,0.000864
+0,49,Embedding/head,0.015744
+0,49,Residual/norm,0.795111
+0,49,Dense GEMV / projections / output head,3.571252
+0,49,KDA recurrence/prep,0.445538
+0,49,Activation quantization / SwiGLU,0.00256
+0,49,DSA / MLA,1.363783
+0,49,Routing / shared SwiGLU / publication,0.958918
+0,49,Host/disk wait,0.029568
+0,49,Fetch: whole expert,2.750801
+0,49,Expert gate/up + shared down,1.251972
+0,49,Expert down,0.965284
+0,49,CPU answer wait,3.081654
+0,49,Fetch: gate/up prefix,5.427747
+0,49,Fetch: down component,2.27528
+0,50,Other kernel,0.000896
+0,50,Embedding/head,0.016736
+0,50,Residual/norm,0.793606
+0,50,Dense GEMV / projections / output head,3.537588
+0,50,KDA recurrence/prep,0.44471
+0,50,Activation quantization / SwiGLU,0.002624
+0,50,DSA / MLA,1.141155
+0,50,Routing / shared SwiGLU / publication,0.942052
+0,50,Host/disk wait,0.02912
+0,50,Fetch: whole expert,2.130095
+0,50,Expert gate/up + shared down,1.310636
+0,50,Expert down,0.770087
+0,50,CPU answer wait,3.364402
+0,50,Fetch: gate/up prefix,3.975576
+0,50,Fetch: down component,1.882029
+0,51,Other kernel,0.000832
+0,51,Embedding/head,0.016224
+0,51,Residual/norm,0.787842
+0,51,Dense GEMV / projections / output head,3.565623
+0,51,KDA recurrence/prep,0.4441
+0,51,Activation quantization / SwiGLU,0.002592
+0,51,DSA / MLA,1.169061
+0,51,Routing / shared SwiGLU / publication,0.941926
+0,51,Host/disk wait,0.029568
+0,51,Fetch: whole expert,3.510646
+0,51,Expert gate/up + shared down,1.465993
+0,51,Expert down,0.761766
+0,51,CPU answer wait,2.95592
+0,51,Fetch: gate/up prefix,3.887993
+0,51,Fetch: down component,1.797102
+0,52,Other kernel,0.000832
+0,52,Embedding/head,0.016768
+0,52,Residual/norm,0.794982
+0,52,Dense GEMV / projections / output head,3.58405
+0,52,KDA recurrence/prep,0.657925
+0,52,Activation quantization / SwiGLU,0.002592
+0,52,DSA / MLA,1.133351
+0,52,Routing / shared SwiGLU / publication,0.961801
+0,52,Host/disk wait,0.029696
+0,52,Fetch: whole expert,3.644502
+0,52,Expert gate/up + shared down,1.221896
+0,52,Expert down,0.738086
+0,52,CPU answer wait,3.398389
+0,52,Fetch: gate/up prefix,5.276321
+0,52,Fetch: down component,2.426287
+0,53,Other kernel,0.000896
+0,53,Embedding/head,0.01664
+0,53,Residual/norm,0.793093
+0,53,Dense GEMV / projections / output head,3.56293
+0,53,KDA recurrence/prep,0.443139
+0,53,Activation quantization / SwiGLU,0.002592
+0,53,DSA / MLA,1.158601
+0,53,Routing / shared SwiGLU / publication,0.948935
+0,53,Host/disk wait,0.052161
+0,53,Fetch: whole expert,2.527505
+0,53,Expert gate/up + shared down,1.251079
+0,53,Expert down,0.748711
+0,53,CPU answer wait,2.692082
+0,53,Fetch: gate/up prefix,5.17011
+0,53,Fetch: down component,2.424239
+0,54,Other kernel,0.000736
+0,54,Embedding/head,0.016224
+0,54,Residual/norm,0.791426
+0,54,Dense GEMV / projections / output head,3.629942
+0,54,KDA recurrence/prep,0.450914
+0,54,Activation quantization / SwiGLU,0.002624
+0,54,DSA / MLA,1.154699
+0,54,Routing / shared SwiGLU / publication,0.973351
+0,54,Host/disk wait,0.029184
+0,54,Fetch: whole expert,3.948281
+0,54,Expert gate/up + shared down,1.152964
+0,54,Expert down,0.716004
+0,54,CPU answer wait,3.0781
+0,54,Fetch: gate/up prefix,6.545838
+0,54,Fetch: down component,2.910866
+0,55,Other kernel,0.000864
+0,55,Embedding/head,0.017312
+0,55,Residual/norm,0.793544
+0,55,Dense GEMV / projections / output head,3.86162
+0,55,KDA recurrence/prep,0.448582
+0,55,Activation quantization / SwiGLU,0.002688
+0,55,DSA / MLA,1.516806
+0,55,Routing / shared SwiGLU / publication,0.978985
+0,55,Host/disk wait,0.029088
+0,55,Fetch: whole expert,2.649072
+0,55,Expert gate/up + shared down,1.173863
+0,55,Expert down,0.735427
+0,55,CPU answer wait,3.073685
+0,55,Fetch: gate/up prefix,6.665289
+0,55,Fetch: down component,3.170803
+0,56,Other kernel,0.000928
+0,56,Embedding/head,0.016192
+0,56,Residual/norm,0.79575
+0,56,Dense GEMV / projections / output head,3.595161
+0,56,KDA recurrence/prep,0.449921
+0,56,Activation quantization / SwiGLU,0.002624
+0,56,DSA / MLA,1.134724
+0,56,Routing / shared SwiGLU / publication,0.965318
+0,56,Host/disk wait,0.028896
+0,56,Fetch: whole expert,3.650327
+0,56,Expert gate/up + shared down,1.179276
+0,56,Expert down,0.733956
+0,56,CPU answer wait,3.473011
+0,56,Fetch: gate/up prefix,5.492995
+0,56,Fetch: down component,2.579153
+0,57,Other kernel,0.000864
+0,57,Embedding/head,0.016192
+0,57,Residual/norm,0.795014
+0,57,Dense GEMV / projections / output head,3.637205
+0,57,KDA recurrence/prep,0.452898
+0,57,Activation quantization / SwiGLU,0.00256
+0,57,DSA / MLA,1.152806
+0,57,Routing / shared SwiGLU / publication,0.985416
+0,57,Host/disk wait,0.029056
+0,57,Fetch: whole expert,3.409972
+0,57,Expert gate/up + shared down,1.102058
+0,57,Expert down,0.711941
+0,57,CPU answer wait,3.885654
+0,57,Fetch: gate/up prefix,7.140302
+0,57,Fetch: down component,3.260789
+0,58,Other kernel,0.001152
+0,58,Embedding/head,0.017344
+0,58,Residual/norm,0.792675
+0,58,Dense GEMV / projections / output head,3.634332
+0,58,KDA recurrence/prep,0.452483
+0,58,Activation quantization / SwiGLU,0.00256
+0,58,DSA / MLA,1.14692
+0,58,Routing / shared SwiGLU / publication,0.98282
+0,58,Host/disk wait,0.057121
+0,58,Fetch: whole expert,3.953048
+0,58,Expert gate/up + shared down,1.217731
+0,58,Expert down,0.715173
+0,58,CPU answer wait,3.442132
+0,58,Fetch: gate/up prefix,6.498028
+0,58,Fetch: down component,2.808177
+0,59,Other kernel,0.000864
+0,59,Embedding/head,0.016288
+0,59,Residual/norm,0.794536
+0,59,Dense GEMV / projections / output head,3.628114
+0,59,KDA recurrence/prep,0.452229
+0,59,Activation quantization / SwiGLU,0.002592
+0,59,DSA / MLA,1.151879
+0,59,Routing / shared SwiGLU / publication,1.185642
+0,59,Host/disk wait,0.029185
+0,59,Fetch: whole expert,3.544597
+0,59,Expert gate/up + shared down,1.199177
+0,59,Expert down,0.716646
+0,59,CPU answer wait,2.919314
+0,59,Fetch: gate/up prefix,7.248971
+0,59,Fetch: down component,3.259541
+0,60,Other kernel,0.000832
+0,60,Embedding/head,0.017184
+0,60,Residual/norm,0.79706
+0,60,Dense GEMV / projections / output head,4.006779
+0,60,KDA recurrence/prep,0.452194
+0,60,Activation quantization / SwiGLU,0.002624
+0,60,DSA / MLA,1.384363
+0,60,Routing / shared SwiGLU / publication,0.977193
+0,60,Host/disk wait,0.029408
+0,60,Fetch: whole expert,3.551223
+0,60,Expert gate/up + shared down,1.421736
+0,60,Expert down,0.716837
+0,60,CPU answer wait,3.882551
+0,60,Fetch: gate/up prefix,6.301446
+0,60,Fetch: down component,3.154259
+0,61,Other kernel,0.000896
+0,61,Embedding/head,0.016032
+0,61,Residual/norm,0.79562
+0,61,Dense GEMV / projections / output head,3.602997
+0,61,KDA recurrence/prep,0.450948
+0,61,Activation quantization / SwiGLU,0.00256
+0,61,DSA / MLA,1.147048
+0,61,Routing / shared SwiGLU / publication,1.316457
+0,61,Host/disk wait,0.0288
+0,61,Fetch: whole expert,4.168381
+0,61,Expert gate/up + shared down,1.140745
+0,61,Expert down,0.977798
+0,61,CPU answer wait,3.630965
+0,61,Fetch: gate/up prefix,5.320417
+0,61,Fetch: down component,2.439538
+0,62,Other kernel,0.00096
+0,62,Embedding/head,0.015872
+0,62,Residual/norm,0.794121
+0,62,Dense GEMV / projections / output head,3.597106
+0,62,KDA recurrence/prep,0.448066
+0,62,Activation quantization / SwiGLU,0.002592
+0,62,DSA / MLA,1.156648
+0,62,Routing / shared SwiGLU / publication,0.965992
+0,62,Host/disk wait,0.029376
+0,62,Fetch: whole expert,2.768498
+0,62,Expert gate/up + shared down,1.190055
+0,62,Expert down,0.738532
+0,62,CPU answer wait,3.325939
+0,62,Fetch: gate/up prefix,5.369152
+0,62,Fetch: down component,2.502481
+0,63,Other kernel,0.000864
+0,63,Embedding/head,0.016832
+0,63,Residual/norm,0.796743
+0,63,Dense GEMV / projections / output head,4.416472
+0,63,KDA recurrence/prep,0.450529
+0,63,Activation quantization / SwiGLU,0.002624
+0,63,DSA / MLA,1.164552
+0,63,Routing / shared SwiGLU / publication,1.301835
+0,63,Host/disk wait,0.029152
+0,63,Fetch: whole expert,2.476495
+0,63,Expert gate/up + shared down,1.215273
+0,63,Expert down,0.744933
+0,63,CPU answer wait,2.867254
+0,63,Fetch: gate/up prefix,5.937382
+0,63,Fetch: down component,2.855533
+0,64,Other kernel,0.000896
+0,64,Embedding/head,0.017376
+0,64,Residual/norm,0.794342
+0,64,Dense GEMV / projections / output head,3.633299
+0,64,KDA recurrence/prep,0.450562
+0,64,Activation quantization / SwiGLU,0.002656
+0,64,DSA / MLA,1.154345
+0,64,Routing / shared SwiGLU / publication,0.957604
+0,64,Host/disk wait,0.029152
+0,64,Fetch: whole expert,4.054491
+0,64,Expert gate/up + shared down,1.155654
+0,64,Expert down,1.132743
+0,64,CPU answer wait,2.959669
+0,64,Fetch: gate/up prefix,6.31604
+0,64,Fetch: down component,3.354936
+0,65,Other kernel,0.000864
+0,65,Embedding/head,0.016832
+0,65,Residual/norm,1.138759
+0,65,Dense GEMV / projections / output head,3.97372
+0,65,KDA recurrence/prep,0.444322
+0,65,Activation quantization / SwiGLU,0.002592
+0,65,DSA / MLA,1.146313
+0,65,Routing / shared SwiGLU / publication,0.940833
+0,65,Host/disk wait,0.0296
+0,65,Fetch: whole expert,3.776411
+0,65,Expert gate/up + shared down,1.232706
+0,65,Expert down,0.754152
+0,65,CPU answer wait,2.788562
+0,65,Fetch: gate/up prefix,4.371967
+0,65,Fetch: down component,2.026893
+0,66,Other kernel,0.000864
+0,66,Embedding/head,0.016608
+0,66,Residual/norm,0.793223
+0,66,Dense GEMV / projections / output head,3.595318
+0,66,KDA recurrence/prep,0.445476
+0,66,Activation quantization / SwiGLU,0.002592
+0,66,DSA / MLA,1.173769
+0,66,Routing / shared SwiGLU / publication,0.958243
+0,66,Host/disk wait,0.0296
+0,66,Fetch: whole expert,2.99957
+0,66,Expert gate/up + shared down,1.222443
+0,66,Expert down,0.741124
+0,66,CPU answer wait,1.878091
+0,66,Fetch: gate/up prefix,5.908038
+0,66,Fetch: down component,2.758004
+0,67,Other kernel,0.000896
+0,67,Embedding/head,0.01632
+0,67,Residual/norm,0.797479
+0,67,Dense GEMV / projections / output head,3.598356
+0,67,KDA recurrence/prep,0.447492
+0,67,Activation quantization / SwiGLU,0.00256
+0,67,DSA / MLA,1.165351
+0,67,Routing / shared SwiGLU / publication,0.967012
+0,67,Host/disk wait,0.029248
+0,67,Fetch: whole expert,2.647536
+0,67,Expert gate/up + shared down,1.173449
+0,67,Expert down,0.727557
+0,67,CPU answer wait,3.699606
+0,67,Fetch: gate/up prefix,6.243145
+0,67,Fetch: down component,2.706898
+0,68,Other kernel,0.000896
+0,68,Embedding/head,0.016896
+0,68,Residual/norm,0.793573
+0,68,Dense GEMV / projections / output head,3.629753
+0,68,KDA recurrence/prep,0.45101
+0,68,Activation quantization / SwiGLU,0.002624
+0,68,DSA / MLA,1.157672
+0,68,Routing / shared SwiGLU / publication,0.972709
+0,68,Host/disk wait,0.029281
+0,68,Fetch: whole expert,2.598702
+0,68,Expert gate/up + shared down,1.169385
+0,68,Expert down,1.133605
+0,68,CPU answer wait,3.566453
+0,68,Fetch: gate/up prefix,6.654122
+0,68,Fetch: down component,3.068726
+0,69,Other kernel,0.000864
+0,69,Embedding/head,0.016768
+0,69,Residual/norm,0.797603
+0,69,Dense GEMV / projections / output head,3.935198
+0,69,KDA recurrence/prep,0.455138
+0,69,Activation quantization / SwiGLU,0.002657
+0,69,DSA / MLA,1.164903
+0,69,Routing / shared SwiGLU / publication,1.213099
+0,69,Host/disk wait,0.02928
+0,69,Fetch: whole expert,3.259828
+0,69,Expert gate/up + shared down,1.10327
+0,69,Expert down,0.996998
+0,69,CPU answer wait,3.385496
+0,69,Fetch: gate/up prefix,8.391253
+0,69,Fetch: down component,3.968918
+0,70,Other kernel,0.000864
+0,70,Embedding/head,0.016288
+0,70,Residual/norm,0.796355
+0,70,Dense GEMV / projections / output head,3.63775
+0,70,KDA recurrence/prep,0.454337
+0,70,Activation quantization / SwiGLU,0.002624
+0,70,DSA / MLA,1.168776
+0,70,Routing / shared SwiGLU / publication,0.983078
+0,70,Host/disk wait,0.029377
+0,70,Fetch: whole expert,4.754974
+0,70,Expert gate/up + shared down,1.129128
+0,70,Expert down,0.719622
+0,70,CPU answer wait,2.643505
+0,70,Fetch: gate/up prefix,6.796523
+0,70,Fetch: down component,2.872786
+0,71,Other kernel,0.000864
+0,71,Embedding/head,0.016128
+0,71,Residual/norm,0.795942
+0,71,Dense GEMV / projections / output head,3.623192
+0,71,KDA recurrence/prep,0.451491
+0,71,Activation quantization / SwiGLU,0.002656
+0,71,DSA / MLA,1.181959
+0,71,Routing / shared SwiGLU / publication,0.975972
+0,71,Host/disk wait,0.029088
+0,71,Fetch: whole expert,4.275867
+0,71,Expert gate/up + shared down,1.132904
+0,71,Expert down,0.711489
+0,71,CPU answer wait,3.842329
+0,71,Fetch: gate/up prefix,5.85495
+0,71,Fetch: down component,2.713014
+0,72,Other kernel,0.001344
+0,72,Embedding/head,0.016736
+0,72,Residual/norm,0.7946
+0,72,Dense GEMV / projections / output head,3.674169
+0,72,KDA recurrence/prep,0.457827
+0,72,Activation quantization / SwiGLU,0.002624
+0,72,DSA / MLA,1.169605
+0,72,Routing / shared SwiGLU / publication,1.006056
+0,72,Host/disk wait,0.054272
+0,72,Fetch: whole expert,4.303228
+0,72,Expert gate/up + shared down,1.073768
+0,72,Expert down,0.697475
+0,72,CPU answer wait,3.729431
+0,72,Fetch: gate/up prefix,7.642931
+0,72,Fetch: down component,3.453174
+0,73,Other kernel,0.000736
+0,73,Embedding/head,0.016352
+0,73,Residual/norm,1.017095
+0,73,Dense GEMV / projections / output head,3.672406
+0,73,KDA recurrence/prep,0.455299
+0,73,Activation quantization / SwiGLU,0.002624
+0,73,DSA / MLA,1.172264
+0,73,Routing / shared SwiGLU / publication,1.213416
+0,73,Host/disk wait,0.029472
+0,73,Fetch: whole expert,5.019679
+0,73,Expert gate/up + shared down,1.088742
+0,73,Expert down,0.701958
+0,73,CPU answer wait,3.518003
+0,73,Fetch: gate/up prefix,7.944692
+0,73,Fetch: down component,3.135124
+0,74,Other kernel,0.000864
+0,74,Embedding/head,0.01728
+0,74,Residual/norm,0.795621
+0,74,Dense GEMV / projections / output head,3.674588
+0,74,KDA recurrence/prep,0.457057
+0,74,Activation quantization / SwiGLU,0.002624
+0,74,DSA / MLA,1.171814
+0,74,Routing / shared SwiGLU / publication,1.004746
+0,74,Host/disk wait,0.029056
+0,74,Fetch: whole expert,4.974495
+0,74,Expert gate/up + shared down,1.063335
+0,74,Expert down,0.673987
+0,74,CPU answer wait,3.449176
+0,74,Fetch: gate/up prefix,8.92172
+0,74,Fetch: down component,4.258905
+0,75,Other kernel,0.000864
+0,75,Embedding/head,0.017537
+0,75,Residual/norm,0.796194
+0,75,Dense GEMV / projections / output head,4.094874
+0,75,KDA recurrence/prep,0.45946
+0,75,Activation quantization / SwiGLU,0.002688
+0,75,DSA / MLA,1.179945
+0,75,Routing / shared SwiGLU / publication,1.003842
+0,75,Host/disk wait,0.029184
+0,75,Fetch: whole expert,4.711486
+0,75,Expert gate/up + shared down,1.064644
+0,75,Expert down,0.679269
+0,75,CPU answer wait,3.846776
+0,75,Fetch: gate/up prefix,7.966391
+0,75,Fetch: down component,3.835835
+0,76,Other kernel,0.000768
+0,76,Embedding/head,0.017312
+0,76,Residual/norm,0.797731
+0,76,Dense GEMV / projections / output head,4.249568
+0,76,KDA recurrence/prep,0.452067
+0,76,Activation quantization / SwiGLU,0.002592
+0,76,DSA / MLA,1.169736
+0,76,Routing / shared SwiGLU / publication,0.983876
+0,76,Host/disk wait,0.029376
+0,76,Fetch: whole expert,4.204378
+0,76,Expert gate/up + shared down,1.124102
+0,76,Expert down,0.711142
+0,76,CPU answer wait,3.845559
+0,76,Fetch: gate/up prefix,6.420042
+0,76,Fetch: down component,3.209717
+0,77,Other kernel,0.000736
+0,77,Embedding/head,0.017056
+0,77,Residual/norm,0.7938
+0,77,Dense GEMV / projections / output head,3.68601
+0,77,KDA recurrence/prep,0.459971
+0,77,Activation quantization / SwiGLU,0.002592
+0,77,DSA / MLA,1.166341
+0,77,Routing / shared SwiGLU / publication,0.993252
+0,77,Host/disk wait,0.054304
+0,77,Fetch: whole expert,5.760293
+0,77,Expert gate/up + shared down,1.054984
+0,77,Expert down,0.687395
+0,77,CPU answer wait,3.363992
+0,77,Fetch: gate/up prefix,7.715026
+0,77,Fetch: down component,3.519704
+0,78,Other kernel,0.000864
+0,78,Embedding/head,0.016384
+0,78,Residual/norm,0.795206
+0,78,Dense GEMV / projections / output head,3.657459
+0,78,KDA recurrence/prep,0.458371
+0,78,Activation quantization / SwiGLU,0.002592
+0,78,DSA / MLA,1.154346
+0,78,Routing / shared SwiGLU / publication,0.995875
+0,78,Host/disk wait,0.029056
+0,78,Fetch: whole expert,3.919867
+0,78,Expert gate/up + shared down,1.099529
+0,78,Expert down,0.693219
+0,78,CPU answer wait,3.569244
+0,78,Fetch: gate/up prefix,7.967733
+0,78,Fetch: down component,3.249209
+0,79,Other kernel,0.000864
+0,79,Embedding/head,0.01632
+0,79,Residual/norm,1.139975
+0,79,Dense GEMV / projections / output head,3.69363
+0,79,KDA recurrence/prep,0.460417
+0,79,Activation quantization / SwiGLU,0.00256
+0,79,DSA / MLA,1.178728
+0,79,Routing / shared SwiGLU / publication,1.20023
+0,79,Host/disk wait,0.029184
+0,79,Fetch: whole expert,4.365723
+0,79,Expert gate/up + shared down,1.036934
+0,79,Expert down,0.683043
+0,79,CPU answer wait,3.119794
+0,79,Fetch: gate/up prefix,9.169948
+0,79,Fetch: down component,4.067034
+0,80,Other kernel,0.0008
+0,80,Embedding/head,0.016352
+0,80,Residual/norm,0.794728
+0,80,Dense GEMV / projections / output head,3.699544
+0,80,KDA recurrence/prep,0.461153
+0,80,Activation quantization / SwiGLU,0.002592
+0,80,DSA / MLA,1.167464
+0,80,Routing / shared SwiGLU / publication,1.015302
+0,80,Host/disk wait,0.02896
+0,80,Fetch: whole expert,5.891911
+0,80,Expert gate/up + shared down,1.018794
+0,80,Expert down,0.667399
+0,80,CPU answer wait,3.646202
+0,80,Fetch: gate/up prefix,8.727157
+0,80,Fetch: down component,3.813526
+0,81,Other kernel,0.000896
+0,81,Embedding/head,0.01632
+0,81,Residual/norm,0.795877
+0,81,Dense GEMV / projections / output head,3.659031
+0,81,KDA recurrence/prep,0.45565
+0,81,Activation quantization / SwiGLU,0.002592
+0,81,DSA / MLA,1.404809
+0,81,Routing / shared SwiGLU / publication,0.989932
+0,81,Host/disk wait,0.052481
+0,81,Fetch: whole expert,5.066174
+0,81,Expert gate/up + shared down,1.079238
+0,81,Expert down,0.702019
+0,81,CPU answer wait,2.875382
+0,81,Fetch: gate/up prefix,7.160013
+0,81,Fetch: down component,3.26482
+0,82,Other kernel,0.000992
+0,82,Embedding/head,0.01712
+0,82,Residual/norm,0.797155
+0,82,Dense GEMV / projections / output head,3.696531
+0,82,KDA recurrence/prep,0.459464
+0,82,Activation quantization / SwiGLU,0.00256
+0,82,DSA / MLA,1.144136
+0,82,Routing / shared SwiGLU / publication,1.00164
+0,82,Host/disk wait,0.028993
+0,82,Fetch: whole expert,5.155265
+0,82,Expert gate/up + shared down,1.033093
+0,82,Expert down,0.931365
+0,82,CPU answer wait,3.073558
+0,82,Fetch: gate/up prefix,8.652408
+0,82,Fetch: down component,3.95721
+0,83,Other kernel,0.000896
+0,83,Embedding/head,0.017473
+0,83,Residual/norm,0.796487
+0,83,Dense GEMV / projections / output head,3.645391
+0,83,KDA recurrence/prep,0.453955
+0,83,Activation quantization / SwiGLU,0.00256
+0,83,DSA / MLA,1.177992
+0,83,Routing / shared SwiGLU / publication,0.97761
+0,83,Host/disk wait,0.029152
+0,83,Fetch: whole expert,2.995027
+0,83,Expert gate/up + shared down,1.165577
+0,83,Expert down,0.709955
+0,83,CPU answer wait,3.013204
+0,83,Fetch: gate/up prefix,7.575666
+0,83,Fetch: down component,3.535031
+0,84,Other kernel,0.000864
+0,84,Embedding/head,0.016032
+0,84,Residual/norm,0.79725
+0,84,Dense GEMV / projections / output head,3.562203
+0,84,KDA recurrence/prep,0.446497
+0,84,Activation quantization / SwiGLU,0.002624
+0,84,DSA / MLA,1.161447
+0,84,Routing / shared SwiGLU / publication,0.948967
+0,84,Host/disk wait,0.051297
+0,84,Fetch: whole expert,1.157544
+0,84,Expert gate/up + shared down,1.24494
+0,84,Expert down,0.755817
+0,84,CPU answer wait,4.144763
+0,84,Fetch: gate/up prefix,5.079101
+0,84,Fetch: down component,2.24923
+0,85,Other kernel,0.000832
+0,85,Embedding/head,0.016608
+0,85,Residual/norm,1.153285
+0,85,Dense GEMV / projections / output head,3.632157
+0,85,KDA recurrence/prep,0.452643
+0,85,Activation quantization / SwiGLU,0.002592
+0,85,DSA / MLA,1.166693
+0,85,Routing / shared SwiGLU / publication,1.403272
+0,85,Host/disk wait,0.028896
+0,85,Fetch: whole expert,3.644633
+0,85,Expert gate/up + shared down,1.127239
+0,85,Expert down,0.71338
+0,85,CPU answer wait,2.956112
+0,85,Fetch: gate/up prefix,6.834956
+0,85,Fetch: down component,3.157811
+0,86,Other kernel,0.000736
+0,86,Embedding/head,0.016448
+0,86,Residual/norm,0.793858
+0,86,Dense GEMV / projections / output head,3.582132
+0,86,KDA recurrence/prep,0.448548
+0,86,Activation quantization / SwiGLU,0.00256
+0,86,DSA / MLA,1.164008
+0,86,Routing / shared SwiGLU / publication,0.948297
+0,86,Host/disk wait,0.02912
+0,86,Fetch: whole expert,3.109972
+0,86,Expert gate/up + shared down,1.217387
+0,86,Expert down,0.744035
+0,86,CPU answer wait,2.734994
+0,86,Fetch: gate/up prefix,5.167678
+0,86,Fetch: down component,2.276113
+0,87,Other kernel,0.0008
+0,87,Embedding/head,0.017248
+0,87,Residual/norm,0.795141
+0,87,Dense GEMV / projections / output head,3.615036
+0,87,KDA recurrence/prep,0.676579
+0,87,Activation quantization / SwiGLU,0.002592
+0,87,DSA / MLA,1.175047
+0,87,Routing / shared SwiGLU / publication,0.969989
+0,87,Host/disk wait,0.02928
+0,87,Fetch: whole expert,4.160537
+0,87,Expert gate/up + shared down,1.131401
+0,87,Expert down,0.71166
+0,87,CPU answer wait,3.378161
+0,87,Fetch: gate/up prefix,6.156743
+0,87,Fetch: down component,2.802065
+0,88,Other kernel,0.000864
+0,88,Embedding/head,0.017664
+0,88,Residual/norm,0.795747
+0,88,Dense GEMV / projections / output head,3.617783
+0,88,KDA recurrence/prep,0.449505
+0,88,Activation quantization / SwiGLU,0.002592
+0,88,DSA / MLA,1.165642
+0,88,Routing / shared SwiGLU / publication,1.50846
+0,88,Host/disk wait,0.029152
+0,88,Fetch: whole expert,2.747314
+0,88,Expert gate/up + shared down,1.179718
+0,88,Expert down,0.730051
+0,88,CPU answer wait,3.001075
+0,88,Fetch: gate/up prefix,6.447852
+0,88,Fetch: down component,2.873203
+0,89,Other kernel,0.000736
+0,89,Embedding/head,0.016897
+0,89,Residual/norm,0.794597
+0,89,Dense GEMV / projections / output head,3.903868
+0,89,KDA recurrence/prep,0.455296
+0,89,Activation quantization / SwiGLU,0.00256
+0,89,DSA / MLA,1.168969
+0,89,Routing / shared SwiGLU / publication,0.973668
+0,89,Host/disk wait,0.029184
+0,89,Fetch: whole expert,3.320212
+0,89,Expert gate/up + shared down,1.154762
+0,89,Expert down,0.718342
+0,89,CPU answer wait,3.307285
+0,89,Fetch: gate/up prefix,6.906093
+0,89,Fetch: down component,3.507609
+0,90,Other kernel,0.000928
+0,90,Embedding/head,0.016704
+0,90,Residual/norm,0.795944
+0,90,Dense GEMV / projections / output head,3.930233
+0,90,KDA recurrence/prep,0.457571
+0,90,Activation quantization / SwiGLU,0.002592
+0,90,DSA / MLA,1.146439
+0,90,Routing / shared SwiGLU / publication,1.317961
+0,90,Host/disk wait,0.050144
+0,90,Fetch: whole expert,4.580062
+0,90,Expert gate/up + shared down,1.071588
+0,90,Expert down,0.689412
+0,90,CPU answer wait,3.222998
+0,90,Fetch: gate/up prefix,8.554041
+0,90,Fetch: down component,3.825942
+0,91,Other kernel,0.000928
+0,91,Embedding/head,0.016864
+0,91,Residual/norm,0.797574
+0,91,Dense GEMV / projections / output head,3.617404
+0,91,KDA recurrence/prep,0.453282
+0,91,Activation quantization / SwiGLU,0.002592
+0,91,DSA / MLA,1.177829
+0,91,Routing / shared SwiGLU / publication,1.190697
+0,91,Host/disk wait,0.029696
+0,91,Fetch: whole expert,3.210262
+0,91,Expert gate/up + shared down,1.132772
+0,91,Expert down,0.708867
+0,91,CPU answer wait,2.971381
+0,91,Fetch: gate/up prefix,7.183661
+0,91,Fetch: down component,3.327796
+0,92,Other kernel,0.000928
+0,92,Embedding/head,0.01696
+0,92,Residual/norm,0.795361
+0,92,Dense GEMV / projections / output head,3.891967
+0,92,KDA recurrence/prep,0.450946
+0,92,Activation quantization / SwiGLU,0.002592
+0,92,DSA / MLA,1.164039
+0,92,Routing / shared SwiGLU / publication,0.966886
+0,92,Host/disk wait,0.056577
+0,92,Fetch: whole expert,3.595385
+0,92,Expert gate/up + shared down,1.154375
+0,92,Expert down,0.721545
+0,92,CPU answer wait,2.714607
+0,92,Fetch: gate/up prefix,7.096462
+0,92,Fetch: down component,2.956945
+0,93,Other kernel,0.000992
+0,93,Embedding/head,0.016256
+0,93,Residual/norm,0.794148
+0,93,Dense GEMV / projections / output head,3.589559
+0,93,KDA recurrence/prep,0.445127
+0,93,Activation quantization / SwiGLU,0.002656
+0,93,DSA / MLA,1.16356
+0,93,Routing / shared SwiGLU / publication,1.148648
+0,93,Host/disk wait,0.029024
+0,93,Fetch: whole expert,3.570103
+0,93,Expert gate/up + shared down,1.223527
+0,93,Expert down,0.738339
+0,93,CPU answer wait,2.491791
+0,93,Fetch: gate/up prefix,5.754533
+0,93,Fetch: down component,2.520848
+0,94,Other kernel,0.000896
+0,94,Embedding/head,0.016864
+0,94,Residual/norm,0.794117
+0,94,Dense GEMV / projections / output head,3.608219
+0,94,KDA recurrence/prep,0.668228
+0,94,Activation quantization / SwiGLU,0.00256
+0,94,DSA / MLA,1.165545
+0,94,Routing / shared SwiGLU / publication,0.954728
+0,94,Host/disk wait,0.053056
+0,94,Fetch: whole expert,3.031635
+0,94,Expert gate/up + shared down,1.179141
+0,94,Expert down,0.73453
+0,94,CPU answer wait,3.572728
+0,94,Fetch: gate/up prefix,5.810694
+0,94,Fetch: down component,2.538833
+0,95,Other kernel,0.000768
+0,95,Embedding/head,0.017057
+0,95,Residual/norm,0.794564
+0,95,Dense GEMV / projections / output head,3.834007
+0,95,KDA recurrence/prep,0.448775
+0,95,Activation quantization / SwiGLU,0.002624
+0,95,DSA / MLA,1.15287
+0,95,Routing / shared SwiGLU / publication,0.949252
+0,95,Host/disk wait,0.029248
+0,95,Fetch: whole expert,2.699601
+0,95,Expert gate/up + shared down,1.224009
+0,95,Expert down,0.748327
+0,95,CPU answer wait,2.606738
+0,95,Fetch: gate/up prefix,5.240354
+0,95,Fetch: down component,2.426065
+0,96,Other kernel,0.000768
+0,96,Embedding/head,0.017345
+0,96,Residual/norm,0.795206
+0,96,Dense GEMV / projections / output head,3.549394
+0,96,KDA recurrence/prep,0.441891
+0,96,Activation quantization / SwiGLU,0.002592
+0,96,DSA / MLA,1.155463
+0,96,Routing / shared SwiGLU / publication,0.934435
+0,96,Host/disk wait,0.029312
+0,96,Fetch: whole expert,2.447793
+0,96,Expert gate/up + shared down,1.232678
+0,96,Expert down,0.763686
+0,96,CPU answer wait,2.975153
+0,96,Fetch: gate/up prefix,3.829339
+0,96,Fetch: down component,1.836298
+0,97,Other kernel,0.000864
+0,97,Embedding/head,0.017472
+0,97,Residual/norm,0.792193
+0,97,Dense GEMV / projections / output head,3.541653
+0,97,KDA recurrence/prep,0.445509
+0,97,Activation quantization / SwiGLU,0.002625
+0,97,DSA / MLA,1.155558
+0,97,Routing / shared SwiGLU / publication,0.931206
+0,97,Host/disk wait,0.029344
+0,97,Fetch: whole expert,4.218109
+0,97,Expert gate/up + shared down,1.247975
+0,97,Expert down,0.771204
+0,97,CPU answer wait,3.080242
+0,97,Fetch: gate/up prefix,2.826035
+0,97,Fetch: down component,1.339851
+0,98,Other kernel,0.00112
+0,98,Embedding/head,0.01712
+0,98,Residual/norm,0.789794
+0,98,Dense GEMV / projections / output head,3.569114
+0,98,KDA recurrence/prep,0.445476
+0,98,Activation quantization / SwiGLU,0.002528
+0,98,DSA / MLA,1.142024
+0,98,Routing / shared SwiGLU / publication,0.94906
+0,98,Host/disk wait,0.029216
+0,98,Fetch: whole expert,3.253143
+0,98,Expert gate/up + shared down,1.211303
+0,98,Expert down,0.745665
+0,98,CPU answer wait,3.246231
+0,98,Fetch: gate/up prefix,4.365886
+0,98,Fetch: down component,1.934349
+0,99,Other kernel,0.000896
+0,99,Embedding/head,0.016832
+0,99,Residual/norm,0.793608
+0,99,Dense GEMV / projections / output head,3.563414
+0,99,KDA recurrence/prep,0.45034
+0,99,Activation quantization / SwiGLU,0.002624
+0,99,DSA / MLA,1.16916
+0,99,Routing / shared SwiGLU / publication,0.949636
+0,99,Host/disk wait,0.029056
+0,99,Fetch: whole expert,1.529162
+0,99,Expert gate/up + shared down,1.216106
+0,99,Expert down,0.744612
+0,99,CPU answer wait,3.229141
+0,99,Fetch: gate/up prefix,5.374018
+0,99,Fetch: down component,2.472944
+0,100,Other kernel,0.000864
+0,100,Embedding/head,0.01648
+0,100,Residual/norm,1.011075
+0,100,Dense GEMV / projections / output head,3.782747
+0,100,KDA recurrence/prep,0.442724
+0,100,Activation quantization / SwiGLU,0.002592
+0,100,DSA / MLA,1.146697
+0,100,Routing / shared SwiGLU / publication,0.92724
+0,100,Host/disk wait,0.02896
+0,100,Fetch: whole expert,1.541451
+0,100,Expert gate/up + shared down,1.311142
+0,100,Expert down,0.790244
+0,100,CPU answer wait,3.313178
+0,100,Fetch: gate/up prefix,2.776115
+0,100,Fetch: down component,1.314438
+0,101,Other kernel,0.000864
+0,101,Embedding/head,0.016672
+0,101,Residual/norm,0.78826
+0,101,Dense GEMV / projections / output head,3.789691
+0,101,KDA recurrence/prep,0.449762
+0,101,Activation quantization / SwiGLU,0.002592
+0,101,DSA / MLA,1.167625
+0,101,Routing / shared SwiGLU / publication,0.948195
+0,101,Host/disk wait,0.029088
+0,101,Fetch: whole expert,3.765368
+0,101,Expert gate/up + shared down,1.202536
+0,101,Expert down,0.751176
+0,101,CPU answer wait,2.879539
+0,101,Fetch: gate/up prefix,4.511422
+0,101,Fetch: down component,2.133486
+0,102,Other kernel,0.00096
+0,102,Embedding/head,0.016576
+0,102,Residual/norm,0.790216
+0,102,Dense GEMV / projections / output head,3.52463
+0,102,KDA recurrence/prep,0.441953
+0,102,Activation quantization / SwiGLU,0.002592
+0,102,DSA / MLA,1.152263
+0,102,Routing / shared SwiGLU / publication,0.921991
+0,102,Host/disk wait,0.029568
+0,102,Fetch: whole expert,2.231566
+0,102,Expert gate/up + shared down,1.286473
+0,102,Expert down,0.778154
+0,102,CPU answer wait,3.062833
+0,102,Fetch: gate/up prefix,2.974932
+0,102,Fetch: down component,1.375112
+0,103,Other kernel,0.000832
+0,103,Embedding/head,0.016768
+0,103,Residual/norm,1.361868
+0,103,Dense GEMV / projections / output head,3.614481
+0,103,KDA recurrence/prep,0.452804
+0,103,Activation quantization / SwiGLU,0.002592
+0,103,DSA / MLA,1.350764
+0,103,Routing / shared SwiGLU / publication,0.967399
+0,103,Host/disk wait,0.029248
+0,103,Fetch: whole expert,3.758872
+0,103,Expert gate/up + shared down,1.150472
+0,103,Expert down,0.714276
+0,103,CPU answer wait,2.673428
+0,103,Fetch: gate/up prefix,6.839659
+0,103,Fetch: down component,3.117781
+0,104,Other kernel,0.001024
+0,104,Embedding/head,0.017472
+0,104,Residual/norm,0.795271
+0,104,Dense GEMV / projections / output head,3.860888
+0,104,KDA recurrence/prep,0.449698
+0,104,Activation quantization / SwiGLU,0.002624
+0,104,DSA / MLA,1.148263
+0,104,Routing / shared SwiGLU / publication,0.951237
+0,104,Host/disk wait,0.029248
+0,104,Fetch: whole expert,2.878226
+0,104,Expert gate/up + shared down,1.190373
+0,104,Expert down,0.735784
+0,104,CPU answer wait,3.115187
+0,104,Fetch: gate/up prefix,5.451364
+0,104,Fetch: down component,2.475409
+0,105,Other kernel,0.0008
+0,105,Embedding/head,0.016672
+0,105,Residual/norm,0.792677
+0,105,Dense GEMV / projections / output head,3.648886
+0,105,KDA recurrence/prep,0.455841
+0,105,Activation quantization / SwiGLU,0.002592
+0,105,DSA / MLA,1.164584
+0,105,Routing / shared SwiGLU / publication,0.981897
+0,105,Host/disk wait,0.029344
+0,105,Fetch: whole expert,3.775032
+0,105,Expert gate/up + shared down,1.113638
+0,105,Expert down,0.703364
+0,105,CPU answer wait,2.580209
+0,105,Fetch: gate/up prefix,7.731443
+0,105,Fetch: down component,3.566678
+0,106,Other kernel,0.001088
+0,106,Embedding/head,0.015904
+0,106,Residual/norm,0.796102
+0,106,Dense GEMV / projections / output head,3.602553
+0,106,KDA recurrence/prep,0.45085
+0,106,Activation quantization / SwiGLU,0.002624
+0,106,DSA / MLA,1.148901
+0,106,Routing / shared SwiGLU / publication,0.96439
+0,106,Host/disk wait,0.028961
+0,106,Fetch: whole expert,2.826067
+0,106,Expert gate/up + shared down,1.182571
+0,106,Expert down,0.726982
+0,106,CPU answer wait,2.719987
+0,106,Fetch: gate/up prefix,6.53572
+0,106,Fetch: down component,3.127156
+0,107,Other kernel,0.000896
+0,107,Embedding/head,0.016993
+0,107,Residual/norm,0.795013
+0,107,Dense GEMV / projections / output head,3.659958
+0,107,KDA recurrence/prep,0.45722
+0,107,Activation quantization / SwiGLU,0.002656
+0,107,DSA / MLA,1.16756
+0,107,Routing / shared SwiGLU / publication,1.53492
+0,107,Host/disk wait,0.029024
+0,107,Fetch: whole expert,5.106785
+0,107,Expert gate/up + shared down,1.09543
+0,107,Expert down,0.693447
+0,107,CPU answer wait,2.785649
+0,107,Fetch: gate/up prefix,7.663857
+0,107,Fetch: down component,3.409397
+0,108,Other kernel,0.000896
+0,108,Embedding/head,0.017216
+0,108,Residual/norm,0.796292
+0,108,Dense GEMV / projections / output head,3.644414
+0,108,KDA recurrence/prep,0.456867
+0,108,Activation quantization / SwiGLU,0.002624
+0,108,DSA / MLA,1.170184
+0,108,Routing / shared SwiGLU / publication,0.97421
+0,108,Host/disk wait,0.029376
+0,108,Fetch: whole expert,4.174139
+0,108,Expert gate/up + shared down,1.110435
+0,108,Expert down,0.706371
+0,108,CPU answer wait,3.315285
+0,108,Fetch: gate/up prefix,6.961102
+0,108,Fetch: down component,3.231828
+0,109,Other kernel,0.000896
+0,109,Embedding/head,0.017472
+0,109,Residual/norm,1.004362
+0,109,Dense GEMV / projections / output head,3.61884
+0,109,KDA recurrence/prep,0.453827
+0,109,Activation quantization / SwiGLU,0.002624
+0,109,DSA / MLA,1.149701
+0,109,Routing / shared SwiGLU / publication,1.321705
+0,109,Host/disk wait,0.029376
+0,109,Fetch: whole expert,3.960697
+0,109,Expert gate/up + shared down,1.142122
+0,109,Expert down,0.707427
+0,109,CPU answer wait,3.920791
+0,109,Fetch: gate/up prefix,6.439947
+0,109,Fetch: down component,2.928019
+0,110,Other kernel,0.000896
+0,110,Embedding/head,0.016608
+0,110,Residual/norm,0.797253
+0,110,Dense GEMV / projections / output head,3.603132
+0,110,KDA recurrence/prep,0.450432
+0,110,Activation quantization / SwiGLU,0.00256
+0,110,DSA / MLA,1.15172
+0,110,Routing / shared SwiGLU / publication,0.964229
+0,110,Host/disk wait,0.029312
+0,110,Fetch: whole expert,2.609135
+0,110,Expert gate/up + shared down,1.462506
+0,110,Expert down,0.734087
+0,110,CPU answer wait,4.054361
+0,110,Fetch: gate/up prefix,5.378178
+0,110,Fetch: down component,2.513842
+0,111,Other kernel,0.000928
+0,111,Embedding/head,0.017152
+0,111,Residual/norm,0.795555
+0,111,Dense GEMV / projections / output head,3.588445
+0,111,KDA recurrence/prep,0.451526
+0,111,Activation quantization / SwiGLU,0.00256
+0,111,DSA / MLA,1.16647
+0,111,Routing / shared SwiGLU / publication,0.959973
+0,111,Host/disk wait,0.029024
+0,111,Fetch: whole expert,2.751344
+0,111,Expert gate/up + shared down,1.18727
+0,111,Expert down,0.728676
+0,111,CPU answer wait,3.678617
+0,111,Fetch: gate/up prefix,5.705478
+0,111,Fetch: down component,2.637487
+0,112,Other kernel,0.000704
+0,112,Embedding/head,0.017376
+0,112,Residual/norm,0.795171
+0,112,Dense GEMV / projections / output head,3.810486
+0,112,KDA recurrence/prep,0.449539
+0,112,Activation quantization / SwiGLU,0.00272
+0,112,DSA / MLA,1.145735
+0,112,Routing / shared SwiGLU / publication,0.946792
+0,112,Host/disk wait,0.029408
+0,112,Fetch: whole expert,3.074484
+0,112,Expert gate/up + shared down,1.211365
+0,112,Expert down,0.750946
+0,112,CPU answer wait,3.250613
+0,112,Fetch: gate/up prefix,4.602527
+0,112,Fetch: down component,2.352434
+0,113,Other kernel,0.000864
+0,113,Embedding/head,0.01616
+0,113,Residual/norm,0.796583
+0,113,Dense GEMV / projections / output head,3.963639
+0,113,KDA recurrence/prep,0.446245
+0,113,Activation quantization / SwiGLU,0.00256
+0,113,DSA / MLA,1.355976
+0,113,Routing / shared SwiGLU / publication,0.935878
+0,113,Host/disk wait,0.029441
+0,113,Fetch: whole expert,2.63224
+0,113,Expert gate/up + shared down,1.261994
+0,113,Expert down,0.763554
+0,113,CPU answer wait,2.476594
+0,113,Fetch: gate/up prefix,4.373596
+0,113,Fetch: down component,1.93083
+0,114,Other kernel,0.000832
+0,114,Embedding/head,0.016928
+0,114,Residual/norm,0.797191
+0,114,Dense GEMV / projections / output head,4.143869
+0,114,KDA recurrence/prep,0.449409
+0,114,Activation quantization / SwiGLU,0.002688
+0,114,DSA / MLA,1.158312
+0,114,Routing / shared SwiGLU / publication,0.949762
+0,114,Host/disk wait,0.029344
+0,114,Fetch: whole expert,3.48924
+0,114,Expert gate/up + shared down,1.167721
+0,114,Expert down,0.744165
+0,114,CPU answer wait,2.859474
+0,114,Fetch: gate/up prefix,5.281731
+0,114,Fetch: down component,2.600882
+0,115,Other kernel,0.000864
+0,115,Embedding/head,0.016608
+0,115,Residual/norm,0.794598
+0,115,Dense GEMV / projections / output head,3.560627
+0,115,KDA recurrence/prep,0.445474
+0,115,Activation quantization / SwiGLU,0.002624
+0,115,DSA / MLA,1.174631
+0,115,Routing / shared SwiGLU / publication,0.947526
+0,115,Host/disk wait,0.029345
+0,115,Fetch: whole expert,3.638201
+0,115,Expert gate/up + shared down,1.203943
+0,115,Expert down,0.748067
+0,115,CPU answer wait,3.536891
+0,115,Fetch: gate/up prefix,4.148314
+0,115,Fetch: down component,1.930862
+0,116,Other kernel,0.000832
+0,116,Embedding/head,0.017248
+0,116,Residual/norm,0.79114
+0,116,Dense GEMV / projections / output head,3.623286
+0,116,KDA recurrence/prep,0.45213
+0,116,Activation quantization / SwiGLU,0.002592
+0,116,DSA / MLA,1.144426
+0,116,Routing / shared SwiGLU / publication,0.965673
+0,116,Host/disk wait,0.029152
+0,116,Fetch: whole expert,4.670301
+0,116,Expert gate/up + shared down,1.390986
+0,116,Expert down,0.724386
+0,116,CPU answer wait,3.484151
+0,116,Fetch: gate/up prefix,5.507492
+0,116,Fetch: down component,2.538288
+0,117,Other kernel,0.000736
+0,117,Embedding/head,0.017088
+0,117,Residual/norm,1.017541
+0,117,Dense GEMV / projections / output head,3.886332
+0,117,KDA recurrence/prep,0.455105
+0,117,Activation quantization / SwiGLU,0.002624
+0,117,DSA / MLA,1.154599
+0,117,Routing / shared SwiGLU / publication,0.985254
+0,117,Host/disk wait,0.028896
+0,117,Fetch: whole expert,3.591192
+0,117,Expert gate/up + shared down,1.110342
+0,117,Expert down,0.701414
+0,117,CPU answer wait,3.59359
+0,117,Fetch: gate/up prefix,7.548753
+0,117,Fetch: down component,3.302324
+0,118,Other kernel,0.000896
+0,118,Embedding/head,0.016768
+0,118,Residual/norm,0.795492
+0,118,Dense GEMV / projections / output head,3.585692
+0,118,KDA recurrence/prep,0.446978
+0,118,Activation quantization / SwiGLU,0.002656
+0,118,DSA / MLA,1.16564
+0,118,Routing / shared SwiGLU / publication,0.95962
+0,118,Host/disk wait,0.028992
+0,118,Fetch: whole expert,3.179894
+0,118,Expert gate/up + shared down,1.182021
+0,118,Expert down,0.728771
+0,118,CPU answer wait,3.220055
+0,118,Fetch: gate/up prefix,5.696197
+0,118,Fetch: down component,2.566319
+0,119,Other kernel,0.001088
+0,119,Embedding/head,0.0168
+0,119,Residual/norm,0.796585
+0,119,Dense GEMV / projections / output head,3.638517
+0,119,KDA recurrence/prep,0.456864
+0,119,Activation quantization / SwiGLU,0.002592
+0,119,DSA / MLA,1.162696
+0,119,Routing / shared SwiGLU / publication,0.980709
+0,119,Host/disk wait,0.02896
+0,119,Fetch: whole expert,4.117179
+0,119,Expert gate/up + shared down,1.077638
+0,119,Expert down,0.689155
+0,119,CPU answer wait,3.920666
+0,119,Fetch: gate/up prefix,7.092752
+0,119,Fetch: down component,3.236022
+0,120,Other kernel,0.000864
+0,120,Embedding/head,0.016832
+0,120,Residual/norm,0.79514
+0,120,Dense GEMV / projections / output head,3.582653
+0,120,KDA recurrence/prep,0.44637
+0,120,Activation quantization / SwiGLU,0.002624
+0,120,DSA / MLA,1.148102
+0,120,Routing / shared SwiGLU / publication,0.952389
+0,120,Host/disk wait,0.029344
+0,120,Fetch: whole expert,2.910549
+0,120,Expert gate/up + shared down,1.205412
+0,120,Expert down,0.74474
+0,120,CPU answer wait,2.418928
+0,120,Fetch: gate/up prefix,5.914727
+0,120,Fetch: down component,2.572048
+0,121,Other kernel,0.000832
+0,121,Embedding/head,0.017152
+0,121,Residual/norm,0.996966
+0,121,Dense GEMV / projections / output head,3.616116
+0,121,KDA recurrence/prep,0.448962
+0,121,Activation quantization / SwiGLU,0.002624
+0,121,DSA / MLA,1.154506
+0,121,Routing / shared SwiGLU / publication,0.962278
+0,121,Host/disk wait,0.02912
+0,121,Fetch: whole expert,3.50092
+0,121,Expert gate/up + shared down,1.416042
+0,121,Expert down,0.723556
+0,121,CPU answer wait,2.711059
+0,121,Fetch: gate/up prefix,6.287626
+0,121,Fetch: down component,2.950389
+0,122,Other kernel,0.0008
+0,122,Embedding/head,0.016576
+0,122,Residual/norm,0.794084
+0,122,Dense GEMV / projections / output head,3.577784
+0,122,KDA recurrence/prep,0.445764
+0,122,Activation quantization / SwiGLU,0.002784
+0,122,DSA / MLA,1.160394
+0,122,Routing / shared SwiGLU / publication,0.955812
+0,122,Host/disk wait,0.029793
+0,122,Fetch: whole expert,2.949492
+0,122,Expert gate/up + shared down,1.187336
+0,122,Expert down,0.738789
+0,122,CPU answer wait,3.207443
+0,122,Fetch: gate/up prefix,5.771909
+0,122,Fetch: down component,2.626002
+0,123,Other kernel,0.000864
+0,123,Embedding/head,0.016864
+0,123,Residual/norm,0.794532
+0,123,Dense GEMV / projections / output head,3.58982
+0,123,KDA recurrence/prep,0.447808
+0,123,Activation quantization / SwiGLU,0.002592
+0,123,DSA / MLA,1.166823
+0,123,Routing / shared SwiGLU / publication,0.954981
+0,123,Host/disk wait,0.029344
+0,123,Fetch: whole expert,2.758868
+0,123,Expert gate/up + shared down,1.183943
+0,123,Expert down,0.73002
+0,123,CPU answer wait,3.871095
+0,123,Fetch: gate/up prefix,5.561125
+0,123,Fetch: down component,2.540114
+0,124,Other kernel,0.000896
+0,124,Embedding/head,0.016513
+0,124,Residual/norm,0.79725
+0,124,Dense GEMV / projections / output head,4.037596
+0,124,KDA recurrence/prep,0.455237
+0,124,Activation quantization / SwiGLU,0.002624
+0,124,DSA / MLA,1.156452
+0,124,Routing / shared SwiGLU / publication,0.964522
+0,124,Host/disk wait,0.029568
+0,124,Fetch: whole expert,3.776535
+0,124,Expert gate/up + shared down,1.380041
+0,124,Expert down,1.062793
+0,124,CPU answer wait,3.307063
+0,124,Fetch: gate/up prefix,6.13066
+0,124,Fetch: down component,3.029845
+0,125,Other kernel,0.000864
+0,125,Embedding/head,0.016352
+0,125,Residual/norm,1.118634
+0,125,Dense GEMV / projections / output head,3.777466
+0,125,KDA recurrence/prep,0.446658
+0,125,Activation quantization / SwiGLU,0.002592
+0,125,DSA / MLA,1.154727
+0,125,Routing / shared SwiGLU / publication,0.952102
+0,125,Host/disk wait,0.029216
+0,125,Fetch: whole expert,3.746521
+0,125,Expert gate/up + shared down,1.19108
+0,125,Expert down,0.74231
+0,125,CPU answer wait,3.299154
+0,125,Fetch: gate/up prefix,4.340829
+0,125,Fetch: down component,2.014858
+0,126,Other kernel,0.000736
+0,126,Embedding/head,0.017408
+0,126,Residual/norm,0.793992
+0,126,Dense GEMV / projections / output head,3.590677
+0,126,KDA recurrence/prep,0.449571
+0,126,Activation quantization / SwiGLU,0.002592
+0,126,DSA / MLA,1.155238
+0,126,Routing / shared SwiGLU / publication,1.163593
+0,126,Host/disk wait,0.029056
+0,126,Fetch: whole expert,3.431541
+0,126,Expert gate/up + shared down,1.152907
+0,126,Expert down,0.724678
+0,126,CPU answer wait,2.301871
+0,126,Fetch: gate/up prefix,6.595242
+0,126,Fetch: down component,3.237109
+0,127,Other kernel,0.000896
+0,127,Embedding/head,0.016512
+0,127,Residual/norm,0.792547
+0,127,Dense GEMV / projections / output head,3.583803
+0,127,KDA recurrence/prep,0.448612
+0,127,Activation quantization / SwiGLU,0.002592
+0,127,DSA / MLA,1.164041
+0,127,Routing / shared SwiGLU / publication,0.955843
+0,127,Host/disk wait,0.0296
+0,127,Fetch: whole expert,2.735089
+0,127,Expert gate/up + shared down,1.209097
+0,127,Expert down,0.739365
+0,127,CPU answer wait,2.738575
+0,127,Fetch: gate/up prefix,5.610469
+0,127,Fetch: down component,2.585167
+0,128,Other kernel,0.000896
+0,128,Embedding/head,0.017248
+0,128,Residual/norm,0.792935
+0,128,Dense GEMV / projections / output head,3.57161
+0,128,KDA recurrence/prep,0.446465
+0,128,Activation quantization / SwiGLU,0.002592
+0,128,DSA / MLA,1.157606
+0,128,Routing / shared SwiGLU / publication,1.148642
+0,128,Host/disk wait,0.029345
+0,128,Fetch: whole expert,3.723128
+0,128,Expert gate/up + shared down,1.595145
+0,128,Expert down,0.747882
+0,128,CPU answer wait,3.925846
+0,128,Fetch: gate/up prefix,3.560504
+0,128,Fetch: down component,1.658955
+0,129,Other kernel,0.000864
+0,129,Embedding/head,0.016672
+0,129,Residual/norm,1.005002
+0,129,Dense GEMV / projections / output head,4.016056
+0,129,KDA recurrence/prep,0.453634
+0,129,Activation quantization / SwiGLU,0.002624
+0,129,DSA / MLA,1.164584
+0,129,Routing / shared SwiGLU / publication,0.975525
+0,129,Host/disk wait,0.029312
+0,129,Fetch: whole expert,3.72633
+0,129,Expert gate/up + shared down,1.128139
+0,129,Expert down,0.714022
+0,129,CPU answer wait,4.239737
+0,129,Fetch: gate/up prefix,6.959981
+0,129,Fetch: down component,3.038996
+0,130,Other kernel,0.000896
+0,130,Embedding/head,0.017152
+0,130,Residual/norm,0.794947
+0,130,Dense GEMV / projections / output head,3.886139
+0,130,KDA recurrence/prep,0.448834
+0,130,Activation quantization / SwiGLU,0.002624
+0,130,DSA / MLA,1.160391
+0,130,Routing / shared SwiGLU / publication,0.956327
+0,130,Host/disk wait,0.029184
+0,130,Fetch: whole expert,3.693271
+0,130,Expert gate/up + shared down,1.160906
+0,130,Expert down,0.725603
+0,130,CPU answer wait,2.869139
+0,130,Fetch: gate/up prefix,6.632235
+0,130,Fetch: down component,2.856789
+0,131,Other kernel,0.000864
+0,131,Embedding/head,0.016672
+0,131,Residual/norm,0.793378
+0,131,Dense GEMV / projections / output head,3.630553
+0,131,KDA recurrence/prep,0.452228
+0,131,Activation quantization / SwiGLU,0.002624
+0,131,DSA / MLA,1.174438
+0,131,Routing / shared SwiGLU / publication,1.302412
+0,131,Host/disk wait,0.029473
+0,131,Fetch: whole expert,3.653588
+0,131,Expert gate/up + shared down,1.143914
+0,131,Expert down,0.705479
+0,131,CPU answer wait,2.717426
+0,131,Fetch: gate/up prefix,7.289006
+0,131,Fetch: down component,3.347832
+0,132,Other kernel,0.000896
+0,132,Embedding/head,0.017024
+0,132,Residual/norm,0.794373
+0,132,Dense GEMV / projections / output head,3.936632
+0,132,KDA recurrence/prep,0.452228
+0,132,Activation quantization / SwiGLU,0.002624
+0,132,DSA / MLA,1.193131
+0,132,Routing / shared SwiGLU / publication,0.977446
+0,132,Host/disk wait,0.028864
+0,132,Fetch: whole expert,4.153402
+0,132,Expert gate/up + shared down,1.113671
+0,132,Expert down,0.698531
+0,132,CPU answer wait,2.465165
+0,132,Fetch: gate/up prefix,7.705044
+0,132,Fetch: down component,3.521944
+0,133,Other kernel,0.000896
+0,133,Embedding/head,0.017568
+0,133,Residual/norm,0.79559
+0,133,Dense GEMV / projections / output head,3.596252
+0,133,KDA recurrence/prep,0.450113
+0,133,Activation quantization / SwiGLU,0.002592
+0,133,DSA / MLA,1.177416
+0,133,Routing / shared SwiGLU / publication,0.958978
+0,133,Host/disk wait,0.029088
+0,133,Fetch: whole expert,3.700375
+0,133,Expert gate/up + shared down,1.194025
+0,133,Expert down,0.736962
+0,133,CPU answer wait,3.18626
+0,133,Fetch: gate/up prefix,5.449221
+0,133,Fetch: down component,2.755827
+0,134,Other kernel,0.000864
+0,134,Embedding/head,0.016512
+0,134,Residual/norm,0.795943
+0,134,Dense GEMV / projections / output head,3.671098
+0,134,KDA recurrence/prep,0.45754
+0,134,Activation quantization / SwiGLU,0.002624
+0,134,DSA / MLA,1.170055
+0,134,Routing / shared SwiGLU / publication,0.992261
+0,134,Host/disk wait,0.029248
+0,134,Fetch: whole expert,4.579358
+0,134,Expert gate/up + shared down,1.409577
+0,134,Expert down,0.686785
+0,134,CPU answer wait,4.318811
+0,134,Fetch: gate/up prefix,8.437429
+0,134,Fetch: down component,3.979643
+0,135,Other kernel,0.000864
+0,135,Embedding/head,0.016576
+0,135,Residual/norm,0.797893
+0,135,Dense GEMV / projections / output head,3.681754
+0,135,KDA recurrence/prep,0.456867
+0,135,Activation quantization / SwiGLU,0.002592
+0,135,DSA / MLA,1.187463
+0,135,Routing / shared SwiGLU / publication,0.993571
+0,135,Host/disk wait,0.029217
+0,135,Fetch: whole expert,4.373535
+0,135,Expert gate/up + shared down,1.087394
+0,135,Expert down,0.693283
+0,135,CPU answer wait,3.994237
+0,135,Fetch: gate/up prefix,8.436886
+0,135,Fetch: down component,3.935705
+0,136,Other kernel,0.000896
+0,136,Embedding/head,0.016032
+0,136,Residual/norm,0.796806
+0,136,Dense GEMV / projections / output head,4.197378
+0,136,KDA recurrence/prep,0.453155
+0,136,Activation quantization / SwiGLU,0.002592
+0,136,DSA / MLA,1.176678
+0,136,Routing / shared SwiGLU / publication,0.975301
+0,136,Host/disk wait,0.029312
+0,136,Fetch: whole expert,4.395806
+0,136,Expert gate/up + shared down,1.122659
+0,136,Expert down,0.710948
+0,136,CPU answer wait,3.714771
+0,136,Fetch: gate/up prefix,6.798957
+0,136,Fetch: down component,3.450968
+0,137,Other kernel,0.000864
+0,137,Embedding/head,0.016225
+0,137,Residual/norm,0.796132
+0,137,Dense GEMV / projections / output head,3.616562
+0,137,KDA recurrence/prep,0.450658
+0,137,Activation quantization / SwiGLU,0.002592
+0,137,DSA / MLA,1.176457
+0,137,Routing / shared SwiGLU / publication,0.979657
+0,137,Host/disk wait,0.02944
+0,137,Fetch: whole expert,2.533553
+0,137,Expert gate/up + shared down,1.137672
+0,137,Expert down,0.710276
+0,137,CPU answer wait,4.097855
+0,137,Fetch: gate/up prefix,7.372272
+0,137,Fetch: down component,3.293812
+0,138,Other kernel,0.000864
+0,138,Embedding/head,0.017248
+0,138,Residual/norm,0.794274
+0,138,Dense GEMV / projections / output head,3.637272
+0,138,KDA recurrence/prep,0.451842
+0,138,Activation quantization / SwiGLU,0.002592
+0,138,DSA / MLA,1.176777
+0,138,Routing / shared SwiGLU / publication,0.9746
+0,138,Host/disk wait,0.029216
+0,138,Fetch: whole expert,3.759382
+0,138,Expert gate/up + shared down,1.127142
+0,138,Expert down,0.713796
+0,138,CPU answer wait,3.538072
+0,138,Fetch: gate/up prefix,6.869868
+0,138,Fetch: down component,3.15554
+0,139,Other kernel,0.000832
+0,139,Embedding/head,0.016832
+0,139,Residual/norm,0.799366
+0,139,Dense GEMV / projections / output head,3.614961
+0,139,KDA recurrence/prep,0.452419
+0,139,Activation quantization / SwiGLU,0.002624
+0,139,DSA / MLA,1.42318
+0,139,Routing / shared SwiGLU / publication,0.960904
+0,139,Host/disk wait,0.029057
+0,139,Fetch: whole expert,3.282902
+0,139,Expert gate/up + shared down,1.175688
+0,139,Expert down,0.727237
+0,139,CPU answer wait,3.191385
+0,139,Fetch: gate/up prefix,6.936939
+0,139,Fetch: down component,3.026899
+0,140,Other kernel,0.000864
+0,140,Embedding/head,0.016128
+0,140,Residual/norm,0.791333
+0,140,Dense GEMV / projections / output head,3.920794
+0,140,KDA recurrence/prep,0.44842
+0,140,Activation quantization / SwiGLU,0.002592
+0,140,DSA / MLA,1.169257
+0,140,Routing / shared SwiGLU / publication,1.148198
+0,140,Host/disk wait,0.029504
+0,140,Fetch: whole expert,3.500247
+0,140,Expert gate/up + shared down,1.212486
+0,140,Expert down,0.737156
+0,140,CPU answer wait,3.218674
+0,140,Fetch: gate/up prefix,5.091011
+0,140,Fetch: down component,2.333392
+0,141,Other kernel,0.000832
+0,141,Embedding/head,0.017536
+0,141,Residual/norm,1.132421
+0,141,Dense GEMV / projections / output head,3.855512
+0,141,KDA recurrence/prep,0.45258
+0,141,Activation quantization / SwiGLU,0.002592
+0,141,DSA / MLA,1.376458
+0,141,Routing / shared SwiGLU / publication,0.958534
+0,141,Host/disk wait,0.028865
+0,141,Fetch: whole expert,3.524377
+0,141,Expert gate/up + shared down,1.17178
+0,141,Expert down,0.729701
+0,141,CPU answer wait,4.215933
+0,141,Fetch: gate/up prefix,5.786405
+0,141,Fetch: down component,2.692496
+0,142,Other kernel,0.000928
+0,142,Embedding/head,0.017472
+0,142,Residual/norm,0.794854
+0,142,Dense GEMV / projections / output head,3.592916
+0,142,KDA recurrence/prep,0.454117
+0,142,Activation quantization / SwiGLU,0.00272
+0,142,DSA / MLA,1.177993
+0,142,Routing / shared SwiGLU / publication,0.96452
+0,142,Host/disk wait,0.028896
+0,142,Fetch: whole expert,4.114905
+0,142,Expert gate/up + shared down,1.150182
+0,142,Expert down,0.724421
+0,142,CPU answer wait,3.973975
+0,142,Fetch: gate/up prefix,6.000999
+0,142,Fetch: down component,2.778898
+0,143,Other kernel,0.00128
+0,143,Embedding/head,0.017696
+0,143,Residual/norm,0.794725
+0,143,Dense GEMV / projections / output head,3.587993
+0,143,KDA recurrence/prep,0.449702
+0,143,Activation quantization / SwiGLU,0.002592
+0,143,DSA / MLA,1.18007
+0,143,Routing / shared SwiGLU / publication,0.963361
+0,143,Host/disk wait,0.029376
+0,143,Fetch: whole expert,3.822586
+0,143,Expert gate/up + shared down,1.180746
+0,143,Expert down,0.729987
+0,143,CPU answer wait,4.234749
+0,143,Fetch: gate/up prefix,5.533316
+0,143,Fetch: down component,2.605235
+0,144,Other kernel,0.000864
+0,144,Embedding/head,0.017088
+0,144,Residual/norm,0.794021
+0,144,Dense GEMV / projections / output head,3.566293
+0,144,KDA recurrence/prep,0.449024
+0,144,Activation quantization / SwiGLU,0.002624
+0,144,DSA / MLA,1.527435
+0,144,Routing / shared SwiGLU / publication,0.94622
+0,144,Host/disk wait,0.029472
+0,144,Fetch: whole expert,2.825554
+0,144,Expert gate/up + shared down,1.225767
+0,144,Expert down,0.748451
+0,144,CPU answer wait,3.222202
+0,144,Fetch: gate/up prefix,4.992831
+0,144,Fetch: down component,2.28043
+0,145,Other kernel,0.000864
+0,145,Embedding/head,0.016032
+0,145,Residual/norm,0.792804
+0,145,Dense GEMV / projections / output head,4.058306
+0,145,KDA recurrence/prep,0.456386
+0,145,Activation quantization / SwiGLU,0.002592
+0,145,DSA / MLA,1.171301
+0,145,Routing / shared SwiGLU / publication,1.191431
+0,145,Host/disk wait,0.02928
+0,145,Fetch: whole expert,4.977058
+0,145,Expert gate/up + shared down,1.097924
+0,145,Expert down,0.698436
+0,145,CPU answer wait,3.825497
+0,145,Fetch: gate/up prefix,7.246577
+0,145,Fetch: down component,3.1964
+0,146,Other kernel,0.000864
+0,146,Embedding/head,0.016896
+0,146,Residual/norm,0.795651
+0,146,Dense GEMV / projections / output head,3.870649
+0,146,KDA recurrence/prep,0.456387
+0,146,Activation quantization / SwiGLU,0.002592
+0,146,DSA / MLA,1.181258
+0,146,Routing / shared SwiGLU / publication,0.974471
+0,146,Host/disk wait,0.029312
+0,146,Fetch: whole expert,3.539351
+0,146,Expert gate/up + shared down,1.140617
+0,146,Expert down,0.709571
+0,146,CPU answer wait,4.269629
+0,146,Fetch: gate/up prefix,7.014252
+0,146,Fetch: down component,3.135958
+0,147,Other kernel,0.000864
+0,147,Embedding/head,0.01712
+0,147,Residual/norm,0.794055
+0,147,Dense GEMV / projections / output head,3.88354
+0,147,KDA recurrence/prep,0.45021
+0,147,Activation quantization / SwiGLU,0.002592
+0,147,DSA / MLA,1.174344
+0,147,Routing / shared SwiGLU / publication,0.95863
+0,147,Host/disk wait,0.028864
+0,147,Fetch: whole expert,3.224788
+0,147,Expert gate/up + shared down,1.196654
+0,147,Expert down,0.731427
+0,147,CPU answer wait,4.142106
+0,147,Fetch: gate/up prefix,5.516772
+0,147,Fetch: down component,2.587923
+0,148,Other kernel,0.00096
+0,148,Embedding/head,0.016448
+0,148,Residual/norm,0.796713
+0,148,Dense GEMV / projections / output head,3.681013
+0,148,KDA recurrence/prep,0.461281
+0,148,Activation quantization / SwiGLU,0.002592
+0,148,DSA / MLA,1.184136
+0,148,Routing / shared SwiGLU / publication,1.005961
+0,148,Host/disk wait,0.028928
+0,148,Fetch: whole expert,4.554139
+0,148,Expert gate/up + shared down,1.00564
+0,148,Expert down,0.67357
+0,148,CPU answer wait,5.521156
+0,148,Fetch: gate/up prefix,8.164659
+0,148,Fetch: down component,3.717978
+0,149,Other kernel,0.001024
+0,149,Embedding/head,0.016353
+0,149,Residual/norm,0.796744
+0,149,Dense GEMV / projections / output head,3.701976
+0,149,KDA recurrence/prep,0.461152
+0,149,Activation quantization / SwiGLU,0.002624
+0,149,DSA / MLA,1.196936
+0,149,Routing / shared SwiGLU / publication,1.011842
+0,149,Host/disk wait,0.028928
+0,149,Fetch: whole expert,5.282852
+0,149,Expert gate/up + shared down,1.027909
+0,149,Expert down,0.671172
+0,149,CPU answer wait,3.523893
+0,149,Fetch: gate/up prefix,9.418337
+0,149,Fetch: down component,4.329981
+0,150,Other kernel,0.000896
+0,150,Embedding/head,0.017088
+0,150,Residual/norm,0.799432
+0,150,Dense GEMV / projections / output head,3.626139
+0,150,KDA recurrence/prep,0.454753
+0,150,Activation quantization / SwiGLU,0.002624
+0,150,DSA / MLA,1.183947
+0,150,Routing / shared SwiGLU / publication,0.972068
+0,150,Host/disk wait,0.029056
+0,150,Fetch: whole expert,4.70432
+0,150,Expert gate/up + shared down,1.169605
+0,150,Expert down,0.717155
+0,150,CPU answer wait,3.561559
+0,150,Fetch: gate/up prefix,6.606187
+0,150,Fetch: down component,2.934839
+0,151,Other kernel,0.000896
+0,151,Embedding/head,0.016736
+0,151,Residual/norm,0.796839
+0,151,Dense GEMV / projections / output head,3.615928
+0,151,KDA recurrence/prep,0.450467
+0,151,Activation quantization / SwiGLU,0.002592
+0,151,DSA / MLA,1.19233
+0,151,Routing / shared SwiGLU / publication,0.968579
+0,151,Host/disk wait,0.029408
+0,151,Fetch: whole expert,3.958523
+0,151,Expert gate/up + shared down,1.137255
+0,151,Expert down,0.719907
+0,151,CPU answer wait,4.562462
+0,151,Fetch: gate/up prefix,6.501293
+0,151,Fetch: down component,2.984564
+0,152,Other kernel,0.000864
+0,152,Embedding/head,0.016704
+0,152,Residual/norm,0.794568
+0,152,Dense GEMV / projections / output head,3.608153
+0,152,KDA recurrence/prep,0.452451
+0,152,Activation quantization / SwiGLU,0.002624
+0,152,DSA / MLA,1.163912
+0,152,Routing / shared SwiGLU / publication,0.964838
+0,152,Host/disk wait,0.02896
+0,152,Fetch: whole expert,4.604799
+0,152,Expert gate/up + shared down,1.140774
+0,152,Expert down,0.721315
+0,152,CPU answer wait,4.27139
+0,152,Fetch: gate/up prefix,6.18308
+0,152,Fetch: down component,2.650031
+0,153,Other kernel,0.000864
+0,153,Embedding/head,0.017088
+0,153,Residual/norm,0.995845
+0,153,Dense GEMV / projections / output head,3.59903
+0,153,KDA recurrence/prep,0.671366
+0,153,Activation quantization / SwiGLU,0.002624
+0,153,DSA / MLA,1.170696
+0,153,Routing / shared SwiGLU / publication,0.959302
+0,153,Host/disk wait,0.029312
+0,153,Fetch: whole expert,3.562264
+0,153,Expert gate/up + shared down,1.499403
+0,153,Expert down,0.734374
+0,153,CPU answer wait,3.586616
+0,153,Fetch: gate/up prefix,5.846248
+0,153,Fetch: down component,2.668497
+0,154,Other kernel,0.000864
+0,154,Embedding/head,0.017376
+0,154,Residual/norm,0.794339
+0,154,Dense GEMV / projections / output head,3.590427
+0,154,KDA recurrence/prep,0.451043
+0,154,Activation quantization / SwiGLU,0.002624
+0,154,DSA / MLA,1.15895
+0,154,Routing / shared SwiGLU / publication,0.95927
+0,154,Host/disk wait,0.029089
+0,154,Fetch: whole expert,2.811154
+0,154,Expert gate/up + shared down,1.196645
+0,154,Expert down,0.733986
+0,154,CPU answer wait,3.868442
+0,154,Fetch: gate/up prefix,5.819174
+0,154,Fetch: down component,2.696756
+0,155,Other kernel,0.000992
+0,155,Embedding/head,0.01664
+0,155,Residual/norm,0.795526
+0,155,Dense GEMV / projections / output head,3.612694
+0,155,KDA recurrence/prep,0.449698
+0,155,Activation quantization / SwiGLU,0.00272
+0,155,DSA / MLA,1.186312
+0,155,Routing / shared SwiGLU / publication,0.965796
+0,155,Host/disk wait,0.029376
+0,155,Fetch: whole expert,4.408541
+0,155,Expert gate/up + shared down,1.152107
+0,155,Expert down,0.983269
+0,155,CPU answer wait,3.255511
+0,155,Fetch: gate/up prefix,6.530124
+0,155,Fetch: down component,3.028661
+0,156,Other kernel,0.000832
+0,156,Embedding/head,0.017632
+0,156,Residual/norm,0.794564
+0,156,Dense GEMV / projections / output head,3.920469
+0,156,KDA recurrence/prep,0.448356
+0,156,Activation quantization / SwiGLU,0.002592
+0,156,DSA / MLA,1.160551
+0,156,Routing / shared SwiGLU / publication,0.971625
+0,156,Host/disk wait,0.029376
+0,156,Fetch: whole expert,3.005077
+0,156,Expert gate/up + shared down,1.178823
+0,156,Expert down,0.720644
+0,156,CPU answer wait,3.780669
+0,156,Fetch: gate/up prefix,7.153231
+0,156,Fetch: down component,3.346836
+0,157,Other kernel,0.000896
+0,157,Embedding/head,0.016896
+0,157,Residual/norm,1.023496
+0,157,Dense GEMV / projections / output head,3.573079
+0,157,KDA recurrence/prep,0.450915
+0,157,Activation quantization / SwiGLU,0.002592
+0,157,DSA / MLA,1.181737
+0,157,Routing / shared SwiGLU / publication,0.958404
+0,157,Host/disk wait,0.029504
+0,157,Fetch: whole expert,2.451408
+0,157,Expert gate/up + shared down,1.195046
+0,157,Expert down,0.73751
+0,157,CPU answer wait,4.020825
+0,157,Fetch: gate/up prefix,5.907527
+0,157,Fetch: down component,2.740564
+1,30,Other kernel,0.000864
+1,30,Embedding/head,0.015552
+1,30,Residual/norm,0.792516
+1,30,Dense GEMV / projections / output head,3.992476
+1,30,KDA recurrence/prep,0.446722
+1,30,Activation quantization / SwiGLU,0.002624
+1,30,DSA / MLA,1.139143
+1,30,Routing / shared SwiGLU / publication,0.959943
+1,30,Host/disk wait,0.029216
+1,30,Fetch: whole expert,3.119797
+1,30,Expert gate/up + shared down,1.165102
+1,30,Expert down,0.734212
+1,30,CPU answer wait,3.691608
+1,30,Fetch: gate/up prefix,5.81178
+1,30,Fetch: down component,2.719187
+1,31,Other kernel,0.000896
+1,31,Embedding/head,0.01632
+1,31,Residual/norm,0.797575
+1,31,Dense GEMV / projections / output head,4.104857
+1,31,KDA recurrence/prep,0.445858
+1,31,Activation quantization / SwiGLU,0.002656
+1,31,DSA / MLA,1.155815
+1,31,Routing / shared SwiGLU / publication,0.931944
+1,31,Host/disk wait,0.0296
+1,31,Fetch: whole expert,2.128909
+1,31,Expert gate/up + shared down,1.633321
+1,31,Expert down,0.7657
+1,31,CPU answer wait,2.896309
+1,31,Fetch: gate/up prefix,4.989122
+1,31,Fetch: down component,2.152303
+1,32,Other kernel,0.000928
+1,32,Embedding/head,0.016416
+1,32,Residual/norm,0.783682
+1,32,Dense GEMV / projections / output head,3.481475
+1,32,KDA recurrence/prep,0.436451
+1,32,Activation quantization / SwiGLU,0.002592
+1,32,DSA / MLA,1.136676
+1,32,Routing / shared SwiGLU / publication,0.906851
+1,32,Host/disk wait,0.02928
+1,32,Fetch: whole expert,0.806758
+1,32,Expert gate/up + shared down,1.330182
+1,32,Expert down,0.808939
+1,32,CPU answer wait,2.79355
+1,32,Fetch: gate/up prefix,2.470162
+1,32,Fetch: down component,1.360615
+1,33,Other kernel,0.000704
+1,33,Embedding/head,0.016448
+1,33,Residual/norm,0.786883
+1,33,Dense GEMV / projections / output head,4.09053
+1,33,KDA recurrence/prep,0.441249
+1,33,Activation quantization / SwiGLU,0.002528
+1,33,DSA / MLA,1.359786
+1,33,Routing / shared SwiGLU / publication,0.919526
+1,33,Host/disk wait,0.029312
+1,33,Fetch: whole expert,1.788235
+1,33,Expert gate/up + shared down,1.30935
+1,33,Expert down,0.788102
+1,33,CPU answer wait,2.801009
+1,33,Fetch: gate/up prefix,3.308181
+1,33,Fetch: down component,2.080654
+1,34,Other kernel,0.000864
+1,34,Embedding/head,0.016768
+1,34,Residual/norm,1.132518
+1,34,Dense GEMV / projections / output head,3.536883
+1,34,KDA recurrence/prep,0.779527
+1,34,Activation quantization / SwiGLU,0.002592
+1,34,DSA / MLA,1.136808
+1,34,Routing / shared SwiGLU / publication,0.930312
+1,34,Host/disk wait,0.029024
+1,34,Fetch: whole expert,2.350927
+1,34,Expert gate/up + shared down,1.253767
+1,34,Expert down,1.061285
+1,34,CPU answer wait,3.111735
+1,34,Fetch: gate/up prefix,3.584472
+1,34,Fetch: down component,1.289546
+1,35,Other kernel,0.000833
+1,35,Embedding/head,0.016545
+1,35,Residual/norm,0.793705
+1,35,Dense GEMV / projections / output head,4.103513
+1,35,KDA recurrence/prep,0.445858
+1,35,Activation quantization / SwiGLU,0.002592
+1,35,DSA / MLA,1.150532
+1,35,Routing / shared SwiGLU / publication,1.164907
+1,35,Host/disk wait,0.029056
+1,35,Fetch: whole expert,1.941195
+1,35,Expert gate/up + shared down,1.210633
+1,35,Expert down,0.756133
+1,35,CPU answer wait,2.627664
+1,35,Fetch: gate/up prefix,5.557091
+1,35,Fetch: down component,2.678194
+1,36,Other kernel,0.000928
+1,36,Embedding/head,0.017152
+1,36,Residual/norm,1.014504
+1,36,Dense GEMV / projections / output head,3.826362
+1,36,KDA recurrence/prep,0.442369
+1,36,Activation quantization / SwiGLU,0.002624
+1,36,DSA / MLA,1.139527
+1,36,Routing / shared SwiGLU / publication,1.123658
+1,36,Host/disk wait,0.029536
+1,36,Fetch: whole expert,2.458162
+1,36,Expert gate/up + shared down,1.28967
+1,36,Expert down,0.78628
+1,36,CPU answer wait,2.684303
+1,36,Fetch: gate/up prefix,3.461367
+1,36,Fetch: down component,1.923755
+1,37,Other kernel,0.000896
+1,37,Embedding/head,0.016768
+1,37,Residual/norm,0.789283
+1,37,Dense GEMV / projections / output head,3.529208
+1,37,KDA recurrence/prep,0.441956
+1,37,Activation quantization / SwiGLU,0.002624
+1,37,DSA / MLA,1.127717
+1,37,Routing / shared SwiGLU / publication,0.926728
+1,37,Host/disk wait,0.029313
+1,37,Fetch: whole expert,2.004139
+1,37,Expert gate/up + shared down,1.285896
+1,37,Expert down,0.781668
+1,37,CPU answer wait,2.578193
+1,37,Fetch: gate/up prefix,3.355415
+1,37,Fetch: down component,1.599979
+1,38,Other kernel,0.000896
+1,38,Embedding/head,0.017025
+1,38,Residual/norm,0.790597
+1,38,Dense GEMV / projections / output head,4.162206
+1,38,KDA recurrence/prep,0.441922
+1,38,Activation quantization / SwiGLU,0.002624
+1,38,DSA / MLA,1.135271
+1,38,Routing / shared SwiGLU / publication,0.909926
+1,38,Host/disk wait,0.029664
+1,38,Fetch: whole expert,2.238095
+1,38,Expert gate/up + shared down,1.593835
+1,38,Expert down,0.801218
+1,38,CPU answer wait,2.494576
+1,38,Fetch: gate/up prefix,2.381679
+1,38,Fetch: down component,0.961735
+1,39,Other kernel,0.000864
+1,39,Embedding/head,0.016064
+1,39,Residual/norm,0.98362
+1,39,Dense GEMV / projections / output head,3.518559
+1,39,KDA recurrence/prep,0.441345
+1,39,Activation quantization / SwiGLU,0.002592
+1,39,DSA / MLA,1.121416
+1,39,Routing / shared SwiGLU / publication,0.911047
+1,39,Host/disk wait,0.028704
+1,39,Fetch: whole expert,1.376169
+1,39,Expert gate/up + shared down,1.621353
+1,39,Expert down,0.792772
+1,39,CPU answer wait,2.339406
+1,39,Fetch: gate/up prefix,3.396437
+1,39,Fetch: down component,1.58209
+1,40,Other kernel,0.000928
+1,40,Embedding/head,0.016992
+1,40,Residual/norm,0.789989
+1,40,Dense GEMV / projections / output head,3.511259
+1,40,KDA recurrence/prep,0.443557
+1,40,Activation quantization / SwiGLU,0.002593
+1,40,DSA / MLA,1.4746
+1,40,Routing / shared SwiGLU / publication,0.91869
+1,40,Host/disk wait,0.029408
+1,40,Fetch: whole expert,2.201774
+1,40,Expert gate/up + shared down,1.281512
+1,40,Expert down,0.784521
+1,40,CPU answer wait,3.151345
+1,40,Fetch: gate/up prefix,3.069142
+1,40,Fetch: down component,1.200745
+1,41,Other kernel,0.000736
+1,41,Embedding/head,0.016672
+1,41,Residual/norm,0.792516
+1,41,Dense GEMV / projections / output head,3.866674
+1,41,KDA recurrence/prep,0.649733
+1,41,Activation quantization / SwiGLU,0.00256
+1,41,DSA / MLA,1.149034
+1,41,Routing / shared SwiGLU / publication,0.912073
+1,41,Host/disk wait,0.029184
+1,41,Fetch: whole expert,1.110089
+1,41,Expert gate/up + shared down,1.31812
+1,41,Expert down,0.796323
+1,41,CPU answer wait,3.298361
+1,41,Fetch: gate/up prefix,2.897234
+1,41,Fetch: down component,1.358761
+1,42,Other kernel,0.000864
+1,42,Embedding/head,0.016448
+1,42,Residual/norm,0.782444
+1,42,Dense GEMV / projections / output head,3.491376
+1,42,KDA recurrence/prep,0.436514
+1,42,Activation quantization / SwiGLU,0.002592
+1,42,DSA / MLA,1.155432
+1,42,Routing / shared SwiGLU / publication,0.91559
+1,42,Host/disk wait,0.029377
+1,42,Fetch: whole expert,1.514345
+1,42,Expert gate/up + shared down,1.328649
+1,42,Expert down,0.801223
+1,42,CPU answer wait,2.462608
+1,42,Fetch: gate/up prefix,2.37944
+1,42,Fetch: down component,1.122055
+1,43,Other kernel,0.000864
+1,43,Embedding/head,0.01584
+1,43,Residual/norm,0.788998
+1,43,Dense GEMV / projections / output head,3.518357
+1,43,KDA recurrence/prep,0.443012
+1,43,Activation quantization / SwiGLU,0.002592
+1,43,DSA / MLA,1.156773
+1,43,Routing / shared SwiGLU / publication,0.920326
+1,43,Host/disk wait,0.02928
+1,43,Fetch: whole expert,1.524555
+1,43,Expert gate/up + shared down,1.279176
+1,43,Expert down,1.180739
+1,43,CPU answer wait,3.167703
+1,43,Fetch: gate/up prefix,2.887349
+1,43,Fetch: down component,1.347913
+1,44,Other kernel,0.000896
+1,44,Embedding/head,0.017024
+1,44,Residual/norm,0.787366
+1,44,Dense GEMV / projections / output head,3.521396
+1,44,KDA recurrence/prep,0.442016
+1,44,Activation quantization / SwiGLU,0.002624
+1,44,DSA / MLA,1.144104
+1,44,Routing / shared SwiGLU / publication,0.92145
+1,44,Host/disk wait,0.029408
+1,44,Fetch: whole expert,2.499503
+1,44,Expert gate/up + shared down,1.287339
+1,44,Expert down,1.207497
+1,44,CPU answer wait,2.75189
+1,44,Fetch: gate/up prefix,2.638769
+1,44,Fetch: down component,1.127559
+1,45,Other kernel,0.000736
+1,45,Embedding/head,0.016832
+1,45,Residual/norm,0.794372
+1,45,Dense GEMV / projections / output head,3.558619
+1,45,KDA recurrence/prep,0.445091
+1,45,Activation quantization / SwiGLU,0.002592
+1,45,DSA / MLA,1.134409
+1,45,Routing / shared SwiGLU / publication,0.944259
+1,45,Host/disk wait,0.029216
+1,45,Fetch: whole expert,3.048468
+1,45,Expert gate/up + shared down,1.200261
+1,45,Expert down,0.745636
+1,45,CPU answer wait,3.001491
+1,45,Fetch: gate/up prefix,4.522078
+1,45,Fetch: down component,2.391122
+1,46,Other kernel,0.000864
+1,46,Embedding/head,0.016417
+1,46,Residual/norm,0.793924
+1,46,Dense GEMV / projections / output head,3.795288
+1,46,KDA recurrence/prep,0.441539
+1,46,Activation quantization / SwiGLU,0.002624
+1,46,DSA / MLA,1.484968
+1,46,Routing / shared SwiGLU / publication,1.136773
+1,46,Host/disk wait,0.029504
+1,46,Fetch: whole expert,2.301809
+1,46,Expert gate/up + shared down,1.233574
+1,46,Expert down,0.762563
+1,46,CPU answer wait,2.399632
+1,46,Fetch: gate/up prefix,4.430113
+1,46,Fetch: down component,2.016844
+1,47,Other kernel,0.000864
+1,47,Embedding/head,0.016256
+1,47,Residual/norm,0.792842
+1,47,Dense GEMV / projections / output head,3.590861
+1,47,KDA recurrence/prep,0.447177
+1,47,Activation quantization / SwiGLU,0.002592
+1,47,DSA / MLA,1.143463
+1,47,Routing / shared SwiGLU / publication,0.959077
+1,47,Host/disk wait,0.028864
+1,47,Fetch: whole expert,2.82274
+1,47,Expert gate/up + shared down,1.187589
+1,47,Expert down,0.73658
+1,47,CPU answer wait,2.454222
+1,47,Fetch: gate/up prefix,5.830664
+1,47,Fetch: down component,2.650674
+1,48,Other kernel,0.000768
+1,48,Embedding/head,0.017728
+1,48,Residual/norm,0.796674
+1,48,Dense GEMV / projections / output head,3.90578
+1,48,KDA recurrence/prep,0.447685
+1,48,Activation quantization / SwiGLU,0.002528
+1,48,DSA / MLA,1.143401
+1,48,Routing / shared SwiGLU / publication,1.152716
+1,48,Host/disk wait,0.029184
+1,48,Fetch: whole expert,2.083981
+1,48,Expert gate/up + shared down,1.232682
+1,48,Expert down,0.760293
+1,48,CPU answer wait,2.925301
+1,48,Fetch: gate/up prefix,4.506526
+1,48,Fetch: down component,1.893803
+1,49,Other kernel,0.000832
+1,49,Embedding/head,0.016832
+1,49,Residual/norm,0.797607
+1,49,Dense GEMV / projections / output head,3.564563
+1,49,KDA recurrence/prep,0.44935
+1,49,Activation quantization / SwiGLU,0.002656
+1,49,DSA / MLA,1.494283
+1,49,Routing / shared SwiGLU / publication,1.168198
+1,49,Host/disk wait,0.029344
+1,49,Fetch: whole expert,2.471217
+1,49,Expert gate/up + shared down,1.396774
+1,49,Expert down,0.749859
+1,49,CPU answer wait,3.183543
+1,49,Fetch: gate/up prefix,5.210979
+1,49,Fetch: down component,2.563473
+1,50,Other kernel,0.000736
+1,50,Embedding/head,0.016416
+1,50,Residual/norm,0.790534
+1,50,Dense GEMV / projections / output head,3.490328
+1,50,KDA recurrence/prep,0.439524
+1,50,Activation quantization / SwiGLU,0.002656
+1,50,DSA / MLA,1.131399
+1,50,Routing / shared SwiGLU / publication,0.908713
+1,50,Host/disk wait,0.029409
+1,50,Fetch: whole expert,1.552235
+1,50,Expert gate/up + shared down,1.28954
+1,50,Expert down,0.793346
+1,50,CPU answer wait,3.164792
+1,50,Fetch: gate/up prefix,2.846834
+1,50,Fetch: down component,1.310633
+1,51,Other kernel,0.000864
+1,51,Embedding/head,0.015552
+1,51,Residual/norm,0.785252
+1,51,Dense GEMV / projections / output head,3.548279
+1,51,KDA recurrence/prep,0.447557
+1,51,Activation quantization / SwiGLU,0.002624
+1,51,DSA / MLA,1.516075
+1,51,Routing / shared SwiGLU / publication,0.946758
+1,51,Host/disk wait,0.02896
+1,51,Fetch: whole expert,2.442801
+1,51,Expert gate/up + shared down,1.239527
+1,51,Expert down,0.760547
+1,51,CPU answer wait,2.983797
+1,51,Fetch: gate/up prefix,4.161756
+1,51,Fetch: down component,1.950283
+1,52,Other kernel,0.000864
+1,52,Embedding/head,0.01664
+1,52,Residual/norm,0.794852
+1,52,Dense GEMV / projections / output head,3.558781
+1,52,KDA recurrence/prep,0.449411
+1,52,Activation quantization / SwiGLU,0.002592
+1,52,DSA / MLA,1.144423
+1,52,Routing / shared SwiGLU / publication,1.159718
+1,52,Host/disk wait,0.029248
+1,52,Fetch: whole expert,2.703408
+1,52,Expert gate/up + shared down,1.227621
+1,52,Expert down,1.030632
+1,52,CPU answer wait,3.222678
+1,52,Fetch: gate/up prefix,4.471165
+1,52,Fetch: down component,1.880171
+1,53,Other kernel,0.000864
+1,53,Embedding/head,0.016128
+1,53,Residual/norm,0.793634
+1,53,Dense GEMV / projections / output head,3.549688
+1,53,KDA recurrence/prep,0.443489
+1,53,Activation quantization / SwiGLU,0.002592
+1,53,DSA / MLA,1.145576
+1,53,Routing / shared SwiGLU / publication,0.941128
+1,53,Host/disk wait,0.02944
+1,53,Fetch: whole expert,2.660785
+1,53,Expert gate/up + shared down,1.224906
+1,53,Expert down,0.746308
+1,53,CPU answer wait,2.712403
+1,53,Fetch: gate/up prefix,4.55862
+1,53,Fetch: down component,2.13749
+1,54,Other kernel,0.000896
+1,54,Embedding/head,0.016128
+1,54,Residual/norm,0.793028
+1,54,Dense GEMV / projections / output head,3.606839
+1,54,KDA recurrence/prep,0.449441
+1,54,Activation quantization / SwiGLU,0.002656
+1,54,DSA / MLA,1.156169
+1,54,Routing / shared SwiGLU / publication,0.963847
+1,54,Host/disk wait,0.029088
+1,54,Fetch: whole expert,3.381846
+1,54,Expert gate/up + shared down,1.150763
+1,54,Expert down,0.718887
+1,54,CPU answer wait,2.528848
+1,54,Fetch: gate/up prefix,6.862765
+1,54,Fetch: down component,2.878005
+1,55,Other kernel,0.000896
+1,55,Embedding/head,0.016768
+1,55,Residual/norm,0.796515
+1,55,Dense GEMV / projections / output head,3.572759
+1,55,KDA recurrence/prep,0.799716
+1,55,Activation quantization / SwiGLU,0.002656
+1,55,DSA / MLA,1.152488
+1,55,Routing / shared SwiGLU / publication,0.946698
+1,55,Host/disk wait,0.02896
+1,55,Fetch: whole expert,2.118923
+1,55,Expert gate/up + shared down,1.236011
+1,55,Expert down,0.760325
+1,55,CPU answer wait,3.378168
+1,55,Fetch: gate/up prefix,4.783294
+1,55,Fetch: down component,2.173393
+1,56,Other kernel,0.000864
+1,56,Embedding/head,0.016768
+1,56,Residual/norm,0.793641
+1,56,Dense GEMV / projections / output head,3.520083
+1,56,KDA recurrence/prep,0.441921
+1,56,Activation quantization / SwiGLU,0.002592
+1,56,DSA / MLA,1.14001
+1,56,Routing / shared SwiGLU / publication,0.921415
+1,56,Host/disk wait,0.029504
+1,56,Fetch: whole expert,1.793004
+1,56,Expert gate/up + shared down,1.253672
+1,56,Expert down,0.777735
+1,56,CPU answer wait,2.668015
+1,56,Fetch: gate/up prefix,3.796442
+1,56,Fetch: down component,1.756938
+1,57,Other kernel,0.000864
+1,57,Embedding/head,0.016768
+1,57,Residual/norm,0.792612
+1,57,Dense GEMV / projections / output head,3.600469
+1,57,KDA recurrence/prep,0.450561
+1,57,Activation quantization / SwiGLU,0.002592
+1,57,DSA / MLA,1.145706
+1,57,Routing / shared SwiGLU / publication,0.957962
+1,57,Host/disk wait,0.029184
+1,57,Fetch: whole expert,1.826988
+1,57,Expert gate/up + shared down,1.165225
+1,57,Expert down,0.728099
+1,57,CPU answer wait,2.527629
+1,57,Fetch: gate/up prefix,6.680526
+1,57,Fetch: down component,3.178934
+1,58,Other kernel,0.000864
+1,58,Embedding/head,0.016672
+1,58,Residual/norm,0.797189
+1,58,Dense GEMV / projections / output head,3.77734
+1,58,KDA recurrence/prep,0.444353
+1,58,Activation quantization / SwiGLU,0.002656
+1,58,DSA / MLA,1.148262
+1,58,Routing / shared SwiGLU / publication,0.940006
+1,58,Host/disk wait,0.029184
+1,58,Fetch: whole expert,2.688179
+1,58,Expert gate/up + shared down,1.593708
+1,58,Expert down,0.759044
+1,58,CPU answer wait,3.184945
+1,58,Fetch: gate/up prefix,4.087963
+1,58,Fetch: down component,1.909487
+1,59,Other kernel,0.000864
+1,59,Embedding/head,0.018592
+1,59,Residual/norm,0.794406
+1,59,Dense GEMV / projections / output head,4.218494
+1,59,KDA recurrence/prep,0.649893
+1,59,Activation quantization / SwiGLU,0.002656
+1,59,DSA / MLA,1.145351
+1,59,Routing / shared SwiGLU / publication,0.952357
+1,59,Host/disk wait,0.029024
+1,59,Fetch: whole expert,2.991701
+1,59,Expert gate/up + shared down,1.213163
+1,59,Expert down,0.748614
+1,59,CPU answer wait,2.844752
+1,59,Fetch: gate/up prefix,5.210338
+1,59,Fetch: down component,2.381521
+1,60,Other kernel,0.000896
+1,60,Embedding/head,0.016512
+1,60,Residual/norm,0.794088
+1,60,Dense GEMV / projections / output head,3.580921
+1,60,KDA recurrence/prep,0.446594
+1,60,Activation quantization / SwiGLU,0.002592
+1,60,DSA / MLA,1.147782
+1,60,Routing / shared SwiGLU / publication,0.943493
+1,60,Host/disk wait,0.02944
+1,60,Fetch: whole expert,3.076052
+1,60,Expert gate/up + shared down,1.222312
+1,60,Expert down,0.742116
+1,60,CPU answer wait,2.902511
+1,60,Fetch: gate/up prefix,4.529662
+1,60,Fetch: down component,2.118002
+1,61,Other kernel,0.000896
+1,61,Embedding/head,0.016
+1,61,Residual/norm,0.792166
+1,61,Dense GEMV / projections / output head,3.966518
+1,61,KDA recurrence/prep,0.445378
+1,61,Activation quantization / SwiGLU,0.002688
+1,61,DSA / MLA,1.153512
+1,61,Routing / shared SwiGLU / publication,1.146027
+1,61,Host/disk wait,0.029441
+1,61,Fetch: whole expert,3.427701
+1,61,Expert gate/up + shared down,1.222051
+1,61,Expert down,0.757991
+1,61,CPU answer wait,3.075063
+1,61,Fetch: gate/up prefix,3.572375
+1,61,Fetch: down component,1.643882
+1,62,Other kernel,0.00096
+1,62,Embedding/head,0.016608
+1,62,Residual/norm,0.794887
+1,62,Dense GEMV / projections / output head,3.772793
+1,62,KDA recurrence/prep,0.686915
+1,62,Activation quantization / SwiGLU,0.002592
+1,62,DSA / MLA,1.150664
+1,62,Routing / shared SwiGLU / publication,0.935588
+1,62,Host/disk wait,0.029281
+1,62,Fetch: whole expert,2.159342
+1,62,Expert gate/up + shared down,1.239685
+1,62,Expert down,0.770178
+1,62,CPU answer wait,3.014451
+1,62,Fetch: gate/up prefix,3.837114
+1,62,Fetch: down component,1.718767
+1,63,Other kernel,0.000896
+1,63,Embedding/head,0.016896
+1,63,Residual/norm,0.785989
+1,63,Dense GEMV / projections / output head,3.518874
+1,63,KDA recurrence/prep,0.43853
+1,63,Activation quantization / SwiGLU,0.002592
+1,63,DSA / MLA,1.146919
+1,63,Routing / shared SwiGLU / publication,0.927523
+1,63,Host/disk wait,0.029536
+1,63,Fetch: whole expert,1.000583
+1,63,Expert gate/up + shared down,1.309831
+1,63,Expert down,0.778502
+1,63,CPU answer wait,2.465648
+1,63,Fetch: gate/up prefix,3.550105
+1,63,Fetch: down component,1.680811
+1,64,Other kernel,0.000864
+1,64,Embedding/head,0.017472
+1,64,Residual/norm,1.017642
+1,64,Dense GEMV / projections / output head,3.583761
+1,64,KDA recurrence/prep,0.449796
+1,64,Activation quantization / SwiGLU,0.002624
+1,64,DSA / MLA,1.156969
+1,64,Routing / shared SwiGLU / publication,1.084645
+1,64,Host/disk wait,0.029473
+1,64,Fetch: whole expert,3.712185
+1,64,Expert gate/up + shared down,1.180838
+1,64,Expert down,0.748167
+1,64,CPU answer wait,3.026643
+1,64,Fetch: gate/up prefix,4.770112
+1,64,Fetch: down component,2.203567
+1,65,Other kernel,0.000736
+1,65,Embedding/head,0.016609
+1,65,Residual/norm,0.78877
+1,65,Dense GEMV / projections / output head,3.536889
+1,65,KDA recurrence/prep,0.442115
+1,65,Activation quantization / SwiGLU,0.002592
+1,65,DSA / MLA,1.147112
+1,65,Routing / shared SwiGLU / publication,0.930566
+1,65,Host/disk wait,0.029184
+1,65,Fetch: whole expert,2.322126
+1,65,Expert gate/up + shared down,1.265802
+1,65,Expert down,0.766983
+1,65,CPU answer wait,3.386835
+1,65,Fetch: gate/up prefix,3.399446
+1,65,Fetch: down component,1.570795
+1,66,Other kernel,0.000864
+1,66,Embedding/head,0.01664
+1,66,Residual/norm,0.790886
+1,66,Dense GEMV / projections / output head,3.572951
+1,66,KDA recurrence/prep,0.446082
+1,66,Activation quantization / SwiGLU,0.002592
+1,66,DSA / MLA,1.148038
+1,66,Routing / shared SwiGLU / publication,0.942919
+1,66,Host/disk wait,0.029152
+1,66,Fetch: whole expert,2.623536
+1,66,Expert gate/up + shared down,1.232103
+1,66,Expert down,0.75322
+1,66,CPU answer wait,2.331604
+1,66,Fetch: gate/up prefix,4.938147
+1,66,Fetch: down component,2.08302
+1,67,Other kernel,0.00096
+1,67,Embedding/head,0.015936
+1,67,Residual/norm,0.795079
+1,67,Dense GEMV / projections / output head,3.794262
+1,67,KDA recurrence/prep,0.447619
+1,67,Activation quantization / SwiGLU,0.002592
+1,67,DSA / MLA,1.176393
+1,67,Routing / shared SwiGLU / publication,1.150887
+1,67,Host/disk wait,0.029185
+1,67,Fetch: whole expert,2.513551
+1,67,Expert gate/up + shared down,1.194888
+1,67,Expert down,0.742021
+1,67,CPU answer wait,2.881172
+1,67,Fetch: gate/up prefix,5.214883
+1,67,Fetch: down component,2.739829
+1,68,Other kernel,0.000832
+1,68,Embedding/head,0.016928
+1,68,Residual/norm,0.792515
+1,68,Dense GEMV / projections / output head,3.57763
+1,68,KDA recurrence/prep,0.447684
+1,68,Activation quantization / SwiGLU,0.002592
+1,68,DSA / MLA,1.372264
+1,68,Routing / shared SwiGLU / publication,0.961381
+1,68,Host/disk wait,0.02912
+1,68,Fetch: whole expert,2.800916
+1,68,Expert gate/up + shared down,1.180776
+1,68,Expert down,0.732645
+1,68,CPU answer wait,3.244727
+1,68,Fetch: gate/up prefix,6.204487
+1,68,Fetch: down component,2.561615
+1,69,Other kernel,0.000864
+1,69,Embedding/head,0.01712
+1,69,Residual/norm,0.797445
+1,69,Dense GEMV / projections / output head,3.605234
+1,69,KDA recurrence/prep,0.451494
+1,69,Activation quantization / SwiGLU,0.002562
+1,69,DSA / MLA,1.158087
+1,69,Routing / shared SwiGLU / publication,0.964042
+1,69,Host/disk wait,0.029184
+1,69,Fetch: whole expert,2.665618
+1,69,Expert gate/up + shared down,1.161638
+1,69,Expert down,0.717668
+1,69,CPU answer wait,3.697974
+1,69,Fetch: gate/up prefix,6.011144
+1,69,Fetch: down component,2.7653
+1,70,Other kernel,0.000928
+1,70,Embedding/head,0.01696
+1,70,Residual/norm,0.796102
+1,70,Dense GEMV / projections / output head,3.610038
+1,70,KDA recurrence/prep,0.451044
+1,70,Activation quantization / SwiGLU,0.002592
+1,70,DSA / MLA,1.395785
+1,70,Routing / shared SwiGLU / publication,0.968326
+1,70,Host/disk wait,0.029184
+1,70,Fetch: whole expert,3.39436
+1,70,Expert gate/up + shared down,1.170601
+1,70,Expert down,0.727905
+1,70,CPU answer wait,2.782036
+1,70,Fetch: gate/up prefix,6.026279
+1,70,Fetch: down component,2.631795
+1,71,Other kernel,0.000896
+1,71,Embedding/head,0.015648
+1,71,Residual/norm,0.793127
+1,71,Dense GEMV / projections / output head,3.587895
+1,71,KDA recurrence/prep,0.45021
+1,71,Activation quantization / SwiGLU,0.002624
+1,71,DSA / MLA,1.173163
+1,71,Routing / shared SwiGLU / publication,0.956037
+1,71,Host/disk wait,0.029217
+1,71,Fetch: whole expert,3.393014
+1,71,Expert gate/up + shared down,1.183944
+1,71,Expert down,0.73757
+1,71,CPU answer wait,3.288118
+1,71,Fetch: gate/up prefix,5.062882
+1,71,Fetch: down component,2.214192
+1,72,Other kernel,0.000896
+1,72,Embedding/head,0.016064
+1,72,Residual/norm,0.795687
+1,72,Dense GEMV / projections / output head,4.655068
+1,72,KDA recurrence/prep,0.449346
+1,72,Activation quantization / SwiGLU,0.00272
+1,72,DSA / MLA,1.182984
+1,72,Routing / shared SwiGLU / publication,0.960902
+1,72,Host/disk wait,0.028736
+1,72,Fetch: whole expert,2.843954
+1,72,Expert gate/up + shared down,1.187849
+1,72,Expert down,0.731077
+1,72,CPU answer wait,3.33551
+1,72,Fetch: gate/up prefix,5.596868
+1,72,Fetch: down component,2.59877
+1,73,Other kernel,0.000864
+1,73,Embedding/head,0.01648
+1,73,Residual/norm,0.794531
+1,73,Dense GEMV / projections / output head,3.606584
+1,73,KDA recurrence/prep,0.449729
+1,73,Activation quantization / SwiGLU,0.002592
+1,73,DSA / MLA,1.169353
+1,73,Routing / shared SwiGLU / publication,0.968582
+1,73,Host/disk wait,0.0288
+1,73,Fetch: whole expert,3.401495
+1,73,Expert gate/up + shared down,1.166185
+1,73,Expert down,0.721478
+1,73,CPU answer wait,3.194421
+1,73,Fetch: gate/up prefix,5.558822
+1,73,Fetch: down component,2.557649
+1,74,Other kernel,0.000896
+1,74,Embedding/head,0.017152
+1,74,Residual/norm,0.796261
+1,74,Dense GEMV / projections / output head,4.04633
+1,74,KDA recurrence/prep,0.452931
+1,74,Activation quantization / SwiGLU,0.002592
+1,74,DSA / MLA,1.160008
+1,74,Routing / shared SwiGLU / publication,0.973192
+1,74,Host/disk wait,0.029312
+1,74,Fetch: whole expert,4.201695
+1,74,Expert gate/up + shared down,1.165385
+1,74,Expert down,0.719173
+1,74,CPU answer wait,2.455055
+1,74,Fetch: gate/up prefix,6.940717
+1,74,Fetch: down component,3.075988
+1,75,Other kernel,0.00096
+1,75,Embedding/head,0.017217
+1,75,Residual/norm,0.795779
+1,75,Dense GEMV / projections / output head,3.799931
+1,75,KDA recurrence/prep,0.450212
+1,75,Activation quantization / SwiGLU,0.00256
+1,75,DSA / MLA,1.17556
+1,75,Routing / shared SwiGLU / publication,0.964421
+1,75,Host/disk wait,0.028672
+1,75,Fetch: whole expert,3.495447
+1,75,Expert gate/up + shared down,1.16708
+1,75,Expert down,0.728642
+1,75,CPU answer wait,3.203062
+1,75,Fetch: gate/up prefix,6.074056
+1,75,Fetch: down component,2.616689
+1,76,Other kernel,0.000896
+1,76,Embedding/head,0.016384
+1,76,Residual/norm,0.796293
+1,76,Dense GEMV / projections / output head,4.088504
+1,76,KDA recurrence/prep,0.446085
+1,76,Activation quantization / SwiGLU,0.002624
+1,76,DSA / MLA,1.164007
+1,76,Routing / shared SwiGLU / publication,0.947527
+1,76,Host/disk wait,0.028896
+1,76,Fetch: whole expert,3.224917
+1,76,Expert gate/up + shared down,1.198825
+1,76,Expert down,0.745768
+1,76,CPU answer wait,3.438132
+1,76,Fetch: gate/up prefix,4.900032
+1,76,Fetch: down component,2.231343
+1,77,Other kernel,0.000864
+1,77,Embedding/head,0.016736
+1,77,Residual/norm,0.789509
+1,77,Dense GEMV / projections / output head,3.583094
+1,77,KDA recurrence/prep,0.448293
+1,77,Activation quantization / SwiGLU,0.002624
+1,77,DSA / MLA,1.152106
+1,77,Routing / shared SwiGLU / publication,0.960134
+1,77,Host/disk wait,0.028928
+1,77,Fetch: whole expert,3.892985
+1,77,Expert gate/up + shared down,1.187305
+1,77,Expert down,0.731172
+1,77,CPU answer wait,2.265518
+1,77,Fetch: gate/up prefix,5.319556
+1,77,Fetch: down component,2.504079
+1,78,Other kernel,0.000736
+1,78,Embedding/head,0.016864
+1,78,Residual/norm,0.793733
+1,78,Dense GEMV / projections / output head,3.649815
+1,78,KDA recurrence/prep,0.454114
+1,78,Activation quantization / SwiGLU,0.002592
+1,78,DSA / MLA,1.158761
+1,78,Routing / shared SwiGLU / publication,0.973063
+1,78,Host/disk wait,0.029121
+1,78,Fetch: whole expert,3.430359
+1,78,Expert gate/up + shared down,1.372488
+1,78,Expert down,0.709993
+1,78,CPU answer wait,2.406571
+1,78,Fetch: gate/up prefix,7.379119
+1,78,Fetch: down component,3.453977
+1,79,Other kernel,0.000768
+1,79,Embedding/head,0.016896
+1,79,Residual/norm,1.02103
+1,79,Dense GEMV / projections / output head,3.631519
+1,79,KDA recurrence/prep,0.451266
+1,79,Activation quantization / SwiGLU,0.002592
+1,79,DSA / MLA,1.190698
+1,79,Routing / shared SwiGLU / publication,0.97658
+1,79,Host/disk wait,0.028832
+1,79,Fetch: whole expert,3.759929
+1,79,Expert gate/up + shared down,1.138308
+1,79,Expert down,0.717157
+1,79,CPU answer wait,4.337659
+1,79,Fetch: gate/up prefix,6.700398
+1,79,Fetch: down component,2.959762
+1,80,Other kernel,0.000864
+1,80,Embedding/head,0.0176
+1,80,Residual/norm,0.795907
+1,80,Dense GEMV / projections / output head,3.933688
+1,80,KDA recurrence/prep,0.456707
+1,80,Activation quantization / SwiGLU,0.002592
+1,80,DSA / MLA,1.163049
+1,80,Routing / shared SwiGLU / publication,0.988203
+1,80,Host/disk wait,0.02912
+1,80,Fetch: whole expert,4.935328
+1,80,Expert gate/up + shared down,1.095111
+1,80,Expert down,0.688935
+1,80,CPU answer wait,3.723708
+1,80,Fetch: gate/up prefix,7.316018
+1,80,Fetch: down component,3.226579
+1,81,Other kernel,0.000864
+1,81,Embedding/head,0.358786
+1,81,Residual/norm,0.795747
+1,81,Dense GEMV / projections / output head,3.6246
+1,81,KDA recurrence/prep,0.44992
+1,81,Activation quantization / SwiGLU,0.002561
+1,81,DSA / MLA,1.166953
+1,81,Routing / shared SwiGLU / publication,0.964971
+1,81,Host/disk wait,0.029184
+1,81,Fetch: whole expert,4.76541
+1,81,Expert gate/up + shared down,1.144996
+1,81,Expert down,1.010183
+1,81,CPU answer wait,2.407637
+1,81,Fetch: gate/up prefix,6.084073
+1,81,Fetch: down component,2.788816
+1,82,Other kernel,0.000896
+1,82,Embedding/head,0.01648
+1,82,Residual/norm,0.797767
+1,82,Dense GEMV / projections / output head,3.631032
+1,82,KDA recurrence/prep,0.457667
+1,82,Activation quantization / SwiGLU,0.002656
+1,82,DSA / MLA,1.159175
+1,82,Routing / shared SwiGLU / publication,0.980937
+1,82,Host/disk wait,0.029664
+1,82,Fetch: whole expert,4.245276
+1,82,Expert gate/up + shared down,1.105481
+1,82,Expert down,0.702341
+1,82,CPU answer wait,3.874716
+1,82,Fetch: gate/up prefix,6.683213
+1,82,Fetch: down component,3.035954
+1,83,Other kernel,0.001312
+1,83,Embedding/head,0.016832
+1,83,Residual/norm,0.796197
+1,83,Dense GEMV / projections / output head,3.583476
+1,83,KDA recurrence/prep,0.450465
+1,83,Activation quantization / SwiGLU,0.00256
+1,83,DSA / MLA,1.176391
+1,83,Routing / shared SwiGLU / publication,1.290698
+1,83,Host/disk wait,0.029248
+1,83,Fetch: whole expert,2.568592
+1,83,Expert gate/up + shared down,1.207915
+1,83,Expert down,0.738883
+1,83,CPU answer wait,2.580919
+1,83,Fetch: gate/up prefix,5.793063
+1,83,Fetch: down component,2.676405
+1,84,Other kernel,0.000896
+1,84,Embedding/head,0.015712
+1,84,Residual/norm,0.791424
+1,84,Dense GEMV / projections / output head,3.53801
+1,84,KDA recurrence/prep,0.443365
+1,84,Activation quantization / SwiGLU,0.002592
+1,84,DSA / MLA,1.163337
+1,84,Routing / shared SwiGLU / publication,0.940198
+1,84,Host/disk wait,0.02912
+1,84,Fetch: whole expert,1.155305
+1,84,Expert gate/up + shared down,1.50129
+1,84,Expert down,0.763879
+1,84,CPU answer wait,3.733531
+1,84,Fetch: gate/up prefix,3.733112
+1,84,Fetch: down component,1.664557
+1,85,Other kernel,0.000832
+1,85,Embedding/head,0.016864
+1,85,Residual/norm,0.792547
+1,85,Dense GEMV / projections / output head,3.614268
+1,85,KDA recurrence/prep,0.451558
+1,85,Activation quantization / SwiGLU,0.002592
+1,85,DSA / MLA,1.160424
+1,85,Routing / shared SwiGLU / publication,0.971044
+1,85,Host/disk wait,0.028736
+1,85,Fetch: whole expert,2.97007
+1,85,Expert gate/up + shared down,1.158152
+1,85,Expert down,0.718657
+1,85,CPU answer wait,2.784151
+1,85,Fetch: gate/up prefix,6.389611
+1,85,Fetch: down component,2.957621
+1,86,Other kernel,0.00096
+1,86,Embedding/head,0.0168
+1,86,Residual/norm,0.795713
+1,86,Dense GEMV / projections / output head,3.55705
+1,86,KDA recurrence/prep,0.447394
+1,86,Activation quantization / SwiGLU,0.002656
+1,86,DSA / MLA,1.153033
+1,86,Routing / shared SwiGLU / publication,0.943814
+1,86,Host/disk wait,0.029184
+1,86,Fetch: whole expert,2.26811
+1,86,Expert gate/up + shared down,1.230958
+1,86,Expert down,0.752069
+1,86,CPU answer wait,3.449465
+1,86,Fetch: gate/up prefix,4.112443
+1,86,Fetch: down component,1.948496
+1,87,Other kernel,0.000864
+1,87,Embedding/head,0.017569
+1,87,Residual/norm,0.792003
+1,87,Dense GEMV / projections / output head,3.592722
+1,87,KDA recurrence/prep,0.448712
+1,87,Activation quantization / SwiGLU,0.002624
+1,87,DSA / MLA,1.380427
+1,87,Routing / shared SwiGLU / publication,0.954408
+1,87,Host/disk wait,0.029184
+1,87,Fetch: whole expert,3.508632
+1,87,Expert gate/up + shared down,1.15828
+1,87,Expert down,0.736266
+1,87,CPU answer wait,3.226675
+1,87,Fetch: gate/up prefix,5.385829
+1,87,Fetch: down component,2.47323
+1,88,Other kernel,0.000864
+1,88,Embedding/head,0.017216
+1,88,Residual/norm,0.995782
+1,88,Dense GEMV / projections / output head,3.587864
+1,88,KDA recurrence/prep,0.447525
+1,88,Activation quantization / SwiGLU,0.002593
+1,88,DSA / MLA,1.164106
+1,88,Routing / shared SwiGLU / publication,0.949444
+1,88,Host/disk wait,0.029024
+1,88,Fetch: whole expert,2.937845
+1,88,Expert gate/up + shared down,1.195939
+1,88,Expert down,0.734249
+1,88,CPU answer wait,3.355798
+1,88,Fetch: gate/up prefix,5.491974
+1,88,Fetch: down component,2.537072
+1,89,Other kernel,0.000896
+1,89,Embedding/head,0.016128
+1,89,Residual/norm,0.793925
+1,89,Dense GEMV / projections / output head,3.590781
+1,89,KDA recurrence/prep,0.450465
+1,89,Activation quantization / SwiGLU,0.002592
+1,89,DSA / MLA,1.163784
+1,89,Routing / shared SwiGLU / publication,0.962566
+1,89,Host/disk wait,0.029152
+1,89,Fetch: whole expert,2.859348
+1,89,Expert gate/up + shared down,1.170759
+1,89,Expert down,0.731875
+1,89,CPU answer wait,2.895317
+1,89,Fetch: gate/up prefix,6.048969
+1,89,Fetch: down component,2.97871
+1,90,Other kernel,0.000928
+1,90,Embedding/head,0.016544
+1,90,Residual/norm,0.795109
+1,90,Dense GEMV / projections / output head,3.973338
+1,90,KDA recurrence/prep,0.455106
+1,90,Activation quantization / SwiGLU,0.002624
+1,90,DSA / MLA,1.163177
+1,90,Routing / shared SwiGLU / publication,0.972616
+1,90,Host/disk wait,0.02912
+1,90,Fetch: whole expert,3.941659
+1,90,Expert gate/up + shared down,1.099689
+1,90,Expert down,0.704643
+1,90,CPU answer wait,2.616144
+1,90,Fetch: gate/up prefix,7.67039
+1,90,Fetch: down component,3.52076
+1,91,Other kernel,0.000896
+1,91,Embedding/head,0.016576
+1,91,Residual/norm,0.795208
+1,91,Dense GEMV / projections / output head,3.586267
+1,91,KDA recurrence/prep,0.447073
+1,91,Activation quantization / SwiGLU,0.002592
+1,91,DSA / MLA,1.182726
+1,91,Routing / shared SwiGLU / publication,0.9489
+1,91,Host/disk wait,0.029281
+1,91,Fetch: whole expert,2.926581
+1,91,Expert gate/up + shared down,1.194059
+1,91,Expert down,0.74029
+1,91,CPU answer wait,3.022582
+1,91,Fetch: gate/up prefix,6.318058
+1,91,Fetch: down component,2.592019
+1,92,Other kernel,0.000864
+1,92,Embedding/head,0.016864
+1,92,Residual/norm,0.796325
+1,92,Dense GEMV / projections / output head,3.845846
+1,92,KDA recurrence/prep,0.445955
+1,92,Activation quantization / SwiGLU,0.002593
+1,92,DSA / MLA,1.162024
+1,92,Routing / shared SwiGLU / publication,0.94759
+1,92,Host/disk wait,0.029249
+1,92,Fetch: whole expert,2.764691
+1,92,Expert gate/up + shared down,1.18887
+1,92,Expert down,0.740738
+1,92,CPU answer wait,3.213593
+1,92,Fetch: gate/up prefix,5.243814
+1,92,Fetch: down component,2.419634
+1,93,Other kernel,0.000896
+1,93,Embedding/head,0.016672
+1,93,Residual/norm,0.791522
+1,93,Dense GEMV / projections / output head,3.536507
+1,93,KDA recurrence/prep,0.440708
+1,93,Activation quantization / SwiGLU,0.00256
+1,93,DSA / MLA,1.159559
+1,93,Routing / shared SwiGLU / publication,0.927687
+1,93,Host/disk wait,0.029184
+1,93,Fetch: whole expert,2.461809
+1,93,Expert gate/up + shared down,1.24698
+1,93,Expert down,0.762309
+1,93,CPU answer wait,2.791635
+1,93,Fetch: gate/up prefix,4.019259
+1,93,Fetch: down component,1.853581
+1,94,Other kernel,0.000864
+1,94,Embedding/head,0.016576
+1,94,Residual/norm,0.789634
+1,94,Dense GEMV / projections / output head,3.583926
+1,94,KDA recurrence/prep,0.445346
+1,94,Activation quantization / SwiGLU,0.002624
+1,94,DSA / MLA,1.171627
+1,94,Routing / shared SwiGLU / publication,0.952105
+1,94,Host/disk wait,0.029216
+1,94,Fetch: whole expert,2.963154
+1,94,Expert gate/up + shared down,1.202573
+1,94,Expert down,1.15943
+1,94,CPU answer wait,2.693814
+1,94,Fetch: gate/up prefix,5.000033
+1,94,Fetch: down component,2.174193
+1,95,Other kernel,0.000864
+1,95,Embedding/head,0.016352
+1,95,Residual/norm,0.7937
+1,95,Dense GEMV / projections / output head,3.780665
+1,95,KDA recurrence/prep,0.444963
+1,95,Activation quantization / SwiGLU,0.002624
+1,95,DSA / MLA,1.14705
+1,95,Routing / shared SwiGLU / publication,0.928329
+1,95,Host/disk wait,0.029088
+1,95,Fetch: whole expert,2.514225
+1,95,Expert gate/up + shared down,1.228199
+1,95,Expert down,0.774373
+1,95,CPU answer wait,2.36763
+1,95,Fetch: gate/up prefix,4.577055
+1,95,Fetch: down component,1.83374
+1,96,Other kernel,0.000896
+1,96,Embedding/head,0.017184
+1,96,Residual/norm,0.789028
+1,96,Dense GEMV / projections / output head,3.539225
+1,96,KDA recurrence/prep,0.442337
+1,96,Activation quantization / SwiGLU,0.002656
+1,96,DSA / MLA,1.155113
+1,96,Routing / shared SwiGLU / publication,0.928457
+1,96,Host/disk wait,0.029376
+1,96,Fetch: whole expert,2.088558
+1,96,Expert gate/up + shared down,1.273416
+1,96,Expert down,0.77044
+1,96,CPU answer wait,2.905139
+1,96,Fetch: gate/up prefix,3.752632
+1,96,Fetch: down component,1.770155
+1,97,Other kernel,0.000864
+1,97,Embedding/head,0.016672
+1,97,Residual/norm,0.792678
+1,97,Dense GEMV / projections / output head,3.772503
+1,97,KDA recurrence/prep,0.444067
+1,97,Activation quantization / SwiGLU,0.002592
+1,97,DSA / MLA,1.169096
+1,97,Routing / shared SwiGLU / publication,0.921836
+1,97,Host/disk wait,0.029408
+1,97,Fetch: whole expert,3.465527
+1,97,Expert gate/up + shared down,1.269766
+1,97,Expert down,0.785605
+1,97,CPU answer wait,2.681073
+1,97,Fetch: gate/up prefix,2.95554
+1,97,Fetch: down component,1.090215
+1,98,Other kernel,0.000928
+1,98,Embedding/head,0.01632
+1,98,Residual/norm,0.785763
+1,98,Dense GEMV / projections / output head,4.118392
+1,98,KDA recurrence/prep,0.443299
+1,98,Activation quantization / SwiGLU,0.002592
+1,98,DSA / MLA,1.156586
+1,98,Routing / shared SwiGLU / publication,0.929734
+1,98,Host/disk wait,0.029249
+1,98,Fetch: whole expert,3.151959
+1,98,Expert gate/up + shared down,1.261354
+1,98,Expert down,1.186828
+1,98,CPU answer wait,2.628144
+1,98,Fetch: gate/up prefix,3.033332
+1,98,Fetch: down component,1.430986
+1,99,Other kernel,0.00096
+1,99,Embedding/head,0.016544
+1,99,Residual/norm,0.792933
+1,99,Dense GEMV / projections / output head,3.531473
+1,99,KDA recurrence/prep,0.443712
+1,99,Activation quantization / SwiGLU,0.002592
+1,99,DSA / MLA,1.165322
+1,99,Routing / shared SwiGLU / publication,0.923752
+1,99,Host/disk wait,0.02944
+1,99,Fetch: whole expert,1.298153
+1,99,Expert gate/up + shared down,1.555727
+1,99,Expert down,0.781128
+1,99,CPU answer wait,2.46254
+1,99,Fetch: gate/up prefix,3.688954
+1,99,Fetch: down component,2.136171
+1,100,Other kernel,0.000864
+1,100,Embedding/head,0.01648
+1,100,Residual/norm,0.785412
+1,100,Dense GEMV / projections / output head,3.501429
+1,100,KDA recurrence/prep,0.439682
+1,100,Activation quantization / SwiGLU,0.002656
+1,100,DSA / MLA,1.160618
+1,100,Routing / shared SwiGLU / publication,0.916071
+1,100,Host/disk wait,0.029409
+1,100,Fetch: whole expert,1.117159
+1,100,Expert gate/up + shared down,1.596046
+1,100,Expert down,0.794918
+1,100,CPU answer wait,3.289302
+1,100,Fetch: gate/up prefix,2.30216
+1,100,Fetch: down component,1.108104
+1,101,Other kernel,0.000864
+1,101,Embedding/head,0.01664
+1,101,Residual/norm,0.788009
+1,101,Dense GEMV / projections / output head,3.526881
+1,101,KDA recurrence/prep,0.444
+1,101,Activation quantization / SwiGLU,0.002624
+1,101,DSA / MLA,1.143109
+1,101,Routing / shared SwiGLU / publication,0.922242
+1,101,Host/disk wait,0.029056
+1,101,Fetch: whole expert,2.14059
+1,101,Expert gate/up + shared down,1.265672
+1,101,Expert down,0.774986
+1,101,CPU answer wait,3.324242
+1,101,Fetch: gate/up prefix,3.534906
+1,101,Fetch: down component,1.649993
+1,102,Other kernel,0.0008
+1,102,Embedding/head,0.016704
+1,102,Residual/norm,0.787172
+1,102,Dense GEMV / projections / output head,4.241153
+1,102,KDA recurrence/prep,0.438753
+1,102,Activation quantization / SwiGLU,0.002624
+1,102,DSA / MLA,1.14868
+1,102,Routing / shared SwiGLU / publication,0.892327
+1,102,Host/disk wait,0.029344
+1,102,Fetch: whole expert,1.99832
+1,102,Expert gate/up + shared down,1.734253
+1,102,Expert down,0.82122
+1,102,CPU answer wait,1.806442
+1,102,Fetch: gate/up prefix,1.938989
+1,102,Fetch: down component,1.247305
+1,103,Other kernel,0.000864
+1,103,Embedding/head,0.015905
+1,103,Residual/norm,0.791078
+1,103,Dense GEMV / projections / output head,3.570332
+1,103,KDA recurrence/prep,0.692004
+1,103,Activation quantization / SwiGLU,0.002592
+1,103,DSA / MLA,1.167911
+1,103,Routing / shared SwiGLU / publication,0.94541
+1,103,Host/disk wait,0.029312
+1,103,Fetch: whole expert,3.247895
+1,103,Expert gate/up + shared down,1.203688
+1,103,Expert down,0.741028
+1,103,CPU answer wait,2.700883
+1,103,Fetch: gate/up prefix,5.501285
+1,103,Fetch: down component,2.476017
+1,104,Other kernel,0.000896
+1,104,Embedding/head,0.016352
+1,104,Residual/norm,0.795619
+1,104,Dense GEMV / projections / output head,3.555417
+1,104,KDA recurrence/prep,0.444065
+1,104,Activation quantization / SwiGLU,0.002624
+1,104,DSA / MLA,1.155049
+1,104,Routing / shared SwiGLU / publication,0.937609
+1,104,Host/disk wait,0.029825
+1,104,Fetch: whole expert,2.25928
+1,104,Expert gate/up + shared down,1.246756
+1,104,Expert down,0.755334
+1,104,CPU answer wait,2.581301
+1,104,Fetch: gate/up prefix,4.58688
+1,104,Fetch: down component,2.141518
+1,105,Other kernel,0.000864
+1,105,Embedding/head,0.016833
+1,105,Residual/norm,1.143399
+1,105,Dense GEMV / projections / output head,3.595291
+1,105,KDA recurrence/prep,0.452289
+1,105,Activation quantization / SwiGLU,0.00256
+1,105,DSA / MLA,1.159015
+1,105,Routing / shared SwiGLU / publication,0.960228
+1,105,Host/disk wait,0.029633
+1,105,Fetch: whole expert,3.756475
+1,105,Expert gate/up + shared down,1.196362
+1,105,Expert down,0.996551
+1,105,CPU answer wait,2.6613
+1,105,Fetch: gate/up prefix,5.729957
+1,105,Fetch: down component,2.656722
+1,106,Other kernel,0.000736
+1,106,Embedding/head,0.015904
+1,106,Residual/norm,0.795301
+1,106,Dense GEMV / projections / output head,3.79293
+1,106,KDA recurrence/prep,0.445953
+1,106,Activation quantization / SwiGLU,0.002592
+1,106,DSA / MLA,1.156423
+1,106,Routing / shared SwiGLU / publication,0.945895
+1,106,Host/disk wait,0.029792
+1,106,Fetch: whole expert,2.61141
+1,106,Expert gate/up + shared down,1.224102
+1,106,Expert down,0.751462
+1,106,CPU answer wait,2.336048
+1,106,Fetch: gate/up prefix,5.966377
+1,106,Fetch: down component,2.42187
+1,107,Other kernel,0.000864
+1,107,Embedding/head,0.01728
+1,107,Residual/norm,0.794595
+1,107,Dense GEMV / projections / output head,3.589432
+1,107,KDA recurrence/prep,0.447748
+1,107,Activation quantization / SwiGLU,0.00256
+1,107,DSA / MLA,1.162218
+1,107,Routing / shared SwiGLU / publication,0.95761
+1,107,Host/disk wait,0.029056
+1,107,Fetch: whole expert,3.74364
+1,107,Expert gate/up + shared down,1.172295
+1,107,Expert down,0.727974
+1,107,CPU answer wait,3.071252
+1,107,Fetch: gate/up prefix,5.577478
+1,107,Fetch: down component,2.553169
+1,108,Other kernel,0.000928
+1,108,Embedding/head,0.01712
+1,108,Residual/norm,0.795044
+1,108,Dense GEMV / projections / output head,3.81692
+1,108,KDA recurrence/prep,0.448576
+1,108,Activation quantization / SwiGLU,0.002624
+1,108,DSA / MLA,1.1634
+1,108,Routing / shared SwiGLU / publication,0.949706
+1,108,Host/disk wait,0.029248
+1,108,Fetch: whole expert,3.422615
+1,108,Expert gate/up + shared down,1.189418
+1,108,Expert down,0.735688
+1,108,CPU answer wait,2.875989
+1,108,Fetch: gate/up prefix,5.054784
+1,108,Fetch: down component,2.56309
+1,109,Other kernel,0.000896
+1,109,Embedding/head,0.016545
+1,109,Residual/norm,0.794309
+1,109,Dense GEMV / projections / output head,3.946585
+1,109,KDA recurrence/prep,0.446945
+1,109,Activation quantization / SwiGLU,0.002592
+1,109,DSA / MLA,1.157544
+1,109,Routing / shared SwiGLU / publication,0.951719
+1,109,Host/disk wait,0.029153
+1,109,Fetch: whole expert,2.690033
+1,109,Expert gate/up + shared down,1.22324
+1,109,Expert down,0.739267
+1,109,CPU answer wait,3.789918
+1,109,Fetch: gate/up prefix,5.14234
+1,109,Fetch: down component,2.235888
+1,110,Other kernel,0.000896
+1,110,Embedding/head,0.01728
+1,110,Residual/norm,0.794242
+1,110,Dense GEMV / projections / output head,3.835165
+1,110,KDA recurrence/prep,0.443522
+1,110,Activation quantization / SwiGLU,0.002656
+1,110,DSA / MLA,1.158056
+1,110,Routing / shared SwiGLU / publication,0.943852
+1,110,Host/disk wait,0.029856
+1,110,Fetch: whole expert,1.73345
+1,110,Expert gate/up + shared down,1.239974
+1,110,Expert down,0.761413
+1,110,CPU answer wait,3.258616
+1,110,Fetch: gate/up prefix,5.220961
+1,110,Fetch: down component,2.379122
+1,111,Other kernel,0.000864
+1,111,Embedding/head,0.017568
+1,111,Residual/norm,0.794309
+1,111,Dense GEMV / projections / output head,3.56597
+1,111,KDA recurrence/prep,0.445987
+1,111,Activation quantization / SwiGLU,0.002624
+1,111,DSA / MLA,1.176104
+1,111,Routing / shared SwiGLU / publication,0.937897
+1,111,Host/disk wait,0.029216
+1,111,Fetch: whole expert,2.982102
+1,111,Expert gate/up + shared down,1.223496
+1,111,Expert down,0.75444
+1,111,CPU answer wait,2.827924
+1,111,Fetch: gate/up prefix,4.469372
+1,111,Fetch: down component,2.041229
+1,112,Other kernel,0.00096
+1,112,Embedding/head,0.01696
+1,112,Residual/norm,0.795747
+1,112,Dense GEMV / projections / output head,4.202775
+1,112,KDA recurrence/prep,0.446916
+1,112,Activation quantization / SwiGLU,0.00256
+1,112,DSA / MLA,1.155051
+1,112,Routing / shared SwiGLU / publication,0.934057
+1,112,Host/disk wait,0.029408
+1,112,Fetch: whole expert,2.659956
+1,112,Expert gate/up + shared down,1.264487
+1,112,Expert down,0.765189
+1,112,CPU answer wait,2.518006
+1,112,Fetch: gate/up prefix,4.341757
+1,112,Fetch: down component,1.99473
+1,113,Other kernel,0.000864
+1,113,Embedding/head,0.016545
+1,113,Residual/norm,0.789859
+1,113,Dense GEMV / projections / output head,3.50578
+1,113,KDA recurrence/prep,0.441766
+1,113,Activation quantization / SwiGLU,0.002592
+1,113,DSA / MLA,1.151945
+1,113,Routing / shared SwiGLU / publication,0.917703
+1,113,Host/disk wait,0.029952
+1,113,Fetch: whole expert,1.573548
+1,113,Expert gate/up + shared down,1.298888
+1,113,Expert down,0.789832
+1,113,CPU answer wait,2.638608
+1,113,Fetch: gate/up prefix,2.94959
+1,113,Fetch: down component,1.383367
+1,114,Other kernel,0.000896
+1,114,Embedding/head,0.016512
+1,114,Residual/norm,0.790667
+1,114,Dense GEMV / projections / output head,3.585017
+1,114,KDA recurrence/prep,0.444321
+1,114,Activation quantization / SwiGLU,0.00256
+1,114,DSA / MLA,1.159047
+1,114,Routing / shared SwiGLU / publication,1.275782
+1,114,Host/disk wait,0.029312
+1,114,Fetch: whole expert,3.221272
+1,114,Expert gate/up + shared down,1.222596
+1,114,Expert down,1.045895
+1,114,CPU answer wait,1.527563
+1,114,Fetch: gate/up prefix,4.593472
+1,114,Fetch: down component,2.404881
+1,115,Other kernel,0.000928
+1,115,Embedding/head,0.017472
+1,115,Residual/norm,0.793798
+1,115,Dense GEMV / projections / output head,3.953311
+1,115,KDA recurrence/prep,0.446054
+1,115,Activation quantization / SwiGLU,0.002592
+1,115,DSA / MLA,1.169961
+1,115,Routing / shared SwiGLU / publication,1.27066
+1,115,Host/disk wait,0.029344
+1,115,Fetch: whole expert,2.574865
+1,115,Expert gate/up + shared down,1.511209
+1,115,Expert down,0.759777
+1,115,CPU answer wait,3.500409
+1,115,Fetch: gate/up prefix,4.310044
+1,115,Fetch: down component,1.873583
+1,116,Other kernel,0.000864
+1,116,Embedding/head,0.017024
+1,116,Residual/norm,0.789193
+1,116,Dense GEMV / projections / output head,3.856762
+1,116,KDA recurrence/prep,0.442883
+1,116,Activation quantization / SwiGLU,0.002624
+1,116,DSA / MLA,1.151015
+1,116,Routing / shared SwiGLU / publication,0.950663
+1,116,Host/disk wait,0.029088
+1,116,Fetch: whole expert,3.796922
+1,116,Expert gate/up + shared down,1.204197
+1,116,Expert down,0.748869
+1,116,CPU answer wait,2.717553
+1,116,Fetch: gate/up prefix,4.290718
+1,116,Fetch: down component,2.023661
+1,117,Other kernel,0.001056
+1,117,Embedding/head,0.017184
+1,117,Residual/norm,0.795076
+1,117,Dense GEMV / projections / output head,3.586581
+1,117,KDA recurrence/prep,0.448451
+1,117,Activation quantization / SwiGLU,0.002592
+1,117,DSA / MLA,1.143207
+1,117,Routing / shared SwiGLU / publication,0.963689
+1,117,Host/disk wait,0.028928
+1,117,Fetch: whole expert,2.912564
+1,117,Expert gate/up + shared down,1.201865
+1,117,Expert down,0.723207
+1,117,CPU answer wait,3.121266
+1,117,Fetch: gate/up prefix,5.952936
+1,117,Fetch: down component,2.746165
+1,118,Other kernel,0.000864
+1,118,Embedding/head,0.016928
+1,118,Residual/norm,1.002885
+1,118,Dense GEMV / projections / output head,3.541979
+1,118,KDA recurrence/prep,0.445282
+1,118,Activation quantization / SwiGLU,0.00256
+1,118,DSA / MLA,1.150438
+1,118,Routing / shared SwiGLU / publication,0.938153
+1,118,Host/disk wait,0.029216
+1,118,Fetch: whole expert,1.936686
+1,118,Expert gate/up + shared down,1.250887
+1,118,Expert down,1.160872
+1,118,CPU answer wait,2.63746
+1,118,Fetch: gate/up prefix,4.586591
+1,118,Fetch: down component,2.279275
+1,119,Other kernel,0.000832
+1,119,Embedding/head,0.01648
+1,119,Residual/norm,1.012901
+1,119,Dense GEMV / projections / output head,3.615958
+1,119,KDA recurrence/prep,0.452451
+1,119,Activation quantization / SwiGLU,0.002592
+1,119,DSA / MLA,1.166025
+1,119,Routing / shared SwiGLU / publication,1.163943
+1,119,Host/disk wait,0.029088
+1,119,Fetch: whole expert,3.775866
+1,119,Expert gate/up + shared down,1.133252
+1,119,Expert down,0.710696
+1,119,CPU answer wait,3.436887
+1,119,Fetch: gate/up prefix,6.869008
+1,119,Fetch: down component,2.942546
+1,120,Other kernel,0.000864
+1,120,Embedding/head,0.016192
+1,120,Residual/norm,0.795974
+1,120,Dense GEMV / projections / output head,3.545982
+1,120,KDA recurrence/prep,0.444257
+1,120,Activation quantization / SwiGLU,0.002624
+1,120,DSA / MLA,1.146758
+1,120,Routing / shared SwiGLU / publication,0.939012
+1,120,Host/disk wait,0.028928
+1,120,Fetch: whole expert,1.991278
+1,120,Expert gate/up + shared down,1.222598
+1,120,Expert down,0.760353
+1,120,CPU answer wait,2.979188
+1,120,Fetch: gate/up prefix,4.645248
+1,120,Fetch: down component,2.147633
+1,121,Other kernel,0.000864
+1,121,Embedding/head,0.01664
+1,121,Residual/norm,0.79047
+1,121,Dense GEMV / projections / output head,3.570036
+1,121,KDA recurrence/prep,0.443972
+1,121,Activation quantization / SwiGLU,0.002656
+1,121,DSA / MLA,1.15377
+1,121,Routing / shared SwiGLU / publication,0.945126
+1,121,Host/disk wait,0.029633
+1,121,Fetch: whole expert,3.525496
+1,121,Expert gate/up + shared down,1.194758
+1,121,Expert down,0.750279
+1,121,CPU answer wait,2.429967
+1,121,Fetch: gate/up prefix,4.644095
+1,121,Fetch: down component,2.261871
+1,122,Other kernel,0.000864
+1,122,Embedding/head,0.016064
+1,122,Residual/norm,0.792457
+1,122,Dense GEMV / projections / output head,4.131921
+1,122,KDA recurrence/prep,0.44567
+1,122,Activation quantization / SwiGLU,0.002624
+1,122,DSA / MLA,1.164553
+1,122,Routing / shared SwiGLU / publication,0.950702
+1,122,Host/disk wait,0.029344
+1,122,Fetch: whole expert,2.380463
+1,122,Expert gate/up + shared down,1.203781
+1,122,Expert down,0.745928
+1,122,CPU answer wait,3.071896
+1,122,Fetch: gate/up prefix,5.01706
+1,122,Fetch: down component,2.315178
+1,123,Other kernel,0.000896
+1,123,Embedding/head,0.016448
+1,123,Residual/norm,0.794469
+1,123,Dense GEMV / projections / output head,3.842396
+1,123,KDA recurrence/prep,0.448642
+1,123,Activation quantization / SwiGLU,0.00256
+1,123,DSA / MLA,1.166794
+1,123,Routing / shared SwiGLU / publication,0.946915
+1,123,Host/disk wait,0.029312
+1,123,Fetch: whole expert,2.77762
+1,123,Expert gate/up + shared down,1.213386
+1,123,Expert down,1.161738
+1,123,CPU answer wait,3.461812
+1,123,Fetch: gate/up prefix,4.574689
+1,123,Fetch: down component,2.081133
+1,124,Other kernel,0.000864
+1,124,Embedding/head,0.01664
+1,124,Residual/norm,0.795137
+1,124,Dense GEMV / projections / output head,3.583548
+1,124,KDA recurrence/prep,0.451235
+1,124,Activation quantization / SwiGLU,0.002656
+1,124,DSA / MLA,1.169032
+1,124,Routing / shared SwiGLU / publication,0.963973
+1,124,Host/disk wait,0.029248
+1,124,Fetch: whole expert,3.923737
+1,124,Expert gate/up + shared down,1.127752
+1,124,Expert down,0.729125
+1,124,CPU answer wait,3.642234
+1,124,Fetch: gate/up prefix,5.44538
+1,124,Fetch: down component,2.479633
+1,125,Other kernel,0.000864
+1,125,Embedding/head,0.016576
+1,125,Residual/norm,0.794562
+1,125,Dense GEMV / projections / output head,3.970228
+1,125,KDA recurrence/prep,0.44413
+1,125,Activation quantization / SwiGLU,0.002656
+1,125,DSA / MLA,1.17281
+1,125,Routing / shared SwiGLU / publication,0.935727
+1,125,Host/disk wait,0.029184
+1,125,Fetch: whole expert,3.325589
+1,125,Expert gate/up + shared down,1.237006
+1,125,Expert down,0.758468
+1,125,CPU answer wait,2.728694
+1,125,Fetch: gate/up prefix,3.940857
+1,125,Fetch: down component,1.733134
+1,126,Other kernel,0.000896
+1,126,Embedding/head,0.016576
+1,126,Residual/norm,0.791912
+1,126,Dense GEMV / projections / output head,3.954871
+1,126,KDA recurrence/prep,0.448322
+1,126,Activation quantization / SwiGLU,0.002624
+1,126,DSA / MLA,1.303465
+1,126,Routing / shared SwiGLU / publication,0.958727
+1,126,Host/disk wait,0.029472
+1,126,Fetch: whole expert,3.216564
+1,126,Expert gate/up + shared down,1.167173
+1,126,Expert down,1.022088
+1,126,CPU answer wait,3.252214
+1,126,Fetch: gate/up prefix,5.881931
+1,126,Fetch: down component,2.534542
+1,127,Other kernel,0.000864
+1,127,Embedding/head,0.017953
+1,127,Residual/norm,0.792164
+1,127,Dense GEMV / projections / output head,3.833338
+1,127,KDA recurrence/prep,0.449701
+1,127,Activation quantization / SwiGLU,0.002752
+1,127,DSA / MLA,1.166696
+1,127,Routing / shared SwiGLU / publication,0.951237
+1,127,Host/disk wait,0.029248
+1,127,Fetch: whole expert,2.213455
+1,127,Expert gate/up + shared down,1.232424
+1,127,Expert down,0.741826
+1,127,CPU answer wait,3.62441
+1,127,Fetch: gate/up prefix,4.973698
+1,127,Fetch: down component,2.321294
+1,128,Other kernel,0.000928
+1,128,Embedding/head,0.017312
+1,128,Residual/norm,0.792709
+1,128,Dense GEMV / projections / output head,3.53852
+1,128,KDA recurrence/prep,0.44666
+1,128,Activation quantization / SwiGLU,0.00256
+1,128,DSA / MLA,1.169128
+1,128,Routing / shared SwiGLU / publication,0.933928
+1,128,Host/disk wait,0.02976
+1,128,Fetch: whole expert,2.961557
+1,128,Expert gate/up + shared down,1.229123
+1,128,Expert down,0.761383
+1,128,CPU answer wait,3.587672
+1,128,Fetch: gate/up prefix,3.425654
+1,128,Fetch: down component,1.603725
+1,129,Other kernel,0.000896
+1,129,Embedding/head,0.01728
+1,129,Residual/norm,0.999718
+1,129,Dense GEMV / projections / output head,3.842939
+1,129,KDA recurrence/prep,0.452451
+1,129,Activation quantization / SwiGLU,0.002592
+1,129,DSA / MLA,1.166536
+1,129,Routing / shared SwiGLU / publication,0.95754
+1,129,Host/disk wait,0.029376
+1,129,Fetch: whole expert,3.124086
+1,129,Expert gate/up + shared down,1.193962
+1,129,Expert down,0.740706
+1,129,CPU answer wait,3.326491
+1,129,Fetch: gate/up prefix,5.515847
+1,129,Fetch: down component,2.517839
+1,130,Other kernel,0.000896
+1,130,Embedding/head,0.016064
+1,130,Residual/norm,0.793473
+1,130,Dense GEMV / projections / output head,3.929886
+1,130,KDA recurrence/prep,0.44842
+1,130,Activation quantization / SwiGLU,0.002592
+1,130,DSA / MLA,1.173705
+1,130,Routing / shared SwiGLU / publication,0.949254
+1,130,Host/disk wait,0.028864
+1,130,Fetch: whole expert,3.398773
+1,130,Expert gate/up + shared down,1.15687
+1,130,Expert down,0.729798
+1,130,CPU answer wait,3.00748
+1,130,Fetch: gate/up prefix,5.504614
+1,130,Fetch: down component,2.556655
+1,131,Other kernel,0.000896
+1,131,Embedding/head,0.016352
+1,131,Residual/norm,0.794084
+1,131,Dense GEMV / projections / output head,3.601493
+1,131,KDA recurrence/prep,0.449026
+1,131,Activation quantization / SwiGLU,0.002656
+1,131,DSA / MLA,1.177225
+1,131,Routing / shared SwiGLU / publication,0.960906
+1,131,Host/disk wait,0.029185
+1,131,Fetch: whole expert,2.62069
+1,131,Expert gate/up + shared down,1.174215
+1,131,Expert down,0.719048
+1,131,CPU answer wait,3.26287
+1,131,Fetch: gate/up prefix,6.084553
+1,131,Fetch: down component,2.823155
+1,132,Other kernel,0.000896
+1,132,Embedding/head,0.016673
+1,132,Residual/norm,0.795463
+1,132,Dense GEMV / projections / output head,3.874487
+1,132,KDA recurrence/prep,0.44813
+1,132,Activation quantization / SwiGLU,0.00256
+1,132,DSA / MLA,1.179976
+1,132,Routing / shared SwiGLU / publication,0.960228
+1,132,Host/disk wait,0.02928
+1,132,Fetch: whole expert,3.074326
+1,132,Expert gate/up + shared down,1.14308
+1,132,Expert down,0.71671
+1,132,CPU answer wait,2.8749
+1,132,Fetch: gate/up prefix,7.164114
+1,132,Fetch: down component,2.956881
+1,133,Other kernel,0.000768
+1,133,Embedding/head,0.016385
+1,133,Residual/norm,0.795752
+1,133,Dense GEMV / projections / output head,3.587534
+1,133,KDA recurrence/prep,0.447781
+1,133,Activation quantization / SwiGLU,0.002592
+1,133,DSA / MLA,1.375659
+1,133,Routing / shared SwiGLU / publication,0.94791
+1,133,Host/disk wait,0.02928
+1,133,Fetch: whole expert,3.389464
+1,133,Expert gate/up + shared down,1.209901
+1,133,Expert down,0.983688
+1,133,CPU answer wait,2.207792
+1,133,Fetch: gate/up prefix,5.020578
+1,133,Fetch: down component,2.266288
+1,134,Other kernel,0.000864
+1,134,Embedding/head,0.016608
+1,134,Residual/norm,0.796069
+1,134,Dense GEMV / projections / output head,3.894264
+1,134,KDA recurrence/prep,0.453733
+1,134,Activation quantization / SwiGLU,0.002592
+1,134,DSA / MLA,1.171145
+1,134,Routing / shared SwiGLU / publication,0.986181
+1,134,Host/disk wait,0.029153
+1,134,Fetch: whole expert,3.993756
+1,134,Expert gate/up + shared down,1.109701
+1,134,Expert down,0.69501
+1,134,CPU answer wait,4.049116
+1,134,Fetch: gate/up prefix,7.240881
+1,134,Fetch: down component,3.326169
+1,135,Other kernel,0.000896
+1,135,Embedding/head,0.019297
+1,135,Residual/norm,0.796646
+1,135,Dense GEMV / projections / output head,3.627951
+1,135,KDA recurrence/prep,0.451847
+1,135,Activation quantization / SwiGLU,0.002624
+1,135,DSA / MLA,1.182343
+1,135,Routing / shared SwiGLU / publication,0.978758
+1,135,Host/disk wait,0.02896
+1,135,Fetch: whole expert,3.748282
+1,135,Expert gate/up + shared down,1.128362
+1,135,Expert down,0.710214
+1,135,CPU answer wait,3.14268
+1,135,Fetch: gate/up prefix,7.104882
+1,135,Fetch: down component,3.155318
+1,136,Other kernel,0.001056
+1,136,Embedding/head,0.01616
+1,136,Residual/norm,0.796227
+1,136,Dense GEMV / projections / output head,3.90815
+1,136,KDA recurrence/prep,0.449539
+1,136,Activation quantization / SwiGLU,0.002592
+1,136,DSA / MLA,1.180678
+1,136,Routing / shared SwiGLU / publication,0.969895
+1,136,Host/disk wait,0.028928
+1,136,Fetch: whole expert,3.799803
+1,136,Expert gate/up + shared down,1.145196
+1,136,Expert down,0.71601
+1,136,CPU answer wait,3.262103
+1,136,Fetch: gate/up prefix,6.710124
+1,136,Fetch: down component,2.832433
+1,137,Other kernel,0.0008
+1,137,Embedding/head,0.016608
+1,137,Residual/norm,0.797191
+1,137,Dense GEMV / projections / output head,4.245507
+1,137,KDA recurrence/prep,0.448673
+1,137,Activation quantization / SwiGLU,0.002592
+1,137,DSA / MLA,1.181573
+1,137,Routing / shared SwiGLU / publication,0.958402
+1,137,Host/disk wait,0.029408
+1,137,Fetch: whole expert,1.845069
+1,137,Expert gate/up + shared down,1.192679
+1,137,Expert down,0.969415
+1,137,CPU answer wait,3.198994
+1,137,Fetch: gate/up prefix,6.209996
+1,137,Fetch: down component,2.821939
+1,138,Other kernel,0.000896
+1,138,Embedding/head,0.016256
+1,138,Residual/norm,0.793442
+1,138,Dense GEMV / projections / output head,3.604475
+1,138,KDA recurrence/prep,0.444067
+1,138,Activation quantization / SwiGLU,0.002592
+1,138,DSA / MLA,1.176775
+1,138,Routing / shared SwiGLU / publication,0.948552
+1,138,Host/disk wait,0.029696
+1,138,Fetch: whole expert,2.801395
+1,138,Expert gate/up + shared down,1.210186
+1,138,Expert down,1.36484
+1,138,CPU answer wait,2.553847
+1,138,Fetch: gate/up prefix,5.59095
+1,138,Fetch: down component,2.580433
+1,139,Other kernel,0.00096
+1,139,Embedding/head,0.016928
+1,139,Residual/norm,0.795431
+1,139,Dense GEMV / projections / output head,3.54959
+1,139,KDA recurrence/prep,0.446659
+1,139,Activation quantization / SwiGLU,0.002592
+1,139,DSA / MLA,1.184677
+1,139,Routing / shared SwiGLU / publication,0.936646
+1,139,Host/disk wait,0.029248
+1,139,Fetch: whole expert,2.290033
+1,139,Expert gate/up + shared down,1.251883
+1,139,Expert down,0.759846
+1,139,CPU answer wait,3.213427
+1,139,Fetch: gate/up prefix,4.627391
+1,139,Fetch: down component,2.190318
+1,140,Other kernel,0.001088
+1,140,Embedding/head,0.016672
+1,140,Residual/norm,0.790758
+1,140,Dense GEMV / projections / output head,3.54796
+1,140,KDA recurrence/prep,0.444964
+1,140,Activation quantization / SwiGLU,0.002656
+1,140,DSA / MLA,1.168998
+1,140,Routing / shared SwiGLU / publication,1.280841
+1,140,Host/disk wait,0.02928
+1,140,Fetch: whole expert,3.002739
+1,140,Expert gate/up + shared down,1.253348
+1,140,Expert down,0.76141
+1,140,CPU answer wait,2.235381
+1,140,Fetch: gate/up prefix,4.024062
+1,140,Fetch: down component,1.830506
+1,141,Other kernel,0.00096
+1,141,Embedding/head,0.016768
+1,141,Residual/norm,0.793959
+1,141,Dense GEMV / projections / output head,3.864636
+1,141,KDA recurrence/prep,0.449056
+1,141,Activation quantization / SwiGLU,0.002624
+1,141,DSA / MLA,1.182376
+1,141,Routing / shared SwiGLU / publication,0.952905
+1,141,Host/disk wait,0.029472
+1,141,Fetch: whole expert,3.188051
+1,141,Expert gate/up + shared down,1.177769
+1,141,Expert down,1.110726
+1,141,CPU answer wait,3.574748
+1,141,Fetch: gate/up prefix,5.40298
+1,141,Fetch: down component,2.445745
+1,142,Other kernel,0.000864
+1,142,Embedding/head,0.016064
+1,142,Residual/norm,0.794086
+1,142,Dense GEMV / projections / output head,3.87455
+1,142,KDA recurrence/prep,0.448902
+1,142,Activation quantization / SwiGLU,0.002624
+1,142,DSA / MLA,1.174347
+1,142,Routing / shared SwiGLU / publication,0.954469
+1,142,Host/disk wait,0.029376
+1,142,Fetch: whole expert,4.346237
+1,142,Expert gate/up + shared down,1.162057
+1,142,Expert down,0.735908
+1,142,CPU answer wait,2.452884
+1,142,Fetch: gate/up prefix,5.596038
+1,142,Fetch: down component,2.594803
+1,143,Other kernel,0.000928
+1,143,Embedding/head,0.017184
+1,143,Residual/norm,0.79623
+1,143,Dense GEMV / projections / output head,3.577585
+1,143,KDA recurrence/prep,0.451745
+1,143,Activation quantization / SwiGLU,0.002562
+1,143,DSA / MLA,1.190665
+1,143,Routing / shared SwiGLU / publication,0.956455
+1,143,Host/disk wait,0.028866
+1,143,Fetch: whole expert,3.066644
+1,143,Expert gate/up + shared down,1.196524
+1,143,Expert down,0.735334
+1,143,CPU answer wait,3.479001
+1,143,Fetch: gate/up prefix,5.105506
+1,143,Fetch: down component,2.356335
+1,144,Other kernel,0.000864
+1,144,Embedding/head,0.0168
+1,144,Residual/norm,0.79418
+1,144,Dense GEMV / projections / output head,3.542653
+1,144,KDA recurrence/prep,0.444643
+1,144,Activation quantization / SwiGLU,0.00256
+1,144,DSA / MLA,1.52049
+1,144,Routing / shared SwiGLU / publication,0.927909
+1,144,Host/disk wait,0.029185
+1,144,Fetch: whole expert,2.576979
+1,144,Expert gate/up + shared down,1.254054
+1,144,Expert down,0.771459
+1,144,CPU answer wait,2.11976
+1,144,Fetch: gate/up prefix,4.6928
+1,144,Fetch: down component,1.965322
+1,145,Other kernel,0.000864
+1,145,Embedding/head,0.017152
+1,145,Residual/norm,0.794018
+1,145,Dense GEMV / projections / output head,3.83337
+1,145,KDA recurrence/prep,0.451302
+1,145,Activation quantization / SwiGLU,0.002624
+1,145,DSA / MLA,1.177768
+1,145,Routing / shared SwiGLU / publication,0.971559
+1,145,Host/disk wait,0.029536
+1,145,Fetch: whole expert,4.068091
+1,145,Expert gate/up + shared down,1.144327
+1,145,Expert down,0.718022
+1,145,CPU answer wait,2.68162
+1,145,Fetch: gate/up prefix,6.596748
+1,145,Fetch: down component,2.757267
+1,146,Other kernel,0.000896
+1,146,Embedding/head,0.24365
+1,146,Residual/norm,0.792518
+1,146,Dense GEMV / projections / output head,3.58972
+1,146,KDA recurrence/prep,0.449221
+1,146,Activation quantization / SwiGLU,0.002624
+1,146,DSA / MLA,1.199752
+1,146,Routing / shared SwiGLU / publication,0.959363
+1,146,Host/disk wait,0.029217
+1,146,Fetch: whole expert,3.173716
+1,146,Expert gate/up + shared down,1.15857
+1,146,Expert down,0.731812
+1,146,CPU answer wait,3.285015
+1,146,Fetch: gate/up prefix,5.479459
+1,146,Fetch: down component,2.52005
+1,147,Other kernel,0.000992
+1,147,Embedding/head,0.016736
+1,147,Residual/norm,0.794659
+1,147,Dense GEMV / projections / output head,3.590965
+1,147,KDA recurrence/prep,0.450661
+1,147,Activation quantization / SwiGLU,0.002592
+1,147,DSA / MLA,1.177961
+1,147,Routing / shared SwiGLU / publication,0.956426
+1,147,Host/disk wait,0.029056
+1,147,Fetch: whole expert,3.039573
+1,147,Expert gate/up + shared down,1.22388
+1,147,Expert down,0.739045
+1,147,CPU answer wait,2.790004
+1,147,Fetch: gate/up prefix,5.446628
+1,147,Fetch: down component,2.546515
+1,148,Other kernel,0.000896
+1,148,Embedding/head,0.016384
+1,148,Residual/norm,0.79322
+1,148,Dense GEMV / projections / output head,3.673945
+1,148,KDA recurrence/prep,0.457702
+1,148,Activation quantization / SwiGLU,0.002592
+1,148,DSA / MLA,1.167143
+1,148,Routing / shared SwiGLU / publication,1.347306
+1,148,Host/disk wait,0.02944
+1,148,Fetch: whole expert,4.559806
+1,148,Expert gate/up + shared down,1.061093
+1,148,Expert down,0.687878
+1,148,CPU answer wait,3.395447
+1,148,Fetch: gate/up prefix,8.055545
+1,148,Fetch: down component,3.745914
+1,149,Other kernel,0.000992
+1,149,Embedding/head,0.016288
+1,149,Residual/norm,0.798114
+1,149,Dense GEMV / projections / output head,3.911071
+1,149,KDA recurrence/prep,0.458882
+1,149,Activation quantization / SwiGLU,0.002528
+1,149,DSA / MLA,1.185064
+1,149,Routing / shared SwiGLU / publication,0.988869
+1,149,Host/disk wait,0.029249
+1,149,Fetch: whole expert,4.455518
+1,149,Expert gate/up + shared down,1.476106
+1,149,Expert down,0.691398
+1,149,CPU answer wait,3.300051
+1,149,Fetch: gate/up prefix,7.677332
+1,149,Fetch: down component,3.920732
+1,150,Other kernel,0.000896
+1,150,Embedding/head,0.016896
+1,150,Residual/norm,0.797925
+1,150,Dense GEMV / projections / output head,3.823326
+1,150,KDA recurrence/prep,0.691366
+1,150,Activation quantization / SwiGLU,0.002592
+1,150,DSA / MLA,1.18516
+1,150,Routing / shared SwiGLU / publication,0.955236
+1,150,Host/disk wait,0.029056
+1,150,Fetch: whole expert,2.957493
+1,150,Expert gate/up + shared down,1.224324
+1,150,Expert down,0.746278
+1,150,CPU answer wait,2.61896
+1,150,Fetch: gate/up prefix,5.245284
+1,150,Fetch: down component,2.775636
+1,151,Other kernel,0.000864
+1,151,Embedding/head,0.016704
+1,151,Residual/norm,0.796358
+1,151,Dense GEMV / projections / output head,3.577945
+1,151,KDA recurrence/prep,0.446434
+1,151,Activation quantization / SwiGLU,0.002592
+1,151,DSA / MLA,1.180104
+1,151,Routing / shared SwiGLU / publication,0.956742
+1,151,Host/disk wait,0.02944
+1,151,Fetch: whole expert,3.133397
+1,151,Expert gate/up + shared down,1.195112
+1,151,Expert down,0.736456
+1,151,CPU answer wait,3.072051
+1,151,Fetch: gate/up prefix,5.15578
+1,151,Fetch: down component,2.367312
+1,152,Other kernel,0.000896
+1,152,Embedding/head,0.016288
+1,152,Residual/norm,0.795205
+1,152,Dense GEMV / projections / output head,3.822328
+1,152,KDA recurrence/prep,0.44778
+1,152,Activation quantization / SwiGLU,0.002624
+1,152,DSA / MLA,1.171688
+1,152,Routing / shared SwiGLU / publication,0.953735
+1,152,Host/disk wait,0.028832
+1,152,Fetch: whole expert,4.532222
+1,152,Expert gate/up + shared down,1.164745
+1,152,Expert down,0.736039
+1,152,CPU answer wait,3.057813
+1,152,Fetch: gate/up prefix,5.177827
+1,152,Fetch: down component,2.181615
+1,153,Other kernel,0.000896
+1,153,Embedding/head,0.017248
+1,153,Residual/norm,0.797225
+1,153,Dense GEMV / projections / output head,3.569815
+1,153,KDA recurrence/prep,0.4505
+1,153,Activation quantization / SwiGLU,0.002593
+1,153,DSA / MLA,1.164007
+1,153,Routing / shared SwiGLU / publication,0.941573
+1,153,Host/disk wait,0.029088
+1,153,Fetch: whole expert,2.384463
+1,153,Expert gate/up + shared down,1.64219
+1,153,Expert down,0.759173
+1,153,CPU answer wait,3.008626
+1,153,Fetch: gate/up prefix,4.720127
+1,153,Fetch: down component,2.163856
+1,154,Other kernel,0.000736
+1,154,Embedding/head,0.017344
+1,154,Residual/norm,0.794982
+1,154,Dense GEMV / projections / output head,3.569683
+1,154,KDA recurrence/prep,0.4496
+1,154,Activation quantization / SwiGLU,0.002624
+1,154,DSA / MLA,1.160873
+1,154,Routing / shared SwiGLU / publication,0.948803
+1,154,Host/disk wait,0.028864
+1,154,Fetch: whole expert,2.727572
+1,154,Expert gate/up + shared down,1.230863
+1,154,Expert down,0.745928
+1,154,CPU answer wait,2.733712
+1,154,Fetch: gate/up prefix,5.348293
+1,154,Fetch: down component,2.664208
+1,155,Other kernel,0.000928
+1,155,Embedding/head,0.017441
+1,155,Residual/norm,0.795012
+1,155,Dense GEMV / projections / output head,4.304449
+1,155,KDA recurrence/prep,0.451555
+1,155,Activation quantization / SwiGLU,0.002592
+1,155,DSA / MLA,1.186915
+1,155,Routing / shared SwiGLU / publication,0.964296
+1,155,Host/disk wait,0.029248
+1,155,Fetch: whole expert,3.735767
+1,155,Expert gate/up + shared down,1.157225
+1,155,Expert down,0.721156
+1,155,CPU answer wait,3.455031
+1,155,Fetch: gate/up prefix,5.764326
+1,155,Fetch: down component,2.645329
+1,156,Other kernel,0.000768
+1,156,Embedding/head,0.017248
+1,156,Residual/norm,0.793443
+1,156,Dense GEMV / projections / output head,3.827322
+1,156,KDA recurrence/prep,0.44845
+1,156,Activation quantization / SwiGLU,0.002688
+1,156,DSA / MLA,1.166858
+1,156,Routing / shared SwiGLU / publication,0.96807
+1,156,Host/disk wait,0.029602
+1,156,Fetch: whole expert,3.527543
+1,156,Expert gate/up + shared down,1.415304
+1,156,Expert down,0.726309
+1,156,CPU answer wait,2.057491
+1,156,Fetch: gate/up prefix,7.041263
+1,156,Fetch: down component,3.419382
+1,157,Other kernel,0.000896
+1,157,Embedding/head,0.017152
+1,157,Residual/norm,0.794985
+1,157,Dense GEMV / projections / output head,4.23097
+1,157,KDA recurrence/prep,0.446788
+1,157,Activation quantization / SwiGLU,0.002624
+1,157,DSA / MLA,1.168585
+1,157,Routing / shared SwiGLU / publication,0.945959
+1,157,Host/disk wait,0.029248
+1,157,Fetch: whole expert,2.232304
+1,157,Expert gate/up + shared down,1.234248
+1,157,Expert down,0.755814
+1,157,CPU answer wait,3.324916
+1,157,Fetch: gate/up prefix,4.812065
+1,157,Fetch: down component,2.146992
