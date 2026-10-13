@@ -193,6 +193,7 @@ struct MoeDev {
     // Decode experiment: 0 all ranks, 1 resident, 2 fetched. Selected only
     // after moe_wait has published disk sources; no expert prediction.
     int gu_phase = 0;
+    int down_row_first = 0, down_row_count = 0; // 0 count means full output
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted

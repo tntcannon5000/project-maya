@@ -3480,7 +3480,7 @@ __global__ void __launch_bounds__(256) moe_down_kernel(MoeDev d, int k, int n_em
     }
     __syncthreads();
     const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
-    const int r0 = blockIdx.x * NR;
+    const int r0 = d.down_row_first + blockIdx.x * NR;
     const size_t drb = rbytes<TD>(n_ff);
     {
         float s[NR];
@@ -4814,7 +4814,7 @@ void moe_down(int d_type, const MoeDev& d_in, int k, int n_embd, int n_ff, size_
     d.skip = g_skip;
 #if defined(STRATA_USE_HIP)
     // IQ3_XXS down regresses on gfx1151; let it use the original dispatch below.
-    if ((d_type == 22 || d_type == 18) && n_embd == 4096 && n_ff == 2048 && rdna3_expert_device(d_type == 22)) {
+    if (!d.down_row_count && (d_type == 22 || d_type == 18) && n_embd == 4096 && n_ff == 2048 && rdna3_expert_device(d_type == 22)) {
         // Two rows lower the register budget; IQ2_S prefers global grid reads,
         // while the smaller IQ3_XXS grid is faster in LDS on gfx1100.
         if (d_type == 22) launch_expert_down<22, 2, true, true, true>(d, k, n_embd, n_ff, down_off, hq, sh_out, out, s);
@@ -4823,7 +4823,7 @@ void moe_down(int d_type, const MoeDev& d_in, int k, int n_embd, int n_ff, size_
         return;
     }
 #endif
-    const int blocks = n_embd / DOWN_ROWS;   // n_embd % DOWN_ROWS == 0 (4096)
+    const int blocks = (d.down_row_count?d.down_row_count:n_embd) / DOWN_ROWS;
     const auto* H = (const block_q8_1*) hq;
     switch (d_type) {
 #define GLMF_DN(T) \

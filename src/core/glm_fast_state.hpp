@@ -28,6 +28,9 @@
 #include <string>
 #include <thread>
 #include <vector>
+#if defined(_WIN32) && (defined(_M_X64) || defined(_M_IX86))
+#include <immintrin.h>
+#endif
 #ifdef __linux__
 #include <pthread.h>
 #include <sched.h>
@@ -51,6 +54,9 @@ namespace gf = strata::kernels::glmf;
 inline void cpu_relax() {
 #if defined(__x86_64__) && !defined(_WIN32)
     asm volatile("pause" ::: "memory");
+#elif defined(_WIN32) && (defined(_M_X64) || defined(_M_IX86))
+    static const bool pause_on=[] { const char* v=std::getenv("MAYA_CPU_PAUSE");return v && std::atoi(v)>0; }();
+    if(pause_on)_mm_pause();
 #endif
 }
 

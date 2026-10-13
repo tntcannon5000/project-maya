@@ -47,3 +47,41 @@ dependencies, and run sequential experiments.
   transport and CPU-assignment experiments. Created isolated branch and
   preserved baseline binary before source edits.
 - Research launched in parallel; experiment execution remains serial.
+
+## First mechanism screens (not final retention decisions)
+
+| Screen | First/repeat TPS | Evidence / decision so far |
+|---|---:|---|
+| Fresh retained baseline | 39.01 / 43.83 | 383 MB/token repeated demand, fixed masks |
+| Q4 two rows/warp | 40.01 / 42.62 | All 39.65M logits exact; mixed timing, needs kernel attribution |
+| Early CPU answer | 40.21 / 44.41 | Exact, same demand/counters; modest improvement requiring combination/confirmation |
+| Windows spin PAUSE | 40.55 / 44.75 | Exact, same demand/counters; test supporting CPU combination |
+
+Resident-GU diagnostic (profiled, not directly comparable to table): repeat
+22.871→23.195 ms, overlap .594→.957 ms, arithmetic9.223→9.615 ms,
+CPU wait2.956→3.507 ms. Mechanism engages; no speed gain. Implementing the
+down-row-band extension to exercise full component readiness, and combinations
+with CPU improvements, before rejecting the whole overlap direction.
+
+## Dependency map and a priori bounds
+
+- Q4 paired rows → reusable activation-only dmin work; unchanged weight bytes,
+  k accumulation and reductions. Dense Q4 already moves ~4.185GB/token at
+  ~1.3TB/s; research bounds ideal saving below0.9ms, realistic much smaller.
+- Resident GU needs captured fork/join, bounded prefix-copy occupancy, immutable
+  rank/source mapping after disk readiness, shared down exactly once. Sources
+  and slots cannot be reused until both streams join. Masking retains rank hq.
+- Down row bands extend that pipeline: preserve each output row's dot and rank
+  accumulation, copy each byte exactly once, start first output half before
+  second-half copy completes. Default callers keep full-row execution.
+- Early CPU answer needs stable request snapshot and deferred processed
+  retirement. Disk and multi-token windows keep the original path.
+- CPU expert-ready pipeline replaces two pool generations with a synchronous
+  ready-task graph, not asynchronous unowned jobs. Last GU task quantizes h,
+  release/acquire publishes it to down tasks, final down completion permits
+  per-output-row ordered combine. Prefill/multi-token CPU kernels unchanged.
+- Windows PAUSE is a spin hint, not a fence/yield or a CPU affinity policy.
+  Preserve all existing memory ordering and wall-time spin budgets.
+- GPU early compute and CPU changes can compete for RAM differently: judge
+  whole token loop, not sum isolated savings. No new quantization or skipped
+  computation in any experiment.

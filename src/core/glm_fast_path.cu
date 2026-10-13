@@ -1758,6 +1758,56 @@ void Glm5Model::lane_experts(glmfast::Workers& pool, uint8_t* act, uint8_t* hq, 
     const int threads = pool.active();
     const int T = threads * (kSplit > 0 ? kSplit : std::max(1, std::min(8, 48 / std::max(1, threads))));
     kc::native_quant_act(nf, x, act);
+    static const bool cpu_pipeline=[] {const char* v=getenv("MAYA_CPU_PIPELINE");return v && std::atoi(v)>0;}();
+    if(cpu_pipeline && ne>1) {
+        // One synchronous pool generation; a ready expert can progress to
+        // down while other experts finish GU. No worker waits on a particular
+        // unfinished task, and no nested Workers::run is allowed.
+        MayaTimelineRange range("CPU stage expert-ready pipeline");
+        const int pieces=std::max(1,(T+ne-1)/ne);
+        std::atomic<int> gu_next{0},down_done{0},combine_next{0};
+        std::atomic<int> gu_left[8],h_ready[8],down_next[8];
+        for(int i=0;i<ne;++i){gu_left[i].store(pieces);h_ready[i].store(0);down_next[i].store(0);}
+        pool.run(threads,[&](int worker) {
+            while(true) {
+                if(down_done.load(std::memory_order_acquire)==ne*pieces) {
+                    const int job=combine_next.fetch_add(1,std::memory_order_relaxed);
+                    if(job>=pieces)return;
+                    const int end=(int)((int64_t)n_embd*(job+1)/pieces);
+                    for(int r=(int)((int64_t)n_embd*job/pieces);r<end;++r) {
+                        float sum=0;for(int i=0;i<ne;++i)sum+=w[i]*dn[(size_t)i*n_embd+r];out[r]=sum;
+                    }
+                    continue;
+                }
+                bool worked=false;
+                for(int n=0;n<ne && !worked;++n) {
+                    const int i=(n+worker)%ne;
+                    if(!h_ready[i].load(std::memory_order_acquire))continue;
+                    int job=down_next[i].load(std::memory_order_relaxed);
+                    while(job<pieces && !down_next[i].compare_exchange_weak(job,job+1,std::memory_order_relaxed)){}
+                    if(job>=pieces)continue;
+                    const void* h[1]={hq+(size_t)i*kc::kNativeHBytes};float* o[1]={dn+(size_t)i*n_embd};
+                    kc::native_down_rows_split(nf,blob[i]+Ly.down_off,h,1,o,
+                        (int)((int64_t)n_embd*job/pieces),(int)((int64_t)n_embd*(job+1)/pieces));
+                    down_done.fetch_add(1,std::memory_order_acq_rel);worked=true;
+                }
+                if(worked)continue;
+                int job=gu_next.load(std::memory_order_relaxed);
+                while(job<ne*pieces && !gu_next.compare_exchange_weak(job,job+1,std::memory_order_relaxed)){}
+                if(job<ne*pieces) {
+                    const int i=job/pieces,p=job%pieces;
+                    const void* a[1]={act};float* o[1]={ff+(size_t)i*n_ff};
+                    kc::native_gu_rows_split(nf,blob[i],blob[i]+Ly.gu_bytes,a,1,o,
+                        (int)((int64_t)n_ff*p/pieces),(int)((int64_t)n_ff*(p+1)/pieces),g.swiglu_exp);
+                    if(gu_left[i].fetch_sub(1,std::memory_order_acq_rel)==1) {
+                        kc::native_quant_h(nf,ff+(size_t)i*n_ff,hq+(size_t)i*kc::kNativeHBytes);
+                        h_ready[i].store(1,std::memory_order_release);
+                    }
+                } else cpu_relax();
+            }
+        });
+        return;
+    }
     const int gu_tot = ne * n_ff;
     {
     MayaTimelineRange range("CPU stage gate-up batch");
@@ -4749,6 +4799,12 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     const bool overlap_enabled=overlap_blocks && (!captured_only || (F->kda_graph_on && Ly.recr));
     static const bool resident_gu=[] { const char* v=getenv("MAYA_RESIDENT_GU");return v && std::atoi(v)>0; }();
     const bool early_gu=resident_gu && overlap_enabled;
+    static const bool down_bands=[] {const char* v=getenv("MAYA_DOWN_BANDS");return v && std::atoi(v)==2;}();
+    const bool band_down=down_bands && overlap_enabled;
+    const size_t down_bytes=Ly.blob-Ly.down_off;
+    if(band_down && (g.n_embd%8 || down_bytes%32 || down_bytes%(size_t)g.n_embd)) {
+        err="maya down bands require two row-aligned native halves";return false;
+    }
     if (overlap_enabled && (F->max_pf || Ly.exl3 || Ly.down_off%16 || Ly.blob%16)) {
         err="maya overlap requires aligned native weights and expert prediction off"; return false;
     }
@@ -4774,7 +4830,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
         } else gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
             !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya overlap fork",err)) return false;
-        gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,Ly.blob-Ly.down_off,overlap_blocks,F->ps);
+        gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,band_down?down_bytes/2:down_bytes,overlap_blocks,F->ps);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"maya down ready",err)) return false;
     } else gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
     if (F->prof_on) F->mark("moe_fetch");
@@ -4811,7 +4867,20 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
                     Ly.sh_down.type, F->sh_hq, FFs, F->sh_out, s);
     if (F->prof_on) F->mark("moe_gate_up");
     if (overlap_enabled && !glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"maya down consumer",err)) return false;
-    gf::moe_down(Ly.d_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, Ly.down_off, F->hq,
+    if(band_down) {
+        // Per-output-row dots and expert accumulation order are unchanged.
+        // Half one executes while half two's bytes arrive; join protects the
+        // second consumer and every subsequent route/slot reuse.
+        gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off+down_bytes/2,down_bytes/2,overlap_blocks,F->ps);
+        if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,F->ps),"down second band ready",err))return false;
+        auto band=md;band.down_row_count=g.n_embd/2;
+        gf::moe_down(Ly.d_type,band,g.n_exp_used,g.n_embd,g.n_ff_exp,Ly.down_off,F->hq,
+            Ly.sh_down.q?F->sh_out:nullptr,io.ffn,s);
+        if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pred,0),"down second band consumer",err))return false;
+        band.down_row_first=g.n_embd/2;
+        gf::moe_down(Ly.d_type,band,g.n_exp_used,g.n_embd,g.n_ff_exp,Ly.down_off,F->hq,
+            Ly.sh_down.q?F->sh_out:nullptr,io.ffn,s);
+    } else gf::moe_down(Ly.d_type, md, g.n_exp_used, g.n_embd, g.n_ff_exp, Ly.down_off, F->hq,
                  Ly.sh_down.q != nullptr ? F->sh_out : nullptr, io.ffn, s);
     if (F->prof_on) F->mark("moe_down");
     }
