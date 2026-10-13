@@ -1,0 +1,7 @@
+[
+  "current-csv, repeat 0: route fetch bytes, hits and admissions match engine counters exactly.",
+  "current-csv, repeat 1: route fetch bytes, hits and admissions match engine counters exactly.",
+  "current-web, repeat 0: route fetch bytes, hits and admissions match engine counters exactly.",
+  "current-web, repeat 1: route fetch bytes, hits and admissions match engine counters exactly.",
+  "current-csv: all 39,649,280 logits exactly equal retained reference maya-transfer-attribution/replay-stamps; maximum difference 0."
+]
