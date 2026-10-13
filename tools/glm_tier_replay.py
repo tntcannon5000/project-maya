@@ -4,9 +4,10 @@ and alternatives - to measure an eviction or promotion idea on recorded routes b
 
 Recording a trace: start the engine as usual with STRATA_GLM_ROUTE_LOG=<prefix> (the config's "env" or the shell).
 Every route goes to <prefix>.<device> (0 = a split's first GPU, 1 = its second), one line per route:
-    layer e0 .. e7 fetch miss cpu [| n0 .. n15]
+    layer e0 .. e7 fetch miss cpu [promotion] [| n0 .. n15]
 the route's experts in selection order, then bit masks over e0..e7: fetched over PCIe, read from disk, computed by
-the CPU lane (an expert in none of them was in VRAM); the near misses after '|' are there when the build logs them.
+the CPU lane (an expert in none of them was in VRAM); newer builds append the actual promotion mask.
+The near misses after '|' are there when the build logs them.
 Run the workload to study, stop the engine, then replay with the usage file of that run (the engine seeds its
 residents from it and rewrites it when it stops):
 

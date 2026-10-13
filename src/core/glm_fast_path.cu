@@ -3436,7 +3436,9 @@ void Glm5Model::fast_service() {
                 if (rf != nullptr) {
                     std::fprintf(rf, "%d", il);
                     for (int i = 0; i < K; ++i) std::fprintf(rf, " %d", ids[i]);
-                    std::fprintf(rf, " %u %u %u |", fetch, miss, cpu);
+                    // Optional fourth mask records actual admission, not merely
+                    // fetching into scratch. Older readers use the first three.
+                    std::fprintf(rf, " %u %u %u %u |", fetch, miss, cpu, promo);
                     for (int i = 0; i < 16 && rq->near_ids[i] >= 0; ++i) std::fprintf(rf, " %d", (int) rq->near_ids[i]);
                     std::fputc('\n', rf);
                 }
