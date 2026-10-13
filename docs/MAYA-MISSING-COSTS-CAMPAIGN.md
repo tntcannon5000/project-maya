@@ -60,3 +60,18 @@ parity from backend-placement differences. No threshold relaxation.
   gate/up or adjacent down rows. Unlike changing reduction widths, widen over
   independent output rows. Requires exact standalone row tests and full-model
   logits before performance can qualify it. Q3/Q4 remain original fallbacks.
+
+## Arithmetic and phase qualification
+
+- Paired Q2 standalone tests passed exact dots (96 pairs across256/512/2048/4096),
+  whole512x256 and4096x2048 split experts, clamp/SwiGLU, hidden activation bytes,
+  misaligned valid data and odd down-tail ranges. Full-model Q2 screen is exact
+  across39,649,280 logits,40.84/46.21TPS. No useful standalone gain established.
+- CoarseCPU + pairedQ2 + four-load copy:40.82/45.39TPS exact; adding plausible
+  mechanisms worsened the screen. Do not retain by summing isolated numbers.
+- Keep8 CPU callbacks admitted until all demand bytes arrive, with copy-stream
+  generation publication and existing work-conserving completion escape:
+  41.49/46.30TPS exact. No major gain; late CPU completion remains the tradeoff.
+- Online16 GPU-only isolation:9,912,320 logits exact, zero CPU experts. The
+  hybrid difference is backend placement, not evidence of lost/corrupted copies.
+  Reject its first-request regression and mixed-backend divergence for retention.

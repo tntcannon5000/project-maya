@@ -52,7 +52,7 @@ struct GlmReusePolicy {
             l.history_next=(at+1)%17;
             l.history_n=std::min(17,l.history_n+1);
             if(l.history_n==17) {
-                std::fill(l.future.begin(),l.future.end(),0);
+                std::fill(l.future.begin(),l.future.end(),uint8_t{0});
                 std::array<int,128> future_ids{};
                 int future_n=0;
                 for(int d=1;d<=16;++d) {

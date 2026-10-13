@@ -4867,6 +4867,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     }
     static const bool down_bands=[] {const char* v=getenv("MAYA_DOWN_BANDS");return v && std::atoi(v)==2;}();
     const bool band_down=down_bands && overlap_enabled;
+    static const bool release_down=[] {const char* v=getenv("MAYA_CPU_RELEASE_DOWN");return v && std::atoi(v)>0;}();
     const size_t down_bytes=Ly.blob-Ly.down_off;
     if(band_down && (g.n_embd%8 || down_bytes%32 || down_bytes%(size_t)g.n_embd)) {
         err="maya down bands require two row-aligned native halves";return false;
@@ -4904,10 +4905,11 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
                 io.xq,F->hq,Ly.sh_down.q,Ly.sh_down.type,F->sh_hq,FFs,F->sh_out,s);
             if(!glmfast::cuda_ok(cudaStreamWaitEvent(s,F->ev_pf,0),"GU second band consumer",err))return false;
         } else gf::moe_fetch_component(md,g.n_exp_used,0,Ly.down_off,0,s);
-        if(md.cpu_phase_on)gf::moe_cpu_phase_ready(md,s);
+        if(md.cpu_phase_on && !release_down)gf::moe_cpu_phase_ready(md,s);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,s),"maya GU ready",err) ||
             !glmfast::cuda_ok(cudaStreamWaitEvent(F->ps,F->ev_pred,0),"maya overlap fork",err)) return false;
         gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off,band_down?down_bytes/2:down_bytes,overlap_blocks,F->ps);
+        if(md.cpu_phase_on && release_down && !band_down)gf::moe_cpu_phase_ready(md,F->ps);
         if (!glmfast::cuda_ok(cudaEventRecord(F->ev_pf,F->ps),"maya down ready",err)) return false;
     } else {
         gf::moe_fetch(md, g.n_exp_used, Ly.blob, s);
@@ -4953,6 +4955,7 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
         // Half one executes while half two's bytes arrive; join protects the
         // second consumer and every subsequent route/slot reuse.
         gf::moe_fetch_component(md,g.n_exp_used,Ly.down_off+down_bytes/2,down_bytes/2,overlap_blocks,F->ps);
+        if(md.cpu_phase_on && release_down)gf::moe_cpu_phase_ready(md,F->ps);
         if(!glmfast::cuda_ok(cudaEventRecord(F->ev_pred,F->ps),"down second band ready",err))return false;
         auto band=md;band.down_row_count=g.n_embd/2;
         gf::moe_down(Ly.d_type,band,g.n_exp_used,g.n_embd,g.n_ff_exp,Ly.down_off,F->hq,
