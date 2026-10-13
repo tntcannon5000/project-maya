@@ -1,0 +1,10 @@
+{
+  "retained_commit": "d9b19bb91d0019d0866175e7c362ab35547000dc",
+  "upstream_commit": "1e225b983262c1dc3efc3640874261391436d470",
+  "pack": "G:\\Models\\GLM-5.3-Flash-3.0bit-Q4Kattn\\pack-maya",
+  "pack_sha256": {
+    "index.txt": "bc4c257b27616ce4c2bed8ed8f12a760b7600e930b824121626209790cc9feed",
+    "native_experts.txt": "53cc70920b5a5530a7b30867156ad860cf0de5fd16df6c6d0081e63e012780ce"
+  },
+  "profile_sha256": "53b03a13482b6fedc599d149be2d69f88c38d9edc4611a740da46314ab1dc5a7"
+}
