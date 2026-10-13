@@ -3108,8 +3108,9 @@ void Glm5Model::fast_destroy() {
     F->quit.store(true);
     if (F->svc.joinable()) F->svc.join();
     if (!F->reuse_policy.layers.empty())
-        std::fprintf(stderr,"maya reuse policy: observations=%llu changed_victims=%llu\n",
-            (unsigned long long)F->reuse_policy.observations,(unsigned long long)F->reuse_policy.changed_victims);
+        std::fprintf(stderr,"maya reuse policy: observations=%llu changed_victims=%llu horizon=%d matured_anchors=%llu\n",
+            (unsigned long long)F->reuse_policy.observations,(unsigned long long)F->reuse_policy.changed_victims,
+            F->reuse_policy.horizon,(unsigned long long)F->reuse_policy.matured_anchors);
     if(F->cpu_single_coarse_batches.load())std::fprintf(stderr,"maya CPU single coarse: batches=%llu\n",
         (unsigned long long)F->cpu_single_coarse_batches.load());
     // H3 may keep copy-back live beside the last token. Join it before any RAM
@@ -4858,6 +4859,9 @@ bool Glm5Model::fast_moe_experts(int il, const MoeIo& io, bool pred, int n_ah, c
     const bool early_gu=resident_gu && overlap_enabled;
     static const bool gu_bands=[] {const char* v=getenv("MAYA_GU_BANDS");return v && std::atoi(v)==2;}();
     const bool band_gu=gu_bands && overlap_enabled;
+#if defined(STRATA_USE_HIP)
+    if(band_gu){err="maya GU band experiment is CUDA-only";return false;}
+#endif
     if(band_gu && (early_gu || Ly.exl3 || g.n_ff_exp%64 || Ly.down_off!=2*Ly.gu_bytes || Ly.gu_bytes%32)) {
         err="maya GU bands require equal aligned native matrices and resident GU off";return false;
     }

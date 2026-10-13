@@ -3403,14 +3403,21 @@ __global__ void __launch_bounds__(256) moe_fetch_kernel(MoeDev d, int k, size_t 
 }
 
 // Limit competing copy CTAs without changing packed weights or arithmetic.
+template<int U=1>
 __global__ void __launch_bounds__(256) moe_component_kernel(MoeDev d, int k, size_t offset16, size_t n16) {
     for (int i=0; i<k; ++i) {
         const auto src=d.fetch_src[i];
         if (!src) continue;
         const uint4* from=(const uint4*)src+offset16;
         uint4* to=(uint4*)d.plan_ptr[i]+offset16;
-        for (size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x; j<n16; j+=(size_t)gridDim.x*blockDim.x)
-            to[j]=from[j];
+        const size_t step=(size_t)gridDim.x*blockDim.x;
+        for (size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x; j<n16; j+=U*step) {
+            uint4 values[U];
+            #pragma unroll
+            for(int u=0;u<U;++u)if(j+u*step<n16)values[u]=from[j+u*step];
+            #pragma unroll
+            for(int u=0;u<U;++u)if(j+u*step<n16)to[j+u*step]=values[u];
+        }
     }
 }
 
@@ -3418,20 +3425,29 @@ void launch_fetch_component(const MoeDev& d, int k, size_t offset, size_t bytes,
     static int sms=0;
     if (!sms) { int dev=0; cudaGetDevice(&dev); cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev); }
     const int grid=blocks>0 ? std::min(blocks,sms) : sms;
-    moe_component_kernel<<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
+    static const bool pipe=[] {const char* v=getenv("MAYA_FETCH_PIPE4");return v && std::atoi(v)>0;}();
+    if(pipe)moe_component_kernel<4><<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
+    else moe_component_kernel<1><<<std::max(1,grid),256,0,s>>>(d,k,offset/16,bytes/16);
 }
 
 // One launch copies corresponding native gate AND up rows. No repacking,
 // extra bytes or change to the persistent [gate|up|down] representation.
+template<int U=1>
 __global__ void __launch_bounds__(256) moe_gu_band_fetch_kernel(MoeDev d, int k,
         size_t matrix16, size_t offset16, size_t n16) {
     for(int i=0;i<k;++i) {
         if(!d.fetch_src[i])continue;
         const auto* from=(const uint4*)d.fetch_src[i];
         auto* to=(uint4*)d.plan_ptr[i];
-        for(size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x;j<2*n16;j+=(size_t)gridDim.x*blockDim.x) {
-            const size_t at=offset16+(j<n16?j:matrix16+j-n16);
-            to[at]=from[at];
+        const size_t step=(size_t)gridDim.x*blockDim.x;
+        for(size_t j=blockIdx.x*(size_t)blockDim.x+threadIdx.x;j<2*n16;j+=U*step) {
+            uint4 values[U];size_t ats[U];
+            #pragma unroll
+            for(int u=0;u<U;++u)if(j+u*step<2*n16) {
+                const size_t x=j+u*step;ats[u]=offset16+(x<n16?x:matrix16+x-n16);values[u]=from[ats[u]];
+            }
+            #pragma unroll
+            for(int u=0;u<U;++u)if(j+u*step<2*n16)to[ats[u]]=values[u];
         }
     }
 }
@@ -3440,7 +3456,9 @@ void launch_fetch_gu_band(const MoeDev& d, int k, size_t matrix_bytes, size_t of
                       size_t bytes, int blocks, cudaStream_t s) {
     int dev=0,sms=0;cudaGetDevice(&dev);cudaDeviceGetAttribute(&sms,cudaDevAttrMultiProcessorCount,dev);
     const int grid=blocks>0?std::min(blocks,sms):sms;
-    moe_gu_band_fetch_kernel<<<std::max(1,grid),256,0,s>>>(d,k,matrix_bytes/16,offset/16,bytes/16);
+    static const bool pipe=[] {const char* v=getenv("MAYA_FETCH_PIPE4");return v && std::atoi(v)>0;}();
+    if(pipe)moe_gu_band_fetch_kernel<4><<<std::max(1,grid),256,0,s>>>(d,k,matrix_bytes/16,offset/16,bytes/16);
+    else moe_gu_band_fetch_kernel<1><<<std::max(1,grid),256,0,s>>>(d,k,matrix_bytes/16,offset/16,bytes/16);
 }
 
 __global__ void moe_prefix_ready_kernel(MoeDev d) {

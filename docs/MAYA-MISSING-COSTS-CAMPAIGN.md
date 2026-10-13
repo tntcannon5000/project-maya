@@ -41,3 +41,22 @@ parity from backend-placement differences. No threshold relaxation.
 - Research caveat: existing down fetch already overlaps nearly all GU on demand
   routes. Prefix streaming could merely relocate overlap; any gain needs traced
   contention/critical-path evidence, not counting overlap twice.
+
+## Second checkpoint: decisive limits
+
+- Combination screen 41.68/46.45 TPS, exact. Combined diagnostic warm loop
+  22.898ms versus retained 22.880ms: flat. Exposed fetch falls9.107→8.399ms,
+  but GPU arithmetic rises9.401→9.905ms and CPU wait3.160→3.462ms. Actual
+  overlap1.765ms, no claim of additive gains or profiled net improvement.
+- Four independent mapped-copy loads before stores:40.83/45.82TPS exact;
+  no useful independent gain. Same bytes and graph topology.
+- Online16 residency: matured12600 causal anchors, changed7582 victims.
+  First uploads464.14→483.53MB/t, repeat383.00→367.94MB/t. Route-logged TPS
+  40.00/46.13 is diagnostic, not controlled unprofiled confirmation. Full hybrid
+  logits differ (max3.42, greedy99.22%) as backend placement changes. Not
+  eligible for retention on warm-only bytes. GPU-only isolation follows.
+- New substantial CPU hypothesis: paired Q2 rows in AVX512 retain independent
+  original AVX2 integer/FMA/reduction chains, sharing activation loads across
+  gate/up or adjacent down rows. Unlike changing reduction widths, widen over
+  independent output rows. Requires exact standalone row tests and full-model
+  logits before performance can qualify it. Q3/Q4 remain original fallbacks.

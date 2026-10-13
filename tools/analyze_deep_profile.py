@@ -60,16 +60,17 @@ def main():
         # copies. Grid size is NOT a phase identifier: prefix may also use32.
         for j,route in enumerate(routing):
             end=routing[j+1]['start'] if j+1<len(routing) else t['end']
-            fs=[k for k in ks if route['start']<=k['start']<end and ('moe_fetch_kernel' in k['name'] or 'moe_component_kernel' in k['name'])]
-            assert len(fs) in (1,2,3)
-            for i,k in enumerate(fs):k['part']='whole' if len(fs)==1 else 'prefix' if i==0 else 'down'
+            fs=[k for k in ks if route['start']<=k['start']<end and any(s in k['name'] for s in ('moe_fetch_kernel','moe_component_kernel','moe_gu_band_fetch_kernel'))]
+            assert len(fs) in (1,2,3,4)
+            paired=any('moe_gu_band_fetch_kernel' in k['name'] for k in fs)
+            for i,k in enumerate(fs):k['part']='prefix' if 'moe_gu_band_fetch_kernel' in k['name'] else 'down' if paired else 'whole' if len(fs)==1 else 'prefix' if i==0 else 'down'
         groups=collections.defaultdict(list);names=collections.defaultdict(list)
         for k in ks:
             name=k['name'];cat=category(name,0)
             if cat=='Dense projections':cat='Dense GEMV / projections / output head'
             elif cat=='Routing':cat='Routing / shared SwiGLU / publication'
             elif cat=='Expert gate/up':cat='Expert gate/up + shared down'
-            if 'moe_component' in name:cat='Fetch: down component' if k['part']=='down' else 'Fetch: gate/up prefix'
+            if 'moe_component' in name or 'moe_gu_band_fetch' in name:cat='Fetch: down component' if k['part']=='down' else 'Fetch: gate/up prefix'
             elif 'moe_fetch' in name:cat='Fetch: whole expert'
             elif 'quantize' in name or 'swiglu_q8' in name:cat='Activation quantization / SwiGLU'
             groups[cat].append((k['start'],k['end']));names[name].append((k['start'],k['end']))
@@ -78,24 +79,26 @@ def main():
         for j,(r,route) in enumerate(zip(rs,routing)):
             end=routing[j+1]['start'] if j+1<len(routing) else t['end']
             es=[k for k in ks if route['start']<=k['start']<end]
-            fetch=[k for k in es if 'moe_fetch_kernel' in k['name'] or 'moe_component_kernel' in k['name']]
+            fetch=[k for k in es if any(s in k['name'] for s in ('moe_fetch_kernel','moe_component_kernel','moe_gu_band_fetch_kernel'))]
             gus=[k for k in es if 'moe_gate_up_kernel' in k['name']];downs=[k for k in es if 'moe_down_kernel' in k['name']]
             gu=gus[-1];down=downs[0]
-            assert len(fetch) in (1,2,3) and len(gus) in (1,2) and len(downs)==max(1,len(fetch)-1)
-            prefix=fetch[0]
+            assert len(fetch) in (1,2,3,4) and len(gus) in (1,2) and len(downs) in (1,2)
+            prefixes=[k for k in fetch if k['part'] in ('prefix','whole')]
+            down_fetches=[k for k in fetch if k['part']=='down']
+            prefix=prefixes[-1]
             ready=max(k['end'] for k in fetch)
             lay=layout[r['layer']];count=r['bytes']//lay['blob']
             assert r['bytes']%lay['blob']==0
             for k in fetch:
                 part=k['part']
-                size=lay['blob'] if part=='whole' else lay['prefix'] if part=='prefix' else (lay['blob']-lay['prefix'])//(len(fetch)-1)
+                size=lay['blob'] if part=='whole' else lay['prefix']//len(prefixes) if part=='prefix' else (lay['blob']-lay['prefix'])//len(down_fetches)
                 transfer_rows.append(dict(repeat=rep,position=t['pos'],layer=r['layer'],part=part,blocks=k['gridX'],bytes=count*size,ms=(k['end']-k['start'])/1e6))
             iv=[(k['start'],k['end']) for k in fetch]
             math=[(k['start'],k['end']) for k in gus+downs]
             layer_rows.append(dict(repeat=rep,position=t['pos'],layer=r['layer'],bytes=r['bytes'],disk_mask=r['miss'],
                 fetch_ms=duration(iv)/1e6,route_to_fetch_ms=(min(k['start'] for k in fetch)-route['end'])/1e6,
                 prefix_ready_to_gu_us=(gu['start']-prefix['end'])/1e3,
-                down_dependencies_to_start_us=(down['start']-max(gu['end'],fetch[1]['end'] if len(fetch)>1 else ready))/1e3,
+                down_dependencies_to_start_us=(down['start']-max(gu['end'],down_fetches[0]['end'] if down_fetches else ready))/1e3,
                 down_copy_remaining_after_gu_ms=max(0,ready-gu['end'])/1e6,
                 overlap_ms=overlap(iv,math)/1e6,component=len(fetch)>1,
                 fetch_start_ms=(min(k['start'] for k in fetch)-t['start'])/1e6,
