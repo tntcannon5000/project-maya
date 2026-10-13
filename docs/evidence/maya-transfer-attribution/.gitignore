@@ -1,2 +1,6 @@
 *.f32
 *.log
+deep-kernels.csv
+deep-layers.csv
+deep-stages.csv
+deep-transfers.csv

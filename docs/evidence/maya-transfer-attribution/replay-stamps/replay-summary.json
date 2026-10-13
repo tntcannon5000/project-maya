@@ -1,0 +1,73 @@
+{
+  "pull": {
+    "bytes": 418480128.0,
+    "fetch_ms": 8.055426,
+    "gpu_window_ms": 8.09442,
+    "cpu_ms": 0.0007625,
+    "wall_ms": 8.6131875,
+    "cpu_experts": 62.625,
+    "effective_GB_s": 51.95009276976785,
+    "tokens_equivalent": 16.0,
+    "pass_fetch_ms": [
+      8.090756,
+      8.020096
+    ]
+  },
+  "pull_cpu": {
+    "bytes": 418480128.0,
+    "fetch_ms": 9.266124,
+    "gpu_window_ms": 9.305046,
+    "cpu_ms": 6.20843125,
+    "wall_ms": 10.51115625,
+    "cpu_experts": 62.625,
+    "effective_GB_s": 45.16237080358519,
+    "tokens_equivalent": 16.0,
+    "pass_fetch_ms": [
+      9.766396,
+      8.765852
+    ]
+  },
+  "pull_gpu": {
+    "bytes": 418480128.0,
+    "fetch_ms": 8.335624,
+    "gpu_window_ms": 9.192588,
+    "cpu_ms": 0.00081875,
+    "wall_ms": 9.9933375,
+    "cpu_experts": 62.625,
+    "effective_GB_s": 50.203815335240655,
+    "tokens_equivalent": 16.0,
+    "pass_fetch_ms": [
+      8.363352,
+      8.307896
+    ]
+  },
+  "pull_cpu_gpu": {
+    "bytes": 418480128.0,
+    "fetch_ms": 9.685812,
+    "gpu_window_ms": 10.542468,
+    "cpu_ms": 6.4396625,
+    "wall_ms": 11.4776,
+    "cpu_experts": 62.625,
+    "effective_GB_s": 43.20547704209002,
+    "tokens_equivalent": 16.0,
+    "pass_fetch_ms": [
+      10.115124,
+      9.256499999999999
+    ]
+  },
+  "dma": {
+    "bytes": 418480128.0,
+    "fetch_ms": 9.594966,
+    "gpu_window_ms": 9.617756,
+    "cpu_ms": 0.0008312500000000001,
+    "wall_ms": 10.0466625,
+    "cpu_experts": 62.625,
+    "effective_GB_s": 43.61455037985544,
+    "tokens_equivalent": 16.0,
+    "pass_fetch_ms": [
+      9.579748,
+      9.610184
+    ]
+  },
+  "notes": "GPU timestamps include tiny stamp/dispatch gaps. Replay is eight last-token address sets, two passes; not live token latency. CPU and GPU work match selected expert shapes; shared/attention excluded."
+}
