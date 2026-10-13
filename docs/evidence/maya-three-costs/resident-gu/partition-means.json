@@ -1,0 +1,20 @@
+{
+  "0": {
+    "wall_ms": 25.947329015625,
+    "GPU computation only": 8.638924093749997,
+    "Fetch + GPU computation": 1.09372428125,
+    "Fetch without GPU computation": 11.059539398437506,
+    "CPU-answer wait (remaining)": 3.758726515625,
+    "Other GPU waits / copies": 0.20874546875000005,
+    "No recorded GPU activity": 1.1876692578124932
+  },
+  "1": {
+    "wall_ms": 23.194922484375,
+    "GPU computation only": 8.658489960937496,
+    "Fetch + GPU computation": 0.9567902734374999,
+    "Fetch without GPU computation": 8.825422156250006,
+    "CPU-answer wait (remaining)": 3.5070082265624998,
+    "Other GPU waits / copies": 0.044918835937500005,
+    "No recorded GPU activity": 1.2022930312499933
+  }
+}

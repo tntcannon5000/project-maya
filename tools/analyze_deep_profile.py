@@ -102,6 +102,7 @@ def main():
                 fetch_end_ms=(ready-t['start'])/1e6,gu_start_ms=(gu['start']-t['start'])/1e6,
                 gu_end_ms=(gu['end']-t['start'])/1e6,down_start_ms=(down['start']-t['start'])/1e6,
                 down_end_ms=(downs[-1]['end']-t['start'])/1e6,
+                fetch_intervals=[((k['start']-t['start'])/1e6,(k['end']-k['start'])/1e6) for k in fetch],
                 gu_intervals=[((k['start']-t['start'])/1e6,(k['end']-k['start'])/1e6) for k in gus],
                 down_intervals=[((k['start']-t['start'])/1e6,(k['end']-k['start'])/1e6) for k in downs]))
         token_rows.append(dict(repeat=rep,position=t['pos'],wall_ms=(t['end']-t['start'])/1e6,bytes=int(f['fetch_bytes'])))
@@ -147,7 +148,7 @@ def main():
     fig,ax=plt.subplots(figsize=(13,8),layout='constrained')
     for r in ls:
         for start,end,color,label in [('fetch_start_ms','fetch_end_ms','#d68736','Fetch span'),('gu_start_ms','gu_end_ms','#237e9e','Gate/up'),('down_start_ms','down_end_ms','#59a67c','Down')]:
-            intervals=r['gu_intervals'] if label=='Gate/up' else r['down_intervals'] if label=='Down' else [(r[start],r[end]-r[start])]
+            intervals=r['gu_intervals'] if label=='Gate/up' else r['down_intervals'] if label=='Down' else r['fetch_intervals']
             ax.broken_barh(intervals,(r['layer']-.35,.7),facecolors=color,label=label if r==ls[0] else None)
     ax.invert_yaxis();ax.set_ylabel('MoE layer');ax.set_xlabel('ms from token entry');ax.legend()
     ax.set_title(f'{phase} token {chosen["position"]}: layer-local fetch and compute\nAttention and other work occupy gaps; fetch spans may overlap computation')

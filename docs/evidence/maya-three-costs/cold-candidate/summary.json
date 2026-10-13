@@ -1,0 +1,28 @@
+{
+  "0": {
+    "tokens": 16,
+    "TPS": 7.781902077797037,
+    "mean_ms": 128.5032875,
+    "p95_ms": 186.81405,
+    "fetch_bytes": 499617792.0,
+    "demotion_bytes": 441556992.0,
+    "hits": 235.875,
+    "cpu_experts": 0.0,
+    "promotions": 55.625,
+    "pool_slots": 2693.0,
+    "ram_slots": 11819.0,
+    "pool_gib": 21.999023,
+    "ram_gib": 97.821899
+  },
+  "parity": {
+    "reference": "cold-control",
+    "count": 2478080,
+    "finite": true,
+    "same_size": true,
+    "exact": true,
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "changed": 0,
+    "greedy_agreement": 1.0
+  }
+}

@@ -1,1 +1,10 @@
 *.f32
+# Large per-event derivatives remain beside local raw traces. Compact means,
+# manifests, fixed-input counters and rendered figures are committed.
+deep-kernels.csv
+deep-layers.csv
+deep-stages.csv
+deep-transfers.csv
+trace-stages.csv
+trace-tokens.csv
+partition-tokens.csv

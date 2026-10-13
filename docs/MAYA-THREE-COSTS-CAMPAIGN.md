@@ -161,3 +161,30 @@ and logits remain local; manifests and compact results are checkpointed.
   comparing ordinary whole-token diagnostics against the preserved baseline.
   Earlier detailed traces retain their actual old instrumentation manifests;
   unprofiled comparisons remain the headline evidence.
+
+## Completed qualification
+
+- 8K occupied corpus: baseline first/repeat 36.38/40.82 TPS; candidate
+  37.61/42.25 TPS. All 39,649,280 logits exact, counters identical. Repeated
+  prefill 3561.222 vs3558.099ms: no material change.
+- New warm diagnostic:22.880ms vs previous22.871, effectively flat. Overlap
+  rises0.594→1.271ms, but fetch/arithmetic/CPU wait grow. This trace proves
+  overlap and routing mechanisms, not the full unprofiled throughput gain.
+  Report both; do not manufacture per-stage attribution or add isolated gains.
+- All10,752 layer-route masks match in order. Expert IDs are not in these
+  NVTX fields; full-logit comparisons complement them.
+- Same-binary baseline-flag/candidate-flag lifecycle sequence:64-token warmup,
+  STOP after8,32-token recovery,128-token web output, QUIT. Every output ID
+  identical; both processes exit cleanly with shadow ownership verification.
+  Held-out web38.78→39.01TPS (+0.59%), not a reliable speed claim from one run.
+- Cold tiers (warming disabled):761 scored disk reads;16 scored tokens,
+  2,478,080 logits exact and every non-timing counter exact. CPU lane is off
+  in this cold configuration, so no hybrid parity extrapolation is made.
+- Bounded8-token HC proof trace:544 launches of each phase (68/token), with
+  1,239,040 prefix logits exact. Phase2 alone0.968ms/token versus the entire
+  original HC family~0.81ms; complete implementation is correctly rejected.
+- Retain selected opt-in combination, not rejected prototypes. Source,
+  experimental checkpoints, compact evidence and raw local traces preserved.
+  No external publication; no inference process intentionally left running.
+
+Final tables and figures: `docs/evidence/maya-three-costs/RESULTS.md`.

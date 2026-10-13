@@ -1,0 +1,16 @@
+{
+  "routes": 10752,
+  "reference_routes": 10752,
+  "exact_ordered_layer_masks": true,
+  "fields": [
+    "token",
+    "position",
+    "layer",
+    "fetch_mask",
+    "cpu_mask",
+    "miss_mask",
+    "promo_mask",
+    "blob_bytes"
+  ],
+  "limitation": "Route IDs are not present in these NVTX marks; exact logits complement this mask comparison."
+}

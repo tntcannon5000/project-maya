@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_transfer_lab.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-three-costs\\scheduler-combination\\tokens.txt",
+    "30",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\maya-three-costs\\scheduler-combination\\fixed",
+    "2"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_CPU_PLAN": "011223344",
+    "STRATA_GLM_POOL_GB": "22",
+    "STRATA_GLM_RAM_GB": "101",
+    "STRATA_GLM_PREFILL": "auto",
+    "STRATA_GLM_TIER_DIAG": "1",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "MAYA_DEFER_DEMOTIONS": "layers",
+    "STRATA_GLM_KDA_GRAPH": "1",
+    "MAYA_REUSE_POLICY": "transition",
+    "MAYA_OVERLAP_BLOCKS": "32",
+    "MAYA_OVERLAP_CAPTURED_ONLY": "1",
+    "MAYA_CPU_EARLY": "1",
+    "MAYA_CPU_PAUSE": "1",
+    "MAYA_DOWN_BANDS": "2",
+    "MAYA_MOE_SUFFIX_GRAPH": "1",
+    "MAYA_ROUTE_WARP": "1",
+    "MAYA_CPU_PIPELINE": "1",
+    "MAYA_CPU_PHASE_LIMIT": "8"
+  },
+  "binary_sha256": "0eb826fd1bf20eab3fefa04f6d6635b0ed0f42d30064587232ca565c8861fb69",
+  "tokens_sha256": "2a0610733575eb3c1daa3ddd6330122956eb50d65ed2a3b9da9e211172e39ae9",
+  "weights": {
+    "path": "G:\\Models\\GLM-5.3-Flash-3.0bit-Q4Kattn\\GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf",
+    "size": 113585695168,
+    "mtime_ns": 1791695489255480800,
+    "pack_manifests": {
+      "index.txt": "bc4c257b27616ce4c2bed8ed8f12a760b7600e930b824121626209790cc9feed",
+      "native_experts.txt": "53cc70920b5a5530a7b30867156ad860cf0de5fd16df6c6d0081e63e012780ce"
+    },
+    "expert_profile_sha256": "53b03a13482b6fedc599d149be2d69f88c38d9edc4611a740da46314ab1dc5a7",
+    "experiment_files": {}
+  }
+}

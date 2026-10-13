@@ -1,0 +1,17 @@
+{
+  "tokens": 8,
+  "logits": 1239040,
+  "exact_prefix_logits": true,
+  "kernel_counts": {
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)1>(strata::kernels::glmf::HcArgs)": 544,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)2>(strata::kernels::glmf::HcArgs)": 544,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)3>(strata::kernels::glmf::HcArgs)": 544,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)0>(strata::kernels::glmf::HcArgs)": 176
+  },
+  "kernel_ms_per_token": {
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)1>(strata::kernels::glmf::HcArgs)": 0.1436411249999998,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)2>(strata::kernels::glmf::HcArgs)": 0.9683660000000037,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)3>(strata::kernels::glmf::HcArgs)": 0.09958100000000021,
+    "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)0>(strata::kernels::glmf::HcArgs)": 0.20300574999999996
+  }
+}

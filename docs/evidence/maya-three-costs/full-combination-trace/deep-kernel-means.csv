@@ -1,0 +1,57 @@
+repeat,kernel,ms_per_token,launches_per_token
+0,"strata::kernels::glmf::<unnamed>::moe_component_kernel(strata::kernels::glmf::MoeDev, int, unsigned long long, unsigned long long)",12.789117695312502,126.0
+1,"strata::kernels::glmf::<unnamed>::moe_component_kernel(strata::kernels::glmf::MoeDev, int, unsigned long long, unsigned long long)",10.518696632812498,126.0
+0,"strata::kernels::glmf::<unnamed>::moe_cpu_wait_kernel(strata::kernels::glmf::MoeDev, int, float *)",3.5269355468749994,42.0
+1,"strata::kernels::glmf::<unnamed>::moe_cpu_wait_kernel(strata::kernels::glmf::MoeDev, int, float *)",3.4101007812499984,42.0
+1,void strata::kernels::glmf::<unnamed>::mv_q4_rows_kernel<(int)2>(strata::kernels::glmf::<unnamed>::MvBatch),3.1811114375000002,150.0
+0,void strata::kernels::glmf::<unnamed>::mv_q4_rows_kernel<(int)2>(strata::kernels::glmf::<unnamed>::MvBatch),3.167794820312499,150.0
+1,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",1.0860279374999995,36.0
+0,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",1.0325029765624996,36.0
+1,strata::kernels::glmf::<unnamed>::hc3_kernel(strata::kernels::glmf::HcArgs),0.8394692499999998,90.0
+0,strata::kernels::glmf::<unnamed>::hc3_kernel(strata::kernels::glmf::HcArgs),0.8285302187500002,90.0
+0,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.8232644453124996,72.0
+0,void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1>(strata::kernels::glmf::<unnamed>::RouteArgs),0.8195733749999999,42.0
+1,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)10>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.8153781718750002,72.0
+1,void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1>(strata::kernels::glmf::<unnamed>::RouteArgs),0.7929866640625,42.0
+1,"strata::kernels::glmf::<unnamed>::mla_split_kernel(const float *, const unsigned short *, const int *, int, int, int, int, float *, bool)",0.5844643984375001,11.0
+0,"strata::kernels::glmf::<unnamed>::mla_split_kernel(const float *, const unsigned short *, const int *, int, int, int, int, float *, bool)",0.578752,11.0
+1,strata::kernels::glmf::<unnamed>::mv_kernel(strata::kernels::glmf::<unnamed>::MvBatch),0.5352245937499998,98.0
+0,strata::kernels::glmf::<unnamed>::mv_kernel(strata::kernels::glmf::<unnamed>::MvBatch),0.5323278046874999,98.0
+1,"strata::kernels::glmf::<unnamed>::headwise_gemv_kernel(const unsigned short *, const float *, int, int, float *, block_q8_1 *)",0.2619296640625,22.0
+0,"strata::kernels::glmf::<unnamed>::headwise_gemv_kernel(const unsigned short *, const float *, int, int, float *, block_q8_1 *)",0.26081036718749995,22.0
+0,strata::kernels::glmf::<unnamed>::kda_prep_kernel(strata::kernels::glmf::KdaPrepArgs),0.24469176562500017,34.0
+1,strata::kernels::glmf::<unnamed>::kda_prep_kernel(strata::kernels::glmf::KdaPrepArgs),0.2343533281249999,34.0
+1,"strata::kernels::glmf::<unnamed>::kda_rec_kernel(const float *, const float *, const float *, const float *, const float *, float *, const float *, const float *, float, int, block_q8_1 *)",0.2319111874999999,34.0
+0,"strata::kernels::glmf::<unnamed>::kda_rec_kernel(const float *, const float *, const float *, const float *, const float *, float *, const float *, const float *, float, int, block_q8_1 *)",0.22405597656250018,34.0
+1,"strata::kernels::glmf::<unnamed>::dsa_select_kernel(const float *, int, int, int, int, int, int *)",0.18798124218749998,11.0
+0,"strata::kernels::glmf::<unnamed>::dsa_select_kernel(const float *, int, int, int, int, int, int *)",0.18613424218749994,11.0
+0,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",0.12385121093749996,3.0
+1,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",0.12031832031249999,3.0
+0,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",0.11882448437500001,3.0
+1,"strata::kernels::glmf::<unnamed>::dsa_score_kernel(const float *, const float *, const float *, int, int, int, float *)",0.11522078906250001,11.0
+0,"strata::kernels::glmf::<unnamed>::dsa_score_kernel(const float *, const float *, const float *, int, int, int, float *)",0.10980328125000002,11.0
+1,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.10533775781249995,6.0
+1,"void strata::kernels::glmf::<unnamed>::moe_gate_up_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, float, const block_q8_1 *, block_q8_1 *, const unsigned char *, int, const block_q8_1 *, int, float *)",0.10435365625,3.0
+0,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)11>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.1032186953125,6.0
+0,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.07015471093750002,6.0
+1,"void strata::kernels::glmf::<unnamed>::moe_down_kernel<(int)12>(strata::kernels::glmf::MoeDev, int, int, int, unsigned long long, const block_q8_1 *, const float *, float *)",0.06277446874999999,6.0
+0,strata::kernels::glmf::<unnamed>::moe_prefix_ready_kernel(strata::kernels::glmf::MoeDev),0.052713828124999966,42.0
+1,strata::kernels::glmf::<unnamed>::moe_prefix_ready_kernel(strata::kernels::glmf::MoeDev),0.050333593749999996,42.0
+1,strata::kernels::glmf::<unnamed>::dsa_prep_kernel(strata::kernels::glmf::DsaPrepArgs),0.039992015625000016,11.0
+0,strata::kernels::glmf::<unnamed>::dsa_prep_kernel(strata::kernels::glmf::DsaPrepArgs),0.039516734375000015,11.0
+0,"strata::kernels::glmf::<unnamed>::moe_wait_kernel(strata::kernels::glmf::MoeDev, int)",0.032431492187499994,42.0
+1,"strata::kernels::glmf::<unnamed>::moe_wait_kernel(strata::kernels::glmf::MoeDev, int)",0.030339476562500012,42.0
+0,"strata::kernels::glmf::<unnamed>::mla_combine_kernel(const float *, int, int, int, float *)",0.022828656250000003,11.0
+1,"strata::kernels::glmf::<unnamed>::mla_combine_kernel(const float *, int, int, int, float *)",0.022763031249999992,11.0
+1,"strata::kernels::glmf::<unnamed>::argmax_kernel(const float *, int, int *)",0.010824093750000003,1.0
+0,"strata::kernels::glmf::<unnamed>::argmax_kernel(const float *, int, int *)",0.010664585937500005,1.0
+0,"strata::kernels::glmf::<unnamed>::head_prep_kernel(const float *, const float *, float, int, float *, block_q8_1 *)",0.004947773437499999,1.0
+1,"strata::kernels::glmf::<unnamed>::head_prep_kernel(const float *, const float *, float, int, float *, block_q8_1 *)",0.0049230390625000005,1.0
+0,"strata::kernels::glmf::<unnamed>::swiglu_q8_kernel(const float *, const float *, float, int, block_q8_1 *)",0.0025472656250000005,3.0
+1,"strata::kernels::glmf::<unnamed>::swiglu_q8_kernel(const float *, const float *, float, int, block_q8_1 *)",0.0025432578124999997,3.0
+1,"strata::kernels::glmf::<unnamed>::hc_post_kernel(const float *, const float *, const float *, const float *, int, float *)",0.0009294999999999988,1.0
+0,"strata::kernels::glmf::<unnamed>::hc_post_kernel(const float *, const float *, const float *, const float *, int, float *)",0.0009292499999999985,1.0
+0,"strata::kernels::glmf::<unnamed>::tab_update_kernel(unsigned long long *, const int *, const unsigned long long *, int)",0.0008780156249999998,1.0
+1,"strata::kernels::glmf::<unnamed>::tab_update_kernel(unsigned long long *, const int *, const unsigned long long *, int)",0.0008750078124999997,1.0
+0,"strata::kernels::glmf::<unnamed>::embed_streams_kernel(const float *, float *, int)",0.0008045000000000005,1.0
+1,"strata::kernels::glmf::<unnamed>::embed_streams_kernel(const float *, float *, int)",0.0007755000000000008,1.0

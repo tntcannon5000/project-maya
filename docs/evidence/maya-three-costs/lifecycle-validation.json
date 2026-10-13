@@ -1,0 +1,42 @@
+[
+  {
+    "task": "warmup",
+    "baseline_tokens": 64,
+    "candidate_tokens": 64,
+    "same_output_ids": true,
+    "baseline_TPS": 42.803638309256286,
+    "candidate_TPS": 44.08928079360706,
+    "baseline_done": "DONE 64 13 448.5 1495.2 length 0 0 0 14843 21168",
+    "candidate_done": "DONE 64 13 450.2 1451.6 length 0 0 0 14843 21168"
+  },
+  {
+    "task": "cancel",
+    "baseline_tokens": 8,
+    "candidate_tokens": 8,
+    "same_output_ids": true,
+    "baseline_TPS": 47.84688995215311,
+    "candidate_TPS": 47.30928444707274,
+    "baseline_done": "DONE 8 15 370.2 167.2 cancel 0 0 0 1508 2352",
+    "candidate_done": "DONE 8 15 371.5 169.1 cancel 0 0 0 1508 2352"
+  },
+  {
+    "task": "recovery",
+    "baseline_tokens": 32,
+    "candidate_tokens": 32,
+    "same_output_ids": true,
+    "baseline_TPS": 39.379768643859215,
+    "candidate_TPS": 40.424456796361795,
+    "baseline_done": "DONE 32 16 362.3 812.6 length 0 0 0 6210 10416",
+    "candidate_done": "DONE 32 16 364.2 791.6 length 0 0 0 6210 10416"
+  },
+  {
+    "task": "web",
+    "baseline_tokens": 128,
+    "candidate_tokens": 128,
+    "same_output_ids": true,
+    "baseline_TPS": 38.78435293761173,
+    "candidate_TPS": 39.013685269285865,
+    "baseline_done": "DONE 128 24 568.3 3300.3 length 0 0 0 25712 42672",
+    "candidate_done": "DONE 128 24 545.8 3280.9 length 0 0 0 25712 42672"
+  }
+]
