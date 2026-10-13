@@ -976,3 +976,7 @@ if(STRATA_BUILD_TESTS)
     add_subdirectory(tests)
   endif()
 endif()
+
+# Local A/B driver; engine implementation unchanged.
+add_executable(maya_ab_192k tools/maya_ab_192k.cpp)
+target_link_libraries(maya_ab_192k PRIVATE strata_engine ${_strata_gpu_runtime_target})

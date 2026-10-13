@@ -1,0 +1,12 @@
+{
+  "upstream_commit": "1e225b983262c1dc3efc3640874261391436d470",
+  "retained_commit": "57b4d1428edec3f0b65bd39e08defd31662e23ab",
+  "context_capacity": 196608,
+  "decode_tokens_per_request": 512,
+  "repeats": 2,
+  "fixture": "First 512 tokens of serve/server.py at 57b4d14; forced-input decode, not free generation",
+  "kv_streaming": false,
+  "speculative_decode": false,
+  "timing": "sum of forward() calls; logits disk writes excluded",
+  "driver_sha256": "a410bdb99e9c7a0a30d0887b1bf789f2e6f40bb3d724d4d764999549a1e74115"
+}
