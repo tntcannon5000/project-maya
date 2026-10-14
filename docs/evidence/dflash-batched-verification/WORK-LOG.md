@@ -99,6 +99,7 @@ Source review identifies the missing dependency: fast_boundary queues NEW
 deferred demotions in `layers` mode; fast_layers submits them, but
 fast_window_layers did not. The CPU service can then wait on an unrecorded or
 recycled event and serve old RAM bytes. Added submission at batched-window layer
-entry before route publication. Bounded immutable-pack audit is running;
-performance and parity claims remain gated on validation.
-
+entry before route publication. Bounded immutable-pack audit passed 42 layers,
+1,599 expert/pointer pairs and 14,556,266,496 bytes with no mismatch. Corrected
+control and combined HC/paired full-logit runs follow, without byte diagnostics.
+Performance claims remain gated on validation.

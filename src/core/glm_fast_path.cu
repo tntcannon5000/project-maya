@@ -4003,7 +4003,18 @@ void Glm5Model::fast_service() {
                         bool draining = false;
                         for (const auto& d : F->draining)
                             if (d.rclass == cls && d.rslot == rs) {
-                                cudaEventSynchronize(d.ev);
+                                const cudaError_t waited = cudaEventSynchronize(d.ev);
+                                if (waited != cudaSuccess) {
+                                    // The service thread has no error-response
+                                    // channel that can safely release the GPU's
+                                    // wait. Like an unrecoverable expert read,
+                                    // stop instead of serving invalid bytes.
+                                    std::fprintf(stderr, "glm fast: CUDA%d demotion source wait failed layer=%d "
+                                                         "expert=%d class=%d slot=%d: %s\n", dev_, il, ids[mi[m]],
+                                                 cls, rs, cudaGetErrorString(waited));
+                                    std::fflush(stderr);
+                                    std::abort();
+                                }
                                 draining = true;
                                 break;
                             }

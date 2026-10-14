@@ -417,9 +417,20 @@ struct Glm5Model::FastState {
     struct DeferredCopy { void* dst; const void* src; size_t bytes; cudaEvent_t ev; };
     std::vector<DeferredCopy> deferred_copies;
     bool submit_demotions(std::string& err) {
+        if (!bg_copy_error.empty()) { err = bg_copy_error; return false; }
         for (const auto& d : deferred_copies) {
             if (!glmfast::cuda_ok(cudaMemcpyAsync(d.dst,d.src,d.bytes,cudaMemcpyDeviceToHost,copy),"maya scheduled demotion",err) ||
-                !glmfast::cuda_ok(cudaEventRecord(d.ev,copy),"maya scheduled demotion event",err)) return false;
+                !glmfast::cuda_ok(cudaEventRecord(d.ev,copy),"maya scheduled demotion event",err)) {
+                // Earlier copies, or this copy with a missing event record,
+                // may already be live. Drain them and retain the pending list
+                // as a barrier: no retry may publish a stale completion event.
+                bg_copy_error = err;
+                const cudaError_t drain = cudaStreamSynchronize(copy);
+                if (drain != cudaSuccess)
+                    bg_copy_error += std::string("; demotion failure drain: ") + cudaGetErrorString(drain);
+                err = bg_copy_error;
+                return false;
+            }
         }
         deferred_copies.clear(); return true;
     }
@@ -432,7 +443,7 @@ struct Glm5Model::FastState {
     };
     std::vector<BgMove> bg;
     bool bg_hold = false;   // lend_tail: no new moves while the pool's tail is lent
-    std::string bg_copy_error;  // failed copy submission: no more boundaries until the model is reloaded
+    std::string bg_copy_error;  // failed tier copy submission: no more boundaries until the model is reloaded
     volatile int* route_error_h = nullptr;   // in the mapped ring allocation, visible after compute completion
     uint64_t bg_up = 0, bg_down = 0;
     std::vector<cudaEvent_t> ev_free;
