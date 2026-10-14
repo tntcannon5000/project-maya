@@ -543,6 +543,18 @@ struct Glm5Model::FastState {
         void* ans_d[16] = {};
         bool per_token = false;             // the batched MoE off for this pass (the redo after a scratch clash)
         uint64_t windows = 0, retries = 0, reuses = 0;
+        // MAYA_WIN_GROUP_DIAG=1: synchronous, deliberately perturbing readback
+        // after grouped experts. Key: gate/up type, down type, token count, gid, part.
+        struct GroupDiag {
+            uint64_t batches = 0, routed = 0, logical_groups = 0;
+            uint64_t gpu_entries = 0, gpu_id_groups = 0, slot_groups = 0;
+            uint64_t executed_gu_groups = 0, executed_down_groups = 0;
+            uint64_t fetch_entries = 0, fetch_id_groups = 0, fetch_bytes = 0, unique_fetch_bytes = 0;
+            std::array<uint64_t, 17> multiplicity{};
+        };
+        std::map<std::array<int, 5>, GroupDiag> group_diag;
+        uint64_t group_diag_readbacks = 0, group_diag_readback_bytes = 0;
+        double group_diag_drain_ms = 0, group_diag_copy_ms = 0, group_diag_reduce_ms = 0;
         int pipe_t = -1;                    // window_pipe: the token whose layers are being enqueued (its KDA inputs
                                             // to kin row pipe_t); -1 otherwise
         void mark(const char* nm, cudaStream_t st) {

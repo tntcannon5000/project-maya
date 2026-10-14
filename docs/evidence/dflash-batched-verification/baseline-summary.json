@@ -1,0 +1,152 @@
+[
+  {
+    "directory": "docs\\evidence\\dflash-batched-verification\\baseline-profile\\Q4_K_M",
+    "binary_sha256": "fce589a808dd8b82d8b957b88f414b14b8341158bf220093dcdcd80b71622a5a",
+    "diagnostic": false,
+    "phase_profile": true,
+    "occupied_prompt_tokens": 40,
+    "context_capacity": 131072,
+    "environment": {
+      "STRATA_GLM_NO_MTP": "1",
+      "STRATA_GLM_CPU_PLAN": "011223344",
+      "STRATA_GLM_POOL_GB": "22",
+      "STRATA_GLM_RAM_GB": "101",
+      "STRATA_GLM_USAGE": "0",
+      "STRATA_GLM_KDA_GRAPH": "1",
+      "MAYA_RAM_SHADOW_MB": "24576",
+      "MAYA_RAM_SHADOW_EXPAND": "1",
+      "MAYA_DEFER_DEMOTIONS": "layers",
+      "MAYA_REUSE_POLICY": "transition",
+      "MAYA_OVERLAP_BLOCKS": "32",
+      "MAYA_OVERLAP_CAPTURED_ONLY": "1",
+      "MAYA_CPU_EARLY": "1",
+      "MAYA_CPU_PAUSE": "1",
+      "MAYA_DOWN_BANDS": "2",
+      "MAYA_MOE_SUFFIX_GRAPH": "1",
+      "MAYA_ROUTE_WARP": "1",
+      "MAYA_CPU_PIPELINE": "1",
+      "MAYA_CPU_PHASE_LIMIT": "8",
+      "MAYA_WIN_SCRATCH": "64",
+      "MAYA_WIN_REUSE": "1",
+      "STRATA_GLM_WIN_STAGGER": "0",
+      "MAYA_WIN_SINGLE_NODE_BATCH": "0",
+      "STRATA_GLM_WIN_ALLCPU": "0",
+      "STRATA_GLM_WIN_PROF": "1",
+      "STRATA_GLM_DFLASH_STATS": "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\dflash-batched-verification\\baseline-profile\\Q4_K_M\\rounds.txt",
+      "STRATA_GLM_DFLASH_PROF": "1"
+    },
+    "requests": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tokens": 192,
+        "tps": 37.01276169179165,
+        "prompt_ms": 729.3,
+        "decode_ms": 5187.4,
+        "offered": 0,
+        "accepted": 0,
+        "acceptance": null,
+        "rounds": 0,
+        "verify_ms_per_round": null,
+        "draft_ms_per_round": null
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tokens": 192,
+        "tps": 41.49377593360996,
+        "prompt_ms": 30.1,
+        "decode_ms": 4627.2,
+        "offered": 0,
+        "accepted": 0,
+        "acceptance": null,
+        "rounds": 0,
+        "verify_ms_per_round": null,
+        "draft_ms_per_round": null
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tokens": 192,
+        "tps": 41.73277979437912,
+        "prompt_ms": 30.6,
+        "decode_ms": 4600.7,
+        "offered": 138.0,
+        "accepted": 123.0,
+        "acceptance": 0.8913043478260869,
+        "rounds": 69,
+        "verify_ms_per_round": 64.0494347826087,
+        "draft_ms_per_round": 2.1738840579710144
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tokens": 192,
+        "tps": 35.37866224433389,
+        "prompt_ms": 33.6,
+        "decode_ms": 5427.0,
+        "offered": 208.0,
+        "accepted": 140.0,
+        "acceptance": 0.6730769230769231,
+        "rounds": 52,
+        "verify_ms_per_round": 101.24059615384616,
+        "draft_ms_per_round": 1.9467884615384616
+      }
+    ],
+    "phases": [
+      {
+        "device": 0,
+        "windows": 69,
+        "layers": [
+          0,
+          45
+        ],
+        "total_ms": 62.81,
+        "stage_ms": {
+          "capture": 0.3,
+          "dense_ffn": 0.3,
+          "dsa_attn": 3.42,
+          "dsa_out_mv": 0.54,
+          "dsa_prep": 0.26,
+          "dsa_proj_mv": 0.63,
+          "dsa_q_mv": 0.81,
+          "hc": 3.39,
+          "kda_out_mv": 0.94,
+          "kda_proj_mv": 3.3,
+          "kda_tokens": 1.57,
+          "moe_cpu_wait": 3.37,
+          "moe_experts": 9.33,
+          "moe_mv": 1.64,
+          "moe_routes": 33.0
+        }
+      },
+      {
+        "device": 0,
+        "windows": 52,
+        "layers": [
+          0,
+          45
+        ],
+        "total_ms": 99.75,
+        "stage_ms": {
+          "capture": 0.48,
+          "dense_ffn": 0.38,
+          "dsa_attn": 5.35,
+          "dsa_out_mv": 0.69,
+          "dsa_prep": 0.34,
+          "dsa_proj_mv": 0.7,
+          "dsa_q_mv": 1.0,
+          "hc": 5.43,
+          "kda_out_mv": 1.34,
+          "kda_proj_mv": 4.06,
+          "kda_tokens": 3.68,
+          "moe_cpu_wait": 5.14,
+          "moe_experts": 12.72,
+          "moe_mv": 1.83,
+          "moe_routes": 56.6
+        }
+      }
+    ],
+    "group_lines": []
+  }
+]

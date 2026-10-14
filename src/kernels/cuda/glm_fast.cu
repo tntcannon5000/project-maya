@@ -414,6 +414,83 @@ __device__ __forceinline__ float dot_q3_K(const void* vbq, const block_q8_1* bq8
     }
     return d * sumf;
 }
+// The K-quant expert window uses the same split as DecW<12>: the decoded weight call is independent of the
+// member activation.  Keep dot()'s expressions and four sub-blocks in dwk<10/11>'s order; only the weight loads,
+// code extraction and scale extraction move out of the member loop.
+template<> struct DecW<10> {
+    int vi[4], sc[4], m[4];
+    float2 dm;
+    struct X {
+        int u[4];
+        float d8[4];
+    };
+    __device__ __forceinline__ void load(const void* vbq, int kbx, int iqs) {
+        const block_q2_K* b = (const block_q2_K*) vbq + kbx;
+        const uint8_t* scales = b->scales + (iqs - iqs % 8 + (iqs % 8) / 4);
+        const int v = get_int_b4(b->qs, iqs);
+#pragma unroll
+        for (int i = 0; i < 4; ++i) {
+            const int scale = scales[2 * i];
+            vi[i] = (v >> (2 * i)) & 0x03030303;
+            sc[i] = scale & 0xF;
+            m[i] = scale >> 4;
+            m[i] |= m[i] << 8;
+            m[i] |= m[i] << 16;
+        }
+        dm = __half22float2(b->dm);
+    }
+    __device__ __forceinline__ static X load_x(const block_q8_1* xb, int iqs) {
+        X x;
+        const int off = 4 * (iqs / 8);
+#pragma unroll
+        for (int i = 0; i < 4; ++i) {
+            x.u[i] = get_int_b4(xb[off + i].qs, iqs % 8);
+            x.d8[i] = __low2float(xb[off + i].ds);
+        }
+        return x;
+    }
+    __device__ __forceinline__ float dot(const X& x) const {
+        float sumf_d = 0.0f, sumf_m = 0.0f;
+#pragma unroll
+        for (int i = 0; i < 4; ++i) {
+            sumf_d += x.d8[i] * (__dp4a(vi[i], x.u[i], 0) * sc[i]);
+            sumf_m += x.d8[i] * __dp4a(m[i], x.u[i], 0);
+        }
+        return dm.x * sumf_d - dm.y * sumf_m;
+    }
+};
+template<> struct DecW<11> {
+    int vi[4], sc[4];
+    float d;
+    using X = DecW<10>::X;
+    __device__ __forceinline__ void load(const void* vbq, int kbx, int iqs) {
+        const block_q3_K* b = (const block_q3_K*) vbq + kbx;
+        const int bq8_offset = 4 * (iqs / 8);
+        const int scale_offset = iqs - iqs % 8 + (iqs % 8) / 4;
+        const int vl = get_int_b2(b->qs, iqs);
+        const int vh = ~get_int_b2(b->hmask, iqs % 8) >> bq8_offset;
+#pragma unroll
+        for (int i = 0; i < 4; ++i) {
+            const int isc = scale_offset + 2 * i;
+            const int sc_low = (b->scales[isc % 8] >> (4 * (isc / 8))) & 0xF;
+            const int sc_high = ((b->scales[8 + isc % 4] >> (2 * (isc / 4))) & 3) << 4;
+            const int vil = (vl >> (2 * i)) & 0x03030303;
+            const int vih = ((vh >> i) << 2) & 0x04040404;
+            vi[i] = (int) __vsubss4(vil, vih);
+            sc[i] = (sc_low | sc_high) - 32;
+        }
+        d = __half2float(b->d);
+    }
+    __device__ __forceinline__ static X load_x(const block_q8_1* xb, int iqs) {
+        return DecW<10>::load_x(xb, iqs);
+    }
+    __device__ __forceinline__ float dot(const X& x) const {
+        float sumf = 0.0f;
+#pragma unroll
+        for (int i = 0; i < 4; ++i) sumf += x.d8[i] * (__dp4a(vi[i], x.u[i], 0) * sc[i]);
+        return d * sumf;
+    }
+};
 __device__ __forceinline__ float dot_iq2_xxs(const void* vbq, const block_q8_1* bq8_1, const int& kbx, const int& iqs) {
     const block_iq2_xxs* bq2 = (const block_iq2_xxs*) vbq + kbx;
     const int q2 = get_int_b2(bq2->qs, iqs);
@@ -5023,18 +5100,126 @@ __global__ void moe_win_group_kernel(const __grid_constant__ MoeWin w) {
     *w.n_groups = ng;
 }
 
+// Bounded grouped K-quant prototype: one decoded gate/up weight call serves every member before the next K step.
+// A warp handles a gate/up row pair at a time (rather than keeping four rows x eight members live), then the
+// existing 32-value q8_1 quantizer consumes the shared results.  Each member retains rows_dot's lane-strided K
+// order, dot expression and warp_sum; the window's original single-member body remains below.
+constexpr int kWinReuseMembers = 8;
+template<int TG>
+__device__ __forceinline__ void moe_win_gu_reuse(const MoeWin& w, int g, int chunk, int lane, int warp,
+                                                float* sg, float* su) {
+    using Fm = F<TG>;
+    using D = DecW<TG>;
+    const int first = w.grp_start[g], ne = w.grp_start[g + 1] - first;
+    int tok[kWinReuseMembers];
+#pragma unroll
+    for (int c = 0; c < kWinReuseMembers; ++c)
+        tok[c] = c < ne ? w.grp_ent[first + c] >> 3 : 0;
+    const uint8_t* blob = (const uint8_t*) w.grp_ptr[g];
+    const size_t rb = rbytes<TG>(w.n_embd);
+    constexpr int RPW = GU_ROWS / GU_WARPS;
+    const int nk = (w.n_embd / Fm::qk) * Fm::ipb;
+#pragma unroll
+    for (int j = 0; j < RPW; ++j) {
+        const int r = chunk * GU_ROWS + warp * RPW + j;
+        const uint8_t* gate = blob + (size_t) r * rb;
+        const uint8_t* up = blob + ((size_t) w.n_ff + r) * rb;
+        float ag[kWinReuseMembers], au[kWinReuseMembers];
+#pragma unroll
+        for (int c = 0; c < kWinReuseMembers; ++c) ag[c] = au[c] = 0.0f;
+        for (int k = lane; k < nk; k += 32) {
+            const int kbx = k / Fm::ipb, iqs = Fm::step * (k % Fm::ipb);
+            D dg, du;
+            dg.load(gate, kbx, iqs);
+            du.load(up, kbx, iqs);
+#pragma unroll
+            for (int c = 0; c < kWinReuseMembers; ++c) {
+                if (c >= ne) continue;
+                const block_q8_1* x = (const block_q8_1*) ((const uint8_t*) w.xq + (size_t) tok[c] * w.xq_stride);
+                const typename D::X xv = D::load_x(x + kbx * (Fm::qk / 32), iqs);
+                ag[c] += dg.dot(xv);
+                au[c] += du.dot(xv);
+            }
+        }
+#pragma unroll
+        for (int c = 0; c < kWinReuseMembers; ++c) {
+            if (c >= ne) continue;
+            const float vg = warp_sum(ag[c]), vu = warp_sum(au[c]);
+            if (lane == 0) {
+                sg[c * GU_ROWS + warp * RPW + j] = vg;
+                su[c * GU_ROWS + warp * RPW + j] = vu;
+            }
+        }
+    }
+    __syncthreads();
+    if (warp == 0) {
+        for (int c = 0; c < ne; ++c) {
+            const int e = w.grp_ent[first + c];
+            const float gv = fminf(sg[c * GU_ROWS + lane], w.limit);
+            const float u = fminf(fmaxf(su[c * GU_ROWS + lane], -w.limit), w.limit);
+            q8_1_store_warp((gv / (1.0f + expf(-gv))) * u,
+                           (block_q8_1*) w.hq + (size_t) e * (w.n_ff / 32) + chunk, lane);
+        }
+    }
+}
+
+// A warp owns an output row and shares its decoded down weight call over the member intermediates.  Four rows
+// use four of the existing block's eight warps; there is no additional product, gather, quantizer or launch.
+template<int TD>
+__device__ __forceinline__ void moe_win_down_reuse(const MoeWin& w, int g, int r0, int lane, int warp) {
+    if (warp >= DOWN_ROWS) return;
+    using Fm = F<TD>;
+    using D = DecW<TD>;
+    const int first = w.grp_start[g], ne = w.grp_start[g + 1] - first;
+    int ent[kWinReuseMembers];
+#pragma unroll
+    for (int c = 0; c < kWinReuseMembers; ++c) ent[c] = c < ne ? w.grp_ent[first + c] : 0;
+    const uint8_t* row = (const uint8_t*) w.grp_ptr[g] + w.down_off + (size_t) (r0 + warp) * rbytes<TD>(w.n_ff);
+    float acc[kWinReuseMembers];
+#pragma unroll
+    for (int c = 0; c < kWinReuseMembers; ++c) acc[c] = 0.0f;
+    const int nk = (w.n_ff / Fm::qk) * Fm::ipb;
+    for (int k = lane; k < nk; k += 32) {
+        const int kbx = k / Fm::ipb, iqs = Fm::step * (k % Fm::ipb);
+        D dw;
+        dw.load(row, kbx, iqs);
+#pragma unroll
+        for (int c = 0; c < kWinReuseMembers; ++c) {
+            if (c >= ne) continue;
+            const block_q8_1* x = (const block_q8_1*) w.hq + (size_t) ent[c] * (w.n_ff / 32);
+            const typename D::X xv = D::load_x(x + kbx * (Fm::qk / 32), iqs);
+            acc[c] += dw.dot(xv);
+        }
+    }
+#pragma unroll
+    for (int c = 0; c < kWinReuseMembers; ++c) {
+        if (c >= ne) continue;
+        const float v = warp_sum(acc[c]);
+        if (lane == 0) w.part[(size_t) ent[c] * w.n_embd + r0 + warp] = v;
+    }
+}
+
 // grid (n_ff / GU_ROWS, groups): a group's expert's gate / up rows of this chunk against each member's FFN input, the
 // clamped swiglu into the member's h (moe_gate_up_kernel's rows, arithmetic and layout per member)
-template<int TG>
+template<int TG, bool Grouped = false>
 __global__ void __launch_bounds__(GU_WARPS * 32) moe_win_gu_kernel(const __grid_constant__ MoeWin w) {
     const int g = blockIdx.y, chunk = blockIdx.x;
     if (g >= *w.n_groups) return;
     constexpr int NW = GU_WARPS;
     const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
-    __shared__ float sg[GU_ROWS], su[GU_ROWS];
+    __shared__ float sg[(Grouped ? kWinReuseMembers : 1) * GU_ROWS], su[(Grouped ? kWinReuseMembers : 1) * GU_ROWS];
     __shared__ uint32_t s_tab[TabWords<TG>::n > 0 ? TabWords<TG>::n : 1];
     load_tab<TG>(s_tab);
     __syncthreads();
+    if constexpr (Grouped) {
+        const int ne = w.grp_start[g + 1] - w.grp_start[g];
+        if (ne > 1 && ne <= kWinReuseMembers) {
+            if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
+                atomicAdd(w.grouped_counts, 1u);
+            moe_win_gu_reuse<TG>(w, g, chunk, lane, warp, sg, su);
+            return;
+        }
+    }
     const size_t rb = rbytes<TG>(w.n_embd);
     const uint8_t* blob = (const uint8_t*) w.grp_ptr[g];
     constexpr int RPW = GU_ROWS / NW;
@@ -5069,7 +5254,7 @@ __global__ void __launch_bounds__(GU_WARPS * 32) moe_win_gu_kernel(const __grid_
 
 // grid (n_embd / DOWN_ROWS, groups): a group's expert's down rows of this chunk against each member's h (a warp a
 // member, moe_down_kernel's rows and arithmetic) into the member's partial rows
-template<int TD>
+template<int TD, bool Grouped = false>
 __global__ void __launch_bounds__(256) moe_win_down_kernel(const __grid_constant__ MoeWin w) {
     const int g = blockIdx.y;
     if (g >= *w.n_groups) return;
@@ -5079,6 +5264,15 @@ __global__ void __launch_bounds__(256) moe_win_down_kernel(const __grid_constant
     __syncthreads();
     const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
     const int r0 = blockIdx.x * NR;
+    if constexpr (Grouped) {
+        const int ne = w.grp_start[g + 1] - w.grp_start[g];
+        if (ne > 1 && ne <= kWinReuseMembers) {
+            if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
+                atomicAdd(w.grouped_counts + 1, 1u);
+            moe_win_down_reuse<TD>(w, g, r0, lane, warp);
+            return;
+        }
+    }
     const size_t drb = rbytes<TD>(w.n_ff);
     const uint8_t* blob = (const uint8_t*) w.grp_ptr[g];
     const uint8_t* rows[NR];
@@ -5114,21 +5308,37 @@ __global__ void moe_win_combine_kernel(const __grid_constant__ MoeWin w) {
 
 bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
     if (w.T < 1 || w.T > kMaxWinTokens || w.k > 8 || w.n_ff % GU_ROWS != 0 || w.n_embd % DOWN_ROWS != 0) return false;
+    static const bool grouped_env = [] {
+        const char* v = getenv("MAYA_WIN_GROUPED");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    // Each stage dispatches its own quant type.  Other formats and wider windows retain the original kernels.
+    const bool grouped = grouped_env && w.T <= kWinReuseMembers && w.n_embd % 256 == 0 && w.n_ff % 256 == 0;
     moe_win_group_kernel<<<1, 32, 0, s>>>(w);
     const int G = w.T * w.k;   // groups at most (the blocks past the real count return at once)
     const dim3 ggu((unsigned) (w.n_ff / GU_ROWS), (unsigned) G), gdn((unsigned) (w.n_embd / DOWN_ROWS), (unsigned) G);
     switch (gu_type) {
 #define GLMF_WGU(T)         case T: moe_win_gu_kernel<T><<<ggu, GU_WARPS * 32, 0, s>>>(w); break;
-        GLMF_WGU(16) GLMF_WGU(18) GLMF_WGU(19) GLMF_WGU(23) GLMF_WGU(10) GLMF_WGU(11) GLMF_WGU(17) GLMF_WGU(22)
-        GLMF_WGU(21) GLMF_WGU(29) GLMF_WGU(12) GLMF_WGU(13) GLMF_WGU(14)
+        GLMF_WGU(16) GLMF_WGU(18) GLMF_WGU(19) GLMF_WGU(23) GLMF_WGU(17) GLMF_WGU(22)
+        GLMF_WGU(21) GLMF_WGU(29) GLMF_WGU(13) GLMF_WGU(14)
 #undef GLMF_WGU
+#define GLMF_WGU_GROUPED(T) case T: \
+        if (grouped) moe_win_gu_kernel<T, true><<<ggu, GU_WARPS * 32, 0, s>>>(w); \
+        else moe_win_gu_kernel<T><<<ggu, GU_WARPS * 32, 0, s>>>(w); break;
+        GLMF_WGU_GROUPED(10) GLMF_WGU_GROUPED(11) GLMF_WGU_GROUPED(12)
+#undef GLMF_WGU_GROUPED
         default: return false;
     }
     switch (d_type) {
 #define GLMF_WDN(T)         case T: moe_win_down_kernel<T><<<gdn, 256, 0, s>>>(w); break;
-        GLMF_WDN(16) GLMF_WDN(18) GLMF_WDN(19) GLMF_WDN(23) GLMF_WDN(10) GLMF_WDN(11) GLMF_WDN(17) GLMF_WDN(22)
-        GLMF_WDN(21) GLMF_WDN(29) GLMF_WDN(12) GLMF_WDN(13) GLMF_WDN(14)
+        GLMF_WDN(16) GLMF_WDN(18) GLMF_WDN(19) GLMF_WDN(23) GLMF_WDN(17) GLMF_WDN(22)
+        GLMF_WDN(21) GLMF_WDN(29) GLMF_WDN(13) GLMF_WDN(14)
 #undef GLMF_WDN
+#define GLMF_WDN_GROUPED(T) case T: \
+        if (grouped) moe_win_down_kernel<T, true><<<gdn, 256, 0, s>>>(w); \
+        else moe_win_down_kernel<T><<<gdn, 256, 0, s>>>(w); break;
+        GLMF_WDN_GROUPED(10) GLMF_WDN_GROUPED(11) GLMF_WDN_GROUPED(12)
+#undef GLMF_WDN_GROUPED
         default: return false;
     }
     moe_win_combine_kernel<<<dim3((unsigned) ((w.n_embd + 255) / 256), (unsigned) w.T), 256, 0, s>>>(w);

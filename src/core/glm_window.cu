@@ -540,6 +540,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         return v == nullptr || std::atoi(v) != 0;
     }();
     static const bool prof_b = getenv("STRATA_GLM_WIN_PROF") != nullptr;
+    static const bool group_diag = [] {
+        const char* v = getenv("MAYA_WIN_GROUP_DIAG");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
     if (batch_env && !W.per_token && W.mplan_ptr != nullptr && (T > 1 || part != 0)) {
         const bool row_scratch = F->scratch_count >= W.T * 8;
         static const bool reuse = [] {
@@ -584,13 +588,15 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                           nullptr, nullptr, 0, nullptr, ah_bias, 0, keep, lane ? win_plan : 0ull, promote_min, 0, 0, t,
                           row_scratch ? nullptr : scr, t0 + T);
             ++F->expected;
+            if (prof_b) W.mark("moe_route", s);
             gf::moe_wait(mt, E, s);
+            if (prof_b) W.mark("moe_disk_wait", s);
             gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
+            if (prof_b) W.mark("moe_fetch", s);
             if (W.uid != nullptr)
                 cudaMemcpyAsync(W.uid + ((size_t) (il - l0_) * kWinMax + t) * 8, mt.plan_id, 8 * sizeof(int),
                                 cudaMemcpyDeviceToDevice, s);
         }
-        if (prof_b) W.mark("moe_routes", s);
         }
         if (part == 1) return true;
         const float* sh_out = nullptr;
@@ -603,13 +609,15 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             if (!gf::mv(&jd, 1, s)) { err = "glm window: shared expert down"; return false; }
             sh_out = W.sh_out + (size_t) t0 * E;
         }
+        if (prof_b) W.mark("moe_shared_down", s);
         // EXL3: each distinct expert once for all its tokens (exl3::win_experts, gf::moe_win_experts' groups);
         // STRATA_GLM_WIN_X3=0: each token's routed experts on the token path's kernels (A/B - the same bits)
         static const bool x3_batch = [] {
             const char* v = getenv("STRATA_GLM_WIN_X3");
             return v == nullptr || std::atoi(v) != 0;
         }();
-        if (Ly.exl3 && x3_batch && W.wh != nullptr && x3::several_ok()) {
+        const bool grouped = !Ly.exl3 || (x3_batch && W.wh != nullptr && x3::several_ok());
+        if (Ly.exl3 && grouped) {
             gf::MoeWin mw;
             mw.plan_ptr = W.mplan_ptr + 8 * t0;
             mw.grp_ptr = W.grp_ptr;
@@ -619,6 +627,7 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             mw.T = T;
             mw.k = g.n_exp_used;
             gf::moe_win_group(mw, s);
+            if (prof_b) W.mark("moe_group", s);
             x3::WinArgs xa;
             xa.grp_ptr = W.grp_ptr;
             xa.grp_start = W.grp_start;
@@ -676,6 +685,13 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             mw.n_ff = g.n_ff_exp;
             mw.limit = g.swiglu_exp;
             mw.down_off = Ly.down_off;
+            if (group_diag) {
+                // Words 5/6 are diagnostic GU/down engagement counts. Grouped
+                // kernels increment once per expert group, not once per tile.
+                mw.grouped_counts = W.scr + 5;
+                if (!glmfast::cuda_ok(cudaMemsetAsync(mw.grouped_counts, 0, 2 * sizeof(unsigned int), s),
+                                     "window grouped kernel diagnostic reset", err)) return false;
+            }
             if (!gf::moe_win_experts(Ly.gu_type, Ly.d_type, mw, s)) {
                 err = "glm window: the batched experts (types " + std::to_string(Ly.gu_type) + " / " +
                       std::to_string(Ly.d_type) + ")";
@@ -683,6 +699,86 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             }
         }
         if (prof_b) W.mark("moe_experts", s);
+        if (group_diag && grouped) {
+            // Read the actual pointer groups before the next layer/group reuses
+            // them. This intentionally drains the stream; do not use its wall
+            // throughput as an unprofiled performance result.
+            using clk = std::chrono::steady_clock;
+            const auto elapsed = [](clk::time_point a, clk::time_point b) {
+                return std::chrono::duration<double, std::milli>(b - a).count();
+            };
+            const auto begin = clk::now();
+            if (!glmfast::cuda_ok(cudaStreamSynchronize(s), "window group diagnostic drain", err)) return false;
+            const auto drained = clk::now();
+            constexpr int cap = kWinMax * 8;
+            int ng = 0;
+            std::array<int, cap + 1> start{};
+            std::array<int, cap> ids{};
+            std::array<unsigned long long, cap> ptr{}, src{};
+            std::array<unsigned int, 2> executed{};
+            const size_t entries = (size_t) T * 8;
+            if (!glmfast::cuda_ok(cudaMemcpyAsync(&ng, W.n_groups, sizeof(int), cudaMemcpyDeviceToHost, s),
+                                 "window group diagnostic count", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(start.data(), W.grp_start, (entries + 1) * sizeof(int),
+                                                 cudaMemcpyDeviceToHost, s), "window group diagnostic starts", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(ids.data(), W.mplan_id + 8 * t0, entries * sizeof(int),
+                                                 cudaMemcpyDeviceToHost, s), "window group diagnostic IDs", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(ptr.data(), W.mplan_ptr + 8 * t0, entries * sizeof(ptr[0]),
+                                                 cudaMemcpyDeviceToHost, s), "window group diagnostic plans", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(src.data(), W.mfetch + 8 * t0, entries * sizeof(src[0]),
+                                                 cudaMemcpyDeviceToHost, s), "window group diagnostic sources", err)) return false;
+            if (!Ly.exl3 && !glmfast::cuda_ok(cudaMemcpyAsync(executed.data(), W.scr + 5, 2 * sizeof(unsigned int),
+                                                            cudaMemcpyDeviceToHost, s),
+                                             "window grouped kernel diagnostic engagement", err)) return false;
+            if (!glmfast::cuda_ok(cudaStreamSynchronize(s), "window group diagnostic readback", err)) return false;
+            const auto copied = clk::now();
+            if (ng < 0 || ng > T * g.n_exp_used) {
+                err = "window group diagnostic: invalid group count";
+                return false;
+            }
+            auto& d = W.group_diag[{Ly.exl3 ? -1 : Ly.gu_type, Ly.exl3 ? -1 : Ly.d_type, T, gid, part}];
+            std::vector<int> logical, gpu, fetched;
+            for (int t = 0; t < T; ++t)
+                for (int i = 0; i < g.n_exp_used; ++i) {
+                    const int e = 8 * t + i;
+                    logical.push_back(ids[(size_t) e]);
+                    if (ptr[(size_t) e] != 0ull) gpu.push_back(ids[(size_t) e]);
+                    if (ptr[(size_t) e] != 0ull && src[(size_t) e] != 0ull) fetched.push_back(ids[(size_t) e]);
+                }
+            const auto distinct = [](std::vector<int>& v) {
+                std::sort(v.begin(), v.end());
+                return (uint64_t) (std::unique(v.begin(), v.end()) - v.begin());
+            };
+            ++d.batches;
+            d.routed += logical.size();
+            d.gpu_entries += gpu.size();
+            d.fetch_entries += fetched.size();
+            d.fetch_bytes += fetched.size() * Ly.blob;
+            d.logical_groups += distinct(logical);
+            d.gpu_id_groups += distinct(gpu);
+            const uint64_t nf = distinct(fetched);
+            d.fetch_id_groups += nf;
+            d.unique_fetch_bytes += nf * Ly.blob;
+            d.slot_groups += (uint64_t) ng;
+            d.executed_gu_groups += executed[0];
+            d.executed_down_groups += executed[1];
+            for (int u = 0; u < ng; ++u) {
+                const int n = start[(size_t) u + 1] - start[(size_t) u];
+                if (n < 1 || n > kWinMax) {
+                    err = "window group diagnostic: invalid multiplicity";
+                    return false;
+                }
+                ++d.multiplicity[(size_t) n];
+            }
+            ++W.group_diag_readbacks;
+            W.group_diag_readback_bytes += sizeof(int) + (entries + 1) * sizeof(int) +
+                                          entries * (sizeof(int) + 2 * sizeof(unsigned long long)) +
+                                          (Ly.exl3 ? 0 : 2 * sizeof(unsigned int));
+            W.group_diag_drain_ms += elapsed(begin, drained);
+            W.group_diag_copy_ms += elapsed(drained, copied);
+            W.group_diag_reduce_ms += elapsed(copied, clk::now());
+            if (prof_b) W.mark("group_diag_perturbation", s);
+        }
         if (lane)
             for (int t = t0; t < t0 + T; ++t) gf::moe_cpu_wait(tok_dev(t), E, W.ffn + (size_t) t * E, s);
         if (prof_b) W.mark("moe_cpu_wait", s);
@@ -886,6 +982,7 @@ bool Glm5Model::fast_window_layers(int64_t p0, int T, std::string& err) {
     for (int t = 0; t < T; ++t)
         gf::hc_post(W.ffn + (size_t) t * E, W.R[rc] + (size_t) t * hcE, W.post + (size_t) t * 8,
                     W.comb + (size_t) t * 16, E, W.R[rc ^ 1] + (size_t) t * hcE, s);
+    mark("hc_post");
     W.out = rc ^ 1;
     const cudaError_t e = cudaGetLastError();
     if (e != cudaSuccess) {
@@ -952,6 +1049,7 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
     // a batched pass whose tokens took more scratch slots than a layer has runs again token by token (rare: the tiers
     // land a fetched expert in a spare slot first)
     for (int attempt = 0;; ++attempt) {
+    if (hprof) WH.mark("window_start", fast_->cs);
     // the embedded rows (host-dequantized from the shard mapping) -> the 4 streams of each token
     {
         FastState* F = fast_;
@@ -969,6 +1067,7 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         cudaMemcpyAsync(W.emb, W.emb_h, (size_t) T * E * sizeof(float), cudaMemcpyHostToDevice, F->cs);
         for (int t = 0; t < T; ++t)
             gf::embed_streams(W.emb + (size_t) t * E, W.R[0] + (size_t) t * hcE, E, F->cs);
+        if (hprof) W.mark("embedding", F->cs);
     }
     if (!fast_window_layers(p0, T, err)) return false;
     // each later part: the rows cross over through the previous part's pinned buffer, ordered on the devices
@@ -993,6 +1092,7 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
     for (int t = 0; t < T; ++t)
         gf::head_prep(WT.R[WT.out] + (size_t) t * hcE, tail->w_.at("output_norm.weight"), g.norm_eps, E,
                       WT.head_x + (size_t) t * E, (uint8_t*) WT.head_xq + (size_t) t * WT.xq_s, FT->cs);
+    if (hprof) WT.mark("head_prep", FT->cs);
     const WSlot& ow = tail->ws_map_.at("output.weight");
     gf::MvJob o = {ow.q, WT.head_xq, WT.head_x, WT.logits, nullptr, 1.0f, ow.type, E, g.n_vocab};
     if (ow.type == 0) o.w = ow.f32;
@@ -1004,13 +1104,16 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         err = "glm window: output head (type " + std::to_string(ow.type) + ")";
         return false;
     }
+    if (hprof) WT.mark("head_mv", FT->cs);
     if (sp != nullptr && !sp->greedy) {
         // row t is drawn with the counter the token loop would use for the token after tokens[t]
         strata::kernels::sample_tokens(WT.logits, T, (int) g.n_vocab, nullptr, 0, *sp, WT.tok, FT->cs);
     } else {
         for (int t = 0; t < T; ++t) gf::argmax(WT.logits + (size_t) t * g.n_vocab, g.n_vocab, WT.tok + t, FT->cs);
     }
+    if (hprof) WT.mark("head_pick", FT->cs);
     cudaMemcpyAsync(WT.tok_h, WT.tok, (size_t) T * sizeof(int), cudaMemcpyDeviceToHost, FT->cs);
+    if (hprof) WT.mark("head_pick_copy", FT->cs);
     hlap(WH.h_enqueue);
     // every part done (their captures for the drafter too)
     bool clash = false;
@@ -1502,6 +1605,41 @@ void Glm5Model::win_prof_report() {
     for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
         if (m->fast_ == nullptr) continue;
         auto& W = m->fast_->win;
+        if (W.group_diag_readbacks > 0) {
+            std::fprintf(stderr, "maya verify group diagnostic CUDA%d: %llu synchronous readbacks, %llu bytes; "
+                                 "preceding GPU work drain %.3f ms, copy/wait %.3f ms, host reduction %.3f ms "
+                                 "(totals; throughput and phase timings are perturbed)\n", m->dev_,
+                         (unsigned long long) W.group_diag_readbacks,
+                         (unsigned long long) W.group_diag_readback_bytes,
+                         W.group_diag_drain_ms, W.group_diag_copy_ms, W.group_diag_reduce_ms);
+            for (const auto& kv : W.group_diag) {
+                const auto& key = kv.first;
+                const auto& d = kv.second;
+                std::string hist;
+                for (size_t n = 1; n < d.multiplicity.size(); ++n) {
+                    if (d.multiplicity[n] == 0) continue;
+                    hist += " " + std::to_string(n) + ":" + std::to_string(d.multiplicity[n]);
+                }
+                const auto type_name = [](int t) { return t < 0 ? "EXL3" : ggml_type_name((ggml_type) t); };
+                std::fprintf(stderr, "maya verify groups CUDA%d GU=%s down=%s T=%d gid=%d part=%d: %llu batches, "
+                                     "%llu routed entries / %llu logical ID groups, "
+                                     "%llu GPU entries / %llu GPU ID groups / %llu slot groups; "
+                                     "%llu executed GU grouped / %llu executed down grouped; "
+                                     "%llu fetch entries / %llu fetch ID groups, %llu copied bytes / "
+                                     "%llu unique-ID bytes; slot multiplicity%s\n", m->dev_,
+                             type_name(key[0]), type_name(key[1]), key[2], key[3], key[4],
+                             (unsigned long long) d.batches, (unsigned long long) d.routed,
+                             (unsigned long long) d.logical_groups, (unsigned long long) d.gpu_entries,
+                             (unsigned long long) d.gpu_id_groups, (unsigned long long) d.slot_groups,
+                             (unsigned long long) d.executed_gu_groups, (unsigned long long) d.executed_down_groups,
+                             (unsigned long long) d.fetch_entries, (unsigned long long) d.fetch_id_groups,
+                             (unsigned long long) d.fetch_bytes, (unsigned long long) d.unique_fetch_bytes,
+                             hist.c_str());
+            }
+            W.group_diag.clear();
+            W.group_diag_readbacks = W.group_diag_readback_bytes = 0;
+            W.group_diag_drain_ms = W.group_diag_copy_ms = W.group_diag_reduce_ms = 0;
+        }
         if (W.n_prof > 0) {
             double tot = 0;
             std::string line;

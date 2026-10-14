@@ -286,8 +286,8 @@ void moe_route(const float* logits, const float* bias, int n_expert, int k, floa
                unsigned int* scr_used = nullptr, int win_n = 0, int disk_skip_from = 8, float disk_skip_w = 0.0f);
 /// A verify window's MoE layer with each distinct expert computed ONCE: the T tokens were routed one after another into
 /// their own plan arrays (moe_route with win = t and a scr_used word, so no two of them land in one scratch slot - the
-/// word's bit 31 says one did), then moe_win_experts groups the entries by expert slot, reads each expert's gate/up and
-/// down rows once for all the tokens it serves, and combines each token's rows in plan order as moe_down does - every
+/// word's bit 31 says one did), then moe_win_experts groups the entries by expert slot. Grouping exposes weight reuse;
+/// actual reads/dequantization depend on the selected kernel. It combines each token's rows in plan order as moe_down does - every
 /// token's output is moe_gate_up + moe_down's for it alone, bit for bit.  The CPU lane's answers stay moe_cpu_wait's.
 struct MoeWin {
     const unsigned long long* plan_ptr = nullptr;   // [T][8] the tokens' plans (0: an entry the GPU does not compute)
@@ -305,6 +305,7 @@ struct MoeWin {
     int* grp_start = nullptr;                       // scratch: [T * 8 + 1]
     int* grp_ent = nullptr;                         // scratch: [T * 8]
     int* n_groups = nullptr;                        // scratch: [1]
+    unsigned int* grouped_counts = nullptr;         // optional diagnostic [2]: executed repeated groups, gate/up then down
     int T = 0, k = 0, n_embd = 0, n_ff = 0;
     float limit = 0.0f;
     size_t down_off = 0;
