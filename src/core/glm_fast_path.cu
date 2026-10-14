@@ -4342,6 +4342,7 @@ void Glm5Model::fast_ahead_reader() {
 bool Glm5Model::fast_boundary(std::string& err) {
     FastState* F = fast_;
     if (F == nullptr || F->lp.empty() || F->rc.empty()) return true;
+    if (!F->bg_copy_error.empty()) { err = F->bg_copy_error; return false; }
     // Any alternate caller that has not entered fast_layers must issue pending
     // moves before querying their (not yet recorded) events or lending slots.
     if (!F->deferred_copies.empty()) {
@@ -4846,6 +4847,33 @@ bool Glm5Model::fast_boundary(std::string& err) {
                 }
             }
             std::sort(cands.begin(), cands.end(), [](const Cand& a, const Cand& b) { return a.hot > b.hot; });
+            const auto submit_bg = [&](void* dst, const void* src, size_t bytes, cudaMemcpyKind kind,
+                                       cudaEvent_t& ev) {
+                ev = F->get_event();
+                if (ev == nullptr) {
+                    err = "glm background copy: completion event did not allocate";
+                    F->bg_copy_error = err;
+                    return false;
+                }
+                if (!glmfast::cuda_ok(cudaMemcpyAsync(dst, src, bytes, kind, F->copy),
+                                     "glm background copy submission", err)) {
+                    cudaEventDestroy(ev);
+                    ev = nullptr;
+                    F->bg_copy_error = err;
+                    return false;
+                }
+                if (!glmfast::cuda_ok(cudaEventRecord(ev, F->copy), "glm background copy completion record", err)) {
+                    // The copy may be live despite its missing completion record.
+                    // Drain before abandoning its event; do not publish an owner
+                    // or resume boundaries with partially updated host metadata.
+                    cudaStreamSynchronize(F->copy);
+                    cudaEventDestroy(ev);
+                    ev = nullptr;
+                    F->bg_copy_error = err;
+                    return false;
+                }
+                return true;
+            };
             int issued = 0, filled = 0;   // demotion moves (at most bg_n), promotions into free slots (bg_up_max)
             for (const auto& c : cands) {
                 if (issued >= bg_nk && filled >= bg_up_max) break;
@@ -4854,12 +4882,11 @@ bool Glm5Model::fast_boundary(std::string& err) {
                 const int rc = F->layer_rc[(size_t) c.il];
                 auto& R = F->rc[(size_t) rc];
                 if (c.free_slot >= 0) {
+                    cudaEvent_t ev = nullptr;
+                    if (!submit_bg(P.slot_ptr(c.free_slot), R.base + (size_t) c.rs * R.stride,
+                                   F->L[(size_t) c.il].blob, cudaMemcpyHostToDevice, ev)) return false;
                     P.st[(size_t) c.free_slot] = FastState::kLanding;
                     R.st[(size_t) c.rs] = FastState::kRPin;
-                    cudaMemcpyAsync(P.slot_ptr(c.free_slot), R.base + (size_t) c.rs * R.stride, F->L[(size_t) c.il].blob,
-                                    cudaMemcpyHostToDevice, F->copy);
-                    cudaEvent_t ev = F->get_event();
-                    cudaEventRecord(ev, F->copy);
                     F->bg.push_back(FastState::BgMove{c.il, c.free_slot, c.il * NE + c.e, rc, c.rs, true, ev});
                     ++filled;
                 } else if (lane_all && c.cold_slot >= 0 && c.hot >= bg_ratio * std::max<uint32_t>(c.cold, 1u) + 4u) {
@@ -4868,13 +4895,12 @@ bool Glm5Model::fast_boundary(std::string& err) {
                         if (R.st[(size_t) s2] == FastState::kRFree) rs = s2;
                     if (rs < 0) continue;
                     const int vkey = c.il * NE + P.key[(size_t) c.cold_slot];
+                    cudaEvent_t ev = nullptr;
+                    if (!submit_bg(R.base + (size_t) rs * R.stride, P.slot_ptr(c.cold_slot),
+                                   F->L[(size_t) c.il].blob, cudaMemcpyDeviceToHost, ev)) return false;
                     P.st[(size_t) c.cold_slot] = FastState::kDraining;   // (still live in VRAM until the copy landed)
                     R.st[(size_t) rs] = FastState::kRDemote;
                     R.key[(size_t) rs] = vkey;
-                    cudaMemcpyAsync(R.base + (size_t) rs * R.stride, P.slot_ptr(c.cold_slot), F->L[(size_t) c.il].blob,
-                                    cudaMemcpyDeviceToHost, F->copy);
-                    cudaEvent_t ev = F->get_event();
-                    cudaEventRecord(ev, F->copy);
                     F->bg.push_back(FastState::BgMove{c.il, c.cold_slot, vkey, rc, rs, false, ev});
                     ++issued;
                 }

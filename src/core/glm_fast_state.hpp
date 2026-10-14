@@ -432,6 +432,7 @@ struct Glm5Model::FastState {
     };
     std::vector<BgMove> bg;
     bool bg_hold = false;   // lend_tail: no new moves while the pool's tail is lent
+    std::string bg_copy_error;  // failed copy submission: no more boundaries until the model is reloaded
     volatile int* route_error_h = nullptr;   // in the mapped ring allocation, visible after compute completion
     uint64_t bg_up = 0, bg_down = 0;
     std::vector<cudaEvent_t> ev_free;
