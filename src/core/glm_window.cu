@@ -49,6 +49,14 @@ bool win_async_fetch_enabled() {
     return on;
 }
 
+bool win_component_fetch_enabled() {
+    static const bool on = [] {
+        const char* v = getenv("MAYA_WIN_COMPONENT_FETCH");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    return on;
+}
+
 bool win_hc_batch_enabled() {
     static const bool on = [] {
         const char* v = getenv("MAYA_WIN_HC_BATCH");
@@ -341,7 +349,7 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
             err = "glm window: the window's events did not create";
             return false;
         }
-    if (win_async_fetch_enabled()) {
+    if (win_async_fetch_enabled() || win_component_fetch_enabled()) {
         if (!glmfast::cuda_ok(cudaStreamCreateWithFlags(&W.fetch_stream, cudaStreamNonBlocking),
                              "window async fetch stream", err)) return false;
         for (auto& e : W.fetch_ready)
@@ -562,6 +570,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
     auto& W = F->win;
     const auto& cpu_override = win_cpu_plan_override();
     if (!cpu_override.error.empty()) { err = cpu_override.error; return false; }
+    if (win_component_fetch_enabled() && win_async_fetch_enabled()) {
+        err = "glm window: MAYA_WIN_COMPONENT_FETCH and MAYA_WIN_ASYNC_FETCH are separate, incompatible schedules";
+        return false;
+    }
     const Glm5Geometry& g = g_;
     cudaStream_t s = F->cs;
     const auto& Ly = F->L[(size_t) il];
@@ -662,6 +674,14 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                              F->cpu_pool->active(), il, T, part);
         }
         const bool row_scratch = F->scratch_count >= W.T * 8;
+        // All sources remain live until the next boundary. Disk fallback also
+        // needs full, token-owned blobs because routes now all precede copies.
+        const bool component_fetch = win_component_fetch_enabled() && part == 0 && t0 == 0 && T == W.T &&
+                                     T > 1 && T <= kWinMax && row_scratch && !Ly.exl3 && g.n_exp_used == 8 &&
+                                     Ly.down_off > 0 && Ly.down_off < Ly.blob && Ly.down_off % 16 == 0 &&
+                                     Ly.blob % 16 == 0 && W.fetch_stream != nullptr &&
+                                     F->win_fetch_stage != nullptr && F->win_fetch_stage_n >= (size_t) T * 8;
+        if (win_component_fetch_enabled() && part != 2 && !component_fetch) ++W.component_fallback_layers;
         const bool async_fetch = win_async_fetch_enabled() && part == 0 && t0 == 0 && T == W.T && T > 1 &&
                                  T <= kWinMax && row_scratch && !Ly.exl3 && W.fetch_stream != nullptr &&
                                  F->win_fetch_stage != nullptr && F->win_fetch_stage_n >= (size_t) T * 8;
@@ -673,7 +693,7 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             cudaStream_t stream;
             bool joined = false;
             ~FetchDrainOnError() { if (stream && !joined) cudaStreamSynchronize(stream); }
-        } fetch_drain{async_fetch ? W.fetch_stream : nullptr};
+        } fetch_drain{async_fetch || component_fetch ? W.fetch_stream : nullptr};
         static const bool reuse = [] {
             const char* v = getenv("MAYA_WIN_REUSE");
             return v != nullptr && std::atoi(v) != 0;
@@ -743,13 +763,39 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                     ++W.async_fetch_each_joins;
                     if (prof_b) W.mark("moe_fetch_each_join", s);
                 }
-            } else {
+            } else if (!component_fetch) {
                 gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
                 if (prof_b) W.mark("moe_fetch", s);
             }
             if (W.uid != nullptr)
                 cudaMemcpyAsync(W.uid + ((size_t) (il - l0_) * kWinMax + t) * 8, mt.plan_id, 8 * sizeof(int),
                                 cudaMemcpyDeviceToDevice, s);
+        }
+        if (component_fetch) {
+            // mfetch and mplan_ptr are [T][8] arrays. The existing component
+            // kernel loops arbitrary k; nonzero sources occur only at the
+            // original fetch owner, while later reused pointers have src=0.
+            const gf::MoeDev all = tok_dev(0);
+            gf::moe_fetch_component(all, T * 8, 0, Ly.down_off, 0, s);
+            ++W.component_prefix_launches;
+            if (prof_b) W.mark("moe_component_prefix", s);
+            if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_ready[0], s), "window component GU ready", err) ||
+                !glmfast::cuda_ok(cudaStreamWaitEvent(W.fetch_stream, W.fetch_ready[0], 0),
+                                 "window component down copy start", err)) return false;
+            // Match the retained ordinary path's bounded competing copy grid.
+            gf::moe_fetch_component(all, T * 8, Ly.down_off, Ly.blob - Ly.down_off, 32, W.fetch_stream);
+            ++W.component_down_launches;
+            if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_done, W.fetch_stream),
+                                 "window component down ready", err)) return false;
+            ++W.component_layers;
+            if (F->window_weight_verify_active) {
+                // Full immutable-blob audit needs down bytes too. Serialize
+                // only the diagnostic; its timings cannot prove overlap.
+                if (!glmfast::cuda_ok(cudaStreamWaitEvent(s, W.fetch_done, 0),
+                                     "window component weight audit join", err)) return false;
+                ++W.component_audit_joins;
+                if (prof_b) W.mark("moe_component_audit_join", s);
+            }
         }
         if (async_fetch) {
             if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_done, W.fetch_stream),
@@ -1049,7 +1095,20 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                 if (!glmfast::cuda_ok(cudaMemsetAsync(mw.grouped_counts, 0, 2 * sizeof(unsigned int), s),
                                      "window grouped kernel diagnostic reset", err)) return false;
             }
-            if (!gf::moe_win_experts(Ly.gu_type, Ly.d_type, mw, s)) {
+            bool experts_ok = false;
+            if (component_fetch) {
+                experts_ok = gf::moe_win_gate_up(Ly.gu_type, mw, s);
+                if (prof_b) W.mark("moe_component_gu", s);
+                // Wait before down consumers and before the next layer can
+                // overwrite source/plan rows, scratch, or promoted destinations.
+                if (!glmfast::cuda_ok(cudaStreamWaitEvent(s, W.fetch_done, 0),
+                                     "window component down consumer join", err)) return false;
+                if (prof_b) W.mark("moe_component_down_join", s);
+                if (experts_ok) experts_ok = gf::moe_win_down(Ly.d_type, mw, s);
+            } else {
+                experts_ok = gf::moe_win_experts(Ly.gu_type, Ly.d_type, mw, s);
+            }
+            if (!experts_ok) {
                 err = "glm window: the batched experts (types " + std::to_string(Ly.gu_type) + " / " +
                       std::to_string(Ly.d_type) + ")";
                 return false;
@@ -1111,6 +1170,14 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             d.gpu_entries += gpu.size();
             d.fetch_entries += fetched.size();
             d.fetch_bytes += fetched.size() * Ly.blob;
+            if (component_fetch) {
+                // Existing synchronous diagnostic only: clean runs report
+                // submitted launches, never capacity as actual copied bytes.
+                ++W.component_diag_layers;
+                W.component_diag_fetch_entries += fetched.size();
+                W.component_diag_prefix_bytes += fetched.size() * Ly.down_off;
+                W.component_diag_down_bytes += fetched.size() * (Ly.blob - Ly.down_off);
+            }
             d.logical_groups += distinct(logical);
             d.gpu_id_groups += distinct(gpu);
             const uint64_t nf = distinct(fetched);
@@ -1219,8 +1286,12 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         if (lane)
             for (int t = t0; t < t0 + T; ++t) gf::moe_cpu_wait(tok_dev(t), E, W.ffn + (size_t) t * E, s);
         if (prof_b) W.mark("moe_cpu_wait", s);
+        // Every normal component exit has a main-stream join before all
+        // consumers. On any earlier error the guard drains the side stream.
+        if (component_fetch) fetch_drain.joined = true;
         return true;
     }
+    if (win_component_fetch_enabled() && part != 2) ++W.component_fallback_layers;
     if (cpu_override.requested) {
         static std::atomic<bool> reported{false};
         if (!reported.exchange(true, std::memory_order_relaxed)) {
@@ -2115,6 +2186,27 @@ void Glm5Model::win_prof_report() {
                          (unsigned long long) W.async_fetch_submissions, (unsigned long long) W.async_fetch_each_joins,
                          (unsigned long long) staging_uses);
             W.async_fetch_layers = W.async_fetch_submissions = W.async_fetch_each_joins = 0;
+        }
+        if (win_component_fetch_enabled()) {
+            std::fprintf(stderr, "maya verify component fetch CUDA%d: %llu full-layer groups, %llu fallback fronts, "
+                                 "%llu prefix / %llu down copy launches submitted, down grid cap 32 CTAs, "
+                                 "%llu serialized weight-audit joins, %llu token-owned disk staging uses; "
+                                 "launches do not imply nonzero traffic\n", m->dev_,
+                         (unsigned long long) W.component_layers, (unsigned long long) W.component_fallback_layers,
+                         (unsigned long long) W.component_prefix_launches, (unsigned long long) W.component_down_launches,
+                         (unsigned long long) W.component_audit_joins, (unsigned long long) staging_uses);
+            if (W.component_diag_layers > 0)
+                std::fprintf(stderr, "maya verify component traffic diagnostic CUDA%d: %llu layers, %llu nonzero "
+                                     "fetch source entries, %llu prefix bytes / %llu down bytes; "
+                                     "synchronous group readbacks perturb timings\n", m->dev_,
+                             (unsigned long long) W.component_diag_layers,
+                             (unsigned long long) W.component_diag_fetch_entries,
+                             (unsigned long long) W.component_diag_prefix_bytes,
+                             (unsigned long long) W.component_diag_down_bytes);
+            W.component_layers = W.component_fallback_layers = W.component_audit_joins = 0;
+            W.component_prefix_launches = W.component_down_launches = 0;
+            W.component_diag_layers = W.component_diag_fetch_entries = 0;
+            W.component_diag_prefix_bytes = W.component_diag_down_bytes = 0;
         }
         if (W.group_diag_readbacks > 0) {
             std::fprintf(stderr, "maya verify group diagnostic CUDA%d: %llu synchronous readbacks, %llu bytes; "

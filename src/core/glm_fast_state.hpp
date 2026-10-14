@@ -568,9 +568,14 @@ struct Glm5Model::FastState {
         void* ans_d[16] = {};
         bool per_token = false;             // the batched MoE off for this pass (the redo after a scratch clash)
         uint64_t windows = 0, retries = 0, reuses = 0;
-        cudaStream_t fetch_stream = nullptr;  // dedicated, full-layer verification fetches only
+        cudaStream_t fetch_stream = nullptr;  // dedicated full-layer verification fetches/component down copies
         cudaEvent_t fetch_ready[16] = {}, fetch_done = nullptr;
         uint64_t async_fetch_layers = 0, async_fetch_submissions = 0, async_fetch_each_joins = 0;
+        uint64_t component_layers = 0, component_fallback_layers = 0, component_audit_joins = 0;
+        uint64_t component_prefix_launches = 0, component_down_launches = 0;
+        // Actual traffic from group diagnostics only; never T*8 capacity.
+        uint64_t component_diag_layers = 0, component_diag_fetch_entries = 0;
+        uint64_t component_diag_prefix_bytes = 0, component_diag_down_bytes = 0;
         void release_fetch() {
             // Every queued wait follows a successfully recorded ready event.
             // Drain before any event/plan/source storage can be destroyed.

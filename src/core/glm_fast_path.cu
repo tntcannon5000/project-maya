@@ -1511,8 +1511,10 @@ bool Glm5Model::fast_setup(std::string& err) {
         F->stage_bytes = sstride;
         const char* win_stage_env = getenv("MAYA_WIN_FETCH_STAGE");
         const char* win_async_env = getenv("MAYA_WIN_ASYNC_FETCH");
+        const char* win_component_env = getenv("MAYA_WIN_COMPONENT_FETCH");
         if (((win_stage_env != nullptr && std::atoi(win_stage_env) != 0) ||
-             (win_async_env != nullptr && std::atoi(win_async_env) != 0)) && F->scratch_count >= 16) {
+             (win_async_env != nullptr && std::atoi(win_async_env) != 0) ||
+             (win_component_env != nullptr && std::atoi(win_component_env) != 0)) && F->scratch_count >= 16) {
             // A later window route must never overwrite a disk fallback source
             // while the dedicated verification stream still reads it. Ordinary
             // decode/startup keep the original small staging pool above. The
