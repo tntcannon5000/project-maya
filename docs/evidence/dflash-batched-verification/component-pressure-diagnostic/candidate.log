@@ -1,0 +1,43 @@
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.28 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 2.38
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 16.00 GB, 46-49 slots/layer (1939 total)
+maya verify fetch staging: CUDA0 64 token-owned disk staging slots, 864.00 MiB extra pinned RAM
+glm fast: CUDA0 RAM tier 63.99 GB pinned, 7754 slots
+glm prefill: CUDA0 80% of the experts' bytes are held pinned: the pool lends at most 85% of its slots
+glm fast: CUDA0 warming the expert tiers 10% (8.5 of 84.6 GB, 2 s)
+glm fast: CUDA0 warming the expert tiers 20% (17.0 of 84.6 GB, 5 s)
+glm fast: CUDA0 warming the expert tiers 30% (25.5 of 84.6 GB, 7 s)
+glm fast: CUDA0 warming the expert tiers 40% (33.9 of 84.6 GB, 10 s)
+glm fast: CUDA0 warming the expert tiers 50% (42.3 of 84.6 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 60% (50.8 of 84.6 GB, 14 s)
+glm fast: CUDA0 warming the expert tiers 70% (59.3 of 84.6 GB, 17 s)
+glm fast: CUDA0 warming the expert tiers 80% (67.8 of 84.6 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 90% (76.2 of 84.6 GB, 22 s)
+glm fast: CUDA0 warming the expert tiers 100% (84.6 of 84.6 GB, 24 s)
+glm fast: CUDA0 tiers warm: 9555 experts (84.6 GB) in 24 s (3.55 GB/s)
+glm fast: CUDA0 CPU lane off: an expert 0.189 ms on the CPU vs 0.249 ms over PCIe
+verify fixture: repeats=1, max windows/repeat=6
+maya verify: 6 windows, 0 retries, 839 reused GPU expert rows
+maya verify HC CUDA0: 540 executed HC3 phase batches, 3510 token rows
+maya verify component fetch CUDA0: 252 full-layer groups, 0 fallback fronts, 252 prefix / 252 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 304 token-owned disk staging uses; launches do not imply nonzero traffic
+maya verify component traffic diagnostic CUDA0: 252 layers, 3627 nonzero fetch source entries, 22707437568 prefix bytes / 11353718784 down bytes; synchronous group readbacks perturb timings
+maya verify group diagnostic CUDA0: 252 synchronous readbacks, 318528 bytes; preceding GPU work drain 1628.143 ms, copy/wait 16.469 ms, host reduction 0.885 ms (totals; throughput and phase timings are perturbed)
+maya verify groups CUDA0 GU=q2_K down=q2_K T=5 gid=0 part=0: 108 batches, 4320 routed entries / 2657 logical ID groups, 4320 GPU entries / 2657 GPU ID groups / 2657 slot groups; 961 executed GU grouped / 961 executed down grouped; 1100 fetch entries / 1100 fetch ID groups, 9083289600 copied bytes / 9083289600 unique-ID bytes; slot multiplicity 1:1696 2:542 3:206 4:143 5:70
+maya verify assignment proxy CUDA0 GU=q2_K down=q2_K T=5 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya verify groups CUDA0 GU=q2_K down=q2_K T=8 gid=0 part=0: 108 batches, 6912 routed entries / 3645 logical ID groups, 6912 GPU entries / 3645 GPU ID groups / 3645 slot groups; 1531 executed GU grouped / 1531 executed down grouped; 1575 fetch entries / 1575 fetch ID groups, 13005619200 copied bytes / 13005619200 unique-ID bytes; slot multiplicity 1:2114 2:750 3:345 4:174 5:112 6:71 7:51 8:28
+maya verify assignment proxy CUDA0 GU=q2_K down=q2_K T=8 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya verify groups CUDA0 GU=q3_K down=q3_K T=5 gid=0 part=0: 9 batches, 360 routed entries / 287 logical ID groups, 360 GPU entries / 287 GPU ID groups / 287 slot groups; 62 executed GU grouped / 62 executed down grouped; 180 fetch entries / 180 fetch ID groups, 1946419200 copied bytes / 1946419200 unique-ID bytes; slot multiplicity 1:225 2:54 3:5 4:3
+maya verify assignment proxy CUDA0 GU=q3_K down=q3_K T=5 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya verify groups CUDA0 GU=q3_K down=q3_K T=8 gid=0 part=0: 9 batches, 576 routed entries / 431 logical ID groups, 576 GPU entries / 431 GPU ID groups / 431 slot groups; 91 executed GU grouped / 91 executed down grouped; 270 fetch entries / 270 fetch ID groups, 2919628800 copied bytes / 2919628800 unique-ID bytes; slot multiplicity 1:340 2:58 3:22 4:6 5:2 6:1 7:2
+maya verify assignment proxy CUDA0 GU=q3_K down=q3_K T=8 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya verify groups CUDA0 GU=q4_K down=q4_K T=5 gid=0 part=0: 9 batches, 360 routed entries / 304 logical ID groups, 360 GPU entries / 304 GPU ID groups / 304 slot groups; 50 executed GU grouped / 50 executed down grouped; 196 fetch entries / 196 fetch ID groups, 2774532096 copied bytes / 2774532096 unique-ID bytes; slot multiplicity 1:254 2:45 3:4 4:1
+maya verify assignment proxy CUDA0 GU=q4_K down=q4_K T=5 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya verify groups CUDA0 GU=q4_K down=q4_K T=8 gid=0 part=0: 9 batches, 576 routed entries / 460 logical ID groups, 576 GPU entries / 460 GPU ID groups / 460 slot groups; 87 executed GU grouped / 87 executed down grouped; 306 fetch entries / 306 fetch ID groups, 4331667456 copied bytes / 4331667456 unique-ID bytes; slot multiplicity 1:373 2:65 3:16 4:5 5:1
+maya verify assignment proxy CUDA0 GU=q4_K down=q4_K T=8 gid=0 part=0: 0 full layers screened, 0 null-first/GPU-later experts / 0 exactly-one-null experts, 0 singleton partner pairs; 0 max-two disjoint proxy swaps / 0 removable singleton bytes, 0 swaps with promotion ambiguity; 0 transient proxy swaps / 0 transient removable bytes; CPU provenance and initial RAM readiness unobserved
+maya reuse policy: observations=3318 changed_victims=693 horizon=1 matured_anchors=0
+glm KDA graphs: 34 captures, 1326 replays, 0 invalidations
+maya MoE suffix graphs: 11 captures, 429 replays, 0 invalidations
+PASS finite logits and partial commits (1 repeat(s), max 6 windows/repeat)

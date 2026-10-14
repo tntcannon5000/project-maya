@@ -158,3 +158,17 @@ Qualification passed 28,188,160 exact logits versus corrected control, 182 rows,
 partial commits and repeated requests. Each repeat engaged 588 full-layer
 component groups with zero fallbacks/retries. A four-window Nsight capture with
 traffic diagnostics is next; no performance claim from parity or flags.
+
+Component trace proves 40.938 ms fetch/GU overlap over four GPU-only windows,
+41.599 ms GU union, and no fetch/down arithmetic overlap. These profiled T5/T8
+windows are not hybrid clean latency measurements. Trace logits remain exact.
+Windows Nsight did not forward target stderr, so direct pressure diagnostics
+provide byte evidence instead: 252 layer groups, 3,627 actual fetch entries,
+22,707,437,568 GU-prefix bytes and 11,353,718,784 down bytes, 304 disk staging
+uses, no fallbacks/retries. All 6,040,320 pressure logits match corrected control.
+
+First clean component sample: ordinary 43.03 TPS, two drafts 45.23 TPS, four
+drafts 43.84 TPS. Verification rounds 58.081/88.273 ms versus earlier HC/paired
+64.395/99.192 ms. Acceptance matches (87.14%/75%). Ordinary control also improved,
+so a narrow reverse-order component-off confirmation is required before crediting
+the apparent 10-11% round reduction to scheduling.
