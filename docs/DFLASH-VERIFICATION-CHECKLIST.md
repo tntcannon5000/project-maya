@@ -23,8 +23,8 @@
 - [ ] Measure refinements and async scheduling combinations.
 - [ ] Investigate supporting combinations when justified by evidence.
 - [x] Screen moderate CPU allocation with merged rows; reject performance recommendation.
-- [ ] Implement and qualify full-layer component fetch with grouped GU overlap.
-- [ ] Verify component byte accounting and actual GPU overlap before judging speed.
+- [x] Implement and qualify full-layer component fetch with grouped GU overlap (GPU exact and bounded disk pressure).
+- [x] Verify component byte accounting and actual GPU overlap before judging speed; narrow confirmation shows only 1.2% TPS difference.
 - [ ] Confirm retained changes on coding/writing, prefill and longer occupied context.
 - [x] Check cancellation/recovery and clean teardown on corrected HC/paired writing case.
 - [ ] Commit report, results table, limitations and recommended settings.

@@ -172,3 +172,11 @@ drafts 43.84 TPS. Verification rounds 58.081/88.273 ms versus earlier HC/paired
 64.395/99.192 ms. Acceptance matches (87.14%/75%). Ordinary control also improved,
 so a narrow reverse-order component-off confirmation is required before crediting
 the apparent 10-11% round reduction to scheduling.
+
+Reverse-order two-draft confirmation: component-off ordinary43.01 TPS versus
+component-on43.03; speculative44.70 versus45.23 TPS; verification58.841 versus
+58.081 ms. Identical output history/acceptance. This reduces the apparent gain
+to 1.2% TPS / 1.3% verification time, insufficient for a robust recommendation.
+Four-draft gain is not confirmed under matched contemporary conditions. Do not
+attribute the earlier 10-11% change to component scheduling. Keep experimental
+and disabled by default; no worker-count sweep or further weak-idea tests.

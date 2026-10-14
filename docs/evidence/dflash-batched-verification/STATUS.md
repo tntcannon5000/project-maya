@@ -52,9 +52,12 @@ New component-streaming prototype also passes 28,188,160 exact logits. A
 four-window Nsight capture measures 40.938 ms fetch/GU overlap, 41.599 ms GU
 union and zero fetch/down-compute overlap. This proves the readiness mechanism,
 not a 10.2 ms/window speedup. Capture includes synchronous group diagnostics;
-clean coding measurement is pending. Actual traffic counters need a direct
-diagnostic log because this Windows Nsight invocation did not forward target
-stderr into its engine log. Raw profiler artifacts remain local.
+clean timing confirmation shows only a 1.2% TPS difference: two drafts45.23 on
+versus44.70 off with ordinary controls43.03/43.01. Verification58.081/58.841ms.
+No robust speed recommendation; keep opt-in. Direct pressure diagnostics verify
+22.707GB prefix +11.354GB down across3,627 nonzero sources and304 disk staging
+uses; all6,040,320 pressure logits exact. Four-draft throughput43.84 is a sample,
+not a confirmed gain. Raw profiler artifacts remain local.
 
 - Keep performance experiments opt-in; no new default speed improvement is claimed.
 - Preserve negative results and raw logits locally; commit only compact evidence.
