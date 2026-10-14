@@ -49,6 +49,14 @@ bool win_async_fetch_enabled() {
     return on;
 }
 
+bool win_hc_batch_enabled() {
+    static const bool on = [] {
+        const char* v = getenv("MAYA_WIN_HC_BATCH");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    return on;
+}
+
 int win_owner_diag_limit() {
     static const int limit = [] {
         const char* v = getenv("MAYA_WIN_OWNERSHIP_VERIFY");
@@ -163,6 +171,7 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
     W.kin_layer = T * (3 * DI + 2 * (size_t) g.kda_head_dim + (size_t) g.n_head);
     const size_t f4 = sizeof(float);
     const auto al = [](size_t b) { return (b + 255u) & ~(size_t) 255u; };
+    const bool hc_batch = win_hc_batch_enabled() && g.n_embd == 4096 && g.hc == 4;
     const size_t need = 2 * al(T * hcE * f4) + al(T * E * f4) * 3 + al(T * 8 * f4) * 2 + al(T * 16 * f4) +
                         al(T * W.xq_s) + al(T * W.gq_s) + 2 * al(T * (size_t) g.q_lora * f4) + al(T * W.qrq_s) +
                         al(T * (size_t) g.kv_lora * f4) + 2 * al(T * (size_t) g.idx_key * f4) +
@@ -177,7 +186,8 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
                         2 * al(T * 8 * 8) + 2 * al(T * 8 * f4) + al(T * E * f4) + al(T * f4) +
                         al(T * ((size_t) FF / 32 * q8)) + al(T * E * f4) + al(T * 8 * ((size_t) g.n_ff_exp / 32 * q8)) +
                         al(T * 8 * E * f4) + al(T * 8 * 8) + 3 * al((T * 8 + 1) * f4) + al(64) + al(T * 64) +
-                        (exl3_ ? al(T * 8 * (size_t) g.n_ff_exp * f4) : 0);
+                        (exl3_ ? al(T * 8 * (size_t) g.n_ff_exp * f4) : 0) +
+                        (hc_batch ? al(T * gf::kHcBatchPartFloats * f4) : 0);
     if (cudaMalloc(&W.arena, need) != cudaSuccess) {
         cudaGetLastError();
         W.arena = nullptr;
@@ -236,6 +246,7 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
     W.scr = (unsigned int*) take_b(at, 64);
     W.cpu_seq_w = (unsigned int*) take_b(at, T * 64);
     if (exl3_) W.wh = take_f(at, T * 8 * (size_t) g.n_ff_exp);
+    if (hc_batch) W.hc_part = take_f(at, T * gf::kHcBatchPartFloats);
     cudaMemset(W.cpu_seq_w, 0, T * 64);
     cudaMemset(W.mcpu_flag, 0, T * f4);
     if ((size_t) (at - (uint8_t*) W.arena) > need) {
@@ -1016,7 +1027,7 @@ bool Glm5Model::fast_window_layers(int64_t p0, int T, std::string& err) {
     };
     const auto hc_rows = [&](int il, bool attn, int rc, int t0, int n) {
         const auto& Ly = F->L[(size_t) il];
-        for (int t = t0; t < t0 + n; ++t) {
+        const auto args = [&](int t) {
             gf::HcArgs h;
             h.block_out = attn ? (il == l0_ ? nullptr : W.ffn + (size_t) t * E) : W.mixer + (size_t) t * E;
             h.R_old = W.R[rc] + (size_t) t * hcE;
@@ -1038,8 +1049,20 @@ bool Glm5Model::fast_window_layers(int64_t p0, int T, std::string& err) {
             h.xq = (uint8_t*) W.xq + (size_t) t * W.xq_s;
             h.part = F->part;
             h.counter = F->counter;
-            gf::hc(h, s);
+            return h;
+        };
+        if (W.hc_part != nullptr && !W.per_token && g.hc == 4 && n >= 2 && n <= 8 &&
+            t0 >= 0 && t0 + n <= W.tmax) {
+            gf::HcArgs h = args(t0);
+            h.part = W.hc_part + (size_t) t0 * gf::kHcBatchPartFloats;
+            h.counter = nullptr;   // all batched synchronization comes from the three stream-ordered phases
+            if (gf::hc_batch(h, n, W.xq_s, s)) {
+                ++W.hc_batch_calls;
+                W.hc_batch_tokens += (uint64_t) n;
+                return;
+            }
         }
+        for (int t = t0; t < t0 + n; ++t) gf::hc(args(t), s);
     };
     static const bool prof = getenv("STRATA_GLM_WIN_PROF") != nullptr;
     const auto mark = [&](const char* nm) {
@@ -1771,6 +1794,11 @@ void Glm5Model::win_prof_report() {
     for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
         if (m->fast_ == nullptr) continue;
         auto& W = m->fast_->win;
+        if (win_hc_batch_enabled()) {
+            std::fprintf(stderr, "maya verify HC CUDA%d: %llu executed HC3 phase batches, %llu token rows\n",
+                         m->dev_, (unsigned long long) W.hc_batch_calls, (unsigned long long) W.hc_batch_tokens);
+            W.hc_batch_calls = W.hc_batch_tokens = 0;
+        }
         const uint64_t staging_uses = m->fast_->win_fetch_stage_uses.exchange(0);
         const uint64_t ring_laps = m->fast_->route_ring_laps.exchange(0);
         const uint64_t ring_skipped = m->fast_->route_ring_skipped.exchange(0);

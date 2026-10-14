@@ -2254,20 +2254,40 @@ __global__ void __launch_bounds__(HC_THREADS) hc2_kernel(const __grid_constant__
 // (8 bf16 per lane per stream segment, uint4) BEFORE it computes its R values, the partial sums are reduced by whole
 // warps (lane = block) instead of one thread walking 32 of them, and the second barrier's total likewise.
 // 32 blocks of 128 embedding values; n_embd == 4096 only.
-template<int PHASE=0>
-__global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__ HcArgs a) {
+template<bool Batch, typename T>
+__device__ __forceinline__ T* hc3_row(T* p, size_t stride) {
+    if constexpr (Batch) return p != nullptr ? p + (size_t) blockIdx.y * stride : nullptr;
+    else return p;
+}
+template<int PHASE=0, bool Batch=false>
+__global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__ HcArgs a, size_t xq_stride) {
+    static_assert(!Batch || (PHASE >= 1 && PHASE <= 3), "batched HC3 uses stream-ordered phases, never grid spins");
+    static_assert(kHcBatchPartFloats == (HC_MIX + 2) * 32, "HC3 batch scratch keeps 25 partial rows and the mixed norm row");
     const int hc = 4;
     const int n_embd = a.n_embd;
     const unsigned int nb = gridDim.x;   // 32
     const int b = blockIdx.x, tid = threadIdx.x, lane = tid & 31, warp = tid >> 5;
     const int e0 = b * HC2_EB;
     unsigned long long* ctr = (unsigned long long*) a.counter;
+    // Batch=false folds these aliases to the original pointers. Batch=true has private rows and scratch for
+    // each token; gridDim.x remains 32, so every sum and reduction uses the existing HC3 arithmetic/order.
+    const float* block_out = hc3_row<Batch>(a.block_out, n_embd);
+    const float* R_old = hc3_row<Batch>(a.R_old, (size_t) hc * n_embd);
+    float* R_new = hc3_row<Batch>(a.R_new, (size_t) hc * n_embd);
+    const float* post_in = hc3_row<Batch>(a.post_in, 8);
+    const float* comb_in = hc3_row<Batch>(a.comb_in, 16);
+    float* pre = hc3_row<Batch>(a.pre, 8);
+    float* post = hc3_row<Batch>(a.post, 8);
+    float* comb = hc3_row<Batch>(a.comb, 16);
+    float* x = hc3_row<Batch>(a.x, n_embd);
+    block_q8_1* xq = (block_q8_1*) hc3_row<Batch>((uint8_t*) a.xq, xq_stride);
+    float* part = hc3_row<Batch>(a.part, kHcBatchPartFloats);
     __shared__ float sR[4][HC2_EB];
     __shared__ float sred[32];
     __shared__ float smix[HC_MIX + 1];
     __shared__ float s_pre[4];
     __shared__ float s_mixed[HC2_EB];
-    float* part2 = a.part + (size_t) (HC_MIX + 1) * nb;
+    float* part2 = part + (size_t) (HC_MIX + 1) * nb;
     if constexpr(PHASE<=1) {
     // the weights first: warp w owns mix rows w, w + 8, w + 16; per row and stream segment d a lane loads the 4 bf16
     // values j = 4 * lane .. 4 * lane + 3 of [e0, e0 + 128)
@@ -2284,19 +2304,19 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
     for (int i = tid; i < 4 * HC2_EB; i += HC_THREADS) {
         const int d = i / HC2_EB, j = i - d * HC2_EB, e = e0 + j;
         float r;
-        if (a.block_out != nullptr) {
-            r = a.block_out[e] * a.post_in[d];
+        if (block_out != nullptr) {
+            r = block_out[e] * post_in[d];
 #pragma unroll
-            for (int s = 0; s < hc; ++s) r += a.comb_in[d * hc + s] * a.R_old[s * n_embd + e];
-            a.R_new[d * n_embd + e] = r;
+            for (int s = 0; s < hc; ++s) r += comb_in[d * hc + s] * R_old[s * n_embd + e];
+            R_new[d * n_embd + e] = r;
         } else {
-            r = a.R_old[d * n_embd + e];
+            r = R_old[d * n_embd + e];
         }
         sR[d][j] = r;
         ss += r * r;
     }
     __syncthreads();
-    float* part = a.part;   // [m][block]: 25 rows of nb partials (the 25th: the sum of squares)
+    // part: [m][block], 25 rows of nb partials (the 25th: the sum of squares)
 #pragma unroll
     for (int r = 0; r < 3; ++r) {
         const int m = warp + 8 * r;
@@ -2317,13 +2337,12 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
     else return;
     }
     if constexpr(PHASE==2) {
-        const float* r=a.block_out?a.R_new:a.R_old;
+        const float* r=block_out?R_new:R_old;
         for(int i=tid;i<4*HC2_EB;i+=HC_THREADS)
             sR[i/HC2_EB][i%HC2_EB]=r[(i/HC2_EB)*n_embd+e0+i%HC2_EB];
         __syncthreads();
     }
     if constexpr(PHASE!=3) {
-    float* part=a.part;
     // the 25 totals: warp w reduces rows w, w + 8, w + 16 (and warp 0 row 24), one partial per lane
     for (int m = warp; m < HC_MIX + 1; m += 8) {
         const float v = lane < (int) nb ? __ldcg(&part[(size_t) m * nb + lane]) : 0.0f;
@@ -2337,8 +2356,8 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
             const float pre_v = dsigmoid(smix[lane] * inv * a.w_scale[0] + a.w_base[lane]) + a.hc_eps;
             s_pre[lane] = pre_v;
             if (b == 0) {
-                a.pre[lane] = pre_v;
-                a.post[lane] = 2.0f * dsigmoid(smix[hc + lane] * inv * a.w_scale[1] + a.w_base[hc + lane]);
+                pre[lane] = pre_v;
+                post[lane] = 2.0f * dsigmoid(smix[hc + lane] * inv * a.w_scale[1] + a.w_base[hc + lane]);
             }
         }
         if(PHASE==0 || b==0) {
@@ -2363,7 +2382,7 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
             sm += __shfl_xor_sync(0xffffffffu, sm, 2);
             c = c / (a.hc_eps + sm);
         }
-        if (b == 0 && lane < 16) a.comb[d * hc + s] = c;
+        if (b == 0 && lane < 16) comb[d * hc + s] = c;
         }
     }
     __syncthreads();
@@ -2373,7 +2392,7 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
 #pragma unroll
         for (int s = 0; s < hc; ++s) acc += s_pre[s] * sR[s][tid];
         s_mixed[tid] = acc;
-        if constexpr(PHASE==2)a.x[e0+tid]=acc;
+        if constexpr(PHASE==2)x[e0+tid]=acc;
         ss2 = acc * acc;
     }
     ss2 = block_sum(ss2, sred);
@@ -2385,10 +2404,10 @@ __global__ void __launch_bounds__(HC_THREADS) hc3_kernel(const __grid_constant__
     const float inv2 = rsqrtf(tot / (float) n_embd + a.norm_eps);
     if (tid < HC2_EB) {
         const int e = e0 + tid;
-        const float mixed=PHASE==3?a.x[e]:s_mixed[tid];
+        const float mixed=PHASE==3?x[e]:s_mixed[tid];
         const float xv = mixed * inv2 * a.norm_w[e];
-        a.x[e] = xv;
-        q8_1_store_warp(xv, (block_q8_1*) a.xq + e / 32, lane);
+        x[e] = xv;
+        q8_1_store_warp(xv, xq + e / 32, lane);
     }
 }
 
@@ -4590,7 +4609,7 @@ void quantize_q8_1(const float* x, void* xq, int n, cudaStream_t s) {
     launch_check("quantize");
 }
 
-void hc(const HcArgs& a, cudaStream_t s) {
+static int hc_mode(const HcArgs& a) {
     // the grid-barrier kernel needs every block resident at once; checked once per process (and per device count
     // of SMs), the single-tail kernel otherwise.  STRATA_GLM_HC1=1 forces the old one (A/B).
     static int mode = -1;
@@ -4604,14 +4623,19 @@ void hc(const HcArgs& a, cudaStream_t s) {
         if (mode == 2 && getenv("STRATA_GLM_HC2") == nullptr && a.n_embd == 4096 && per3 * sms >= a.n_embd / HC2_EB)
             mode = 3;
     }
+    return mode;
+}
+
+void hc(const HcArgs& a, cudaStream_t s) {
+    const int mode = hc_mode(a);
     if (mode == 3) {
         if(a.split_graph) {
             // Same32-block reduction tree. Kernel boundaries replace global
             // grid spins; x temporarily owns the mixed values until phase3.
-            hc3_kernel<1><<<32,HC_THREADS,0,s>>>(a);
-            hc3_kernel<2><<<32,HC_THREADS,0,s>>>(a);
-            hc3_kernel<3><<<32,HC_THREADS,0,s>>>(a);
-        } else hc3_kernel<0><<<a.n_embd / HC2_EB, HC_THREADS, 0, s>>>(a);
+            hc3_kernel<1><<<32,HC_THREADS,0,s>>>(a, 0);
+            hc3_kernel<2><<<32,HC_THREADS,0,s>>>(a, 0);
+            hc3_kernel<3><<<32,HC_THREADS,0,s>>>(a, 0);
+        } else hc3_kernel<0><<<a.n_embd / HC2_EB, HC_THREADS, 0, s>>>(a, 0);
         launch_check("hc3");
         return;
     }
@@ -4623,6 +4647,22 @@ void hc(const HcArgs& a, cudaStream_t s) {
     const int blocks = 4 * a.n_embd / HC_CHUNK;
     hc_kernel<<<blocks, HC_THREADS, 0, s>>>(a);
     launch_check("hc");
+}
+
+bool hc_batch(const HcArgs& a, int T, size_t xq_stride, cudaStream_t s) {
+    const size_t row_bytes = (size_t) a.n_embd / 32 * sizeof(block_q8_1);
+    if (T < 2 || T > 8 || a.n_embd != 4096 || xq_stride < row_bytes || xq_stride % sizeof(block_q8_1) != 0 ||
+        a.R_old == nullptr || a.R_new == nullptr || a.pre == nullptr || a.post == nullptr || a.comb == nullptr ||
+        a.x == nullptr || a.xq == nullptr || a.part == nullptr ||
+        (a.block_out != nullptr && (a.post_in == nullptr || a.comb_in == nullptr))) return false;
+    // HC1/HC2 use a different reduction tree. Keep their existing arithmetic by falling back before any launch.
+    if (hc_mode(a) != 3) return false;
+    const dim3 grid(32, (unsigned) T);
+    hc3_kernel<1, true><<<grid, HC_THREADS, 0, s>>>(a, xq_stride);
+    hc3_kernel<2, true><<<grid, HC_THREADS, 0, s>>>(a, xq_stride);
+    hc3_kernel<3, true><<<grid, HC_THREADS, 0, s>>>(a, xq_stride);
+    launch_check("hc_batch");
+    return true;
 }
 
 void hc_post(const float* block_out, const float* R_old, const float* post, const float* comb, int n_embd,

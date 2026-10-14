@@ -484,6 +484,8 @@ struct Glm5Model::FastState {
         float* R[2] = {nullptr, nullptr};   // residual rows (hc x n_embd each), double-buffered across the layers
         int out = 0;                        // which of R holds this part's output rows after the window
         float *x = nullptr, *mixer = nullptr, *ffn = nullptr, *pre = nullptr, *post = nullptr, *comb = nullptr;
+        float* hc_part = nullptr;           // optional MAYA_WIN_HC_BATCH: [tmax][26*32] private HC3 partials
+        uint64_t hc_batch_calls = 0, hc_batch_tokens = 0;
         void* xq = nullptr;
         void* gated_q = nullptr;
         float *qr_raw = nullptr, *qr = nullptr, *kv_raw = nullptr, *ik_raw = nullptr, *ig_raw = nullptr, *iw = nullptr;

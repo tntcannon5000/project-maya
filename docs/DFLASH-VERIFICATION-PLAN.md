@@ -30,8 +30,9 @@ Existing window grouping already identifies shared GPU pointers, but gate/up loo
 ## Current decision gates (after paired-kernel checkpoint)
 
 - Grouped modes 1 and 2 pass controlled GPU exact-logit qualification. Mode 2's clean coding result is only slightly faster; retain experimental status until a supporting mechanism creates a convincing round-time gain.
-- Async fetch is not qualified. Serial pressure also failed repeatability, so distinguish baseline pressure ownership from new stream scheduling using identical pinned staging and fixed RAM capacity. Do not accept greedy-token agreement as numerical parity.
-- If matched-capacity async passes, capture four warmed fixed-input windows to prove actual fetch/route overlap, then run one clean coding A/B. Combine with grouped mode 2 only if either independently removes useful critical-path time.
+- Async fetch passed matched-allocation all-memory exact parity and demonstrated real route overlap. Clean hybrid verification-round times barely improved; acceptance changed, so headline TPS differences are not scheduling gains. Keep experimental, do not sweep parameters.
+- Serial disk-pressure control failed self-repeatability. Four bounded ownership checks found no mismatch among inspected pointers/five retained blobs; this does not resolve pressure qualification. Do not accept greedy-token agreement as numerical parity.
 - Audit shadow-backed eviction identity/bytes under pressure before blaming arithmetic or relaxing thresholds. Fix a demonstrated ownership defect before relying on pressure results.
 - Dense projections and head already pass ncol=T and use multi-column paths. Remaining arithmetic investigations must show substantial missing reuse or avoidable work in source and timings; a blanket GEMM rewrite is not justified.
-- Keep union-aware placement as a separate design gate: current fetched copies are already unique, so it requires changed backend assignment and a demonstrated makespan benefit.
+- Narrow window assignment swaps screen at only 2.1%/3.5% optimistic byte savings, below 1.2% without promotion ambiguity. Defer that planner; broader union assignment remains untested.
+- Implement and qualify exact HC3 phase batching across tokens (same 32-partial reductions, private scratch, no grid spin). If useful, test it with paired expert arithmetic before choosing a retained candidate. Then qualify one writing workload and longer occupied context; avoid a broad suite.

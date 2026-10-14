@@ -99,6 +99,12 @@ struct HcArgs {
     bool split_graph = false;        // exact32-block HC3 stages, captured decode only
 };
 void hc(const HcArgs& a, cudaStream_t s);
+/// Exact HC3 phases over T contiguous token rows (T=2..8, n_embd=4096). R rows are 4*n_embd floats apart;
+/// block_out/x rows n_embd, pre/post rows 8 and comb rows 16. xq rows xq_stride bytes apart. a.part owns
+/// T*kHcBatchPartFloats floats. Preserves the original 32-partial reduction tree, with stream-ordered phases
+/// instead of global grid spins. Returns false without launches unless the ordinary hc() path selects HC3.
+constexpr int kHcBatchPartFloats = 26 * 32;
+bool hc_batch(const HcArgs& a, int T, size_t xq_stride, cudaStream_t s);
 /// The write half alone (the split boundary / the head): R_new = post (x) block_out + comb . R_old.
 void hc_post(const float* block_out, const float* R_old, const float* post, const float* comb, int n_embd,
              float* R_new, cudaStream_t s);
