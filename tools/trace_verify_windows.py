@@ -72,11 +72,15 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--manifest', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--env', action='append', default=[])
     a = p.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
     source = json.loads(a.manifest.read_text())
     env = {k:v for k,v in os.environ.items() if not k.startswith(('MAYA_', 'STRATA_'))}
     env.update(source['env']);env['MAYA_VERIFY_TRACE']='1'
+    for setting in a.env:
+        key, value = setting.split('=', 1)
+        env[key] = value
     cfg=json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     env['PATH']=';'.join(cfg['lib_dirs'])+';'+env['PATH']
     exe=ROOT/'build/maya_verify_scratch_test.exe'
@@ -84,7 +88,7 @@ if __name__ == '__main__':
          '--sample=none','--cpuctxsw=none','--capture-range=cudaProfilerApi','--capture-range-end=stop',
          '-o',str(out/'timeline'),str(exe),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',
          str(a.manifest.resolve().parent/'tokens.txt'),str(out/'logits.f32')]
-    (out/'manifest.json').write_text(json.dumps(dict(command=cmd,env=source['env'],
+    (out/'manifest.json').write_text(json.dumps(dict(command=cmd,env={k:v for k,v in env.items() if k.startswith(('MAYA_', 'STRATA_'))},
         trace_env={'MAYA_VERIFY_TRACE':'1'},binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest()),indent=2))
     with (out/'engine.log').open('w') as log:
         subprocess.run(cmd,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=600)

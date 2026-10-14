@@ -143,3 +143,18 @@ benefits less from drafting; no universal drafting gain claimed. STOP cancelled
 the four-draft request, the following two-draft recovery completed, no retries,
 clean process exit. This is a lifecycle/longer-input smoke test, not a matched
 prefill speed comparison or qualification at 128K occupied context.
+
+## Complete component streaming prototype
+
+Split the existing expert API into unchanged group/GU and down/combine phases.
+MAYA_WIN_COMPONENT_FETCH resolves all routes first into stable sources, copies
+the GU prefix as one aggregated operation, then copies down components with a
+32-CTA side-stream kernel while grouped GU runs. Joins protect down consumers
+and later layer reuse; unsupported cases fall back, async-fullblob combination
+is rejected, full-weight audit joins early. Actual bytes use diagnostic source
+readbacks, separate from clean submitted-launch counters.
+
+Qualification passed 28,188,160 exact logits versus corrected control, 182 rows,
+partial commits and repeated requests. Each repeat engaged 588 full-layer
+component groups with zero fallbacks/retries. A four-window Nsight capture with
+traffic diagnostics is next; no performance claim from parity or flags.
