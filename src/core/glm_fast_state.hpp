@@ -457,6 +457,8 @@ struct Glm5Model::FastState {
     size_t win_fetch_stage_n = 0;
     std::atomic<uint64_t> win_fetch_stage_uses{0};
     std::atomic<uint64_t> route_ring_laps{0}, route_ring_skipped{0};
+    int window_owner_diag_next = 0;
+    uint64_t window_owner_diag_boundaries = 0;
     std::mutex mu;   // the service thread vs the between-token boundary
     std::unique_ptr<glmfast::Workers> workers;   // parallel disk reads
     // ---- the CPU LANE (STRATA_GLM_CPU_LANE=<threads>, 0 off): a route's RAM-tier experts split between the device's
@@ -572,6 +574,11 @@ struct Glm5Model::FastState {
             uint64_t gpu_entries = 0, gpu_id_groups = 0, slot_groups = 0;
             uint64_t executed_gu_groups = 0, executed_down_groups = 0;
             uint64_t fetch_entries = 0, fetch_id_groups = 0, fetch_bytes = 0, unique_fetch_bytes = 0;
+            // Host-only eligibility proxies from the existing IDs/pointers/sources
+            // readback. A null plan does not itself prove CPU/RAM provenance.
+            uint64_t assignment_screen_layers = 0, null_first_gpu_later = 0, one_null_gpu_later = 0;
+            uint64_t singleton_partner_pairs = 0, proxy_swaps = 0, proxy_saved_bytes = 0;
+            uint64_t proxy_promotion_ambiguous = 0, transient_proxy_swaps = 0, transient_proxy_saved_bytes = 0;
             std::array<uint64_t, 17> multiplicity{};
         };
         std::map<std::array<int, 5>, GroupDiag> group_diag;

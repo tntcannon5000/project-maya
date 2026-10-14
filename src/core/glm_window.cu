@@ -49,6 +49,14 @@ bool win_async_fetch_enabled() {
     return on;
 }
 
+int win_owner_diag_limit() {
+    static const int limit = [] {
+        const char* v = getenv("MAYA_WIN_OWNERSHIP_VERIFY");
+        return v != nullptr ? std::max(0, std::min(16, std::atoi(v))) : 0;
+    }();
+    return limit;
+}
+
 float* take_f(uint8_t*& at, size_t floats) {
     float* p = (float*) at;
     at += (floats * sizeof(float) + 255u) & ~(size_t) 255u;
@@ -839,6 +847,86 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             d.slot_groups += (uint64_t) ng;
             d.executed_gu_groups += executed[0];
             d.executed_down_groups += executed[1];
+            // A bounded assignment screen using only this diagnostic's existing
+            // readback. Null entries are CPU proxies: these tables do not carry
+            // CPU masks, initial RAM readiness, or promotion metadata. Never
+            // apply the proposed exchanges to the live plan here.
+            bool complete_ids = true;
+            for (int t = 0; t < T; ++t)
+                for (int i = 0; i < g.n_exp_used; ++i)
+                    complete_ids = complete_ids && ids[(size_t) (8 * t + i)] >= 0 &&
+                                   ids[(size_t) (8 * t + i)] < g.n_expert;
+            if (part == 0 && gid == 0 && t0 == 0 && T == W.T && T >= 3 && T <= 8 &&
+                lane && keep >= g.n_exp_used && W.pipe_t < 0 && complete_ids) {
+                ++d.assignment_screen_layers;
+                struct ExchangeProxy { int repeat, singleton, uses; bool promotion_ambiguous; };
+                std::vector<ExchangeProxy> pairs;
+                std::array<int, cap> uses{};
+                for (int t = 0; t < T; ++t)
+                    for (int i = 0; i < g.n_exp_used; ++i) {
+                        const int e = 8 * t + i;
+                        for (int tt = 0; tt < T; ++tt)
+                            for (int ii = 0; ii < g.n_exp_used; ++ii)
+                                uses[(size_t) e] += ids[(size_t) e] == ids[(size_t) (8 * tt + ii)];
+                    }
+                for (int t = 0; t < T; ++t)
+                    for (int i = 0; i < g.n_exp_used; ++i) {
+                        const int e = 8 * t + i;
+                        if (ptr[(size_t) e] != 0ull || uses[(size_t) e] < 2) continue;
+                        int first = -1, first_gpu = -1, n_null = 0;
+                        for (int tt = 0; tt < T; ++tt)
+                            for (int ii = 0; ii < g.n_exp_used; ++ii) {
+                                const int q = 8 * tt + ii;
+                                if (ids[(size_t) q] != ids[(size_t) e]) continue;
+                                if (first < 0) first = q;
+                                if (ptr[(size_t) q] == 0ull) ++n_null;
+                                else if (first_gpu < 0) first_gpu = q;
+                            }
+                        if (first != e || first_gpu < 0) continue;
+                        ++d.null_first_gpu_later;
+                        if (n_null != 1) continue;
+                        ++d.one_null_gpu_later;
+                        for (int ii = 0; ii < g.n_exp_used; ++ii) {
+                            const int q = 8 * t + ii;
+                            if (uses[(size_t) q] != 1 || ptr[(size_t) q] == 0ull || src[(size_t) q] == 0ull)
+                                continue;
+                            // A fetched destination in the permanent layer pool
+                            // may alter spare admission. Missing the repeat's
+                            // first-copy source is likewise not a proven exchange.
+                            const bool ambiguous = src[(size_t) first_gpu] == 0ull ||
+                                F->lp[(size_t) il].slot_index(ptr[(size_t) first_gpu]) >= 0 ||
+                                F->lp[(size_t) il].slot_index(ptr[(size_t) q]) >= 0;
+                            pairs.push_back({e, q, uses[(size_t) e], ambiguous});
+                        }
+                    }
+                d.singleton_partner_pairs += pairs.size();
+                std::sort(pairs.begin(), pairs.end(), [](const ExchangeProxy& a, const ExchangeProxy& b) {
+                    if (a.uses != b.uses) return a.uses > b.uses;
+                    if (a.repeat != b.repeat) return a.repeat < b.repeat;
+                    return a.singleton < b.singleton;
+                });
+                // Two independent estimates: max two disjoint exchanges, and
+                // the same bound excluding permanent-pool admission ambiguity.
+                for (int transient_only = 0; transient_only < 2; ++transient_only) {
+                    std::array<bool, cap> used{};
+                    int swaps = 0;
+                    for (const auto& p : pairs) {
+                        if (swaps == 2) break;
+                        if ((transient_only && p.promotion_ambiguous) || used[(size_t) p.repeat] ||
+                            used[(size_t) p.singleton]) continue;
+                        used[(size_t) p.repeat] = used[(size_t) p.singleton] = true;
+                        ++swaps;
+                        if (transient_only) {
+                            ++d.transient_proxy_swaps;
+                            d.transient_proxy_saved_bytes += Ly.blob;
+                        } else {
+                            ++d.proxy_swaps;
+                            d.proxy_saved_bytes += Ly.blob;
+                            d.proxy_promotion_ambiguous += p.promotion_ambiguous;
+                        }
+                    }
+                }
+            }
             for (int u = 0; u < ng; ++u) {
                 const int n = start[(size_t) u + 1] - start[(size_t) u];
                 if (n < 1 || n > kWinMax) {
@@ -1098,6 +1186,7 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         cudaSetDevice(m->dev_);
         cudaStreamSynchronize(m->fast_->cs);
         if (!m->win_alloc(kWinMax, err)) return false;
+        if (win_owner_diag_limit() > 0) m->fast_->window_owner_diag_next = win_owner_diag_limit();
         if (!m->fast_boundary(err)) return false;
         // (a window of one token keeps it: nothing to restore)
         if (T > 1 && !m->spec_kda_copy(false)) {
@@ -1727,6 +1816,21 @@ void Glm5Model::win_prof_report() {
                              (unsigned long long) d.fetch_entries, (unsigned long long) d.fetch_id_groups,
                              (unsigned long long) d.fetch_bytes, (unsigned long long) d.unique_fetch_bytes,
                              hist.c_str());
+                std::fprintf(stderr, "maya verify assignment proxy CUDA%d GU=%s down=%s T=%d gid=%d part=%d: "
+                                     "%llu full layers screened, %llu null-first/GPU-later experts / "
+                                     "%llu exactly-one-null experts, %llu singleton partner pairs; "
+                                     "%llu max-two disjoint proxy swaps / %llu removable singleton bytes, "
+                                     "%llu swaps with promotion ambiguity; %llu transient proxy swaps / "
+                                     "%llu transient removable bytes; CPU provenance and initial RAM readiness unobserved\n",
+                             m->dev_, type_name(key[0]), type_name(key[1]), key[2], key[3], key[4],
+                             (unsigned long long) d.assignment_screen_layers,
+                             (unsigned long long) d.null_first_gpu_later,
+                             (unsigned long long) d.one_null_gpu_later,
+                             (unsigned long long) d.singleton_partner_pairs,
+                             (unsigned long long) d.proxy_swaps, (unsigned long long) d.proxy_saved_bytes,
+                             (unsigned long long) d.proxy_promotion_ambiguous,
+                             (unsigned long long) d.transient_proxy_swaps,
+                             (unsigned long long) d.transient_proxy_saved_bytes);
             }
             W.group_diag.clear();
             W.group_diag_readbacks = W.group_diag_readback_bytes = 0;

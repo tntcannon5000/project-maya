@@ -4354,6 +4354,20 @@ bool Glm5Model::fast_boundary(std::string& err) {
     const Glm5Geometry& g = g_;
     while (F->processed.load(std::memory_order_acquire) < F->expected) cpu_relax();
     std::lock_guard<std::mutex> lk(F->mu);
+    const int owner_diag_limit = F->window_owner_diag_next;
+    F->window_owner_diag_next = 0;
+    const bool owner_diag = owner_diag_limit > 0 && ++F->window_owner_diag_boundaries <= (uint64_t) owner_diag_limit;
+    uint64_t owner_diag_blobs = 0, owner_diag_bytes = 0;
+    const auto owner_diag_fail = [&](const char* phase, int il, int e, int cls, int vs, int rs, size_t byte) {
+        char b[256];
+        std::snprintf(b, sizeof b, "maya ownership diagnostic CUDA%d boundary=%llu phase=%s layer=%d expert=%d "
+                                  "class=%d GPU_slot=%d RAM_slot=%d byte=%llu", dev_,
+                      (unsigned long long) F->window_owner_diag_boundaries, phase, il, e, cls, vs, rs,
+                      (unsigned long long) byte);
+        err = b;
+        std::fprintf(stderr, "%s: mismatch; stopped before further ownership changes\n", b);
+        return false;
+    };
     // Experiment H3: publish small routing-table updates before submitting bulk
     // D2H work. Ownership still reserves BOTH slots until the recorded event.
     // This tests copy-queue ordering, not an assumption that Async means overlap.
@@ -4595,6 +4609,25 @@ bool Glm5Model::fast_boundary(std::string& err) {
             const int backing = F->ram_of[(size_t)vkey];
             if (shadow_budget && backing >= 0 && R.st[(size_t)backing] == FastState::kRHold &&
                 R.key[(size_t)backing] == vkey) {
+                if (owner_diag) {
+                    // The compute stream is drained and this resident GPU/RHold
+                    // pair has no pending writer. Verify the entire retained
+                    // copy before dropping its GPU owner, not a class sample.
+                    const size_t bytes = F->L[(size_t) il].blob;
+                    std::vector<uint8_t> gpu(bytes);
+                    if (!glmfast::cuda_ok(cudaMemcpyAsync(gpu.data(), P.slot_ptr(v), bytes,
+                                                          cudaMemcpyDeviceToHost, F->cs),
+                                         "ownership diagnostic shadow copy", err) ||
+                        !glmfast::cuda_ok(cudaStreamSynchronize(F->cs),
+                                         "ownership diagnostic shadow copy sync", err)) return false;
+                    const uint8_t* ram = R.base + (size_t) backing * R.stride;
+                    const auto bad = std::mismatch(gpu.begin(), gpu.end(), ram);
+                    if (bad.first != gpu.end())
+                        return owner_diag_fail("shadow-bytes", il, vkey % g.n_expert, F->layer_rc[(size_t) il],
+                                               v, backing, (size_t) (bad.first - gpu.begin()));
+                    ++owner_diag_blobs;
+                    owner_diag_bytes += bytes;
+                }
                 // Compute and CPU service are idle here. The RAM copy is already
                 // published and complete, so the GPU slot can become a spare.
                 upd(F->tab_key(vkey), 0ull);
@@ -4850,6 +4883,57 @@ bool Glm5Model::fast_boundary(std::string& err) {
     }
     flush();
     if (!ok) return false;
+    if (owner_diag) {
+        // Audit published table pointers after their update stream completes.
+        // A resident or draining GPU owner may be live; an RPin source remains
+        // valid while a background promotion reads it. Duplicate unreferenced
+        // owners are not rejected: this check concerns currently published keys.
+        const size_t N = (size_t) F->md.n_keys;
+        std::vector<unsigned long long> table(2 * N);
+        if (!glmfast::cuda_ok(cudaMemcpyAsync(table.data(), F->tab, table.size() * sizeof(table[0]),
+                                              cudaMemcpyDeviceToHost, F->cs), "ownership diagnostic tables", err) ||
+            !glmfast::cuda_ok(cudaStreamSynchronize(F->cs), "ownership diagnostic tables sync", err)) return false;
+        uint64_t gpu_keys = 0, ram_keys = 0;
+        for (int il = l0_; il < lt_; ++il) {
+            const auto& P = F->lp[(size_t) il];
+            const int cls = F->layer_rc[(size_t) il];
+            if (P.n == 0 || cls < 0) continue;
+            const auto& R = F->rc[(size_t) cls];
+            for (int e = 0; e < g.n_expert; ++e) {
+                const size_t key = (size_t) il * g.n_expert + e;
+                const unsigned long long vp = table[key], rp = table[N + key];
+                if (vp != 0ull) {
+                    const int s = P.slot_index(vp);
+                    bool owns = s >= 0 && s < P.n && vp == (unsigned long long) P.slot_ptr(s) &&
+                                F->slot_of[key] == s;
+                    if (owns && P.st[(size_t) s] == FastState::kResident)
+                        owns = P.key[(size_t) s] == e;
+                    else if (owns && P.st[(size_t) s] == FastState::kDraining) {
+                        owns = false;
+                        for (const auto& d : F->draining)
+                            owns |= d.il == il && d.vslot == s && d.key == (int) key;
+                        for (const auto& b : F->bg)
+                            owns |= !b.up && b.il == il && b.vslot == s && b.key == (int) key;
+                    } else owns = false;
+                    if (!owns) return owner_diag_fail("GPU-table", il, e, cls, s, F->ram_of[key], 0);
+                    ++gpu_keys;
+                }
+                if (rp != 0ull) {
+                    const int s = F->ram_of[key];
+                    if (s < 0 || s >= R.n || rp != (unsigned long long) (R.base + (size_t) s * R.stride) ||
+                        R.key[(size_t) s] != (int) key ||
+                        (R.st[(size_t) s] != FastState::kRHold && R.st[(size_t) s] != FastState::kRPin))
+                        return owner_diag_fail("RAM-table", il, e, cls, F->slot_of[key], s, 0);
+                    ++ram_keys;
+                }
+            }
+        }
+        std::fprintf(stderr, "maya ownership diagnostic CUDA%d boundary=%llu: verified %llu shadow blobs / %llu bytes "
+                             "before eviction, %llu GPU / %llu RAM published pointers (synchronous diagnostic)\n",
+                     dev_, (unsigned long long) F->window_owner_diag_boundaries,
+                     (unsigned long long) owner_diag_blobs, (unsigned long long) owner_diag_bytes,
+                     (unsigned long long) gpu_keys, (unsigned long long) ram_keys);
+    }
     for (const auto& move : pending_demotions) {
         if (layer_demotions) {
             F->deferred_copies.push_back({move.dst,move.src,move.bytes,move.ev});
