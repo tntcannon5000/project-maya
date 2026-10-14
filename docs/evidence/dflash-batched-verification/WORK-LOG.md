@@ -88,3 +88,17 @@ HC qualification not passed: HC+mode2 differs from matched-stage serial at row34
 Isolated HC unit harness passed128cases/576rows exactly, including partialscratch, guards, alias combinations and offset/paddedstrides. Fullmodel HC remains unqualified; synthetic coverage is not proof for every activation. Added one-window immutablepack audit and bounded fixture repeat/step options. Firstaudit rejected releasedWindows mappings before checkingbytes (diagnosticguarderror, notmodelcorruption); guard nowaccepts retaineddirecthandle with unchangedrangechecks. Corrected audit runningonlyfirstsixwindows/onepass atp0=60.
 
 Decisive immutable-weight audit failure: p0=60,layer3,token3/rank4,expert48 has incorrect GPU scratch bytes atoffset0 versus immutablepack (source reported RAM-tier);26expert/pointer pairs and368,050,176bytes verified before firstmismatch. This matches firstcombinedcandidate logit divergence atposition63. Next distinguish whether RAMsource itself differs orGPU destinationwas overwritten/aliased; HC arithmetic is not leading suspect afterunitpass. No repairorparityclaim yet.
+# Deferred-demotion correctness investigation
+
+Provenance audit at p0=60 found RAM class 0 slot 248, layer 3 expert 48,
+in kRDemote state. GPU bytes exactly equal that RAM source; both differ from
+immutable pack. All 64 scratch pointers are correct. Thus this is not evidence
+of HC arithmetic error or stale GPU cache loads.
+
+Source review identifies the missing dependency: fast_boundary queues NEW
+deferred demotions in `layers` mode; fast_layers submits them, but
+fast_window_layers did not. The CPU service can then wait on an unrecorded or
+recycled event and serve old RAM bytes. Added submission at batched-window layer
+entry before route publication. Bounded immutable-pack audit is running;
+performance and parity claims remain gated on validation.
+

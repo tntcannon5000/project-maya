@@ -29,6 +29,12 @@ Existing window grouping already identifies shared GPU pointers, but gate/up loo
 
 ## Current decision gates (after paired-kernel checkpoint)
 
+Correctness update: batched-window execution missed the retained `layers`
+demotion submission hook. This explains stale RAM consumed after waits on old
+events. The fixed immutable audit passes 1,599 expert copies across 42 layers.
+Requalify corrected control versus batching candidates before using older
+whole-model or TPS comparisons; prior exact repeats alone could share this bug.
+
 - Grouped modes 1 and 2 pass controlled GPU exact-logit qualification. Mode 2's clean coding result is only slightly faster; retain experimental status until a supporting mechanism creates a convincing round-time gain.
 - Async fetch passed matched-allocation all-memory exact parity and demonstrated real route overlap. Clean hybrid verification-round times barely improved; acceptance changed, so headline TPS differences are not scheduling gains. Keep experimental, do not sweep parameters.
 - Serial disk-pressure control failed self-repeatability. Four bounded ownership checks found no mismatch among inspected pointers/five retained blobs; this does not resolve pressure qualification. Do not accept greedy-token agreement as numerical parity.

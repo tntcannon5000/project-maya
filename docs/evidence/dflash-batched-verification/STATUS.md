@@ -28,7 +28,7 @@ Matched serial/async verify-round means were 67.262/66.885 ms at two drafts and 
 
 HC phase batching is implemented but unqualified. HC plus paired experts first differs at logit row 34 (position 63); HC alone first differs at row 170. All greedy selections match, which is insufficient. The current-binary unchanged control remains exact against the stored reference.
 
-Next decisive checks: isolated HC arithmetic on identical inputs, and a bounded immutable-pack weight audit in the first affected window. Do not benchmark or recommend HC as a gain until qualified.
+Isolated HC arithmetic passed all 128 cases/576 rows exactly. The immutable-pack audit localized the first combined mismatch to stale RAM in a pending demotion. GPU bytes exactly matched RAM; scratch addresses were correct. Batched window execution omitted submission of boundary-deferred demotions, so CPU service could wait on an old/unrecorded event and serve stale bytes. Added submission before batched layer routing. The corrected bounded audit passed all 42 MoE scopes: 1,599 expert/pointer pairs and 14,556,266,496 bytes match immutable pack. Full exact-logit qualification is next; no HC speed claim yet.
 
 Separately, serial disk-pressure tests were not reproducible. Four ownership-check boundaries passed published-pointer checks and five retained-copy byte comparisons, but do not resolve that issue. A background-transfer API-error handling fix is checkpointed; no observed API failure establishes it as the cause.
 

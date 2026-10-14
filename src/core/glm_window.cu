@@ -807,6 +807,87 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                                           (unsigned long long) F->window_weight_verify_bytes);
                             err = b;
                             std::fprintf(stderr, "%s\n", b);
+                            const auto hash_bytes = [](const std::vector<uint8_t>& v) {
+                                unsigned long long h = 14695981039346656037ull;
+                                for (uint8_t x : v) { h ^= x; h *= 1099511628211ull; }
+                                return h;
+                            };
+                            const auto prefix = [](const std::vector<uint8_t>& v) {
+                                std::string out;
+                                for (size_t q = 0; q < std::min<size_t>(32, v.size()); ++q) {
+                                    char h[4]; std::snprintf(h, sizeof h, "%02x", (unsigned int) v[q]);
+                                    out += h;
+                                }
+                                return out;
+                            };
+                            std::fprintf(stderr, "maya weight diagnostic fingerprints: GPU=%016llx pack=%016llx "
+                                                 "GPU_prefix=%s pack_prefix=%s\n", hash_bytes(actual),
+                                         hash_bytes(expected), prefix(actual).c_str(), prefix(expected).c_str());
+                            if (src[at] != 0ull) {
+                                std::vector<uint8_t> source(Ly.blob);
+                                int cls = -1, rs = -1, owner_key = -1, owner_state = -1, expected_rs = -1;
+                                {
+                                    std::lock_guard<std::mutex> lk(F->mu);
+                                    expected_rs = F->ram_of[(size_t) il * g.n_expert + e];
+                                    for (size_t c = 0; c < F->rc.size(); ++c) {
+                                        const auto& R = F->rc[c];
+                                        if (!in_slots(src[at], R.base, (size_t) R.n, R.stride)) continue;
+                                        cls = (int) c;
+                                        rs = (int) ((src[at] - (unsigned long long) R.base) / R.stride);
+                                        owner_key = R.key[(size_t) rs];
+                                        owner_state = (int) R.st[(size_t) rs];
+                                        break;
+                                    }
+                                    // This is a failure-only snapshot of an already
+                                    // range-validated RAM/staging source. Ownership
+                                    // stays locked until the CPU snapshot completes.
+                                    std::memcpy(source.data(), (const void*) src[at], Ly.blob);
+                                }
+                                const auto ram_pack = std::mismatch(source.begin(), source.end(), expected.begin());
+                                const auto ram_gpu = std::mismatch(source.begin(), source.end(), actual.begin());
+                                const long long pack_byte = ram_pack.first == source.end() ? -1 :
+                                    (long long) (ram_pack.first - source.begin());
+                                const long long gpu_byte = ram_gpu.first == source.end() ? -1 :
+                                    (long long) (ram_gpu.first - source.begin());
+                                std::fprintf(stderr, "maya weight diagnostic source snapshot: pointer=%llu kind=%s class=%d "
+                                                     "slot=%d key=%d owner_layer=%d owner_expert=%d state=%d "
+                                                     "ram_of_expected=%d source_pack_first=%lld source_GPU_first=%lld "
+                                                     "hash=%016llx prefix=%s\n", src[at], source_name(src[at]), cls, rs,
+                                             owner_key, owner_key >= 0 ? (int) (owner_key / g.n_expert) : -1,
+                                             owner_key >= 0 ? (int) (owner_key % g.n_expert) : -1, owner_state, expected_rs,
+                                             pack_byte, gpu_byte, hash_bytes(source), prefix(source).c_str());
+                            }
+                            for (int q = 0; q < T; ++q)
+                                for (int j = 0; j < g.n_exp_used; ++j) {
+                                    const size_t z = (size_t) q * 8 + j;
+                                    if (ptr[z] != p) continue;
+                                    std::fprintf(stderr, "maya weight diagnostic destination member: token=%d rank=%d "
+                                                         "expert=%d source=%llu kind=%s\n", q, j, ids[z], src[z],
+                                                 source_name(src[z]));
+                                }
+                            if (scratch) {
+                                std::array<unsigned long long, 128> scratch_ptr{};
+                                if (!glmfast::cuda_ok(cudaMemcpyAsync(scratch_ptr.data(), F->md.scratch,
+                                                                     (size_t) F->scratch_count * sizeof(scratch_ptr[0]),
+                                                                     cudaMemcpyDeviceToHost, s),
+                                                     "weight diagnostic scratch address table", err) ||
+                                    !glmfast::cuda_ok(cudaStreamSynchronize(s), "weight diagnostic scratch table sync", err))
+                                    return false;
+                                int wrong = 0;
+                                for (int q = 0; q < F->scratch_count; ++q) {
+                                    const auto want = (unsigned long long) (F->scratch + (size_t) q * F->stage_bytes);
+                                    if (scratch_ptr[(size_t) q] == want) continue;
+                                    ++wrong;
+                                    std::fprintf(stderr, "maya weight diagnostic scratch table mismatch: slot=%d "
+                                                         "actual=%llu expected=%llu\n", q, scratch_ptr[(size_t) q], want);
+                                }
+                                const size_t slot = (size_t) (p - (unsigned long long) F->scratch) / F->stage_bytes;
+                                std::fprintf(stderr, "maya weight diagnostic scratch destination: slot=%llu row=%llu rank=%llu "
+                                                     "direct_row_slot=%d address_table_mismatches=%d/%d stride=%llu\n",
+                                             (unsigned long long) slot, (unsigned long long) (slot / 8),
+                                             (unsigned long long) (slot % 8), 8 * t + i, wrong, F->scratch_count,
+                                             (unsigned long long) F->stage_bytes);
+                            }
                             return false;
                         }
                         ++F->window_weight_verify_experts;
@@ -1128,6 +1209,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
 
 bool Glm5Model::fast_window_layers(int64_t p0, int T, std::string& err) {
     FastState* F = fast_;
+    // Like fast_layers, submit boundary-deferred demotions before any route
+    // can request their RAM slots. Waiting on an unrecorded/recycled event
+    // otherwise succeeds without making the new expert bytes available.
+    if (!F->deferred_copies.empty() && !F->submit_demotions(err)) return false;
     auto& W = F->win;
     const Glm5Geometry& g = g_;
     cudaStream_t s = F->cs;

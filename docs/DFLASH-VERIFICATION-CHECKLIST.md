@@ -16,6 +16,9 @@
 - [x] Screen narrow assignment swaps; defer based on small optimistic byte savings.
 - [x] Implement exact-order HC phase-batching candidate and engagement counters.
 - [ ] Qualify HC and combined kernels; whole-model mismatches require isolation.
+- [x] Localize first mismatch to stale RAM bytes, not HC arithmetic or GPU fetch corruption.
+- [x] Identify missing deferred-demotion submission in batched verification.
+- [ ] Validate window submission fix against immutable pack, exact logits and pressure replay.
 - [ ] Resolve or bound existing disk-pressure non-reproducibility with ownership diagnostics.
 - [ ] Measure refinements and async scheduling combinations.
 - [ ] Investigate supporting combinations when justified by evidence.
