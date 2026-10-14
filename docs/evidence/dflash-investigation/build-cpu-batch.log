@@ -1,0 +1,89 @@
+[1/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_transport_probe.cu.obj
+glm_transport_probe.cu
+tmpxft_0000582c_00000000-7_glm_transport_probe.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[2/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_multi.cu.obj
+glm_multi.cu
+tmpxft_00003ea8_00000000-7_glm_multi.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[3/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_rows.cu.obj
+glm_rows.cu
+tmpxft_00005ab8_00000000-7_glm_rows.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[4/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_window.cu.obj
+glm_window.cu
+tmpxft_00005dec_00000000-7_glm_window.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[5/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_dflash.cu.obj
+glm_dflash.cu
+tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_dflash.cu(1713): warning C4456: declaration of 't_win' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_dflash.cu(1523): note: see declaration of 't_win'
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(39): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(35): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(37): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002fa4_00000000-7_glm_dflash.cudafe1.stub.c(31): warning C4211: nonstandard extension used: redefined extern to static
+[6/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_prefill.cu.obj
+glm_prefill.cu
+tmpxft_00000bf0_00000000-7_glm_prefill.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1148): warning C4456: declaration of 'parked' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1086): note: see declaration of 'parked'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(2107): warning C4456: declaration of 'c' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1897): note: see declaration of 'c'
+[7/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_model.cu.obj
+glm_model.cu
+tmpxft_00000e24_00000000-7_glm_model.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(43): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000e24_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+[8/11] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_fast_path.cu.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(3672): warning #549-D: variable "w_rq" is used before its value is set
+          if (w_n > 0) win_cpu_merged(w_rq[0]->layer, w_n, w_rq, w_ans, w_seq);
+                                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(3672): warning #549-D: variable "w_rq" is used before its value is set
+          if (w_n > 0) win_cpu_merged(w_rq[0]->layer, w_n, w_rq, w_ans, w_seq);
+                                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+glm_fast_path.cu
+tmpxft_000010e4_00000000-7_glm_fast_path.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1164): warning C4456: declaration of 'need' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(812): note: see declaration of 'need'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1686): warning C4456: declaration of 'total' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1368): note: see declaration of 'total'
+[9/11] Linking CXX static library strata_engine.lib
+[10/11] Linking CXX executable glm_dflash_test.exe
+[11/11] Linking CXX executable strata.exe

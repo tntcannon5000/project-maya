@@ -20,6 +20,7 @@ def main():
     ap.add_argument('--widths',default='4,1,7,2,6,3,5')
     ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
     ap.add_argument('--env',action='append',default=[])
+    ap.add_argument('--cancel-smoke',action='store_true')
     a=ap.parse_args();OUT=a.out.resolve()
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
@@ -61,7 +62,9 @@ def main():
             try:
                 while not read().startswith('READY'): pass
                 print(quant,'READY',flush=True)
-                for name,width,n in [('warmup',0,192),('control',0,192)]+[('matrix',w,192) for w in manifest['width_order']]:
+                requests=[('warmup',0,192),('control',0,192)]+[('matrix',w,192) for w in manifest['width_order']]
+                if a.cancel_smoke:requests += [('cancel',4,192),('recovery',2,32)]
+                for name,width,n in requests:
                     before=len(stats.read_text().splitlines()) if stats.exists() else 0
                     start=time.perf_counter(); output=[]; arrivals=[]
                     p.stdin.write(f'GEN {n} temperature=0 spec={width+1} spec_min_p=0 spec_n_min={width} spec_cum=0 '+','.join(map(str,ids))+'\n');p.stdin.flush()
@@ -69,8 +72,11 @@ def main():
                         s=read()
                         if s.startswith('T '):
                             output.append(int(s.split()[1]));arrivals.append((time.perf_counter()-start)*1000)
+                            if name=='cancel' and len(output)==8:
+                                p.stdin.write('STOP\n');p.stdin.flush()
                         if s.startswith('DONE'): break
                     fields=s.split()
+                    if name=='cancel' and 'cancel' not in fields:raise RuntimeError('STOP did not cancel')
                     rounds=[list(map(float,x.split())) for x in stats.read_text().splitlines()[before:]] if stats.exists() else []
                     offered=sum(r[0] for r in rounds); accepted=sum(r[1] for r in rounds)
                     if width and (not rounds or max(r[0] for r in rounds)!=width):

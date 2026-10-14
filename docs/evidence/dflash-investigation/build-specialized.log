@@ -1,0 +1,61 @@
+[1/4] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\glm_fast.cu.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(646): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=23]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<23>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t*) { return dot_iq4_xs(v, y, kbx, iqs); }
+                                                        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(645): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=18]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<18>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq3_xxs_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(644): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=16]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<16>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq2_xxs_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(643): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=19]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<19>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq1_s_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+glm_fast.cu
+tmpxft_00003488_00000000-7_glm_fast.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(193): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(29): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(29): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(27): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(23): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(85): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(1167): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003488_00000000-7_glm_fast.cudafe1.stub.c(327): warning C4211: nonstandard extension used: redefined extern to static
+[2/4] Linking CXX static library strata_kernels.lib
+[3/4] Linking CXX executable glm_dflash_test.exe
+[4/4] Linking CXX executable strata.exe

@@ -1,0 +1,37 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 10.52 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 3.63
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)
+glm fast: CUDA0 a pinning cap: 78.50 GB more pin, the RAM tier sized to it
+maya shadow: class 2 pinning fallback 10384 -> 10142 slots
+glm fast: CUDA0 RAM tier 98.46 GB pinned, 11902 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.3 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.59 GB/s)
+glm fast: CUDA0 CPU lane off: an expert 0.191 ms on the CPU vs 0.249 ms over PCIe
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 717 MB on CUDA0
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 40.94 ms/tok (24.43 tok/s) | vram hit 66.38% | ram fetches 112.24/tok | disk 0.00 reads/tok in 0.14 waits/tok, 0.00 ms/tok | promotions 80.51/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 18.1 ms/tok | vram 2503/2523 ram 11596/11902
+glm stat: decode 34.89 ms/tok (28.66 tok/s) | vram hit 72.97% | ram fetches 90.35/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 73.88/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 1.4 ms/tok | vram 2494/2523 ram 11644/11902
+maya verify: 70 windows, 0 retries, 555 reused GPU expert rows
+glm dflash prof (70 rounds, 0 of them no draft: 2.00 drafts, 1.73 accepted a round): draft 2.20 ms | verify window (or the token) 85.38 ms | commit + inject 0.38 ms
+glm stat: decode 32.08 ms/tok (31.17 tok/s) | vram hit 72.35% | ram fetches 101.61/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 42.07/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 1.5 ms/tok | vram 2516/2523 ram 11632/11902
+glm spec: 121 of 140 drafts accepted (86.4%)
+maya verify: 49 windows, 0 retries, 1812 reused GPU expert rows
+glm dflash prof (49 rounds, 0 of them no draft: 4.00 drafts, 2.90 accepted a round): draft 1.93 ms | verify window (or the token) 135.83 ms | commit + inject 0.94 ms
+glm stat: decode 35.40 ms/tok (28.24 tok/s) | vram hit 72.50% | ram fetches 117.87/tok | disk 0.00 reads/tok in 0.02 waits/tok, 0.00 ms/tok | promotions 31.37/tok | cpu lane 0.00/tok in 0.00 ms/tok | prompt 1.1 ms/tok | vram 2516/2523 ram 11640/11902
+glm spec: 142 of 196 drafts accepted (72.4%)
+maya reuse policy: observations=35322 changed_victims=24294 horizon=1 matured_anchors=0
+glm spec: 336 speculative positions, 78.3% accepted

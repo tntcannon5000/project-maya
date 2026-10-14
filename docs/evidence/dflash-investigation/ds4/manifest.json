@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\DS4-glm\\build-win\\sm120a\\ds4.exe",
+    "--cuda",
+    "-m",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf",
+    "--ssd-streaming",
+    "--ssd-streaming-cache-experts",
+    "20GB",
+    "--mtp",
+    "--mtp-model",
+    "G:/Models/GLM-5.3-Flash-MTP/GLM-5.3-Flash-MTP-Q4_K.gguf",
+    "--ctx",
+    "131072",
+    "-n",
+    "1",
+    "-p",
+    "Say hello."
+  ]
+}

@@ -1,0 +1,44 @@
+0.00.000.660 I srv  llama_server: initializing ...
+0.00.020.150 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.020.368 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.125.922 I common_spec_auto: model 3.5x free VRAM: draft depth starts at 0, max 1
+0.00.126.006 I srv    load_model: loading model 'G:\Models\GLM-5.3-Flash-3.0bit-Q4Kattn\GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf'
+0.00.160.851 I common_spec_auto: model 3.5x free VRAM: draft depth starts at 0, max 1
+0.00.675.986 E llama_init_from_model: failed to initialize the context: glm5-next requires ctx_other to be set (this warning is normal during memory fitting)
+0.00.710.309 W operator (): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.00.904.684 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.00.904.688 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.00.925.173 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.06.905.284 I cmn          init: llama threadpool init, n_threads = 16
+0.07.601.050 I common_speculative_init_result: loading draft model 'G:/Models/GLM-5.3-Flash-MTP/GLM-5.3-Flash-MTP-Q4_K.gguf'
+0.07.785.100 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.07.785.105 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.09.829.944 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 131072, kv_unified = 'false'
+0.09.899.220 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.09.899.236 I srv  llama_server: model loaded
+0.09.899.238 I srv  llama_server: listening on http://127.0.0.1:8097
+0.10.660.831 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.10.660.855 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.10.661.131 W moe-cache: 42 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.11.087.024 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.13.879.500 W moe-cache: probe: links alone link 0 4.6 GB/s; CPU threads:GB/s alone/with links 1:7.0/20.6 2:19.4/34.9 3:33.2/45.8 4:42.6/52.1 5:49.6/53.9 6:54.2/56.1 7:57.5/57.7 8:60.2/65.4 9:63.9/57.5 10:66.3/64.2 11:67.4/60.8 12:69.6/62.3 13:70.5/65.2 14:70.7/64.5 -> CPU 70.7 GB/s (saturated by 11 threads), RAM budget 70.7 GB/s
+0.13.880.090 W operator (): MoE expert cache enabled: 42 layers, slots/layer 45..45, 2 inserts/step, 16327.1 MiB device memory
+0.22.242.880 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =     36, progress = 0.90, t =  11.50 s / 3.13 tokens per second
+0.30.232.200 I slot print_timing: id  0 | task 0 | n_gen =    101, tg =  13.14 t/s, tg_3s =  13.27 t/s
+0.33.266.553 I slot print_timing: id  0 | task 0 | n_gen =    145, tg =  13.53 t/s, tg_3s =  14.50 t/s
+0.35.764.183 I slot print_timing: id  0 | task 0 | prompt eval time =   11959.03 ms /    40 tokens (  298.98 ms per token,     3.34 tokens per second)
+0.35.764.187 I slot print_timing: id  0 | task 0 |        eval time =   13144.13 ms /   192 tokens (   68.82 ms per token,    14.53 tokens per second)
+0.35.764.188 I slot print_timing: id  0 | task 0 |       total time =   25103.16 ms /   232 tokens
+0.35.764.188 I slot print_timing: id  0 | task 0 |    graphs reused =        100
+0.35.764.191 I slot print_timing: id  0 | task 0 | draft acceptance = 0.93878 (   46 accepted /    49 generated), mean len =  1.94
+0.35.764.237 I slot      release: id  0 | task 0 | stop processing: n_tokens = 231, truncated = 0
+0.35.786.275 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.173
+0.35.856.355 I slot launch_slot_: id  0 | task 148 | processing task, is_child = 0
+0.43.131.347 I slot print_timing: id  0 | task 148 | n_gen =    100, tg =  21.77 t/s, tg_3s =  21.99 t/s
+0.46.166.717 I slot print_timing: id  0 | task 148 | n_gen =    162, tg =  21.24 t/s, tg_3s =  20.43 t/s
+0.47.587.754 I slot print_timing: id  0 | task 148 | prompt eval time =    2728.39 ms /    40 tokens (   68.21 ms per token,    14.66 tokens per second)
+0.47.587.760 I slot print_timing: id  0 | task 148 |        eval time =    9002.76 ms /   192 tokens (   47.13 ms per token,    21.22 tokens per second)
+0.47.587.760 I slot print_timing: id  0 | task 148 |       total time =   11731.15 ms /   232 tokens
+0.47.587.761 I slot print_timing: id  0 | task 148 |    graphs reused =        200
+0.47.587.764 I slot print_timing: id  0 | task 148 | draft acceptance = 0.95918 (   47 accepted /    49 generated), mean len =  1.96
+0.47.587.814 I slot      release: id  0 | task 148 | stop processing: n_tokens = 231, truncated = 0

@@ -1,0 +1,29 @@
+0.00.000.552 I srv  llama_server: initializing ...
+0.00.020.339 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.020.547 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.123.410 I common_spec_auto: model 3.5x free VRAM: draft depth starts at 0, max 2
+0.00.123.487 I srv    load_model: loading model 'G:\Models\GLM-5.3-Flash-3.0bit-Q4Kattn\GLM-5.3-Flash-GSQ-RCO-3.0bit-q4kattn.gguf'
+0.00.155.128 I common_spec_auto: model 3.5x free VRAM: draft depth starts at 0, max 2
+0.00.667.476 E llama_init_from_model: failed to initialize the context: dflash requires ctx_other to be set (this warning is normal during memory fitting)
+0.00.706.454 W operator (): failed to measure the memory of the extra model, fitting without it: failed to create llama_context from model
+0.00.912.977 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.00.912.982 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.00.933.736 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --load-mode none for better performance
+0.06.951.710 I cmn          init: llama threadpool init, n_threads = 16
+0.07.659.069 I common_speculative_init_result: loading draft model 'G:/Models/GLM-5.3-Flash-DFlash2/GLM-5.3-Flash-DFlash2-Q4_K_M.gguf'
+0.07.866.358 W load: special_eot_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.07.866.363 W load: special_eom_id is not in special_eog_ids - the tokenizer config may be incorrect
+0.08.083.737 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 131072, kv_unified = 'false'
+0.08.083.755 I common_speculative_impl_draft_dflash: adding speculative implementation 'draft-dflash'
+0.08.083.755 I common_speculative_impl_draft_dflash: - n_max=2, n_min=0, p_min=0.00
+0.08.083.756 I common_speculative_impl_draft_dflash: - block_size=8, mask_token_id=154856, n_extract=5, sample_from_anchor=true
+0.08.140.513 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.08.140.526 I srv  llama_server: model loaded
+0.08.140.528 I srv  llama_server: listening on http://127.0.0.1:8097
+0.08.561.639 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.08.561.669 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.08.561.852 W moe-cache: 42 expert layers cached on CUDA0 (CUDA0), upload link fastest
+0.08.827.736 W moe-cache: 1 upload workers, from pageable host memory (mmap; --load-mode pin: faster uploads)
+0.11.622.712 W moe-cache: probe: links alone link 0 4.7 GB/s; CPU threads:GB/s alone/with links 1:7.2/21.0 2:19.2/35.1 3:32.9/46.9 4:42.7/52.5 5:49.3/54.7 6:54.9/56.1 7:57.7/48.6 8:59.9/60.6 9:62.3/60.6 10:64.4/63.2 11:65.5/63.2 12:67.4/65.4 13:68.7/63.1 14:70.2/63.1 -> CPU 70.2 GB/s (saturated by 12 threads), RAM budget 70.2 GB/s
+0.11.623.343 W operator (): MoE expert cache enabled: 42 layers, slots/layer 55..55, 2 inserts/step, 19876.5 MiB device memory
+C:\Users\niran\Documents\Code Projects\LocalLLMs\llama-glm-neurall\src\llama-graph.cpp:1399: GGML_ASSERT(t_layer_inp[il] != nullptr && "layer input tensor is null") failed

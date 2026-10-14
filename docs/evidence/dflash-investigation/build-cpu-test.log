@@ -1,0 +1,6 @@
+[1/2] Building CUDA object CMakeFiles\maya_verify_scratch_test.dir\tests\maya_verify_scratch_test.cu.obj
+maya_verify_scratch_test.cu
+tmpxft_00006cc8_00000000-7_maya_verify_scratch_test.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\../src/core/glm_fast_state.hpp(655): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\../src/core/glm_fast_state.hpp(619): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[2/2] Linking CXX executable maya_verify_scratch_test.exe

@@ -39,3 +39,9 @@ The 21-cell screen found high acceptance but poor TPS and scratch exhaustion. Te
 - Expanded scratch with reuse on/off: 28,188,160 GPU-only full logits bit-exact, including partial commits and repeat. Legacy overflow-retry versus candidate differs (max 6.5748, 181/182 greedy rows matching). This is unresolved pending a retry-free token-path control; do not call parity qualified yet.
 
 Keep the changes opt-in pending validation. Fixed-input GPU-only verification tests compare full logits with the same arithmetic backend, partial window commits, reset and repeated requests; they exercise mixed expert formats and eviction pressure. Benchmark variants are not a numerical-parity qualification by themselves. No default launcher change or publication.
+
+## Final qualification and decision
+
+Retry-free token-path control resolved the candidate parity question: candidate/reuse-off/token-path all match bit-exactly across 28,188,160 logits. The differing result belongs to legacy overflow/retry (maximum difference 6.574832); its exact internal cause remains open. Controlled CPU merged/serial placement also matches all 28,188,160 logits exactly. Native CPU row test passed.
+
+Final cancellation/recovery smoke passed and engine exited cleanly: control 35.14 TPS, width 2 34.14 TPS, recovery 33.03 TPS. This does not establish CPU batching as a reliable throughput win. Candidate flags remain opt-in and daily settings unchanged. See RESULTS.md for all engine comparisons, memory costs, engagement counts and limitations. No broad prefill or long occupied-context qualification claimed.

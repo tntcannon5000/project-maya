@@ -1,0 +1,36 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.78 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 2.89
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 21.37 GB, 49-86 slots/layer (2618 total)
+glm fast: CUDA0 a pinning cap: 78.50 GB more pin, the RAM tier sized to it
+maya shadow: class 2 pinning fallback 10384 -> 10142 slots
+glm fast: CUDA0 RAM tier 98.46 GB pinned, 11902 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.0 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.59 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.193 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 717 MB on CUDA0
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 26.90 ms/tok (37.17 tok/s) | vram hit 66.02% | ram fetches 46.30/tok | disk 0.00 reads/tok in 0.11 waits/tok, 0.00 ms/tok | promotions 44.48/tok | cpu lane 67.15/tok in 13.86 ms/tok | prompt 18.5 ms/tok | vram 2543/2618 ram 11598/11902
+glm stat: decode 23.54 ms/tok (42.48 tok/s) | vram hit 72.31% | ram fetches 36.49/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 36.36/tok | cpu lane 56.06/tok in 11.36 ms/tok | prompt 0.8 ms/tok | vram 2537/2618 ram 11654/11902
+glm window: a window's tokens took more scratch slots than a layer has - that window runs again token by token (said once)
+glm dflash prof (69 rounds, 0 of them no draft: 2.00 drafts, 1.78 accepted a round): draft 2.19 ms | verify window (or the token) 69.06 ms | commit + inject 0.40 ms
+glm stat: decode 25.76 ms/tok (38.81 tok/s) | vram hit 72.58% | ram fetches 39.71/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 29.40/tok | cpu lane 61.08/tok in 12.75 ms/tok | prompt 0.8 ms/tok | vram 2581/2618 ram 11614/11902
+glm spec: 123 of 138 drafts accepted (89.1%)
+glm dflash prof (47 rounds, 0 of them no draft: 4.00 drafts, 3.09 accepted a round): draft 1.98 ms | verify window (or the token) 185.53 ms | commit + inject 1.15 ms
+glm stat: decode 46.19 ms/tok (21.65 tok/s) | vram hit 73.47% | ram fetches 77.46/tok | disk 0.00 reads/tok in 0.02 waits/tok, 0.00 ms/tok | promotions 26.54/tok | cpu lane 124.46/tok in 25.20 ms/tok | prompt 0.8 ms/tok | vram 2590/2618 ram 11634/11902
+glm spec: 145 of 188 drafts accepted (77.1%)
+maya reuse policy: observations=43302 changed_victims=17372 horizon=1 matured_anchors=0
+glm spec: 326 speculative positions, 82.2% accepted
+maya CPU pipeline: 9497 batches, 75962 phase-gated callbacks

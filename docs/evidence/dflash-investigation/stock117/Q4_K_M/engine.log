@@ -1,0 +1,31 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.78 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 2.89
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+glm fast: CUDA0 layers [0,45) expert pool 21.37 GB, 49-86 slots/layer (2618 total)
+glm fast: CUDA0 RAM tier 88.31 GB pinned, 10660 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.0 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.59 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.196 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 717 MB on CUDA0
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 38.14 ms/tok (26.22 tok/s) | vram hit 66.03% | ram fetches 45.64/tok | disk 0.00 reads/tok in 1.82 waits/tok, 0.01 ms/tok | promotions 38.64/tok | cpu lane 66.05/tok in 13.77 ms/tok | prompt 23.0 ms/tok | vram 2531/2618 ram 9524/10660
+glm stat: decode 35.13 ms/tok (28.46 tok/s) | vram hit 70.96% | ram fetches 37.49/tok | disk 0.00 reads/tok in 1.92 waits/tok, 0.01 ms/tok | promotions 33.30/tok | cpu lane 57.62/tok in 11.92 ms/tok | prompt 0.9 ms/tok | vram 2529/2618 ram 9529/10660
+glm window: a window's tokens took more scratch slots than a layer has - that window runs again token by token (said once)
+glm dflash prof (69 rounds, 0 of them no draft: 2.00 drafts, 1.78 accepted a round): draft 2.30 ms | verify window (or the token) 140.37 ms | commit + inject 0.43 ms
+glm stat: decode 51.44 ms/tok (19.44 tok/s) | vram hit 69.77% | ram fetches 66.02/tok | disk 0.00 reads/tok in 2.15 waits/tok, 0.02 ms/tok | promotions 19.69/tok | cpu lane 100.01/tok in 21.01 ms/tok | prompt 1.1 ms/tok | vram 2552/2618 ram 9487/10660
+glm spec: 123 of 138 drafts accepted (89.1%)
+glm dflash prof (48 rounds, 0 of them no draft: 4.00 drafts, 3.00 accepted a round): draft 2.13 ms | verify window (or the token) 279.51 ms | commit + inject 1.10 ms
+glm stat: decode 70.69 ms/tok (14.15 tok/s) | vram hit 68.85% | ram fetches 103.13/tok | disk 0.00 reads/tok in 2.88 waits/tok, 0.02 ms/tok | promotions 15.15/tok | cpu lane 155.66/tok in 31.93 ms/tok | prompt 1.4 ms/tok | vram 2545/2618 ram 9478/10660
+glm spec: 144 of 192 drafts accepted (75.0%)
+glm spec: 330 speculative positions, 80.9% accepted

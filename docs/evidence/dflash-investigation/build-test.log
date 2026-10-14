@@ -1,0 +1,24 @@
+[0/1] Re-running CMake...
+-- Strata: CUDA enabled, arch 120
+-- strata: pack/full/experts.bin absent - the expert arena load test is NOT registered
+-- Warning: ccache not found - consider installing it for faster compilation or disable this warning with GGML_CCACHE=OFF
+-- CMAKE_SYSTEM_PROCESSOR: AMD64
+-- CMAKE_GENERATOR_PLATFORM: 
+-- GGML_SYSTEM_ARCH: x86
+-- Including CPU backend
+-- x86 detected
+-- Adding CPU backend variant ggml-cpu: /arch:AVX512 GGML_AVX512
+-- ggml version: 0.24.0
+-- ggml commit:  2b93797
+-- Configuring done (2.0s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/niran/Documents/Code Projects/LocalLLMs/project-maya/build
+[1/5] Building C object ggml\src\CMakeFiles\ggml-base.dir\ggml.c.obj
+C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\um\winbase.h(9531): warning C5105: macro expansion producing 'defined' has undefined behavior
+[2/5] Linking CXX static library ggml\src\ggml-base.lib
+[3/5] Building CUDA object CMakeFiles\maya_verify_scratch_test.dir\tests\maya_verify_scratch_test.cu.obj
+maya_verify_scratch_test.cu
+tmpxft_0000208c_00000000-7_maya_verify_scratch_test.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\../src/core/glm_fast_state.hpp(654): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\../src/core/glm_fast_state.hpp(618): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[4/5] Linking CXX executable maya_verify_scratch_test.exe

@@ -1,0 +1,29 @@
+[
+  {
+    "a": "candidate",
+    "b": "no-reuse",
+    "exact": true,
+    "max_abs": 0.0,
+    "first_mismatch": null,
+    "greedy_matches": 182,
+    "rows": 182
+  },
+  {
+    "a": "candidate",
+    "b": "token-path",
+    "exact": true,
+    "max_abs": 0.0,
+    "first_mismatch": null,
+    "greedy_matches": 182,
+    "rows": 182
+  },
+  {
+    "a": "legacy",
+    "b": "token-path",
+    "exact": false,
+    "max_abs": 6.574832439422607,
+    "first_mismatch": 13,
+    "greedy_matches": 181,
+    "rows": 182
+  }
+]
