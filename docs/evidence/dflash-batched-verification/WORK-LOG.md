@@ -133,3 +133,13 @@ faster ordinary control this did not meet the required 5% round-time gain.
 Reject as recommended performance setting; no quota sweep. Keep opt-in hook
 and negative evidence. Same-plan merged/serial numerical qualification remains
 required before recommending the experimental override.
+
+## Writing and lifecycle check
+
+Corrected HC/paired, override disabled, 3,239 occupied prompt tokens and 128K
+capacity. Short 128-output writing sample: ordinary 39.98 TPS, two drafts
+32.02 TPS at 54.1% acceptance, verification 61.777 ms/round. This workload
+benefits less from drafting; no universal drafting gain claimed. STOP cancelled
+the four-draft request, the following two-draft recovery completed, no retries,
+clean process exit. This is a lifecycle/longer-input smoke test, not a matched
+prefill speed comparison or qualification at 128K occupied context.

@@ -18,12 +18,12 @@
 - [x] Qualify HC/paired combination on corrected GPU control: 28,188,160 exact logits.
 - [x] Localize first mismatch to stale RAM bytes, not HC arithmetic or GPU fetch corruption.
 - [x] Identify missing deferred-demotion submission in batched verification.
-- [ ] Validate window submission fix against immutable pack, exact logits and pressure replay.
+- [x] Validate window submission fix against immutable pack, exact logits and bounded pressure replay.
 - [ ] Resolve or bound existing disk-pressure non-reproducibility with ownership diagnostics.
 - [ ] Measure refinements and async scheduling combinations.
 - [ ] Investigate supporting combinations when justified by evidence.
 - [ ] Confirm retained changes on coding/writing, prefill and longer occupied context.
-- [ ] Check cancellation/recovery and clean teardown.
+- [x] Check cancellation/recovery and clean teardown on corrected HC/paired writing case.
 - [ ] Commit report, results table, limitations and recommended settings.
 
 Current stage: missing deferred-demotion submission fixed. Immutable-pack audit passes 42 layers and HC/paired versus corrected control passes 28,188,160 exact logits. Corrected clean throughput comparison is underway. Pressure replay remains outstanding. Async overlap did not materially reduce verification round time. No substantial performance gain claimed; performance candidates remain opt-in research.
