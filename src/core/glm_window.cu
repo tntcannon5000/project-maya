@@ -541,8 +541,23 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
     }();
     static const bool prof_b = getenv("STRATA_GLM_WIN_PROF") != nullptr;
     if (batch_env && !W.per_token && W.mplan_ptr != nullptr && (T > 1 || part != 0)) {
+        const bool row_scratch = F->scratch_count >= W.T * 8;
+        static const bool reuse = [] {
+            const char* v = getenv("MAYA_WIN_REUSE");
+            return v != nullptr && std::atoi(v) != 0;
+        }();
         const auto tok_dev = [&](int t) {
             gf::MoeDev mt = md;
+            if (row_scratch) {
+                // Separate rows also keep the staggered groups' live layers disjoint.
+                mt.scratch = md.scratch + 8 * t;
+                if (reuse && t > t0) {
+                    mt.win_prev_ptr = W.mplan_ptr + 8 * t0;
+                    mt.win_prev_id = W.mplan_id + 8 * t0;
+                    mt.win_prev_n = 8 * (t - t0);
+                    mt.win_reuses = W.scr + 4;
+                }
+            }
             mt.plan_ptr = W.mplan_ptr + 8 * t;
             mt.plan_w = W.mplan_w + 8 * t;
             mt.plan_id = W.mplan_id + 8 * t;
@@ -567,7 +582,7 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                           g.norm_w != 0, il, W.x + (size_t) t * E, E, mt, W.sh_g + (size_t) t * FFs,
                           W.sh_u + (size_t) t * FFs, g.swiglu_shexp, FFs, (uint8_t*) W.sh_hq + (size_t) t * W.sh_hq_s, s,
                           nullptr, nullptr, 0, nullptr, ah_bias, 0, keep, lane ? win_plan : 0ull, promote_min, 0, 0, t,
-                          scr, t0 + T);
+                          row_scratch ? nullptr : scr, t0 + T);
             ++F->expected;
             gf::moe_wait(mt, E, s);
             gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
@@ -922,7 +937,7 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         if (Wm.scr != nullptr) {
             // the claim and sticky words of both groups; words 8 / 9: the claim words that leave group A slots 0-3
             // and group B slots 4-7 (a staggered window's layer halves: fast_moe_window)
-            cudaMemsetAsync(Wm.scr, 0, 4 * sizeof(unsigned int), m->fast_->cs);
+            cudaMemsetAsync(Wm.scr, 0, 5 * sizeof(unsigned int), m->fast_->cs);
             if (Wm.scr_h != nullptr) {
                 // (bits 8-15: the group's own slots, where a clash's fallback stays - moe_route)
                 Wm.scr_h[8] = 0xF0u | (0x0Fu << 8);
@@ -1003,11 +1018,12 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         cudaSetDevice(m->dev_);
         auto& Wm = m->fast_->win;
         if (Wm.scr != nullptr && Wm.scr_h != nullptr)   // both groups' sticky words: [1], [3]
-            cudaMemcpyAsync(Wm.scr_h, Wm.scr + 1, 3 * sizeof(unsigned int), cudaMemcpyDeviceToHost, m->fast_->cs);
+            cudaMemcpyAsync(Wm.scr_h, Wm.scr + 1, 4 * sizeof(unsigned int), cudaMemcpyDeviceToHost, m->fast_->cs);
         cudaStreamSynchronize(m->fast_->cs);
         if (Wm.scr_h != nullptr && ((Wm.scr_h[0] | Wm.scr_h[2]) & 0x80000000u) != 0u) clash = true;
     }
     if (clash && attempt == 0) {
+        ++WH.retries;
         static bool told = false;
         if (!told) {
             told = true;
@@ -1025,6 +1041,11 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         continue;
     }
     break;
+    }
+    ++WH.windows;
+    for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
+        auto& Wm = m->fast_->win;
+        if (Wm.scr_h != nullptr) Wm.reuses += Wm.scr_h[3];
     }
     const cudaError_t e = cudaGetLastError();
     if (e != cudaSuccess) {
@@ -1456,6 +1477,19 @@ bool Glm5Model::window_pipe(const int32_t* tokens, int T, int32_t* out, std::str
 }
 
 void Glm5Model::win_prof_report() {
+    if (fast_ != nullptr) {
+        const auto n = fast_->verify_cpu_batches.exchange(0);
+        const auto rows = fast_->verify_cpu_rows.exchange(0);
+        const auto unique = fast_->verify_cpu_unique.exchange(0);
+        if (n > 0) std::fprintf(stderr, "maya verify CPU: %llu batches, %llu expert entries, %llu unique expert reads\n",
+                               (unsigned long long) n, (unsigned long long) rows, (unsigned long long) unique);
+    }
+    if (fast_ != nullptr && fast_->win.windows > 0) {
+        auto& W = fast_->win;
+        std::fprintf(stderr, "maya verify: %llu windows, %llu retries, %llu reused GPU expert rows\n",
+                     (unsigned long long) W.windows, (unsigned long long) W.retries, (unsigned long long) W.reuses);
+        W.windows = W.retries = W.reuses = 0;
+    }
     if (fast_ != nullptr && fast_->win.h_n > 0) {
         auto& W = fast_->win;
         const double n = (double) W.h_n;

@@ -2970,7 +2970,7 @@ struct RouteArgs {
                                 // weights is below this (0: none)
 };
 
-template<bool WARP_SELECT=false>
+template<bool WARP_SELECT=false, bool WIN_REUSE=false>
 __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_constant__ RouteArgs a) {
     const int tid = threadIdx.x, lane = tid & 31;
     // a token past a wrong draft (set_skip): every expert not in VRAM is left out - no fetch, no CPU work, no counts
@@ -3169,6 +3169,17 @@ __global__ void __launch_bounds__(ROUTE_THREADS) moe_route_kernel(const __grid_c
             s_w[i] = w;
             const size_t key = (size_t) a.layer * E + s_ids[i];
             unsigned long long ptr = a.d.tab[key];
+            if constexpr (WIN_REUSE) {
+                if (ptr == 0ull && a.d.win_prev_ptr != nullptr) {
+                    for (int j = 0; j < a.d.win_prev_n; ++j) {
+                        if (a.d.win_prev_id[j] == s_ids[i] && a.d.win_prev_ptr[j] != 0ull) {
+                            ptr = a.d.win_prev_ptr[j];
+                            if (a.d.win_reuses != nullptr) ++*a.d.win_reuses;
+                            break;
+                        }
+                    }
+                }
+            }
             unsigned long long src = 0ull;
             s_pp[i] = 0ull;
             s_cs[i] = 0ull;
@@ -4717,7 +4728,11 @@ void moe_route(const float* logits, const float* bias, int n_expert, int k, floa
     }
     const int blocks = 1 + (n_ff_sh + ROUTE_THREADS - 1) / ROUTE_THREADS;
     static const bool warp_select=[] {const char* v=getenv("MAYA_ROUTE_WARP");return v && std::atoi(v)>0;}();
-    if(warp_select)moe_route_kernel<true><<<blocks,ROUTE_THREADS,0,s>>>(a);
+    if (d.win_prev_ptr != nullptr) {
+        if (warp_select) moe_route_kernel<true,true><<<blocks,ROUTE_THREADS,0,s>>>(a);
+        else moe_route_kernel<false,true><<<blocks,ROUTE_THREADS,0,s>>>(a);
+    }
+    else if(warp_select)moe_route_kernel<true><<<blocks,ROUTE_THREADS,0,s>>>(a);
     else moe_route_kernel<false><<<blocks, ROUTE_THREADS, 0, s>>>(a);
     launch_check("moe_route");
 }

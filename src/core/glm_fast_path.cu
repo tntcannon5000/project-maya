@@ -820,6 +820,7 @@ bool Glm5Model::fast_setup(std::string& err) {
                 32 * q8;
         need += 64 * 256 + (size_t) (2 * NL * g.n_expert + NL * gf::kSpares) * sizeof(unsigned long long) +
                 8 * 16 + 4096 * 4 + 4 * 256 + (size_t) g.n_expert * 4 + 256 + 4 * 256;
+        need += 128 * sizeof(unsigned long long); // optional per-row verification scratch addresses
         need += (size_t) gf::kAhead * g.n_expert * sizeof(float) + 256 + (size_t) E * sizeof(float) + 256;
         need += (size_t) g.n_sel_max() * sizeof(int) + 256;   // slot_cells
     }
@@ -880,7 +881,7 @@ bool Glm5Model::fast_setup(std::string& err) {
         at, (size_t) (2 * F->n_keys + NL * gf::kSpares) * sizeof(unsigned long long));
     F->md.tab = F->tab;
     F->md.n_keys = F->n_keys;
-    F->md.scratch = (unsigned long long*) fa_take_b(at, 8 * sizeof(unsigned long long));
+    F->md.scratch = (unsigned long long*) fa_take_b(at, 128 * sizeof(unsigned long long));
     F->md.fetch_src = (unsigned long long*) fa_take_b(at, 8 * sizeof(unsigned long long));
     for (int b2 = 0; b2 < 2; ++b2) {
         F->pf_buf[b2] = (unsigned long long*) fa_take_b(at, 16 * sizeof(unsigned long long));
@@ -952,14 +953,21 @@ bool Glm5Model::fast_setup(std::string& err) {
     if (n_moe > 0) {
         // the scratch slots: a fetched expert that found no spare lands here (8 = one per routed entry)
         const size_t sstride = (blob_max + 255u) & ~(size_t) 255u;
-        if (cudaMalloc(&F->scratch, 8 * sstride) != cudaSuccess) {
+        if (const char* v = getenv("MAYA_WIN_SCRATCH")) F->scratch_count = std::atoi(v);
+        if (F->scratch_count < 8 || F->scratch_count > 128 || F->scratch_count % 8 != 0) {
+            err = "MAYA_WIN_SCRATCH must be a multiple of 8 between 8 and 128";
+            return false;
+        }
+        if (cudaMalloc(&F->scratch, (size_t) F->scratch_count * sstride) != cudaSuccess) {
             err = "glm fast: the scratch slots did not allocate";
             return false;
         }
         {
-            unsigned long long sp[8];
-            for (int i = 0; i < 8; ++i) sp[i] = (unsigned long long) (F->scratch + (size_t) i * sstride);
-            cudaMemcpy(F->md.scratch, sp, sizeof sp, cudaMemcpyHostToDevice);
+            std::vector<unsigned long long> sp((size_t) F->scratch_count);
+            for (int i = 0; i < F->scratch_count; ++i) sp[i] = (unsigned long long) (F->scratch + (size_t) i * sstride);
+            cudaMemcpy(F->md.scratch, sp.data(), sp.size() * sizeof(sp[0]), cudaMemcpyHostToDevice);
+            std::fprintf(stderr, "maya verify scratch: %d slots, %.1f MiB reserved before expert-pool sizing\n",
+                         F->scratch_count, (double) F->scratch_count * sstride / (1 << 20));
         }
         // a parallel split load: the parts pin their prompt paths, size their pools and plan their RAM tiers one at a
         // time, in part order - the first part's RAM measurement then sees none of the later parts' prompt staging, as
@@ -2072,6 +2080,11 @@ void Glm5Model::win_cpu_merged(int il, int nb, const gf::MoeRequest* const* rq, 
                 u_ent[u][u_n[u]++] = e;
             }
     const size_t act_b = kc::kNativeActBytes, h_b = kc::kNativeHBytes;
+    uint64_t entries = 0;
+    for (int j = 0; j < nb; ++j) entries += ne[j];
+    F->verify_cpu_batches.fetch_add(1, std::memory_order_relaxed);
+    F->verify_cpu_rows.fetch_add(entries, std::memory_order_relaxed);
+    F->verify_cpu_unique.fetch_add(nu, std::memory_order_relaxed);
     if (!Ly.exl3)
         for (int j = 0; j < nb; ++j) kc::native_quant_act(nf, rq[j]->x, C.act.data() + (size_t) j * act_b);
     // the distinct experts into two halves of about equal cost (greedy, costliest first)
@@ -2615,7 +2628,14 @@ bool Glm5Model::fast_cpu_lane_setup(std::string& err) {
     }();
     if (!shared && n_parts_ == 1 && dflash_on_ && win_lanes != 0) {
         const auto groups = cpu_groups();
-        if (groups.size() >= 2 && groups[0].first >= 0) {
+        const char* single = getenv("MAYA_WIN_SINGLE_NODE_BATCH");
+        if (single != nullptr && std::atoi(single) != 0 && threads >= 4) {
+            // Only the verification path uses these pools; decode keeps its calibrated pool.
+            const int a = threads / 2, b = threads - a;
+            win_lanes_make(std::make_shared<glmfast::Workers>(a - 1, 20000, std::vector<int>{}),
+                           std::make_shared<glmfast::Workers>(b - 1, 20000, std::vector<int>{}), {}, {});
+            std::fprintf(stderr, "maya verify CPU: single-node merged rows on %d + %d threads\n", a, b);
+        } else if (groups.size() >= 2 && groups[0].first >= 0) {
             const int gn = gpu_numa_node(dev_);
             size_t a = 0;
             for (size_t i = 0; i < groups.size(); ++i)

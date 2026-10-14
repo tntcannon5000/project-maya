@@ -205,6 +205,11 @@ struct MoeDev {
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted
+    // Earlier rows in the same verification group, whose fetches completed on this stream.
+    const unsigned long long* win_prev_ptr = nullptr;
+    const int* win_prev_id = nullptr;
+    int win_prev_n = 0;
+    unsigned int* win_reuses = nullptr;
     unsigned long long* plan_ptr = nullptr;    // [8]
     float* plan_w = nullptr;                   // [8]
     int* plan_id = nullptr;                    // [8]

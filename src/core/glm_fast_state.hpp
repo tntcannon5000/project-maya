@@ -447,6 +447,8 @@ struct Glm5Model::FastState {
     uint32_t upd_g = 0;
     int n_keys = 0;
     uint8_t* scratch = nullptr;
+    int scratch_count = 8;
+    std::atomic<uint64_t> verify_cpu_batches{0}, verify_cpu_rows{0}, verify_cpu_unique{0};
     std::vector<uint8_t*> stage;   // pinned: disk reads when no RAM slot is free
     size_t stage_bytes = 0;        // ... each (an expert's blob); the start's uploads go through stage[0] too
     std::mutex mu;   // the service thread vs the between-token boundary
@@ -540,6 +542,7 @@ struct Glm5Model::FastState {
         gf::CpuAnswer* ans_h[16] = {};      // host-mapped answer slots for tokens 1.. (token 0: cpu_ans_h)
         void* ans_d[16] = {};
         bool per_token = false;             // the batched MoE off for this pass (the redo after a scratch clash)
+        uint64_t windows = 0, retries = 0, reuses = 0;
         int pipe_t = -1;                    // window_pipe: the token whose layers are being enqueued (its KDA inputs
                                             // to kin row pipe_t); -1 otherwise
         void mark(const char* nm, cudaStream_t st) {
