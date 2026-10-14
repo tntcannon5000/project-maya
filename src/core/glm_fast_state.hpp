@@ -460,6 +460,9 @@ struct Glm5Model::FastState {
     std::atomic<uint64_t> route_ring_laps{0}, route_ring_skipped{0};
     int window_owner_diag_next = 0;
     uint64_t window_owner_diag_boundaries = 0;
+    bool window_weight_verify_claimed = false, window_weight_verify_active = false;
+    uint64_t window_weight_verify_experts = 0, window_weight_verify_bytes = 0;
+    uint64_t window_weight_verify_layers = 0, window_weight_verify_skips = 0;
     std::mutex mu;   // the service thread vs the between-token boundary
     std::unique_ptr<glmfast::Workers> workers;   // parallel disk reads
     // ---- the CPU LANE (STRATA_GLM_CPU_LANE=<threads>, 0 off): a route's RAM-tier experts split between the device's

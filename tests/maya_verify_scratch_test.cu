@@ -22,10 +22,16 @@ int main(int argc, char** argv) {
     if (f == nullptr) return 4;
     std::vector<float> logits;
     const bool trace = std::getenv("MAYA_VERIFY_TRACE") != nullptr;
-    for (int rep = 0; rep < 2; ++rep) {
+    const char* reps_env = std::getenv("MAYA_VERIFY_REPEATS");
+    const char* steps_env = std::getenv("MAYA_VERIFY_STEPS");
+    const int repeats = reps_env ? std::atoi(reps_env) : 2;
+    const int steps = steps_env ? std::atoi(steps_env) : 14;
+    if (repeats < 1 || repeats > 2 || steps < 1 || steps > 14) return 2;
+    std::fprintf(stderr, "verify fixture: repeats=%d, max windows/repeat=%d\n", repeats, steps);
+    for (int rep = 0; rep < repeats; ++rep) {
         m.reset();
         if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+40), logits, err)) return 5;
-        for (int pos=40, step=0; pos < 104; ++step) {
+        for (int pos=40, step=0; pos < 104 && step < steps; ++step) {
             if (trace && rep == 1 && step == 0) cudaProfilerStart();
             const int T = step % 2 == 0 ? 5 : 8;
             int32_t picks[8];
@@ -44,5 +50,5 @@ int main(int argc, char** argv) {
         m.win_prof_report();
     }
     std::fclose(f);
-    std::puts("PASS finite logits, partial commits, reset and repeat");
+    std::printf("PASS finite logits and partial commits (%d repeat(s), max %d windows/repeat)\n", repeats, steps);
 }

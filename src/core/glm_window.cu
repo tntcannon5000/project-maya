@@ -65,6 +65,17 @@ int win_owner_diag_limit() {
     return limit;
 }
 
+int64_t win_weight_verify_p0() {
+    static const int64_t p0 = [] {
+        const char* v = getenv("MAYA_WIN_WEIGHT_VERIFY_P0");
+        if (v == nullptr || *v == '\0') return (int64_t) -1;
+        char* end = nullptr;
+        const long long n = std::strtoll(v, &end, 10);
+        return end != v && *end == '\0' && n >= 0 ? (int64_t) n : (int64_t) -1;
+    }();
+    return p0;
+}
+
 float* take_f(uint8_t*& at, size_t floats) {
     float* p = (float*) at;
     at += (floats * sizeof(float) + 255u) & ~(size_t) 255u;
@@ -694,6 +705,117 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             if (prof_b) W.mark("moe_fetch_completion_join", s);
         }
         }
+        if (F->window_weight_verify_active) {
+            if (part != 0 || t0 != 0 || T != W.T || Ly.exl3 || F->cpu_plan != 0ull ||
+                !row_scratch || keep < g.n_exp_used) {
+                ++F->window_weight_verify_skips;
+                std::fprintf(stderr, "maya weight diagnostic CUDA%d p0=%lld layer=%d: skipped incomplete/native/GPU-only "
+                                     "scope (part=%d t0=%d T=%d cpu=%d EXL3=%d row_scratch=%d keep=%d)\n",
+                             dev_, (long long) W.p0, il, part, t0, T, F->cpu_plan != 0ull ? 1 : 0,
+                             Ly.exl3 ? 1 : 0, row_scratch ? 1 : 0, keep);
+            } else {
+                if (!pack_ || il < 0 || il >= (int) pack_layers_.size() || g.n_exp_used < 1 || g.n_exp_used > 8 ||
+                    T < 1 || T > kWinMax || Ly.gu_bytes == 0 || Ly.dn_bytes == 0 ||
+                    Ly.down_off != 2 * Ly.gu_bytes || Ly.blob != 2 * Ly.gu_bytes + Ly.dn_bytes) {
+                    err = "maya weight diagnostic: unavailable native pack or invalid active blob layout";
+                    return false;
+                }
+                const auto& nl = pack_layers_[(size_t) il];
+                if (nl.x_cb >= 0) { err = "maya weight diagnostic: native pack source is EXL3"; return false; }
+                std::array<int, kWinMax * 8> ids{};
+                std::array<unsigned long long, kWinMax * 8> ptr{}, src{};
+                const size_t entries = (size_t) T * 8;
+                if (!glmfast::cuda_ok(cudaMemcpyAsync(ids.data(), W.mplan_id, entries * sizeof(int),
+                                                      cudaMemcpyDeviceToHost, s), "weight diagnostic IDs", err) ||
+                    !glmfast::cuda_ok(cudaMemcpyAsync(ptr.data(), W.mplan_ptr, entries * sizeof(ptr[0]),
+                                                      cudaMemcpyDeviceToHost, s), "weight diagnostic plans", err) ||
+                    !glmfast::cuda_ok(cudaMemcpyAsync(src.data(), W.mfetch, entries * sizeof(src[0]),
+                                                      cudaMemcpyDeviceToHost, s), "weight diagnostic sources", err) ||
+                    !glmfast::cuda_ok(cudaStreamSynchronize(s), "weight diagnostic fetch join/readback", err)) return false;
+                const auto& P = F->lp[(size_t) il];
+                const auto in_slots = [&](unsigned long long p, const uint8_t* base, size_t n, size_t stride) {
+                    const auto b = (unsigned long long) base;
+                    return base != nullptr && stride >= Ly.blob && p >= b && p - b < n * stride &&
+                           (p - b) % stride == 0;
+                };
+                const auto source_name = [&](unsigned long long p) {
+                    if (p == 0ull) return "resident-or-borrowed";
+                    for (const auto& R : F->rc)
+                        if (in_slots(p, R.base, (size_t) R.n, R.stride)) return "RAM-tier";
+                    if (in_slots(p, F->win_fetch_stage, F->win_fetch_stage_n, F->stage_bytes)) return "window-disk-stage";
+                    for (const auto* q : F->stage)
+                        if (p == (unsigned long long) q) return "legacy-disk-stage";
+                    return "unknown-source";
+                };
+                std::vector<std::pair<int, unsigned long long>> seen;
+                std::vector<uint8_t> expected(Ly.blob), actual(Ly.blob);
+                for (int t = 0; t < T; ++t)
+                    for (int i = 0; i < g.n_exp_used; ++i) {
+                        const size_t at = (size_t) t * 8 + i;
+                        const int e = ids[at];
+                        const auto p = ptr[at];
+                        const bool permanent = in_slots(p, P.base, (size_t) P.n_main, P.stride) ||
+                                               in_slots(p, P.xbase, (size_t) (P.n - P.n_main), P.stride);
+                        const bool scratch = in_slots(p, F->scratch, (size_t) F->scratch_count, F->stage_bytes);
+                        if (e < 0 || e >= g.n_expert || p == 0ull || (!permanent && !scratch)) {
+                            err = "maya weight diagnostic: invalid expert ID or GPU destination pointer";
+                            return false;
+                        }
+                        if (std::strcmp(source_name(src[at]), "unknown-source") == 0) {
+                            err = "maya weight diagnostic: fetch source is outside stable RAM/staging allocations";
+                            return false;
+                        }
+                        const std::pair<int, unsigned long long> pair{e, p};
+                        if (std::find(seen.begin(), seen.end(), pair) != seen.end()) continue;
+                        seen.push_back(pair);
+                        const int shard[3] = {nl.gate_shard, nl.up_shard, nl.down_shard};
+                        const uint64_t off[3] = {nl.gate_off, nl.up_off, nl.down_off};
+                        for (int r = 0; r < 3; ++r) {
+                            const size_t bytes = r == 2 ? Ly.dn_bytes : Ly.gu_bytes;
+                            if (shard[r] < 0 || shard[r] >= (int) pack_shards_.size()) {
+                                err = "maya weight diagnostic: missing immutable pack shard";
+                                return false;
+                            }
+                            const auto& sh = pack_shards_[(size_t) shard[r]];
+                            // Packed views may be released after loading; read_slice
+                            // still reads through the retained platform file handle.
+                            const bool source_available = sh.base != nullptr ||
+#if defined(_WIN32)
+                                (sh.h_direct != nullptr && sh.h_direct != (void*) (intptr_t) -1);
+#else
+                                sh.fd_direct >= 0 || sh.fd >= 0;
+#endif
+                            if (!source_available || off[r] > sh.size || bytes > sh.size - off[r] ||
+                                (uint64_t) e > (sh.size - off[r] - bytes) / bytes) {
+                                err = "maya weight diagnostic: immutable pack source range is unavailable";
+                                return false;
+                            }
+                            fast_read_part(il, e, r, expected.data());
+                        }
+                        if (!glmfast::cuda_ok(cudaMemcpyAsync(actual.data(), (const void*) p, Ly.blob,
+                                                              cudaMemcpyDeviceToHost, s), "weight diagnostic expert", err) ||
+                            !glmfast::cuda_ok(cudaStreamSynchronize(s), "weight diagnostic expert sync", err)) return false;
+                        const auto bad = std::mismatch(actual.begin(), actual.end(), expected.begin());
+                        if (bad.first != actual.end()) {
+                            char b[384];
+                            std::snprintf(b, sizeof b, "maya weight diagnostic CUDA%d p0=%lld layer=%d token=%d rank=%d "
+                                                      "expert=%d pointer=%llu destination=%s source=%s byte=%llu "
+                                                      "verified_before=%llu/%llu: immutable pack mismatch", dev_,
+                                          (long long) W.p0, il, t, i, e, p, permanent ? "permanent" : "scratch",
+                                          source_name(src[at]), (unsigned long long) (bad.first - actual.begin()),
+                                          (unsigned long long) F->window_weight_verify_experts,
+                                          (unsigned long long) F->window_weight_verify_bytes);
+                            err = b;
+                            std::fprintf(stderr, "%s\n", b);
+                            return false;
+                        }
+                        ++F->window_weight_verify_experts;
+                        F->window_weight_verify_bytes += Ly.blob;
+                    }
+                ++F->window_weight_verify_layers;
+                if (prof_b) W.mark("weight_diag_perturbation", s);
+            }
+        }
         if (part == 1) return true;
         const float* sh_out = nullptr;
         if (Ly.sh_down.q != nullptr) {
@@ -964,6 +1086,11 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         err = "glm window: a staggered group on the token-by-token path";
         return false;
     }
+    if (F->window_weight_verify_active) {
+        ++F->window_weight_verify_skips;
+        std::fprintf(stderr, "maya weight diagnostic CUDA%d p0=%lld layer=%d: skipped token-path fallback\n",
+                     dev_, (long long) W.p0, il);
+    }
     for (int t = t0; t < t0 + T; ++t) {
         const float* x = W.x + (size_t) t * E;
         const void* xq = (const uint8_t*) W.xq + (size_t) t * W.xq_s;
@@ -1219,6 +1346,17 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
         m->fast_->win.p0 = p0;
         m->fast_->win.T = T;
         m->fast_->win.per_token = false;
+        if (win_weight_verify_p0() >= 0) {
+            auto* Fm = m->fast_;
+            Fm->window_weight_verify_active = !Fm->window_weight_verify_claimed && p0 == win_weight_verify_p0();
+            if (Fm->window_weight_verify_active) {
+                Fm->window_weight_verify_claimed = true;
+                Fm->window_weight_verify_experts = Fm->window_weight_verify_bytes = 0;
+                Fm->window_weight_verify_layers = Fm->window_weight_verify_skips = 0;
+                std::fprintf(stderr, "maya weight diagnostic CUDA%d p0=%lld T=%d: first matching window selected; "
+                                     "full immutable-pack byte readbacks perturb timing\n", m->dev_, (long long) p0, T);
+            }
+        }
         auto& Wm = m->fast_->win;
         if (Wm.scr != nullptr) {
             // the claim and sticky words of both groups; words 8 / 9: the claim words that leave group A slots 0-3
@@ -1356,6 +1494,17 @@ bool Glm5Model::window(const int32_t* tokens, int T, int32_t* out, std::string& 
     }
     for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
         m->pos_ = p0 + T;
+        if (m->fast_->window_weight_verify_active) {
+            auto* Fm = m->fast_;
+            std::fprintf(stderr, "maya weight diagnostic CUDA%d p0=%lld: %llu layer scopes, %llu expert/pointer pairs, "
+                                 "%llu bytes verified against immutable pack, %llu skipped scopes "
+                                 "(synchronous diagnostic; first match only)\n", m->dev_, (long long) p0,
+                         (unsigned long long) Fm->window_weight_verify_layers,
+                         (unsigned long long) Fm->window_weight_verify_experts,
+                         (unsigned long long) Fm->window_weight_verify_bytes,
+                         (unsigned long long) Fm->window_weight_verify_skips);
+            Fm->window_weight_verify_active = false;
+        }
         auto& W = m->fast_->win;
         if (W.uid != nullptr) {
             cudaMemcpy(W.uid_h.data(), W.uid, W.uid_h.size() * sizeof(int), cudaMemcpyDeviceToHost);

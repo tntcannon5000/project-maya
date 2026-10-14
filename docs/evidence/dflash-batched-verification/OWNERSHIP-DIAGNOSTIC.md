@@ -29,3 +29,31 @@ both cases and confirm matching actual RAM/GPU cache sizes in the logs.
 `MAYA_WIN_ASYNC_FETCH=1` also implies that staging allocation. Pressure serial
 self-comparison previously differed from row 14, so an async-only cause has
 not been established by the earlier pressure pair.
+
+## Used-expert immutable pack audit
+
+`MAYA_WIN_WEIGHT_VERIFY_P0=60` selects only the first `window()` starting at
+position 60 in each device's model lifetime. Reset/repeat does not select it
+again. In the fixed-input fixture this is the sixth window, whose logit rows
+31..38 include the first combined-HC mismatch at row 34.
+
+After routed fetch completion and before expert consumers, every distinct
+`(expert ID, GPU pointer)` pair in each eligible layer is compared byte for byte
+against a private reference read directly from the immutable pack shards.
+The check includes resident/main/tail, promoted, scratch and borrowed GPU
+destinations. It verifies `Ly.blob` active bytes, excluding slot-stride padding.
+Shard ranges, expert IDs, destination ranges and RAM/staging source ranges are
+validated before comparison. A mismatch aborts with device, position, layer,
+token, rank, expert, pointer, provenance and first differing byte offset.
+
+The initial diagnostic supports complete full-layer native GGUF groups with
+CPU placement disabled and sufficient row scratch. EXL3, split/staggered
+groups, omitted experts and token-path fallbacks explicitly report skipped
+coverage. The summary counts verified layer scopes, expert/pointer pairs,
+bytes and skipped scopes. An all-zero skipped count is required for complete
+coverage of routed expert weights in the selected window.
+
+This performs full model-weight disk reads and GPU readbacks for one window;
+it can substantially change timing and cache retirement. Passing it covers
+the bytes observed before those consumers, not all later windows, shared/dense
+weights, activation arithmetic or unperturbed execution.
