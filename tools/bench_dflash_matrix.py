@@ -21,11 +21,15 @@ def main():
     ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
     ap.add_argument('--env',action='append',default=[])
     ap.add_argument('--cancel-smoke',action='store_true')
+    ap.add_argument('--prompt-file',type=Path)
+    ap.add_argument('--tokens',type=int,default=192)
     a=ap.parse_args();OUT=a.out.resolve()
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
-    ids = tok.encode('[gMASK]<sop><|user|>\n'+PROMPT+'<|assistant|>\n</think>', parse_special=True)
+    prompt=a.prompt_file.read_text(encoding='utf-8') if a.prompt_file else PROMPT
+    if a.tokens < 1:ap.error('--tokens must be positive')
+    ids = tok.encode('[gMASK]<sop><|user|>\n'+prompt+'<|assistant|>\n</think>', parse_special=True)
     exe = a.exe.resolve()
     for quant in a.quant:
         out = OUT/quant
@@ -43,10 +47,10 @@ def main():
         draft = DRAFT/f'GLM-5.3-Flash-DFlash2-{quant}.gguf'
         cmd = [str(exe), '--serve', *cfg['args'], '--parallel', '1', '--dflash', str(draft),
                '--spec-min-p', '0', '--short-read', '0', '--prompt-cache', '0', '--kv-streaming', 'off']
-        manifest = dict(command=cmd, environment={k:v for k,v in env.items() if k.startswith(('STRATA_', 'MAYA_'))}, prompt=PROMPT, prompt_ids=ids,
+        manifest = dict(command=cmd, environment={k:v for k,v in env.items() if k.startswith(('STRATA_', 'MAYA_'))}, prompt=prompt, prompt_ids=ids,
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
-                        context_capacity=131072, output_cap=192,
+                        context_capacity=131072, occupied_prompt_tokens=len(ids), output_cap=a.tokens,
                         width_order=list(map(int,a.widths.split(','))), stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]
@@ -62,7 +66,7 @@ def main():
             try:
                 while not read().startswith('READY'): pass
                 print(quant,'READY',flush=True)
-                requests=[('warmup',0,192),('control',0,192)]+[('matrix',w,192) for w in manifest['width_order']]
+                requests=[('warmup',0,a.tokens),('control',0,a.tokens)]+[('matrix',w,a.tokens) for w in manifest['width_order']]
                 if a.cancel_smoke:requests += [('cancel',4,192),('recovery',2,32)]
                 for name,width,n in requests:
                     before=len(stats.read_text().splitlines()) if stats.exists() else 0

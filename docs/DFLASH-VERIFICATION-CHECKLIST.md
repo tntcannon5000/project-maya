@@ -3,7 +3,7 @@
 - [x] Preserve prior checkpoint and create isolated research branch.
 - [x] Record objective, controls, qualification rules and decision sequence.
 - [x] Delegate focused GPU and scheduling source investigations.
-- [ ] Collect width-2/4 diagnostic breakdown on retained baseline.
+- [x] Collect width-2/4 diagnostic breakdown on retained baseline.
 - [ ] Measure group-size distribution and potential expert-weight reuse.
 - [ ] Rank complete candidate designs and bound attainable savings.
 - [ ] Implement the highest-value complete prototype with engagement counters.
