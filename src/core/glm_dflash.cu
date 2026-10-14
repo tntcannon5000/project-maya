@@ -63,6 +63,13 @@ struct BlkQ6K {
     int8_t scales[16];
     __half d;
 };
+struct BlkQ5K {
+    __half2 dm;
+    uint8_t scales[12];
+    uint8_t qh[32];
+    uint8_t qs[128];
+};
+static_assert(sizeof(BlkQ5K) == 176, "ggml Q5_K block layout");
 static_assert(sizeof(BlkQ8_0) == 34 && sizeof(BlkQ4K) == 144 && sizeof(BlkQ6K) == 210, "ggml block layouts");
 
 constexpr int kTopKMax = 32;    // selector candidates a row (the GGUF's selector_top_k)
@@ -523,6 +530,21 @@ __device__ float tab_at(const uint8_t* tab, int type, int rank, int row, int e) 
             const int v = hi ? b >> 4 : b & 0xF;
             return __low2float(q->dm) * (float) sc * (float) v - __high2float(q->dm) * (float) mn;
         }
+        case 13: {   // Q5_K: Q4_K's affine scales plus one high bit per value
+            const BlkQ5K* q = (const BlkQ5K*) tab + (size_t) row * (rank / 256) + e / 256;
+            const int r = e % 256, j = r / 64, l = r % 32, hi = (r % 64) >= 32, is = 2 * j + hi;
+            uint8_t sc, mn;
+            if (is < 4) {
+                sc = q->scales[is] & 63;
+                mn = q->scales[is + 4] & 63;
+            } else {
+                sc = (q->scales[is + 4] & 0xF) | ((q->scales[is - 4] >> 6) << 4);
+                mn = (q->scales[is + 4] >> 4) | ((q->scales[is] >> 6) << 4);
+            }
+            const uint8_t b = q->qs[32 * j + l];
+            const int v = (hi ? b >> 4 : b & 0xF) | (((q->qh[l] >> is) & 1) << 4);
+            return __low2float(q->dm) * (float) sc * (float) v - __high2float(q->dm) * (float) mn;
+        }
         case 14: {   // Q6_K
             const BlkQ6K* q = (const BlkQ6K*) tab + (size_t) row * (rank / 256) + e / 256;
             const int r = e % 256, n = r / 128, rr = r % 128, qt = rr / 32, l = rr % 32, is = l / 16;
@@ -886,10 +908,10 @@ bool GlmDflash::load(const std::string& path, int dev, std::string& err) {
         m.sel_type = (int) ip->second.second->type;
         const int st = m.sel_type;
         const bool ok = st == 0 || st == 1 || st == 30 || (st == 8 && m.rank % 32 == 0) ||
-                        ((st == 12 || st == 14) && m.rank % 256 == 0);
+                        ((st == 12 || st == 13 || st == 14) && m.rank % 256 == 0);
         if (!ok) {
             err = std::string("glm dflash: selector tables in ") + ip->second.second->type_name() +
-                  " (F32 / F16 / BF16 / Q8_0 / Q4_K / Q6_K are read)";
+                  " (F32 / F16 / BF16 / Q8_0 / Q4_K / Q5_K / Q6_K are read)";
             return false;
         }
         m.sel_prev = (const uint8_t*) ip->second.first;
