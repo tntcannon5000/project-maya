@@ -1,0 +1,22 @@
+{
+  "cpu": "AMD Ryzen 9 9950X3D 16-Core Processor          ",
+  "gpu": "NVIDIA GeForce RTX 5090, 610.88, 32607 MiB",
+  "memory": [
+    {
+      "Capacity": 34359738368,
+      "ConfiguredClockSpeed": 6000
+    },
+    {
+      "Capacity": 34359738368,
+      "ConfiguredClockSpeed": 6000
+    },
+    {
+      "Capacity": 34359738368,
+      "ConfiguredClockSpeed": 6000
+    },
+    {
+      "Capacity": 34359738368,
+      "ConfiguredClockSpeed": 6000
+    }
+  ]
+}

@@ -14,14 +14,14 @@ PROMPTS=[
  'Write a complete Python CSV import service for a task dashboard, with schema validation, duplicate handling, error reporting, SQLite transactions and pytest tests. Include full implementation code.',
  'Write a complete TypeScript API client and React query hooks for a task dashboard, with authentication, retries, pagination, optimistic updates and tests. Include full implementation code.']
 IDS=[TOK.encode('[gMASK]<sop><|user|>\n'+p+'<|assistant|>\n</think>',parse_special=True) for p in PROMPTS]
-def run(branch, executable=None):
+def run(branch, executable=None, tokens=512):
  out=OUT/branch; out.mkdir(parents=True,exist_ok=False)
  exe=Path(executable) if executable else ((R.parent/'project-maya-upstream-v1.1.7/build/strata.exe') if branch=='upstream' else R/'build/strata.exe')
  env={k:v for k,v in os.environ.items() if not k.startswith(('STRATA_','MAYA_'))}; env.update(BASE)
  if branch=='retained':env.update(RETAINED)
  env['PATH']=r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\x64;'+env['PATH']
  cmd=[str(exe),'--serve','--glm-pack',str(PACK),'--max-context','32768','--parallel','4','--prefill','auto','--expert-profile',str(R/'data/expert-profile-glm.bin'),'--short-read','0','--prompt-cache','0','--suffix-draft','0']
- (out/'manifest.json').write_text(json.dumps(dict(command=cmd,environment={k:v for k,v in env.items() if k.startswith(('STRATA_','MAYA_'))},binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),prompts=PROMPTS,prompt_ids=IDS,context_per_slot=32768,max_tokens=512,repeats=2),indent=2))
+ (out/'manifest.json').write_text(json.dumps(dict(command=cmd,environment={k:v for k,v in env.items() if k.startswith(('STRATA_','MAYA_'))},binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),prompts=PROMPTS,prompt_ids=IDS,context_per_slot=32768,max_tokens=tokens,repeats=2),indent=2))
  results=[]; memory=[]; stopped=threading.Event()
  def monitor():
   start=time.monotonic()
@@ -43,7 +43,7 @@ def run(branch, executable=None):
      print(branch,line.strip(),flush=True);break
    for rep in range(2):
     start=time.perf_counter(); req={i:dict(prompt_ids=ids,output_ids=[],arrivals_ms=[]) for i,ids in enumerate(IDS)};done=set()
-    p.stdin.write(''.join(f'GEN 512 temperature=0 rid={i} '+','.join(map(str,ids))+'\n' for i,ids in enumerate(IDS)));p.stdin.flush()
+    p.stdin.write(''.join(f'GEN {tokens} temperature=0 rid={i} '+','.join(map(str,ids))+'\n' for i,ids in enumerate(IDS)));p.stdin.flush()
     while len(done)<4:
      line=p.stdout.readline();now=(time.perf_counter()-start)*1000;wire.write(line);wire.flush()
      if not line:raise RuntimeError('exit during requests')

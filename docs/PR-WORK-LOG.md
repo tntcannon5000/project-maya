@@ -33,6 +33,7 @@
 - **Transition eviction:** workload-dependent; can change CPU/GPU assignment and hence hybrid floating-point results. Short repeated coding prompts do not establish universal gains across task transitions or model families.
 - **Warp routing:** measured on NVIDIA; AMD wave behavior and compilation/runtime portability remain unqualified.
 - **Polling/CPU pipeline:** PAUSE behavior and worker scheduling vary by CPU/OS. The pause opt-in specifically affects Windows x86; the existing non-Windows behavior remains in place.
+- **Local CUDA binary:** built for SM120 on this RTX 5090. This executable is not a portability test or a generic binary for older GPUs; other devices need their own supported build.
 - **Fixed 22 GiB GPU pool, expert profile, 192K capacity and local paths:** benchmark configuration, not product defaults. Smaller cards and foreground workloads need capacity/headroom planning.
 - **Diagnostic overhead:** counters and dormant experimental branches remain in the research source; opt-in does not mean zero code-size or dispatch overhead. Validate an all-flags-off build before claiming stock-equivalent default performance.
 
@@ -47,6 +48,11 @@
 ## Validation
 
 - Build and focused CPU tests: `native_split_test` and `native_rows_exact_test` passed after the merge.
-- Before/after inference results and numerical checks: see `evidence/maya-release-integration/RESULTS.md` when qualification completes.
+- Short serial-prefill GPU-only decode: all 39,649,280 before/after logits are exactly equal, including the repeated request; live ownership and sampled immutable backing bytes pass verification.
+- Long batched-prefill GPU-only control is not bit-stable across repeats in the old binary, merged binary or stock v1.1.7. Turning fused SwiGLU off does not resolve it. Report this as unresolved exact long-prefill qualification, not a parity pass or proven merge regression. All 256 greedy choices matched between stock and merged in this diagnostic.
+- Hybrid results differ when residency/backend assignments change; the short fixture matches exactly until its first changed expert-assignment counters. Do not claim exact hybrid parity.
+- Cancellation after eight tokens, recovery generation, repeated requests and process teardown passed on the merged server.
+- Normal-budget short warm decode is 1.6-1.8% lower in two pairs; repeated 8K is flat; repeated c=4 is 41.47 -> 43.04 TPS (+3.8%). At approximately matched RAM capacity, short warm decode is 31.37 -> 32.23 TPS (+2.8%). These are bounded paired results, not a universal zero-regression claim or additive gains.
+- Fresh before/after inference tables: `evidence/maya-release-integration/RESULTS.md`.
 - Historical stock-vs-retained numbers are separate from this merge's incremental effects; do not add gains from individual experiments.
 - No PR opened or external content published. This document is a PR description draft and scope audit; the research branch still requires removal of rejected prototypes and bulk evidence before publishing a clean patch.
