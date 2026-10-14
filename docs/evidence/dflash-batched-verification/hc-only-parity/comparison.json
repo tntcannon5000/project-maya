@@ -1,0 +1,16 @@
+[
+  {
+    "reference": "matched-stage-parity/async-off.f32",
+    "exact": false,
+    "max_abs": 3.635173797607422,
+    "first_row": 170,
+    "greedy_matches": 182
+  },
+  {
+    "reference": "hc-pairs-parity/candidate.f32",
+    "exact": false,
+    "max_abs": 5.505636215209961,
+    "first_row": 34,
+    "greedy_matches": 182
+  }
+]
