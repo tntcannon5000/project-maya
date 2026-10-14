@@ -318,6 +318,14 @@ struct MoeWin {
     size_t down_off = 0;
 };
 constexpr int kMaxWinTokens = kMaxMvCols;   // the window's tokens moe_win_experts groups (16 x 8 entries)
+/// Group the immutable plans and launch the existing routed gate/up + h quantization dispatch.
+/// Planned gate/up component bytes must be ready on s. Keeps MAYA_WIN_GROUPED modes and diagnostic counts.
+bool moe_win_gate_up(int gu_type, const MoeWin& w, cudaStream_t s);
+/// Launch the existing routed down + plan-order combine dispatch over the grouping/hq above. Gate/up,
+/// grouping, and down component bytes must be ready on s; cross-stream callers must join them explicitly.
+/// The plans and group scratch must stay unchanged between the two phases. Keeps grouped modes/counts.
+bool moe_win_down(int d_type, const MoeWin& w, cudaStream_t s);
+/// Original group + gate/up + down + combine sequence and final launch check, retained for unsplit callers.
 bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s);
 /// moe_win_experts' grouping alone (w's plan_ptr, T, k -> grp_ptr / grp_start / grp_ent / n_groups), for kernels of
 /// other formats (EXL3: exl3::win_experts)

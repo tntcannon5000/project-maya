@@ -5389,18 +5389,31 @@ __global__ void moe_win_combine_kernel(const __grid_constant__ MoeWin w) {
 
 }  // namespace
 
-bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
-    if (w.T < 1 || w.T > kMaxWinTokens || w.k > 8 || w.n_ff % GU_ROWS != 0 || w.n_embd % DOWN_ROWS != 0) return false;
+namespace {
+
+bool moe_win_geometry_valid(const MoeWin& w) {
+    return !(w.T < 1 || w.T > kMaxWinTokens || w.k > 8 || w.n_ff % GU_ROWS != 0 || w.n_embd % DOWN_ROWS != 0);
+}
+
+int moe_win_grouped_mode(const MoeWin& w) {
     static const int grouped_env = [] {
         const char* v = getenv("MAYA_WIN_GROUPED");
         return v != nullptr ? std::atoi(v) : 0;
     }();
     // Each stage dispatches its own quant type.  Other formats and wider windows retain the original kernels.
     const bool grouped = grouped_env && w.T <= kWinReuseMembers && w.n_embd % 256 == 0 && w.n_ff % 256 == 0;
-    const bool pairs = grouped && grouped_env == 2;
+    return !grouped ? 0 : grouped_env == 2 ? 2 : 1;
+}
+
+// The wrapper uses these unchecked launch sequences so its single final launch
+// check and unsupported-type behavior stay exactly as before the phase split.
+bool moe_win_gate_up_impl(int gu_type, const MoeWin& w, cudaStream_t s) {
+    if (!moe_win_geometry_valid(w)) return false;
+    const int mode = moe_win_grouped_mode(w);
+    const bool grouped = mode != 0, pairs = mode == 2;
     moe_win_group_kernel<<<1, 32, 0, s>>>(w);
     const int G = w.T * w.k;   // groups at most (the blocks past the real count return at once)
-    const dim3 ggu((unsigned) (w.n_ff / GU_ROWS), (unsigned) G), gdn((unsigned) (w.n_embd / DOWN_ROWS), (unsigned) G);
+    const dim3 ggu((unsigned) (w.n_ff / GU_ROWS), (unsigned) G);
     switch (gu_type) {
 #define GLMF_WGU(T)         case T: moe_win_gu_kernel<T><<<ggu, GU_WARPS * 32, 0, s>>>(w); break;
         GLMF_WGU(16) GLMF_WGU(18) GLMF_WGU(19) GLMF_WGU(23) GLMF_WGU(17) GLMF_WGU(22)
@@ -5416,6 +5429,15 @@ bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
 #undef GLMF_WGU_GROUPED
         default: return false;
     }
+    return true;
+}
+
+bool moe_win_down_impl(int d_type, const MoeWin& w, cudaStream_t s) {
+    if (!moe_win_geometry_valid(w)) return false;
+    const int mode = moe_win_grouped_mode(w);
+    const bool grouped = mode != 0, pairs = mode == 2;
+    const int G = w.T * w.k;
+    const dim3 gdn((unsigned) (w.n_embd / DOWN_ROWS), (unsigned) G);
     switch (d_type) {
 #define GLMF_WDN(T)         case T: moe_win_down_kernel<T><<<gdn, 256, 0, s>>>(w); break;
         GLMF_WDN(16) GLMF_WDN(18) GLMF_WDN(19) GLMF_WDN(23) GLMF_WDN(17) GLMF_WDN(22)
@@ -5432,6 +5454,25 @@ bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
         default: return false;
     }
     moe_win_combine_kernel<<<dim3((unsigned) ((w.n_embd + 255) / 256), (unsigned) w.T), 256, 0, s>>>(w);
+    return true;
+}
+
+}  // namespace
+
+bool moe_win_gate_up(int gu_type, const MoeWin& w, cudaStream_t s) {
+    if (!moe_win_gate_up_impl(gu_type, w, s)) return false;
+    launch_check("moe_win_gate_up");
+    return true;
+}
+
+bool moe_win_down(int d_type, const MoeWin& w, cudaStream_t s) {
+    if (!moe_win_down_impl(d_type, w, s)) return false;
+    launch_check("moe_win_down");
+    return true;
+}
+
+bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
+    if (!moe_win_gate_up_impl(gu_type, w, s) || !moe_win_down_impl(d_type, w, s)) return false;
     launch_check("moe_win_experts");
     return true;
 }
