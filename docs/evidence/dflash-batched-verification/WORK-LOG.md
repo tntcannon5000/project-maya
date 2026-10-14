@@ -115,3 +115,8 @@ round-time change is small, while ordinary decode varies ~5%; do not claim a
 robust speedup. Keep opt-in. Next decisive candidate is moderate window-only
 CPU allocation plus existing merged CPU rows. Bounded RAM-pressure regression
 also checks whether the demotion fix resolves previous non-reproducibility.
+
+Bounded pressure regression passed: RAM64GiB/GPU16GiB, combined HC/paired,
+six alternating windows and partial commits. All 6,040,320 logits (39 rows)
+match the corrected all-memory control exactly. This covers the previously
+observed early pressure failure, not an exhaustive pressure/lifecycle claim.
