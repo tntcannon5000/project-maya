@@ -26,4 +26,4 @@
 - [ ] Check cancellation/recovery and clean teardown.
 - [ ] Commit report, results table, limitations and recommended settings.
 
-Current stage: HC-only and HC/paired whole-model comparisons differ, while the current-binary unchanged control matches exactly. Isolated arithmetic and one-window immutable-weight diagnostics are next. Async overlap did not materially reduce verification round time. No substantial performance gain claimed; all changes remain opt-in research.
+Current stage: missing deferred-demotion submission fixed. Immutable-pack audit passes 42 layers and HC/paired versus corrected control passes 28,188,160 exact logits. Corrected clean throughput comparison is underway. Pressure replay remains outstanding. Async overlap did not materially reduce verification round time. No substantial performance gain claimed; performance candidates remain opt-in research.

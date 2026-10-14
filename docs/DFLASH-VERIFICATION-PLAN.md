@@ -44,3 +44,13 @@ whole-model or TPS comparisons; prior exact repeats alone could share this bug.
 - Implement and qualify exact HC3 phase batching across tokens (same 32-partial reductions, private scratch, no grid spin). If useful, test it with paired expert arithmetic before choosing a retained candidate. Then qualify one writing workload and longer occupied context; avoid a broad suite.
 
 Possible later gate, not current implementation: a window-specific moderate CPU split paired with merged CPU rows. The current window uses the ordinary decode CPU plan or the already-tested all-CPU extreme; neither establishes the best multi-row makespan. Only pursue a bounded middle-point experiment after current arithmetic/ownership isolation. Account for shared RAM bandwidth and CPU tail, distinguish backend arithmetic changes from scheduling parity, and avoid an exhaustive quota sweep.
+
+Next bounded experiment (correctness gate now passed): window-only CPU table
+`011233445`, ordinary decode unchanged at `011223344`, existing single-node
+merged rows enabled. At 4/6/8 RAM experts this assigns one extra expert to CPU;
+the actual mix determines saved transfers. Prior partial-plan merging alone
+saved only 3.3%/5.8% CPU expert rereads and did not establish a robust speed win.
+Test width 4 once against the corrected candidate. Require shorter total and
+verification round times (target at least 5%) before broadening qualification.
+CPU placement changes arithmetic; compare merged/serial with the SAME plan to
+qualify scheduling, rather than demanding GPU-only equality across placements.

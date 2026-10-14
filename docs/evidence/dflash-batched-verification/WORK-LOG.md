@@ -103,3 +103,15 @@ entry before route publication. Bounded immutable-pack audit passed 42 layers,
 1,599 expert/pointer pairs and 14,556,266,496 bytes with no mismatch. Corrected
 control and combined HC/paired full-logit runs follow, without byte diagnostics.
 Performance claims remain gated on validation.
+
+## Corrected clean screen
+
+HC+paired matches corrected control across 28,188,160 logits. Clean coding
+screen (192 output cap, 40 occupied prompt tokens, 128K capacity, RAM94GiB,
+staging matched): control ordinary/two/four drafts = 33.80/39.73/38.19 TPS;
+HC+paired = 35.48/40.96/39.11 TPS. Verify-round times fall 66.340 to 64.395 ms
+and 101.709 to 99.192 ms. Identical output histories/acceptance. The 2.5-3%
+round-time change is small, while ordinary decode varies ~5%; do not claim a
+robust speedup. Keep opt-in. Next decisive candidate is moderate window-only
+CPU allocation plus existing merged CPU rows. Bounded RAM-pressure regression
+also checks whether the demotion fix resolves previous non-reproducibility.
