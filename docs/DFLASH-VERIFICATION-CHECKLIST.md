@@ -6,8 +6,8 @@
 - [x] Collect width-2/4 diagnostic breakdown on retained baseline.
 - [ ] Measure group-size distribution and potential expert-weight reuse.
 - [ ] Rank complete candidate designs and bound attainable savings.
-- [ ] Implement the highest-value complete prototype with engagement counters.
-- [ ] Validate mixed-format controlled-backend logits and window state.
+- [x] Implement first complete grouped Q2/Q3/Q4 prototype with engagement counters.
+- [x] Validate grouped arithmetic: mixed-format logits and window state bit-exact. Scheduling changes require separate validation.
 - [ ] Measure end-to-end TPS and decisive ablations.
 - [ ] Investigate supporting combinations when justified by evidence.
 - [ ] Confirm retained changes on coding/writing, prefill and longer occupied context.

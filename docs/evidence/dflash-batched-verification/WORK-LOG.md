@@ -23,3 +23,9 @@ MAYA_WIN_GROUPED=1 uses native quantized DP4A arithmetic with decoded weights sh
 Instrumentation now separates route / disk wait / fetch and shared down; group diagnostic reads actual slot membership and copied bytes. It deliberately synchronizes, so diagnostic TPS cannot be used as a performance result. Actual on-device branch counters are being added before the diagnostic run. Baseline executable preserved as build/strata-before-grouped-verification.exe.
 
 Next gate: controlled GPU-only full-logit comparison on fixed windows, partial commits and eviction pressure. If exact, run one small end-to-end A/B and inspect group multiplicity. Investigate complete window scheduling only where the split profile supports it. Avoid assuming that all repeated CPU experts should move to GPU: that can increase transfer demand and destroy overlap.
+
+## Grouped arithmetic qualification
+
+Full-model grouped-off vs grouped-on comparison passed bit-exactly: 28,188,160 logits, 182 rows, zero mismatches, zero retries. Includes alternating T5/T8, partial commits, two resets/repeats and 16GiB expert capacity eviction pressure. Source arithmetic matches checkpoint 59d5b5f; test binary hash is recorded in manifests (built before diagnostic-only counters). This qualifies controlled GPU arithmetic, not hybrid-placement changes or a throughput win.
+
+Follow-up scheduler design must address disk temporary staging: F->stage[m] can be reused on a later route, so merely placing fetches on a side stream would be unsafe. All-RAM-only gating would change the baseline configuration and may not engage; investigate bounded per-window staging or a precise source-retirement fence. Keep this separate from grouped arithmetic.

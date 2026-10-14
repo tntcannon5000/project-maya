@@ -1,0 +1,27 @@
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.28 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 2.38
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 16.00 GB, 46-49 slots/layer (1939 total)
+glm fast: CUDA0 a pinning cap: 78.75 GB more pin, the RAM tier sized to it
+maya shadow: class 2 pinning fallback 10384 -> 10174 slots
+glm fast: CUDA0 RAM tier 98.71 GB pinned, 11934 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.7 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.58 GB/s)
+glm fast: CUDA0 CPU lane off: an expert 0.199 ms on the CPU vs 0.249 ms over PCIe
+maya verify: 14 windows, 0 retries, 2097 reused GPU expert rows
+maya verify: 14 windows, 0 retries, 1159 reused GPU expert rows
+maya reuse policy: observations=11004 changed_victims=4392 horizon=1 matured_anchors=0
+glm KDA graphs: 34 captures, 2686 replays, 0 invalidations
+maya MoE suffix graphs: 11 captures, 869 replays, 0 invalidations
+PASS finite logits, partial commits, reset and repeat
