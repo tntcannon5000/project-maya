@@ -14,9 +14,9 @@ PROMPTS=[
  'Write a complete Python CSV import service for a task dashboard, with schema validation, duplicate handling, error reporting, SQLite transactions and pytest tests. Include full implementation code.',
  'Write a complete TypeScript API client and React query hooks for a task dashboard, with authentication, retries, pagination, optimistic updates and tests. Include full implementation code.']
 IDS=[TOK.encode('[gMASK]<sop><|user|>\n'+p+'<|assistant|>\n</think>',parse_special=True) for p in PROMPTS]
-def run(branch):
+def run(branch, executable=None):
  out=OUT/branch; out.mkdir(parents=True,exist_ok=False)
- exe=(R.parent/'project-maya-upstream-v1.1.7/build/strata.exe') if branch=='upstream' else R/'build/strata.exe'
+ exe=Path(executable) if executable else ((R.parent/'project-maya-upstream-v1.1.7/build/strata.exe') if branch=='upstream' else R/'build/strata.exe')
  env={k:v for k,v in os.environ.items() if not k.startswith(('STRATA_','MAYA_'))}; env.update(BASE)
  if branch=='retained':env.update(RETAINED)
  env['PATH']=r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\x64;'+env['PATH']
@@ -65,4 +65,5 @@ def run(branch):
    watchdog.cancel()
    if p.poll() is None:p.terminate();p.wait(timeout=30)
    stopped.set();gpu.terminate();gpu.wait(timeout=10);(out/'memory.json').write_text(json.dumps(memory,indent=2))
-for branch in ['upstream','retained']:run(branch)
+if __name__ == '__main__':
+ for branch in ['upstream','retained']:run(branch)
