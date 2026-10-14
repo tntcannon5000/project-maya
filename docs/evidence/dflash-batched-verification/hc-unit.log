@@ -1,0 +1,9 @@
+HC3 exact parity seed=1296128321 T=2: 16 cases passed
+HC3 exact parity seed=1296128321 T=3: 16 cases passed
+HC3 exact parity seed=1296128321 T=5: 16 cases passed
+HC3 exact parity seed=1296128321 T=8: 16 cases passed
+HC3 exact parity seed=1212363586 T=2: 16 cases passed
+HC3 exact parity seed=1212363586 T=3: 16 cases passed
+HC3 exact parity seed=1212363586 T=5: 16 cases passed
+HC3 exact parity seed=1212363586 T=8: 16 cases passed
+PASS: 128 cases, 576 token rows; all output bits, partial scratch, guards, and untouched regions match.
