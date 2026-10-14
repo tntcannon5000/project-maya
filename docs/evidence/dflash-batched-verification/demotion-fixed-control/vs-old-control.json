@@ -1,0 +1,9 @@
+{
+  "comparison": "pre-fix control versus corrected control",
+  "values": 28188160,
+  "exact": false,
+  "max_abs": 6.449382781982422,
+  "first_differing_row": 0,
+  "greedy_matches": 182,
+  "rows": 182
+}

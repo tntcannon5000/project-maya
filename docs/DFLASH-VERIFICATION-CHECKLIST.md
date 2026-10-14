@@ -15,7 +15,7 @@
 - [x] Measure matched-capacity async clean A/B: no convincing verify-round gain.
 - [x] Screen narrow assignment swaps; defer based on small optimistic byte savings.
 - [x] Implement exact-order HC phase-batching candidate and engagement counters.
-- [ ] Qualify HC and combined kernels; whole-model mismatches require isolation.
+- [x] Qualify HC/paired combination on corrected GPU control: 28,188,160 exact logits.
 - [x] Localize first mismatch to stale RAM bytes, not HC arithmetic or GPU fetch corruption.
 - [x] Identify missing deferred-demotion submission in batched verification.
 - [ ] Validate window submission fix against immutable pack, exact logits and pressure replay.
