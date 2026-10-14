@@ -1,0 +1,52 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.91 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 3.02
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 21.25 GB, 49-85 slots/layer (2602 total)
+glm fast: CUDA0 a pinning cap: 78.50 GB more pin, the RAM tier sized to it
+maya shadow: class 2 pinning fallback 10384 -> 10142 slots
+glm fast: CUDA0 RAM tier 98.46 GB pinned, 11902 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 11 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 14 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 17 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 20 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.3 of 107.2 GB, 23 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 26 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 29 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 32 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 35 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 35 s (3.08 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.187 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 843 MB on CUDA0
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 24.87 ms/tok (40.21 tok/s) | vram hit 66.52% | ram fetches 45.61/tok | disk 0.00 reads/tok in 0.13 waits/tok, 0.00 ms/tok | promotions 43.93/tok | cpu lane 66.14/tok in 13.22 ms/tok | prompt 17.9 ms/tok | vram 2518/2602 ram 11603/11902
+glm stat: decode 22.64 ms/tok (44.17 tok/s) | vram hit 71.09% | ram fetches 38.23/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 38.07/tok | cpu lane 58.41/tok in 12.13 ms/tok | prompt 0.7 ms/tok | vram 2518/2602 ram 11664/11902
+glm window: a window's tokens took more scratch slots than a layer has - that window runs again token by token (said once)
+glm dflash prof (53 rounds, 0 of them no draft: 4.00 drafts, 2.64 accepted a round): draft 2.56 ms | verify window (or the token) 170.59 ms | commit + inject 1.21 ms
+glm stat: decode 48.14 ms/tok (20.77 tok/s) | vram hit 73.87% | ram fetches 87.82/tok | disk 0.00 reads/tok in 0.03 waits/tok, 0.00 ms/tok | promotions 29.84/tok | cpu lane 143.05/tok in 29.60 ms/tok | prompt 0.7 ms/tok | vram 2592/2602 ram 11629/11902
+glm spec: 140 of 212 drafts accepted (66.0%)
+glm dflash prof (101 rounds, 0 of them no draft: 1.00 drafts, 0.90 accepted a round): draft 1.96 ms | verify window (or the token) 44.17 ms | commit + inject 0.29 ms
+glm stat: decode 24.44 ms/tok (40.92 tok/s) | vram hit 72.17% | ram fetches 38.53/tok | disk 0.00 reads/tok in 0.01 waits/tok, 0.00 ms/tok | promotions 34.20/tok | cpu lane 59.84/tok in 12.77 ms/tok | prompt 0.8 ms/tok | vram 2543/2602 ram 11691/11902
+glm spec: 91 of 101 drafts accepted (90.1%)
+glm dflash: the head (type 12, 7 columns) 0.36 ms on the dp4a kernel, 0.24 ms on the tensor cores (medians of 6) -> tensor cores
+glm dflash prof (36 rounds, 0 of them no draft: 7.00 drafts, 4.33 accepted a round): draft 3.11 ms | verify window (or the token) 278.89 ms | commit + inject 1.73 ms
+glm stat: decode 53.20 ms/tok (18.80 tok/s) | vram hit 72.30% | ram fetches 108.74/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 22.43/tok | cpu lane 170.44/tok in 34.90 ms/tok | prompt 0.7 ms/tok | vram 2592/2602 ram 11644/11902
+glm spec: 156 of 252 drafts accepted (61.9%)
+glm dflash prof (71 rounds, 0 of them no draft: 2.00 drafts, 1.70 accepted a round): draft 2.21 ms | verify window (or the token) 62.59 ms | commit + inject 0.52 ms
+glm stat: decode 24.17 ms/tok (41.38 tok/s) | vram hit 71.96% | ram fetches 41.97/tok | disk 0.00 reads/tok in 0.00 waits/tok, 0.00 ms/tok | promotions 30.77/tok | cpu lane 65.48/tok in 13.95 ms/tok | prompt 0.8 ms/tok | vram 2584/2602 ram 11653/11902
+glm spec: 121 of 142 drafts accepted (85.2%)
+glm dflash prof (48 rounds, 0 of them no draft: 6.00 drafts, 3.02 accepted a round): draft 2.88 ms | verify window (or the token) 237.44 ms | commit + inject 1.88 ms
+glm stat: decode 60.56 ms/tok (16.51 tok/s) | vram hit 73.80% | ram fetches 117.68/tok | disk 0.00 reads/tok in 0.02 waits/tok, 0.00 ms/tok | promotions 29.20/tok | cpu lane 190.42/tok in 37.93 ms/tok | prompt 0.7 ms/tok | vram 2602/2602 ram 11646/11902
+glm spec: 145 of 288 drafts accepted (50.3%)
+glm dflash prof (57 rounds, 0 of them no draft: 3.00 drafts, 2.37 accepted a round): draft 2.42 ms | verify window (or the token) 130.03 ms | commit + inject 0.64 ms
+glm stat: decode 39.52 ms/tok (25.30 tok/s) | vram hit 73.71% | ram fetches 71.74/tok | disk 0.00 reads/tok in 0.01 waits/tok, 0.00 ms/tok | promotions 30.91/tok | cpu lane 115.96/tok in 23.20 ms/tok | prompt 0.8 ms/tok | vram 2571/2602 ram 11681/11902
+glm spec: 135 of 171 drafts accepted (78.9%)
+glm dflash prof (42 rounds, 0 of them no draft: 5.00 drafts, 3.57 accepted a round): draft 2.73 ms | verify window (or the token) 209.27 ms | commit + inject 1.45 ms
+glm stat: decode 46.70 ms/tok (21.41 tok/s) | vram hit 73.30% | ram fetches 90.54/tok | disk 0.00 reads/tok in 0.01 waits/tok, 0.00 ms/tok | promotions 24.88/tok | cpu lane 144.95/tok in 29.11 ms/tok | prompt 0.7 ms/tok | vram 2584/2602 ram 11672/11902
+glm spec: 150 of 210 drafts accepted (71.4%)
+maya reuse policy: observations=146034 changed_victims=43498 horizon=1 matured_anchors=0
+glm spec: 1376 speculative positions, 68.2% accepted
+maya CPU pipeline: 22821 batches, 182560 phase-gated callbacks

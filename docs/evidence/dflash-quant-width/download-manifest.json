@@ -1,0 +1,41 @@
+{
+  "revision": "f3569acb7f9cee95e66d24442d75536eb00ab842",
+  "files": [
+    {
+      "type": "file",
+      "oid": "0d7f2405bc7214049584d05e024b3bf87acd9136",
+      "size": 697017248,
+      "lfs": {
+        "oid": "f4158ffb805b26c4fe439669c2009908a80ea89e1576ecea4d03eaded18f017c",
+        "size": 697017248,
+        "pointerSize": 134
+      },
+      "xetHash": "52168a060128b6d1f4ab3001dedc6bb2ff741aba4433a4bbbdb402bc07d30b8f",
+      "path": "GLM-5.3-Flash-DFlash2-Q4_K_M.gguf"
+    },
+    {
+      "type": "file",
+      "oid": "1574354d28653f3abb06a6e47b1efbfb53727f8a",
+      "size": 829744032,
+      "lfs": {
+        "oid": "51d38d51e05b1184b40f3ee026dcff3fe33b72f37b6f1c198f34441f85a0f929",
+        "size": 829744032,
+        "pointerSize": 134
+      },
+      "xetHash": "d144a607bc4c7ffdb6b8fb336e873aff718ad918a9ca41d036a17ecfd184e794",
+      "path": "GLM-5.3-Flash-DFlash2-Q5_K_M.gguf"
+    },
+    {
+      "type": "file",
+      "oid": "81cbe2749cee119efef5708c47f6b0d1e5182785",
+      "size": 1254335392,
+      "lfs": {
+        "oid": "0af40871f001e624ea0fb766495405bf0d68232435a63cb00ced97e77a4387aa",
+        "size": 1254335392,
+        "pointerSize": 135
+      },
+      "xetHash": "9343e9eff587544c9894fb9bee071e844896430fb1d7f8d3ba99a554d30fc8d3",
+      "path": "GLM-5.3-Flash-DFlash2-Q8_0.gguf"
+    }
+  ]
+}

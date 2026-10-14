@@ -1,0 +1,106 @@
+[
+  {
+    "file": "GLM-5.3-Flash-DFlash2-Q4_K_M.gguf",
+    "bytes": 697017248,
+    "types": {
+      "F32": 32,
+      "Q4_K": 45,
+      "Q6_K": 4
+    },
+    "selectors": [
+      {
+        "name": "selector_hidden.weight",
+        "type": "Q4_K",
+        "shape": [
+          4096,
+          256
+        ]
+      },
+      {
+        "name": "selector_predecessor.weight",
+        "type": "Q4_K",
+        "shape": [
+          256,
+          154880
+        ]
+      },
+      {
+        "name": "selector_successor.weight",
+        "type": "Q4_K",
+        "shape": [
+          256,
+          154880
+        ]
+      }
+    ]
+  },
+  {
+    "file": "GLM-5.3-Flash-DFlash2-Q5_K_M.gguf",
+    "bytes": 829744032,
+    "types": {
+      "F32": 32,
+      "Q5_K": 45,
+      "Q6_K": 4
+    },
+    "selectors": [
+      {
+        "name": "selector_hidden.weight",
+        "type": "Q5_K",
+        "shape": [
+          4096,
+          256
+        ]
+      },
+      {
+        "name": "selector_predecessor.weight",
+        "type": "Q5_K",
+        "shape": [
+          256,
+          154880
+        ]
+      },
+      {
+        "name": "selector_successor.weight",
+        "type": "Q5_K",
+        "shape": [
+          256,
+          154880
+        ]
+      }
+    ]
+  },
+  {
+    "file": "GLM-5.3-Flash-DFlash2-Q8_0.gguf",
+    "bytes": 1254335392,
+    "types": {
+      "F32": 32,
+      "Q8_0": 49
+    },
+    "selectors": [
+      {
+        "name": "selector_hidden.weight",
+        "type": "Q8_0",
+        "shape": [
+          4096,
+          256
+        ]
+      },
+      {
+        "name": "selector_predecessor.weight",
+        "type": "Q8_0",
+        "shape": [
+          256,
+          154880
+        ]
+      },
+      {
+        "name": "selector_successor.weight",
+        "type": "Q8_0",
+        "shape": [
+          256,
+          154880
+        ]
+      }
+    ]
+  }
+]

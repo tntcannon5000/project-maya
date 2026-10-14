@@ -1,0 +1,12 @@
+glm dflash: the head (type 30, 7 columns) 0.87 ms on the dp4a kernel, 0.87 ms on the tensor cores (medians of 6) -> dp4a
+5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 843 MB on CUDA0
+draft: 3.44 ms (median of 20), same drafts
+row 1: cos 0.996994 | pick gpu  79777 ref  79777 | conf gpu 0.2870 ref 0.3442
+row 2: cos 0.995350 | pick gpu   4246 ref 149443 | conf gpu 0.3807 ref 0.2979
+row 3: cos 0.992372 | pick gpu  68340 ref  68340 | conf gpu 0.8034 ref 0.8194
+row 4: cos 0.997839 | pick gpu  94849 ref  94849 | conf gpu 0.6003 ref 0.6361
+row 5: cos 0.996138 | pick gpu  44906 ref  44906 | conf gpu 0.2993 ref 0.2673
+row 6: cos 0.998401 | pick gpu  29257 ref  29257 | conf gpu 0.1038 ref 0.1069
+row 7: cos 0.997846 | pick gpu   5179 ref 145032 | conf gpu 0.1650 ref 0.1661
+n_past 8: hidden cosine >= 0.992372, 15 of 112 candidates missing, 2 of 7 picks differ
+PASS

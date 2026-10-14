@@ -29,11 +29,11 @@ def main():
         draft = DRAFT/f'GLM-5.3-Flash-DFlash2-{quant}.gguf'
         cmd = [str(exe), '--serve', *cfg['args'], '--parallel', '1', '--dflash', str(draft),
                '--spec-min-p', '0', '--short-read', '0', '--prompt-cache', '0', '--kv-streaming', 'off']
-        manifest = dict(command=cmd, environment=cfg['env'], prompt=PROMPT, prompt_ids=ids,
+        manifest = dict(command=cmd, environment={k:v for k,v in env.items() if k.startswith(('STRATA_', 'MAYA_'))}, prompt=PROMPT, prompt_ids=ids,
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
                         context_capacity=131072, output_cap=192,
-                        width_order=[4,1,7,2,6,3,5], stats_columns=['offered','accepted','draft_ms','verify_ms','lane_a','lane_b'])
+                        width_order=[4,1,7,2,6,3,5], stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]
         with (out/'engine.log').open('w') as log, (out/'wire.log').open('w') as wire, (out/'gpu.csv').open('w') as glog:
