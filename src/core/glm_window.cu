@@ -57,6 +57,37 @@ bool win_hc_batch_enabled() {
     return on;
 }
 
+struct WinCpuPlanOverride {
+    bool requested = false;
+    unsigned long long plan = 0;
+    std::string table, error;
+};
+
+const WinCpuPlanOverride& win_cpu_plan_override() {
+    static const WinCpuPlanOverride config = [] {
+        WinCpuPlanOverride c;
+        const char* v = getenv("MAYA_WIN_CPU_PLAN");
+        if (v == nullptr) return c;
+        c.requested = true;
+        c.table = v;
+        if (c.table.size() != 9) {
+            c.error = "glm window: MAYA_WIN_CPU_PLAN requires exactly 9 digits for f=0..8";
+            return c;
+        }
+        for (int f = 0; f <= 8; ++f) {
+            const char digit = c.table[(size_t) f];
+            if (digit < '0' || digit > '9' || digit - '0' > f) {
+                c.error = "glm window: MAYA_WIN_CPU_PLAN digit at f=" + std::to_string(f) +
+                          " must be between 0 and " + std::to_string(f);
+                return c;
+            }
+            c.plan |= (unsigned long long) (digit - '0') << (4 * f);
+        }
+        return c;
+    }();
+    return config;
+}
+
 int win_owner_diag_limit() {
     static const int limit = [] {
         const char* v = getenv("MAYA_WIN_OWNERSHIP_VERIFY");
@@ -529,6 +560,8 @@ bool Glm5Model::fast_dsa_window(int il, int64_t p0, int t0, int T, std::string& 
 bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::string& err) {
     FastState* F = fast_;
     auto& W = F->win;
+    const auto& cpu_override = win_cpu_plan_override();
+    if (!cpu_override.error.empty()) { err = cpu_override.error; return false; }
     const Glm5Geometry& g = g_;
     cudaStream_t s = F->cs;
     const auto& Ly = F->L[(size_t) il];
@@ -603,6 +636,31 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         return v != nullptr && std::atoi(v) != 0;
     }();
     if (batch_env && !W.per_token && W.mplan_ptr != nullptr && (T > 1 || part != 0)) {
+        if (cpu_override.requested) {
+            static const bool merge = [] {
+                const char* v = getenv("STRATA_GLM_WIN_CPU");
+                return v == nullptr || std::atoi(v) != 0;
+            }();
+            if (!lane || F->cpu_pool == nullptr || md.cpu_seq == nullptr || md.cpu_ans == nullptr ||
+                F->cpu_ans_h == nullptr || F->win_lane[0] == nullptr || F->win_lane[1] == nullptr ||
+                (merge && Ly.exl3 && F->cpu_win.x3.empty())) {
+                err = "glm window: MAYA_WIN_CPU_PLAN requires an active CPU lane, two window lanes, "
+                      "and the active CPU format's buffers (enable MAYA_WIN_SINGLE_NODE_BATCH on one node)";
+                return false;
+            }
+            // Only this call's batched routes use the override. F->cpu_plan,
+            // its calibrated baseline, ordinary decode and fallback stay intact.
+            // An explicit table takes precedence over STRATA_GLM_WIN_ALLCPU.
+            win_plan = cpu_override.plan;
+            static std::atomic<bool> reported{false};
+            if (!reported.exchange(true, std::memory_order_relaxed))
+                std::fprintf(stderr, "maya verify CPU plan CUDA%d: batched override f=0..8 %s, "
+                                     "decode plan 0x%llx retained; two window lanes, merge=%d, "
+                                     "decode pool %d active threads, layer=%d T=%d part=%d; "
+                                     "CPU work reported in lane stats (merged entries/reads when merge=1)\n",
+                             dev_, cpu_override.table.c_str(), F->cpu_plan, merge ? 1 : 0,
+                             F->cpu_pool->active(), il, T, part);
+        }
         const bool row_scratch = F->scratch_count >= W.T * 8;
         const bool async_fetch = win_async_fetch_enabled() && part == 0 && t0 == 0 && T == W.T && T > 1 &&
                                  T <= kWinMax && row_scratch && !Ly.exl3 && W.fetch_stream != nullptr &&
@@ -1162,6 +1220,16 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             for (int t = t0; t < t0 + T; ++t) gf::moe_cpu_wait(tok_dev(t), E, W.ffn + (size_t) t * E, s);
         if (prof_b) W.mark("moe_cpu_wait", s);
         return true;
+    }
+    if (cpu_override.requested) {
+        static std::atomic<bool> reported{false};
+        if (!reported.exchange(true, std::memory_order_relaxed)) {
+            const char* reason = !batch_env ? "STRATA_GLM_WIN_BATCH=0" : W.per_token ? "per-token retry" :
+                                 W.mplan_ptr == nullptr ? "batched plan storage unavailable" : "single-token call";
+            std::fprintf(stderr, "maya verify CPU plan CUDA%d p0=%lld layer=%d: override %s ineligible "
+                                 "(%s, T=%d part=%d); token-path fallback retains decode plan 0x%llx\n",
+                         dev_, (long long) W.p0, il, cpu_override.table.c_str(), reason, T, part, F->cpu_plan);
+        }
     }
     if (part != 0) {
         err = "glm window: a staggered group on the token-by-token path";
