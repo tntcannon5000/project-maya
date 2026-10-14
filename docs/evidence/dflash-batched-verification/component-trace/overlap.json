@@ -1,0 +1,277 @@
+{
+  "kernel_count": 9376,
+  "stream_ids": [
+    13,
+    104
+  ],
+  "captured_kernel_span_ms": 584.801437,
+  "fetch_union_ms": 396.494376,
+  "fetch_overlap_any_kernel_ms": 43.633568,
+  "fetch_overlap_route_ms": 0.0,
+  "fetch_overlap_window_gu_ms": 40.937851,
+  "fetch_overlap_window_down_ms": 0.0,
+  "window_gu_union_ms": 41.599298,
+  "window_down_union_ms": 25.209174,
+  "kernel_totals": [
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_component_kernel<(int)1>(strata::kernels::glmf::MoeDev, int, unsigned long long, unsigned long long)",
+      "calls": 336,
+      "sum_ms": 396.49437600000016,
+      "max_ms": 6.738009,
+      "mean_ms": 1.1800427857142861
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::mvc_kernel_t<(int)12, (int)8, (int)2>(strata::kernels::glmf::<unnamed>::MvBatch)",
+      "calls": 768,
+      "sum_ms": 26.944385999999966,
+      "max_ms": 0.43741,
+      "mean_ms": 0.03508383593749995
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)10>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 21.49454,
+      "max_ms": 0.564418,
+      "mean_ms": 0.1492676388888889
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1, (bool)1>(strata::kernels::glmf::<unnamed>::RouteArgs)",
+      "calls": 924,
+      "sum_ms": 12.956301999999999,
+      "max_ms": 0.250817,
+      "mean_ms": 0.01402197186147186
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mla_split_kernel(const float *, const unsigned short *, const int *, int, int, int, int, float *, bool)",
+      "calls": 286,
+      "sum_ms": 11.876075000000004,
+      "max_ms": 0.051808,
+      "mean_ms": 0.04152473776223777
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)10>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 11.163233,
+      "max_ms": 0.286369,
+      "mean_ms": 0.07752245138888889
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)10, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 10.548592999999999,
+      "max_ms": 0.47069,
+      "mean_ms": 0.07325411805555554
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)10, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 9.630085999999999,
+      "max_ms": 0.306113,
+      "mean_ms": 0.06687559722222221
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mvc_kernel_bf16(strata::kernels::glmf::<unnamed>::MvBatch)",
+      "calls": 392,
+      "sum_ms": 9.025256,
+      "max_ms": 0.292673,
+      "mean_ms": 0.023023612244897962
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_wait_kernel(strata::kernels::glmf::MoeDev, int)",
+      "calls": 1092,
+      "sum_ms": 6.665814999999703,
+      "max_ms": 5.879413,
+      "mean_ms": 0.006104226190475918
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_win_group_kernel(strata::kernels::glmf::MoeWin)",
+      "calls": 168,
+      "sum_ms": 5.979986999999996,
+      "max_ms": 0.0688,
+      "mean_ms": 0.03559516071428569
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::kda_prep_kernel(strata::kernels::glmf::KdaPrepArgs)",
+      "calls": 952,
+      "sum_ms": 5.077548000000015,
+      "max_ms": 0.008096,
+      "mean_ms": 0.005333558823529428
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)2, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 4.981968999999989,
+      "max_ms": 0.01488,
+      "mean_ms": 0.013838802777777746
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::kda_rec_kernel(const float *, const float *, const float *, const float *, const float *, float *, const float *, const float *, float, int, block_q8_1 *)",
+      "calls": 952,
+      "sum_ms": 4.6331409999999895,
+      "max_ms": 0.00736,
+      "mean_ms": 0.004866744747899149
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_select_kernel(const float *, int, int, int, int, int, int *)",
+      "calls": 286,
+      "sum_ms": 4.530191999999999,
+      "max_ms": 0.254945,
+      "mean_ms": 0.015839832167832163
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)12, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 3.2931009999999996,
+      "max_ms": 0.633187,
+      "mean_ms": 0.2744250833333333
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_score_kernel(const float *, const float *, const float *, int, int, int, float *)",
+      "calls": 286,
+      "sum_ms": 2.639246999999992,
+      "max_ms": 0.010016,
+      "mean_ms": 0.009228136363636336
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)11>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 2.6238829999999997,
+      "max_ms": 0.309825,
+      "mean_ms": 0.21865691666666665
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)11, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 2.344647,
+      "max_ms": 0.239041,
+      "mean_ms": 0.19538725
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1, (bool)0>(strata::kernels::glmf::<unnamed>::RouteArgs)",
+      "calls": 168,
+      "sum_ms": 2.296142999999999,
+      "max_ms": 0.023808,
+      "mean_ms": 0.01366751785714285
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::headwise_gemv_cols_kernel(const unsigned short *, const float *, long long, int, int, int, float *, long long, block_q8_1 *, long long)",
+      "calls": 88,
+      "sum_ms": 2.293575,
+      "max_ms": 0.030337,
+      "mean_ms": 0.026063352272727273
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)11, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 1.6565180000000002,
+      "max_ms": 0.17968,
+      "mean_ms": 0.1380431666666667
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)12, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 1.414309,
+      "max_ms": 0.159137,
+      "mean_ms": 0.11785908333333334
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)12>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 1.294534,
+      "max_ms": 0.239265,
+      "mean_ms": 0.10787783333333334
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)1, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 1.1753989999999999,
+      "max_ms": 0.004352,
+      "mean_ms": 0.003264997222222222
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_prep_kernel(strata::kernels::glmf::DsaPrepArgs)",
+      "calls": 286,
+      "sum_ms": 0.7818270000000026,
+      "max_ms": 0.003776,
+      "mean_ms": 0.002733660839160848
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)11>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.7448659999999999,
+      "max_ms": 0.100896,
+      "mean_ms": 0.06207216666666666
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)12>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.6001620000000001,
+      "max_ms": 0.076352,
+      "mean_ms": 0.05001350000000001
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)3, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 0.5294729999999999,
+      "max_ms": 0.001856,
+      "mean_ms": 0.001470758333333333
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mla_combine_kernel(const float *, int, int, int, float *)",
+      "calls": 286,
+      "sum_ms": 0.4296329999999987,
+      "max_ms": 0.001888,
+      "mean_ms": 0.0015022132867132823
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_win_combine_kernel(strata::kernels::glmf::MoeWin)",
+      "calls": 168,
+      "sum_ms": 0.401697,
+      "max_ms": 0.002816,
+      "mean_ms": 0.0023910535714285718
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::argmax_kernel(const float *, int, int *)",
+      "calls": 26,
+      "sum_ms": 0.285761,
+      "max_ms": 0.011744,
+      "mean_ms": 0.010990807692307692
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::head_prep_kernel(const float *, const float *, float, int, float *, block_q8_1 *)",
+      "calls": 26,
+      "sum_ms": 0.10604800000000002,
+      "max_ms": 0.005504,
+      "mean_ms": 0.004078769230769231
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::swiglu_q8_kernel(const float *, const float *, float, int, block_q8_1 *)",
+      "calls": 78,
+      "sum_ms": 0.07625599999999995,
+      "max_ms": 0.001248,
+      "mean_ms": 0.000977641025641025
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::hc_post_kernel(const float *, const float *, const float *, const float *, int, float *)",
+      "calls": 26,
+      "sum_ms": 0.02809600000000001,
+      "max_ms": 0.001248,
+      "mean_ms": 0.001080615384615385
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::embed_streams_kernel(const float *, float *, int)",
+      "calls": 26,
+      "sum_ms": 0.019871999999999994,
+      "max_ms": 0.001088,
+      "mean_ms": 0.0007643076923076921
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::tab_update_kernel(unsigned long long *, const int *, const unsigned long long *, int)",
+      "calls": 4,
+      "sum_ms": 0.003744,
+      "max_ms": 0.001024,
+      "mean_ms": 0.000936
+    }
+  ],
+  "note": "Diagnostic four-window capture; interval unions avoid double counting. Other kernels include waits. No CPU overlap or throughput claim."
+}

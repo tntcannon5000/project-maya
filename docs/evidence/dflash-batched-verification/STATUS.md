@@ -48,6 +48,14 @@ Separately, serial disk-pressure tests were not reproducible. Four ownership-che
 
 ## Decisions
 
+New component-streaming prototype also passes 28,188,160 exact logits. A
+four-window Nsight capture measures 40.938 ms fetch/GU overlap, 41.599 ms GU
+union and zero fetch/down-compute overlap. This proves the readiness mechanism,
+not a 10.2 ms/window speedup. Capture includes synchronous group diagnostics;
+clean coding measurement is pending. Actual traffic counters need a direct
+diagnostic log because this Windows Nsight invocation did not forward target
+stderr into its engine log. Raw profiler artifacts remain local.
+
 - Keep performance experiments opt-in; no new default speed improvement is claimed.
 - Preserve negative results and raw logits locally; commit only compact evidence.
 - Qualify combinations only after their isolated correctness gates. Avoid another quant/width sweep.
