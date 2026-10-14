@@ -54,3 +54,19 @@ Test width 4 once against the corrected candidate. Require shorter total and
 verification round times (target at least 5%) before broadening qualification.
 CPU placement changes arithmetic; compare merged/serial with the SAME plan to
 qualify scheduling, rather than demanding GPU-only equality across placements.
+
+## Component-streaming gate
+
+Moderate CPU split failed the speed criterion. KDA state persistence is deferred:
+the whole measured stage is only 1.57/3.68 ms at T3/T5, with plausible savings
+below 1-2 ms at T5. Next test MAYA_WIN_COMPONENT_FETCH: route all rows with stable
+token-owned disk staging, aggregate gate/up-prefix fetch, overlap down fetch
+with existing grouped gate/up arithmetic, join before down arithmetic/combine.
+Keep full-layer native formats, disjoint row scratch and identical arithmetic.
+No resident-only arithmetic split. Existing GPU-only trace has 6.18/8.85 ms GU
+at T5/T8; that is an optimistic overlap ceiling, not current hybrid savings.
+Counters must prove component bytes/launches; Nsight must prove fetch/GU
+intersection. Full-blob diagnostics join early by design and are not timing
+evidence. Test exact logits then one clean width-2/4 screen; only qualify more
+widely if total round time improves. Stream failure and next-layer slot reuse
+must preserve ownership. No parameter sweep.

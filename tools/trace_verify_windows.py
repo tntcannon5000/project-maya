@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+from contextlib import closing
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +34,7 @@ def overlap(left, right):
 
 
 def analyze(database):
-    with sqlite3.connect(database) as conn:
+    with closing(sqlite3.connect(database)) as conn:
         rows = conn.execute('SELECT k.start,k.end,k.streamId,s.value FROM CUPTI_ACTIVITY_KIND_KERNEL k JOIN StringIds s ON s.id=k.demangledName').fetchall()
     if not rows:
         raise RuntimeError('Capture contains no GPU kernels; cannot establish engagement or overlap')
@@ -46,15 +47,23 @@ def analyze(database):
         entry['max_ms'] = max(entry['max_ms'], duration)
     for entry in totals.values():
         entry['mean_ms'] = entry['sum_ms']/entry['calls']
-    fetch = union([(a, b) for a, b, _, name in rows if 'moe_fetch_kernel' in name])
-    other = union([(a, b) for a, b, _, name in rows if 'moe_fetch_kernel' not in name])
+    def is_fetch(name):
+        return 'moe_fetch_kernel' in name or 'moe_component_kernel' in name
+    fetch = union([(a, b) for a, b, _, name in rows if is_fetch(name)])
+    other = union([(a, b) for a, b, _, name in rows if not is_fetch(name)])
     route = union([(a, b) for a, b, _, name in rows if 'moe_route_kernel' in name])
+    gu = union([(a, b) for a, b, _, name in rows if 'moe_win_gu_' in name])
+    down = union([(a, b) for a, b, _, name in rows if 'moe_win_down_' in name])
     elapsed = max(r[1] for r in rows) - min(r[0] for r in rows)
     return dict(kernel_count=len(rows), stream_ids=sorted({r[2] for r in rows}),
                 captured_kernel_span_ms=elapsed / 1e6,
                 fetch_union_ms=sum(b-a for a,b in fetch)/1e6,
                 fetch_overlap_any_kernel_ms=overlap(fetch, other)/1e6,
                 fetch_overlap_route_ms=overlap(fetch, route)/1e6,
+                fetch_overlap_window_gu_ms=overlap(fetch, gu)/1e6,
+                fetch_overlap_window_down_ms=overlap(fetch, down)/1e6,
+                window_gu_union_ms=sum(b-a for a,b in gu)/1e6,
+                window_down_union_ms=sum(b-a for a,b in down)/1e6,
                 kernel_totals=sorted(totals.values(), key=lambda x:x['sum_ms'], reverse=True),
                 note='Diagnostic four-window capture; interval unions avoid double counting. Other kernels include waits. No CPU overlap or throughput claim.')
 
