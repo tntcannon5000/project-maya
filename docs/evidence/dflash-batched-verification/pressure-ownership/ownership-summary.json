@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "maya ownership diagnostic CUDA0 boundary=1: verified 0 shadow blobs / 0 bytes before eviction, 1813 GPU / 7701 RAM published pointers (synchronous diagnostic)",
+    "maya ownership diagnostic CUDA0 boundary=2: verified 4 shadow blobs / 33030144 bytes before eviction, 1772 GPU / 7579 RAM published pointers (synchronous diagnostic)",
+    "maya ownership diagnostic CUDA0 boundary=3: verified 1 shadow blobs / 8257536 bytes before eviction, 1693 GPU / 7540 RAM published pointers (synchronous diagnostic)",
+    "maya ownership diagnostic CUDA0 boundary=4: verified 0 shadow blobs / 0 bytes before eviction, 1732 GPU / 7633 RAM published pointers (synchronous diagnostic)"
+  ],
+  "passed": true,
+  "scope": "First four window boundaries only; five shadow blobs (41,287,680 bytes) verified; synchronous diagnostic may alter timing; does not establish every expert or resolve serial pressure non-reproducibility."
+}
