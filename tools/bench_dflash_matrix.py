@@ -1,5 +1,5 @@
 """Short c=1 drafter-quant/width screen; no persistent launcher changes."""
-import hashlib, json, os, subprocess, sys, threading, time
+import argparse, hashlib, json, os, subprocess, sys, threading, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,17 +12,30 @@ PROMPT = ('Write a complete Python FastAPI backend for a task dashboard with pro
           'status filters, SQLite persistence, validation and tests. Include the code for every file.')
 
 def main():
+    global OUT
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--out',type=Path,default=OUT)
+    ap.add_argument('--exe',type=Path,default=ROOT/'build/strata.exe')
+    ap.add_argument('--stock',action='store_true')
+    ap.add_argument('--widths',default='4,1,7,2,6,3,5')
+    ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
+    ap.add_argument('--env',action='append',default=[])
+    a=ap.parse_args();OUT=a.out.resolve()
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
     ids = tok.encode('[gMASK]<sop><|user|>\n'+PROMPT+'<|assistant|>\n</think>', parse_special=True)
-    exe = ROOT/'build/strata.exe'
-    for quant in ['Q4_K_M', 'Q5_K_M', 'Q8_0']:
+    exe = a.exe.resolve()
+    for quant in a.quant:
         out = OUT/quant
         out.mkdir(exist_ok=False)
         stats = out/'rounds.txt'
         env = {k:v for k,v in os.environ.items() if not k.startswith(('MAYA_', 'STRATA_'))}
         env.update(cfg['env'])
+        if a.stock:
+            env={k:v for k,v in env.items() if not k.startswith('MAYA_')}
+        for setting in a.env:
+            k,v=setting.split('=',1);env[k]=v
         env['STRATA_GLM_DFLASH_STATS'] = str(stats)
         env['STRATA_GLM_DFLASH_PROF'] = '1'
         env['PATH'] = ';'.join(cfg['lib_dirs'])+';'+env['PATH']
@@ -33,7 +46,7 @@ def main():
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
                         context_capacity=131072, output_cap=192,
-                        width_order=[4,1,7,2,6,3,5], stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
+                        width_order=list(map(int,a.widths.split(','))), stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]
         with (out/'engine.log').open('w') as log, (out/'wire.log').open('w') as wire, (out/'gpu.csv').open('w') as glog:
