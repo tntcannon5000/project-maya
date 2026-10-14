@@ -1,0 +1,32 @@
+{
+  "label": "async-on",
+  "returncode": 0,
+  "binary_sha256": "bb9bd8f6835a54fa2f1623c5e57ae228c5056b221c697534a42be372e6b21aaa",
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_CPU_PLAN": "000000000",
+    "STRATA_GLM_POOL_GB": "16",
+    "STRATA_GLM_RAM_GB": "64",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_KDA_GRAPH": "1",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "MAYA_DEFER_DEMOTIONS": "layers",
+    "MAYA_REUSE_POLICY": "transition",
+    "MAYA_OVERLAP_BLOCKS": "32",
+    "MAYA_OVERLAP_CAPTURED_ONLY": "1",
+    "MAYA_CPU_EARLY": "1",
+    "MAYA_CPU_PAUSE": "1",
+    "MAYA_DOWN_BANDS": "2",
+    "MAYA_MOE_SUFFIX_GRAPH": "1",
+    "MAYA_ROUTE_WARP": "1",
+    "MAYA_CPU_PIPELINE": "1",
+    "MAYA_CPU_PHASE_LIMIT": "8",
+    "MAYA_WIN_SCRATCH": "64",
+    "MAYA_WIN_REUSE": "1",
+    "STRATA_GLM_WIN_STAGGER": "0",
+    "MAYA_WIN_GROUPED": "0",
+    "MAYA_WIN_FETCH_JOIN_EACH": "1",
+    "MAYA_WIN_ASYNC_FETCH": "1"
+  }
+}

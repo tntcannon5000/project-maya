@@ -5105,35 +5105,34 @@ __global__ void moe_win_group_kernel(const __grid_constant__ MoeWin w) {
 // existing 32-value q8_1 quantizer consumes the shared results.  Each member retains rows_dot's lane-strided K
 // order, dot expression and warp_sum; the window's original single-member body remains below.
 constexpr int kWinReuseMembers = 8;
-template<int TG>
+template<int TG, int Members = kWinReuseMembers, int NW = GU_WARPS>
 __device__ __forceinline__ void moe_win_gu_reuse(const MoeWin& w, int g, int chunk, int lane, int warp,
-                                                float* sg, float* su) {
+                                                float* sg, float* su, int first, int ne) {
     using Fm = F<TG>;
     using D = DecW<TG>;
-    const int first = w.grp_start[g], ne = w.grp_start[g + 1] - first;
-    int tok[kWinReuseMembers];
+    int tok[Members];
 #pragma unroll
-    for (int c = 0; c < kWinReuseMembers; ++c)
+    for (int c = 0; c < Members; ++c)
         tok[c] = c < ne ? w.grp_ent[first + c] >> 3 : 0;
     const uint8_t* blob = (const uint8_t*) w.grp_ptr[g];
     const size_t rb = rbytes<TG>(w.n_embd);
-    constexpr int RPW = GU_ROWS / GU_WARPS;
+    constexpr int RPW = GU_ROWS / NW;
     const int nk = (w.n_embd / Fm::qk) * Fm::ipb;
 #pragma unroll
     for (int j = 0; j < RPW; ++j) {
         const int r = chunk * GU_ROWS + warp * RPW + j;
         const uint8_t* gate = blob + (size_t) r * rb;
         const uint8_t* up = blob + ((size_t) w.n_ff + r) * rb;
-        float ag[kWinReuseMembers], au[kWinReuseMembers];
+        float ag[Members], au[Members];
 #pragma unroll
-        for (int c = 0; c < kWinReuseMembers; ++c) ag[c] = au[c] = 0.0f;
+        for (int c = 0; c < Members; ++c) ag[c] = au[c] = 0.0f;
         for (int k = lane; k < nk; k += 32) {
             const int kbx = k / Fm::ipb, iqs = Fm::step * (k % Fm::ipb);
             D dg, du;
             dg.load(gate, kbx, iqs);
             du.load(up, kbx, iqs);
 #pragma unroll
-            for (int c = 0; c < kWinReuseMembers; ++c) {
+            for (int c = 0; c < Members; ++c) {
                 if (c >= ne) continue;
                 const block_q8_1* x = (const block_q8_1*) ((const uint8_t*) w.xq + (size_t) tok[c] * w.xq_stride);
                 const typename D::X xv = D::load_x(x + kbx * (Fm::qk / 32), iqs);
@@ -5142,7 +5141,7 @@ __device__ __forceinline__ void moe_win_gu_reuse(const MoeWin& w, int g, int chu
             }
         }
 #pragma unroll
-        for (int c = 0; c < kWinReuseMembers; ++c) {
+        for (int c = 0; c < Members; ++c) {
             if (c >= ne) continue;
             const float vg = warp_sum(ag[c]), vu = warp_sum(au[c]);
             if (lane == 0) {
@@ -5165,26 +5164,25 @@ __device__ __forceinline__ void moe_win_gu_reuse(const MoeWin& w, int g, int chu
 
 // A warp owns an output row and shares its decoded down weight call over the member intermediates.  Four rows
 // use four of the existing block's eight warps; there is no additional product, gather, quantizer or launch.
-template<int TD>
-__device__ __forceinline__ void moe_win_down_reuse(const MoeWin& w, int g, int r0, int lane, int warp) {
+template<int TD, int Members = kWinReuseMembers>
+__device__ __forceinline__ void moe_win_down_reuse(const MoeWin& w, int g, int r0, int lane, int warp, int first, int ne) {
     if (warp >= DOWN_ROWS) return;
     using Fm = F<TD>;
     using D = DecW<TD>;
-    const int first = w.grp_start[g], ne = w.grp_start[g + 1] - first;
-    int ent[kWinReuseMembers];
+    int ent[Members];
 #pragma unroll
-    for (int c = 0; c < kWinReuseMembers; ++c) ent[c] = c < ne ? w.grp_ent[first + c] : 0;
+    for (int c = 0; c < Members; ++c) ent[c] = c < ne ? w.grp_ent[first + c] : 0;
     const uint8_t* row = (const uint8_t*) w.grp_ptr[g] + w.down_off + (size_t) (r0 + warp) * rbytes<TD>(w.n_ff);
-    float acc[kWinReuseMembers];
+    float acc[Members];
 #pragma unroll
-    for (int c = 0; c < kWinReuseMembers; ++c) acc[c] = 0.0f;
+    for (int c = 0; c < Members; ++c) acc[c] = 0.0f;
     const int nk = (w.n_ff / Fm::qk) * Fm::ipb;
     for (int k = lane; k < nk; k += 32) {
         const int kbx = k / Fm::ipb, iqs = Fm::step * (k % Fm::ipb);
         D dw;
         dw.load(row, kbx, iqs);
 #pragma unroll
-        for (int c = 0; c < kWinReuseMembers; ++c) {
+        for (int c = 0; c < Members; ++c) {
             if (c >= ne) continue;
             const block_q8_1* x = (const block_q8_1*) w.hq + (size_t) ent[c] * (w.n_ff / 32);
             const typename D::X xv = D::load_x(x + kbx * (Fm::qk / 32), iqs);
@@ -5192,7 +5190,7 @@ __device__ __forceinline__ void moe_win_down_reuse(const MoeWin& w, int g, int r
         }
     }
 #pragma unroll
-    for (int c = 0; c < kWinReuseMembers; ++c) {
+    for (int c = 0; c < Members; ++c) {
         if (c >= ne) continue;
         const float v = warp_sum(acc[c]);
         if (lane == 0) w.part[(size_t) ent[c] * w.n_embd + r0 + warp] = v;
@@ -5201,10 +5199,14 @@ __device__ __forceinline__ void moe_win_down_reuse(const MoeWin& w, int g, int r
 
 // grid (n_ff / GU_ROWS, groups): a group's expert's gate / up rows of this chunk against each member's FFN input, the
 // clamped swiglu into the member's h (moe_gate_up_kernel's rows, arithmetic and layout per member)
-template<int TG, bool Grouped = false>
+template<int TG, bool Grouped = false, bool PlainOnly = false>
 __global__ void __launch_bounds__(GU_WARPS * 32) moe_win_gu_kernel(const __grid_constant__ MoeWin w) {
     const int g = blockIdx.y, chunk = blockIdx.x;
     if (g >= *w.n_groups) return;
+    if constexpr (PlainOnly) {
+        const int ne = w.grp_start[g + 1] - w.grp_start[g];
+        if (ne > 1 && ne <= kWinReuseMembers) return;
+    }
     constexpr int NW = GU_WARPS;
     const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
     __shared__ float sg[(Grouped ? kWinReuseMembers : 1) * GU_ROWS], su[(Grouped ? kWinReuseMembers : 1) * GU_ROWS];
@@ -5216,7 +5218,7 @@ __global__ void __launch_bounds__(GU_WARPS * 32) moe_win_gu_kernel(const __grid_
         if (ne > 1 && ne <= kWinReuseMembers) {
             if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
                 atomicAdd(w.grouped_counts, 1u);
-            moe_win_gu_reuse<TG>(w, g, chunk, lane, warp, sg, su);
+            moe_win_gu_reuse<TG>(w, g, chunk, lane, warp, sg, su, w.grp_start[g], ne);
             return;
         }
     }
@@ -5254,10 +5256,14 @@ __global__ void __launch_bounds__(GU_WARPS * 32) moe_win_gu_kernel(const __grid_
 
 // grid (n_embd / DOWN_ROWS, groups): a group's expert's down rows of this chunk against each member's h (a warp a
 // member, moe_down_kernel's rows and arithmetic) into the member's partial rows
-template<int TD, bool Grouped = false>
+template<int TD, bool Grouped = false, bool PlainOnly = false>
 __global__ void __launch_bounds__(256) moe_win_down_kernel(const __grid_constant__ MoeWin w) {
     const int g = blockIdx.y;
     if (g >= *w.n_groups) return;
+    if constexpr (PlainOnly) {
+        const int ne = w.grp_start[g + 1] - w.grp_start[g];
+        if (ne > 1 && ne <= kWinReuseMembers) return;
+    }
     constexpr int NR = DOWN_ROWS;
     __shared__ uint32_t s_tab[TabWords<TD>::n > 0 ? TabWords<TD>::n : 1];
     load_tab<TD>(s_tab);
@@ -5269,7 +5275,7 @@ __global__ void __launch_bounds__(256) moe_win_down_kernel(const __grid_constant
         if (ne > 1 && ne <= kWinReuseMembers) {
             if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
                 atomicAdd(w.grouped_counts + 1, 1u);
-            moe_win_down_reuse<TD>(w, g, r0, lane, warp);
+            moe_win_down_reuse<TD>(w, g, r0, lane, warp, w.grp_start[g], ne);
             return;
         }
     }
@@ -5286,6 +5292,43 @@ __global__ void __launch_bounds__(256) moe_win_down_kernel(const __grid_constant
 #pragma unroll
             for (int j = 0; j < NR; ++j) w.part[(size_t) e * w.n_embd + r0 + j] = s[j];
     }
+}
+
+// MAYA_WIN_GROUPED=2: singletons use the plain kernels above, so a reused branch's registers never reduce their
+// residency.  Repeated groups run on smaller CTAs with two members live, processing larger groups in pairs.
+// A final odd member is still computed.  Weight calls are shared within each pair; no entry is dropped.
+constexpr int kWinPairMembers = 2;
+constexpr int kWinPairGuWarps = 8;
+template<int TG>
+__global__ void __launch_bounds__(kWinPairGuWarps * 32) moe_win_gu_pairs_kernel(const __grid_constant__ MoeWin w) {
+    const int g = blockIdx.y, chunk = blockIdx.x;
+    if (g >= *w.n_groups) return;
+    const int first = w.grp_start[g], end = w.grp_start[g + 1], ne = end - first;
+    if (ne <= 1 || ne > kWinReuseMembers) return;
+    if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
+        atomicAdd(w.grouped_counts, 1u);
+    const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
+    __shared__ float sg[kWinPairMembers * GU_ROWS], su[kWinPairMembers * GU_ROWS];
+    for (int m = first; m < end; m += kWinPairMembers) {
+        moe_win_gu_reuse<TG, kWinPairMembers, kWinPairGuWarps>(w, g, chunk, lane, warp, sg, su,
+                                                            m, min(kWinPairMembers, end - m));
+        // Warp 0 must finish quantizing the current pair before the other warps overwrite its shared rows.
+        __syncthreads();
+    }
+}
+
+template<int TD>
+__global__ void __launch_bounds__(DOWN_ROWS * 32) moe_win_down_pairs_kernel(const __grid_constant__ MoeWin w) {
+    const int g = blockIdx.y;
+    if (g >= *w.n_groups) return;
+    const int first = w.grp_start[g], end = w.grp_start[g + 1], ne = end - first;
+    if (ne <= 1 || ne > kWinReuseMembers) return;
+    if (w.grouped_counts != nullptr && blockIdx.x == 0 && threadIdx.x == 0)
+        atomicAdd(w.grouped_counts + 1, 1u);
+    const int lane = threadIdx.x & 31, warp = threadIdx.x >> 5;
+    const int r0 = blockIdx.x * DOWN_ROWS;
+    for (int m = first; m < end; m += kWinPairMembers)
+        moe_win_down_reuse<TD, kWinPairMembers>(w, g, r0, lane, warp, m, min(kWinPairMembers, end - m));
 }
 
 // each token's output rows: its entries' partials in plan order, the host's disk answer, the shared expert (moe_down's
@@ -5308,12 +5351,13 @@ __global__ void moe_win_combine_kernel(const __grid_constant__ MoeWin w) {
 
 bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
     if (w.T < 1 || w.T > kMaxWinTokens || w.k > 8 || w.n_ff % GU_ROWS != 0 || w.n_embd % DOWN_ROWS != 0) return false;
-    static const bool grouped_env = [] {
+    static const int grouped_env = [] {
         const char* v = getenv("MAYA_WIN_GROUPED");
-        return v != nullptr && std::atoi(v) != 0;
+        return v != nullptr ? std::atoi(v) : 0;
     }();
     // Each stage dispatches its own quant type.  Other formats and wider windows retain the original kernels.
     const bool grouped = grouped_env && w.T <= kWinReuseMembers && w.n_embd % 256 == 0 && w.n_ff % 256 == 0;
+    const bool pairs = grouped && grouped_env == 2;
     moe_win_group_kernel<<<1, 32, 0, s>>>(w);
     const int G = w.T * w.k;   // groups at most (the blocks past the real count return at once)
     const dim3 ggu((unsigned) (w.n_ff / GU_ROWS), (unsigned) G), gdn((unsigned) (w.n_embd / DOWN_ROWS), (unsigned) G);
@@ -5323,7 +5367,10 @@ bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
         GLMF_WGU(21) GLMF_WGU(29) GLMF_WGU(13) GLMF_WGU(14)
 #undef GLMF_WGU
 #define GLMF_WGU_GROUPED(T) case T: \
-        if (grouped) moe_win_gu_kernel<T, true><<<ggu, GU_WARPS * 32, 0, s>>>(w); \
+        if (pairs) { \
+            moe_win_gu_kernel<T, false, true><<<ggu, GU_WARPS * 32, 0, s>>>(w); \
+            moe_win_gu_pairs_kernel<T><<<ggu, kWinPairGuWarps * 32, 0, s>>>(w); \
+        } else if (grouped) moe_win_gu_kernel<T, true><<<ggu, GU_WARPS * 32, 0, s>>>(w); \
         else moe_win_gu_kernel<T><<<ggu, GU_WARPS * 32, 0, s>>>(w); break;
         GLMF_WGU_GROUPED(10) GLMF_WGU_GROUPED(11) GLMF_WGU_GROUPED(12)
 #undef GLMF_WGU_GROUPED
@@ -5335,7 +5382,10 @@ bool moe_win_experts(int gu_type, int d_type, const MoeWin& w, cudaStream_t s) {
         GLMF_WDN(21) GLMF_WDN(29) GLMF_WDN(13) GLMF_WDN(14)
 #undef GLMF_WDN
 #define GLMF_WDN_GROUPED(T) case T: \
-        if (grouped) moe_win_down_kernel<T, true><<<gdn, 256, 0, s>>>(w); \
+        if (pairs) { \
+            moe_win_down_kernel<T, false, true><<<gdn, 256, 0, s>>>(w); \
+            moe_win_down_pairs_kernel<T><<<gdn, DOWN_ROWS * 32, 0, s>>>(w); \
+        } else if (grouped) moe_win_down_kernel<T, true><<<gdn, 256, 0, s>>>(w); \
         else moe_win_down_kernel<T><<<gdn, 256, 0, s>>>(w); break;
         GLMF_WDN_GROUPED(10) GLMF_WDN_GROUPED(11) GLMF_WDN_GROUPED(12)
 #undef GLMF_WDN_GROUPED

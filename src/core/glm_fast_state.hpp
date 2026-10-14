@@ -456,6 +456,7 @@ struct Glm5Model::FastState {
     uint8_t* win_fetch_stage = nullptr;
     size_t win_fetch_stage_n = 0;
     std::atomic<uint64_t> win_fetch_stage_uses{0};
+    std::atomic<uint64_t> route_ring_laps{0}, route_ring_skipped{0};
     std::mutex mu;   // the service thread vs the between-token boundary
     std::unique_ptr<glmfast::Workers> workers;   // parallel disk reads
     // ---- the CPU LANE (STRATA_GLM_CPU_LANE=<threads>, 0 off): a route's RAM-tier experts split between the device's
@@ -550,7 +551,7 @@ struct Glm5Model::FastState {
         uint64_t windows = 0, retries = 0, reuses = 0;
         cudaStream_t fetch_stream = nullptr;  // dedicated, full-layer verification fetches only
         cudaEvent_t fetch_ready[16] = {}, fetch_done = nullptr;
-        uint64_t async_fetch_layers = 0, async_fetch_submissions = 0;
+        uint64_t async_fetch_layers = 0, async_fetch_submissions = 0, async_fetch_each_joins = 0;
         void release_fetch() {
             // Every queued wait follows a successfully recorded ready event.
             // Drain before any event/plan/source storage can be destroyed.

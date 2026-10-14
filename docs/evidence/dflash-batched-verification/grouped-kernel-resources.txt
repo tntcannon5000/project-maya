@@ -1,0 +1,137 @@
+Grouped K-quant verification kernel resource inspection
+2026-10-14; read-only inspection, no project build or inference run by this agent.
+
+Binary: build/strata.exe
+SHA256: 31176415867C04E444C4C6AE0AAC5E97A6034F4ABDE97EE3DF1F0F5640739E51
+Tool: C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.2/bin/cuobjdump.exe
+Command: cuobjdump --dump-resource-usage build/strata.exe
+Compiled ELF architecture: sm_120
+Build cache: Release; CMAKE_CUDA_ARCHITECTURES=120; CUDA v13.2.
+Device reported by nvidia-smi: NVIDIA GeForce RTX 5090, compute capability 12.0.
+
+Device limits queried without creating a CUDA context, via cuInit/cuDeviceGetAttribute:
+warp size 32; registers/block 65536; registers/SM 65536; threads/SM 1536;
+shared memory/SM 102400 bytes; blocks/SM 24.
+Attribute IDs checked against CUDA v13.2 include/cuda.h: 10, 12, 39, 81, 82, 106.
+
+Type numbers: 10=Q2_K, 11=Q3_K, 12=Q4_K; Grouped 0=original, 1=prototype.
+
+Stage Type Grouped Registers Stack Local Shared  Static SASS instructions LDL/STL
+GU    10   0        59        0     0     1280    752                      0
+GU    10   1        128       0     0     3072    4216                     0
+GU    11   0        60        0     0     1280    928                      0
+GU    11   1        128       0     0     3072    4176                     0
+GU    12   0        58        0     0     1280    704                      0
+GU    12   1        127       0     0     3072    3792                     0
+Down  10   0        58        0     0     1024    600                      0
+Down  10   1        74        0     0     1024    1552                     0
+Down  11   0        64        0     0     1024    776                      0
+Down  11   1        64        0     0     1024    1688                     0
+Down  12   0        40        0     0     1024    552                      0
+Down  12   1        70        0     0     1024    1424                     0
+
+All entries have CONSTANT[0]:1056, TEXTURE:0, SURFACE:0, SAMPLER:0.
+Static SASS instruction counts count lines starting with an instruction address;
+they include fallback and unrolled member branches, not only dynamically executed instructions.
+Function filters identify moe_win_{gu,down}_kernelILi{10,11,12}ELb{0,1}E.
+
+Resource interpretation:
+- No stack/local allocation, and no LDL/STL instructions in these variants: no evidence of local spills.
+- GU launches 512 threads (16 warps). Original 58-60 registers permit two resident
+  blocks by raw register/thread limits (32 warps, 66.7% of the device's 48-warp limit).
+  Grouped 127-128 registers permit only one (16 warps, 33.3%).
+- Down launches 256 threads (8 warps). Raw register/thread limits permit original
+  Q2/Q3/Q4 4/4/6 blocks (66.7/66.7/100% warp occupancy); grouped 3/4/3 blocks
+  (50/66.7/50%). Allocation granularity can lower occupancy further; these are
+  resource upper bounds, not measured achieved occupancy.
+- Shared memory is too small to explain these occupancy ceilings.
+- The unified grouped kernel's resource allocation also applies when a CTA takes
+  the singleton fallback. Most singleton groups therefore lose GU residency without
+  gaining weight reuse. This is a plausible explanation for no material whole-model
+  throughput improvement, but does not prove causality without stage timings.
+
+Recommended bounded refinement (not implemented in this inspection):
+1. Compile singleton GU/down separately from the reused branch, retaining the original
+   resource budget. Make each launch skip groups outside its member-count predicate.
+2. Compile a two-member reused variant for the predominant repeated-group case.
+   Process larger groups in pairs, including a masked final member, so all target
+   entries are computed and each pair shares one weight read/decode. This bounds
+   live accumulators and metadata across every verification width, including T=5..8.
+3. Begin with these two launches per stage. Additional 3-4 and 5-8 variants should
+   depend on measured distribution and stage savings; four buckets would add six
+   product launches per layer versus the current two-product design.
+4. T<=4 capacity four alone is a useful experiment but does not protect singleton
+   CTAs or guarantee the <=64 registers/thread needed for two 512-thread blocks.
+5. If empty CTAs or launch costs matter, then compact groups into singleton/repeated
+   ranges during the existing group kernel, publish device prefix counts, and use
+   safe worst-case capacities N and floor(N/2). This can follow the simpler predicate
+   prototype without changing route ordering or plan-order combination.
+
+Validation for a refinement: full logits with fixed placement, actual GU/down
+engagement counts, fresh cuobjdump resource checks, and clean per-stage plus complete
+round timing. Diagnostic synchronous readbacks must be disabled in throughput runs.
+
+Follow-up implementation, not represented by the compiled-resource table above:
+MAYA_WIN_GROUPED=2 now splits plain singleton/fallback groups from repeated groups.
+Repeated GU launches 256 threads (8 warps), down 128 threads (4 warps), and each keeps
+two members live. Larger groups run in pairs, including an odd final member. Existing
+group metadata and once-per-group engagement counters are preserved. This adds two
+product launches per layer versus mode 1. Mode 0 remains original and mode 1 remains
+the full-eight-member ablation. The parent built the refinement; this agent inspected
+its resources below without building or running inference. Parity and throughput
+qualification belong to the parent campaign.
+
+Refinement resource inspection, 2026-10-14:
+Binary SHA256: 33680BFA2E90BA8520724F8C469D88EA049DA818EE4F3B3F88E78A7D6D4A3F1A
+Binary size: 83849728 bytes; LastWriteTimeUtc: 2026-10-14T21:18:33.1527278Z.
+Same cuobjdump --dump-resource-usage command; sm_120; same RTX 5090 device limits.
+Function filters now include both bool template parameters for moe_win_{gu,down}_kernel
+and moe_win_{gu,down}_pairs_kernel. No additional SASS audit was performed.
+
+Stage Type Variant           Threads Registers Stack Local Shared
+GU    10   mode0-original    512     59        0     0     1280
+GU    10   mode1-full8       512     128       0     0     3072
+GU    10   mode2-plain       512     59        0     0     1280
+GU    10   mode2-pairs       256     64        0     0     1536
+GU    11   mode0-original    512     60        0     0     1280
+GU    11   mode1-full8       512     128       0     0     3072
+GU    11   mode2-plain       512     60        0     0     1280
+GU    11   mode2-pairs       256     56        0     0     1536
+GU    12   mode0-original    512     58        0     0     1280
+GU    12   mode1-full8       512     128       0     0     3072
+GU    12   mode2-plain       512     58        0     0     1280
+GU    12   mode2-pairs       256     59        0     0     1536
+Down  10   mode0-original    256     58        0     0     1024
+Down  10   mode1-full8       256     96        0     0     1024
+Down  10   mode2-plain       256     63        0     0     1024
+Down  10   mode2-pairs       128     56        0     0     1024
+Down  11   mode0-original    256     64        0     0     1024
+Down  11   mode1-full8       256     88        0     0     1024
+Down  11   mode2-plain       256     64        0     0     1024
+Down  11   mode2-pairs       128     48        0     0     1024
+Down  12   mode0-original    256     40        0     0     1024
+Down  12   mode1-full8       256     102       0     0     1024
+Down  12   mode2-plain       256     40        0     0     1024
+Down  12   mode2-pairs       128     48        0     0     1024
+
+All entries have CONSTANT[0]:1056, TEXTURE:0, SURFACE:0, SAMPLER:0.
+
+Refinement interpretation:
+- Intended singleton GU resource protection is achieved: exactly the original
+  59/60/58 registers and 1280 shared bytes, allowing two 512-thread CTAs/SM.
+- Pair GU has 64/56/59 registers at 256 threads, allowing four CTAs/SM by register
+  and thread limits (32 resident warps, 66.7% of the device limit), instead of mode1's
+  one 512-thread CTA and 16 warps. All three types meet the intended budget.
+- Singleton down is unchanged for Q3/Q4. Q2 rises from 58 to 63 registers, but stays
+  in the same <=64 allocation band and four-CTA register ceiling.
+- Pair down uses 56/48/48 registers at 128 threads. Raw register limits allow 9/10/10
+  CTAs/SM (36/40/40 warps, 75/83.3/83.3%). These remain resource bounds rather than
+  measured achieved occupancy; allocation and scheduling granularity may lower them.
+- STACK=LOCAL=0 in every variant; shared memory is again too small to constrain
+  these residency limits. No resource evidence of local spills.
+- The generalized helper compiled mode1 down differently: 96/88/102 registers
+  rather than the earlier binary's 74/64/70. Mode1 is still the same mathematical
+  full-member ablation, but its compiled resource/performance baseline changed.
+- These results establish resource recovery, not correctness under the separately
+  investigated disk-pressure/async cases or a complete-round throughput gain.
+  Extra launches and skipped CTAs remain costs to measure in clean timing.

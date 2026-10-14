@@ -15,4 +15,4 @@
 - [ ] Check cancellation/recovery and clean teardown.
 - [ ] Commit report, results table, limitations and recommended settings.
 
-Current stage: grouped arithmetic exact; clean TPS measurement and safe async-fetch prototype in progress. No new performance gain claimed.
+Current stage: paired refinement (mode 2) also passed 28,188,160 exact logits; clean TPS measurement underway. Async-fetch pressure qualification failed and remains experimental. Next isolate serial pressure reproducibility before attributing all differences to overlap. No new performance gain claimed.

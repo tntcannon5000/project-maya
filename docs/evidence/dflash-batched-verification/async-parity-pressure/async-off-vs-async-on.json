@@ -1,0 +1,11 @@
+{
+  "left": "async-off",
+  "right": "async-on",
+  "values": 28188160,
+  "exact": false,
+  "max_abs": 5.367596626281738,
+  "mean_abs": 0.16191628575325012,
+  "mismatched_values": 26019818,
+  "greedy_matches": 181,
+  "rows": 182
+}

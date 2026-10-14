@@ -577,6 +577,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         const bool async_fetch = win_async_fetch_enabled() && part == 0 && t0 == 0 && T == W.T && T > 1 &&
                                  T <= kWinMax && row_scratch && !Ly.exl3 && W.fetch_stream != nullptr &&
                                  F->win_fetch_stage != nullptr && F->win_fetch_stage_n >= (size_t) T * 8;
+        static const bool join_each = [] {
+            const char* v = getenv("MAYA_WIN_FETCH_JOIN_EACH");
+            return v != nullptr && std::atoi(v) != 0;
+        }();
         struct FetchDrainOnError {
             cudaStream_t stream;
             bool joined = false;
@@ -640,6 +644,17 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
                 ++W.async_fetch_submissions;
                 // This cs interval measures submission gaps, not copy duration.
                 if (prof_b) W.mark("moe_fetch_submission", s);
+                if (join_each) {
+                    // Isolation control: same stream/staging/event topology,
+                    // but finish this row's copy before publishing the next
+                    // route. Existing waits capture this event's current record.
+                    if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_done, W.fetch_stream),
+                                         "window async fetch per-token completion", err) ||
+                        !glmfast::cuda_ok(cudaStreamWaitEvent(s, W.fetch_done, 0),
+                                         "window async fetch per-token join", err)) return false;
+                    ++W.async_fetch_each_joins;
+                    if (prof_b) W.mark("moe_fetch_each_join", s);
+                }
             } else {
                 gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
                 if (prof_b) W.mark("moe_fetch", s);
@@ -1668,12 +1683,19 @@ void Glm5Model::win_prof_report() {
         if (m->fast_ == nullptr) continue;
         auto& W = m->fast_->win;
         const uint64_t staging_uses = m->fast_->win_fetch_stage_uses.exchange(0);
+        const uint64_t ring_laps = m->fast_->route_ring_laps.exchange(0);
+        const uint64_t ring_skipped = m->fast_->route_ring_skipped.exchange(0);
+        if (ring_laps > 0)
+            std::fprintf(stderr, "maya routing ring CUDA%d: %llu laps, %llu skipped request sequences\n",
+                         m->dev_, (unsigned long long) ring_laps, (unsigned long long) ring_skipped);
         if (win_async_fetch_enabled()) {
             std::fprintf(stderr, "maya verify async fetch CUDA%d: %llu full-layer groups, %llu token fetch submissions, "
-                                 "%llu token-owned disk staging uses (submission/join timings are not copy durations)\n",
+                                 "%llu per-token joins, %llu token-owned disk staging uses "
+                                 "(submission/join timings are not copy durations)\n",
                          m->dev_, (unsigned long long) W.async_fetch_layers,
-                         (unsigned long long) W.async_fetch_submissions, (unsigned long long) staging_uses);
-            W.async_fetch_layers = W.async_fetch_submissions = 0;
+                         (unsigned long long) W.async_fetch_submissions, (unsigned long long) W.async_fetch_each_joins,
+                         (unsigned long long) staging_uses);
+            W.async_fetch_layers = W.async_fetch_submissions = W.async_fetch_each_joins = 0;
         }
         if (W.group_diag_readbacks > 0) {
             std::fprintf(stderr, "maya verify group diagnostic CUDA%d: %llu synchronous readbacks, %llu bytes; "

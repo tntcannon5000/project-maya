@@ -3704,6 +3704,8 @@ void Glm5Model::fast_service() {
             // an entry AHEAD of us means the device lapped the ring (only non-waiting routes can be lapped: a
             // disk miss parks the device until it is answered) - resync instead of waiting forever
             if ((int) (sq - next) > 0 && sq % gf::kRingSize == next % gf::kRingSize) {
+                F->route_ring_laps.fetch_add(1, std::memory_order_relaxed);
+                F->route_ring_skipped.fetch_add((uint64_t) (sq - next), std::memory_order_relaxed);
                 F->processed.fetch_add((uint64_t) (sq - next), std::memory_order_release);
                 next = sq;
             } else {

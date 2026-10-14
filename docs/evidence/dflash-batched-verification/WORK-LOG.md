@@ -56,3 +56,17 @@ No material gain. Retain as opt-in research, not recommended/default. Compiled G
 3. Union-aware assignment: documented but deferred until a bounded eligibility experiment shows available byte/makespan savings. Current fetches are already unique under existing assignments. Do not implement a large shadow-routing simulator without evidence of benefit.
 
 Trace capture hook added to fixed-window test for four warmed windows only; intended to demonstrate actual stream overlap if async candidate is correct/promising. Throughput remains separately measured.
+
+## Async pressure qualification failed — blocked from speed claims
+
+With64GiB RAM tier and16GiB GPU pool, async-off/on differed: max5.3676, mean0.1619;181/182 greedy rows. First14 logit rows exact; divergence starts row14 (second token of third window). No retries; token-owned disk staging exercised1344 times across repeats. Normal-memory async also differs from older normal reference, but extra pinned allocation changes available RAM tier, so this is not a clean same-capacity isolation. Serial normal vs serial pressure differ already fromrow0, likely a capacity-dependent prefill path; do not conflate that with the same-config async discrepancy.
+
+Next decisive isolation retains async allocation and staging but joins each token's fetch before advancing routes. Added rare ring-lap/skipped-sequence counters without changing behavior. No numerical thresholds weakened. No performance claim for async while qualification fails.
+
+## Paired refinement and async isolation follow-up
+
+Mode 2 separates singleton work and processes repeated groups in pairs, reducing compiled register pressure without changing quantized arithmetic. The controlled normal-memory GPU-only comparison passed all 28,188,160 logits bit-exactly (182 rows, max absolute difference zero). Evidence: pairs-parity/comparison.json. Clean coding widths 2/4 are being measured; compiled resources alone are not a speed claim.
+
+Async JOIN_EACH isolation retains the same staging allocation and side stream, but waits after each token fetch. It agrees with pressure serial reference for 78 rows, then differs; fully asynchronous diverges at row 14. No nonzero ring-lap report was observed. Next run the identical serial pressure control once to test reproducibility before further ownership changes. Extra pinned allocation and different memory-tier capacities must not be conflated with scheduling effects.
+
+Clean mode-2 coding sample completed: control 42.04 TPS, two drafts 42.26 TPS, four drafts 35.79 TPS. Prior clean grouped-off was 41.93/41.91/35.09 TPS. Small cross-run differences are not a robust gain; no recommendation/default change. Evidence: pairs-clean/Q4_K_M (same acceptance and output histories to be retained for attribution).

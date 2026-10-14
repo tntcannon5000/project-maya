@@ -1,0 +1,16 @@
+[
+  {
+    "reference": "async-parity-pressure/async-off.f32",
+    "exact": false,
+    "max_abs": 5.346842288970947,
+    "first_mismatch": 78,
+    "greedy_matches": 182
+  },
+  {
+    "reference": "async-parity-pressure/async-on.f32",
+    "exact": false,
+    "max_abs": 5.381474018096924,
+    "first_mismatch": 14,
+    "greedy_matches": 181
+  }
+]
