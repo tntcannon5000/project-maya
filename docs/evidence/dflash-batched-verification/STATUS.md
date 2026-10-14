@@ -24,6 +24,20 @@ These are short 192-output-token samples with 40 occupied prompt tokens and 128K
 
 Matched serial/async verify-round means were 67.262/66.885 ms at two drafts and 105.430/105.257 ms at four. Do not interpret their TPS difference as pure scheduling savings.
 
+### After deferred-demotion correctness fix
+
+The earlier rows predate the fix and are historical, not current controls.
+
+| Configuration | Control TPS | Two drafts TPS | Four drafts TPS | Verify round ms (two/four) |
+|---|---:|---:|---:|---:|
+| Corrected control | 33.80 | 39.73 | 38.19 | 66.340 / 101.709 |
+| Corrected HC + paired experts | 35.48 | 40.96 | 39.11 | 64.395 / 99.192 |
+
+Output histories and acceptance match. Small 2.5-3% verification changes are
+not a robust gain given ordinary control variation. Both remain experimental.
+Bounded pressure qualification now also passes 6,040,320 exact logits against
+the corrected all-memory reference (six windows, RAM64GiB/GPU16GiB).
+
 ## Current correctness gate
 
 HC phase batching plus paired experts now passes the corrected GPU-only control exactly: 28,188,160 logits, 182 rows, partial commits and repeated requests. Earlier failures were traced to missing deferred-demotion submission. The old control also changes after the fix (max logit difference 6.4494, all greedy choices unchanged), so it cannot remain the correctness reference.

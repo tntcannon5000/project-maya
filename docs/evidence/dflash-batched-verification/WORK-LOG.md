@@ -120,3 +120,16 @@ Bounded pressure regression passed: RAM64GiB/GPU16GiB, combined HC/paired,
 six alternating windows and partial commits. All 6,040,320 logits (39 rows)
 match the corrected all-memory control exactly. This covers the previously
 observed early pressure failure, not an exhaustive pressure/lifecycle claim.
+
+## Moderate window CPU split
+
+Implemented strict opt-in MAYA_WIN_CPU_PLAN, ordinary decode unchanged. Test
+011233445 with two 8-thread window lanes and merged CPU rows at four drafts.
+Engagement: 2,013 batches, 16,092 CPU entries, 15,141 unique reads, 48 windows,
+zero retries. Ordinary control 43.07 TPS, speculative 38.35 TPS; verification
+101.295 ms/round versus previous HC/paired 99.192 ms. Acceptance/history changed
+(147/192 versus 144/192 accepted); not a pure scheduling comparison. Even with
+faster ordinary control this did not meet the required 5% round-time gain.
+Reject as recommended performance setting; no quota sweep. Keep opt-in hook
+and negative evidence. Same-plan merged/serial numerical qualification remains
+required before recommending the experimental override.
