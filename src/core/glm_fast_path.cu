@@ -1509,20 +1509,24 @@ bool Glm5Model::fast_setup(std::string& err) {
                 return false;
             }
         F->stage_bytes = sstride;
-        if (const char* v = getenv("MAYA_WIN_ASYNC_FETCH"); v != nullptr && std::atoi(v) != 0 && F->scratch_count >= 16) {
+        const char* win_stage_env = getenv("MAYA_WIN_FETCH_STAGE");
+        const char* win_async_env = getenv("MAYA_WIN_ASYNC_FETCH");
+        if (((win_stage_env != nullptr && std::atoi(win_stage_env) != 0) ||
+             (win_async_env != nullptr && std::atoi(win_async_env) != 0)) && F->scratch_count >= 16) {
             // A later window route must never overwrite a disk fallback source
             // while the dedicated verification stream still reads it. Ordinary
-            // decode/startup keep the original small staging pool above.
+            // decode/startup keep the original small staging pool above. The
+            // separate STAGE flag supplies identical buffers to serial controls.
             F->win_fetch_stage_n = (size_t) F->scratch_count;
             if (cudaHostAlloc((void**) &F->win_fetch_stage, F->win_fetch_stage_n * sstride,
                               cudaHostAllocPortable) != cudaSuccess) {
                 F->win_fetch_stage = nullptr;
                 F->win_fetch_stage_n = 0;
                 cudaGetLastError();
-                err = "glm window: pinned per-token async disk staging did not allocate";
+                err = "glm window: pinned per-token disk staging did not allocate";
                 return false;
             }
-            std::fprintf(stderr, "maya verify async fetch: CUDA%d %zu token-owned disk staging slots, %.2f MiB extra pinned RAM\n",
+            std::fprintf(stderr, "maya verify fetch staging: CUDA%d %zu token-owned disk staging slots, %.2f MiB extra pinned RAM\n",
                          dev_, F->win_fetch_stage_n, (double) (F->win_fetch_stage_n * sstride) / (1 << 20));
         }
         // at a pinning cap's first refusal the room left under it is measured (pin_room), and from there on each class
