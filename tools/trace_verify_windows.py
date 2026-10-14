@@ -35,6 +35,17 @@ def overlap(left, right):
 def analyze(database):
     with sqlite3.connect(database) as conn:
         rows = conn.execute('SELECT k.start,k.end,k.streamId,s.value FROM CUPTI_ACTIVITY_KIND_KERNEL k JOIN StringIds s ON s.id=k.demangledName').fetchall()
+    if not rows:
+        raise RuntimeError('Capture contains no GPU kernels; cannot establish engagement or overlap')
+    totals = {}
+    for start, end, stream, name in rows:
+        entry = totals.setdefault(name, dict(name=name, calls=0, sum_ms=0.0, max_ms=0.0))
+        duration = (end-start)/1e6
+        entry['calls'] += 1
+        entry['sum_ms'] += duration
+        entry['max_ms'] = max(entry['max_ms'], duration)
+    for entry in totals.values():
+        entry['mean_ms'] = entry['sum_ms']/entry['calls']
     fetch = union([(a, b) for a, b, _, name in rows if 'moe_fetch_kernel' in name])
     other = union([(a, b) for a, b, _, name in rows if 'moe_fetch_kernel' not in name])
     route = union([(a, b) for a, b, _, name in rows if 'moe_route_kernel' in name])
@@ -44,6 +55,7 @@ def analyze(database):
                 fetch_union_ms=sum(b-a for a,b in fetch)/1e6,
                 fetch_overlap_any_kernel_ms=overlap(fetch, other)/1e6,
                 fetch_overlap_route_ms=overlap(fetch, route)/1e6,
+                kernel_totals=sorted(totals.values(), key=lambda x:x['sum_ms'], reverse=True),
                 note='Diagnostic four-window capture; interval unions avoid double counting. Other kernels include waits. No CPU overlap or throughput claim.')
 
 

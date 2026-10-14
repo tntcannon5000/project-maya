@@ -1,0 +1,50 @@
+{
+  "command": [
+    "C:\\Program Files\\NVIDIA Corporation\\Nsight Systems 2025.6.3\\target-windows-x64\\nsys.exe",
+    "profile",
+    "--show-output=true",
+    "--trace=cuda,nvtx",
+    "--cuda-graph-trace=node",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--capture-range=cudaProfilerApi",
+    "--capture-range-end=stop",
+    "-o",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\dflash-batched-verification\\async-trace\\timeline",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\build\\maya_verify_scratch_test.exe",
+    "G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\dflash-batched-verification\\matched-stage-parity\\tokens.txt",
+    "C:\\Users\\niran\\Documents\\Code Projects\\LocalLLMs\\project-maya\\docs\\evidence\\dflash-batched-verification\\async-trace\\logits.f32"
+  ],
+  "env": {
+    "STRATA_GLM_NO_MTP": "1",
+    "STRATA_GLM_CPU_PLAN": "000000000",
+    "STRATA_GLM_POOL_GB": "16",
+    "STRATA_GLM_RAM_GB": "94",
+    "STRATA_GLM_USAGE": "0",
+    "STRATA_GLM_KDA_GRAPH": "1",
+    "MAYA_RAM_SHADOW_MB": "24576",
+    "MAYA_RAM_SHADOW_EXPAND": "1",
+    "MAYA_DEFER_DEMOTIONS": "layers",
+    "MAYA_REUSE_POLICY": "transition",
+    "MAYA_OVERLAP_BLOCKS": "32",
+    "MAYA_OVERLAP_CAPTURED_ONLY": "1",
+    "MAYA_CPU_EARLY": "1",
+    "MAYA_CPU_PAUSE": "1",
+    "MAYA_DOWN_BANDS": "2",
+    "MAYA_MOE_SUFFIX_GRAPH": "1",
+    "MAYA_ROUTE_WARP": "1",
+    "MAYA_CPU_PIPELINE": "1",
+    "MAYA_CPU_PHASE_LIMIT": "8",
+    "MAYA_WIN_SCRATCH": "64",
+    "MAYA_WIN_REUSE": "1",
+    "STRATA_GLM_WIN_STAGGER": "0",
+    "MAYA_WIN_GROUPED": "0",
+    "MAYA_WIN_FETCH_STAGE": "1",
+    "MAYA_WIN_ASYNC_FETCH": "1"
+  },
+  "trace_env": {
+    "MAYA_VERIFY_TRACE": "1"
+  },
+  "binary_sha256": "d71b097f5636b1ab82fe7159343850ed241d7d1ed571a31ce46ddb4b1a843991"
+}

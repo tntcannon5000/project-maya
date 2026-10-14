@@ -1,0 +1,89 @@
+[
+  {
+    "variant": "reference-clean",
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tps": 37.41377294516544,
+        "same_output": true
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tps": 41.92505895711415,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tps": 41.90858689483564,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tps": 35.09092570593073,
+        "same_output": true
+      }
+    ]
+  },
+  {
+    "variant": "grouped-clean",
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tps": 36.92307692307692,
+        "same_output": true
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tps": 41.727337926238235,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tps": 41.76273545917258,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tps": 35.23970339916306,
+        "same_output": true
+      }
+    ]
+  },
+  {
+    "variant": "pairs-clean",
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tps": 36.97640828117477,
+        "same_output": true
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tps": 42.04348873365888,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tps": 42.263752228752566,
+        "same_output": true
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tps": 35.79018006934347,
+        "same_output": true
+      }
+    ]
+  }
+]
