@@ -1,0 +1,299 @@
+INFO context=131072 kv=fp16 kv_resident=0 expert_slots=2523 expert_cache_mib=21126 engine_kind=glm-fast experts=12096 vram_slots=2523 vram_gb=20.6 ram_slots=11902 ram_gb=98.5 mtp=0 dflash=1 vision_lend=0 cpu_threads=16 pcie_share=0.40 logit_bias=1
+READY 131072 stop pause
+PP 39 40 698.9 55.8
+PP 40 40 745.8 53.6
+T 2
+T 17267
+T 7082
+T 5430
+T 26722
+T 54890
+T 271
+T 12542
+STAT tok_s=30.35 ms_tok=32.95 vram_hit=0.5434 ram_fetch=57.500 disk=0.000 promo=43.625 vram_used=2433 vram_slots=2523 ram_used=10006 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 8128
+T 448
+T 7079
+T 11
+T 9076
+T 11
+T 2639
+T 29557
+STAT tok_s=29.25 ms_tok=34.18 vram_hit=0.5597 ram_fetch=59.562 disk=0.000 promo=46.812 vram_used=2445 vram_slots=2523 ram_used=10364 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 11
+T 28235
+T 40727
+T 11
+T 10514
+T 11
+T 323
+T 7032
+STAT tok_s=31.25 ms_tok=32.00 vram_hit=0.6128 ram_fetch=52.292 disk=0.000 promo=42.625 vram_used=2435 vram_slots=2523 ram_used=10658 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 382
+T 565
+T 5787
+T 28496
+T 271
+T 13865
+T 3989
+T 8201
+STAT tok_s=31.91 ms_tok=31.34 vram_hit=0.6248 ram_fetch=50.812 disk=0.000 promo=43.188 vram_used=2444 vram_slots=2523 ram_used=10844 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 55417
+T 5894
+T 11616
+T 250
+T 16972
+T 906
+T 5894
+T 72325
+STAT tok_s=32.00 ms_tok=31.25 vram_hit=0.6196 ram_fetch=51.900 disk=0.000 promo=45.325 vram_used=2466 vram_slots=2523 ram_used=11015 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1304
+T 2327
+T 18692
+T 3288
+T 198
+T 72325
+STAT tok_s=32.23 ms_tok=31.03 vram_hit=0.6167 ram_fetch=52.729 disk=0.000 promo=46.833 vram_used=2453 vram_slots=2523 ram_used=11147 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1887
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+STAT tok_s=32.71 ms_tok=30.57 vram_hit=0.6212 ram_fetch=52.071 disk=0.000 promo=46.964 vram_used=2439 vram_slots=2523 ram_used=11237 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 4625
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+T 4119
+T 7197
+STAT tok_s=33.60 ms_tok=29.76 vram_hit=0.6356 ram_fetch=49.984 disk=0.000 promo=45.469 vram_used=2428 vram_slots=2523 ram_used=11301 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+DONE 64 40 745.8 1904.9 length 0 0 0 13454 21168
+PP 40 40 24.7 40.5
+T 2
+T 17267
+T 7082
+T 5430
+T 26722
+T 54890
+T 271
+T 12542
+STAT tok_s=54.71 ms_tok=18.28 vram_hit=0.8065 ram_fetch=19.500 disk=0.000 promo=19.500 vram_used=2421 vram_slots=2523 ram_used=11325 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 8128
+T 448
+T 7079
+T 11
+T 9076
+T 11
+T 2639
+T 29557
+STAT tok_s=48.85 ms_tok=20.47 vram_hit=0.7847 ram_fetch=24.562 disk=0.000 promo=24.562 vram_used=2435 vram_slots=2523 ram_used=11326 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 11
+T 28235
+T 40727
+T 11
+T 10514
+T 11
+T 323
+T 7032
+STAT tok_s=48.62 ms_tok=20.57 vram_hit=0.7915 ram_fetch=24.167 disk=0.000 promo=24.167 vram_used=2426 vram_slots=2523 ram_used=11349 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 382
+T 565
+T 5787
+T 28496
+T 271
+T 13865
+T 3989
+T 8201
+STAT tok_s=47.68 ms_tok=20.97 vram_hit=0.7852 ram_fetch=25.500 disk=0.000 promo=25.500 vram_used=2426 vram_slots=2523 ram_used=11356 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 55417
+T 5894
+T 11616
+T 250
+T 16972
+T 906
+T 5894
+T 72325
+STAT tok_s=46.94 ms_tok=21.31 vram_hit=0.7775 ram_fetch=27.175 disk=0.000 promo=27.150 vram_used=2447 vram_slots=2523 ram_used=11346 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1304
+T 2327
+T 18692
+T 3288
+T 198
+T 72325
+STAT tok_s=46.08 ms_tok=21.70 vram_hit=0.7671 ram_fetch=28.771 disk=0.000 promo=28.750 vram_used=2433 vram_slots=2523 ram_used=11369 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1887
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+STAT tok_s=45.88 ms_tok=21.80 vram_hit=0.7643 ram_fetch=29.321 disk=0.000 promo=29.304 vram_used=2421 vram_slots=2523 ram_used=11397 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 4625
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+T 4119
+T 7197
+STAT tok_s=46.06 ms_tok=21.71 vram_hit=0.7670 ram_fetch=28.891 disk=0.000 promo=28.875 vram_used=2422 vram_slots=2523 ram_used=11407 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+DONE 64 40 24.7 1389.6 length 0 0 39 16236 21168
+PP 40 40 23.2 43.1
+T 2
+T 17267
+T 7082
+T 5430
+T 26722
+T 54890
+T 271
+T 12542
+STAT tok_s=32.54 ms_tok=30.73 vram_hit=0.8036 ram_fetch=25.625 disk=0.000 promo=20.000 vram_used=2439 vram_slots=2523 ram_used=11392 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 8128
+T 448
+T 7079
+T 11
+T 9076
+T 11
+T 2639
+T 29557
+STAT tok_s=31.17 ms_tok=32.09 vram_hit=0.7740 ram_fetch=36.812 disk=0.000 promo=28.250 vram_used=2466 vram_slots=2523 ram_used=11371 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 11
+T 28235
+T 40727
+T 11
+T 10514
+T 11
+T 323
+T 7032
+STAT tok_s=34.75 ms_tok=28.78 vram_hit=0.7849 ram_fetch=33.000 disk=0.000 promo=25.500 vram_used=2452 vram_slots=2523 ram_used=11392 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 382
+T 565
+T 5787
+T 28496
+T 271
+T 13865
+T 3989
+T 8201
+STAT tok_s=39.11 ms_tok=25.57 vram_hit=0.7811 ram_fetch=30.406 disk=0.000 promo=23.719 vram_used=2467 vram_slots=2523 ram_used=11383 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 55417
+T 5894
+T 11616
+T 250
+T 16972
+T 906
+T 5894
+T 72325
+STAT tok_s=37.25 ms_tok=26.85 vram_hit=0.7786 ram_fetch=32.975 disk=0.000 promo=25.900 vram_used=2475 vram_slots=2523 ram_used=11376 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1304
+T 2327
+T 18692
+T 3288
+T 198
+T 72325
+STAT tok_s=39.72 ms_tok=25.18 vram_hit=0.7740 ram_fetch=31.604 disk=0.000 promo=24.854 vram_used=2473 vram_slots=2523 ram_used=11381 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1887
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+STAT tok_s=40.17 ms_tok=24.89 vram_hit=0.7751 ram_fetch=31.393 disk=0.000 promo=24.821 vram_used=2464 vram_slots=2523 ram_used=11397 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 4625
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+T 4119
+T 7197
+STAT tok_s=40.41 ms_tok=24.74 vram_hit=0.7757 ram_fetch=31.250 disk=0.000 promo=24.781 vram_used=2473 vram_slots=2523 ram_used=11400 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+DONE 64 40 23.3 1585.6 length 41 48 39 18765 24192
+PP 40 40 28.6 34.9
+T 2
+T 17267
+T 7082
+T 5430
+T 26722
+T 54890
+T 271
+T 12542
+STAT tok_s=29.74 ms_tok=33.63 vram_hit=0.7931 ram_fetch=45.500 disk=0.000 promo=27.500 vram_used=2469 vram_slots=2523 ram_used=11422 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 8128
+T 448
+T 7079
+T 11
+T 9076
+T 11
+T 2639
+T 29557
+STAT tok_s=23.99 ms_tok=41.69 vram_hit=0.7726 ram_fetch=60.688 disk=0.000 promo=35.812 vram_used=2479 vram_slots=2523 ram_used=11416 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 11
+T 28235
+T 40727
+T 11
+T 10514
+T 11
+T 323
+T 7032
+STAT tok_s=31.77 ms_tok=31.47 vram_hit=0.7776 ram_fetch=45.167 disk=0.000 promo=27.042 vram_used=2470 vram_slots=2523 ram_used=11431 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 382
+T 565
+T 5787
+T 28496
+T 271
+T 13865
+T 3989
+T 8201
+STAT tok_s=34.00 ms_tok=29.41 vram_hit=0.7784 ram_fetch=42.094 disk=0.000 promo=25.625 vram_used=2484 vram_slots=2523 ram_used=11419 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 55417
+T 5894
+T 11616
+T 250
+T 16972
+T 906
+T 5894
+T 72325
+STAT tok_s=31.88 ms_tok=31.37 vram_hit=0.7660 ram_fetch=47.100 disk=0.000 promo=28.300 vram_used=2492 vram_slots=2523 ram_used=11415 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1304
+T 2327
+T 18692
+T 3288
+T 198
+T 72325
+STAT tok_s=35.46 ms_tok=28.20 vram_hit=0.7639 ram_fetch=42.646 disk=0.000 promo=25.562 vram_used=2490 vram_slots=2523 ram_used=11419 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 256
+T 79843
+T 1887
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+STAT tok_s=36.26 ms_tok=27.58 vram_hit=0.7661 ram_fetch=41.393 disk=0.000 promo=25.161 vram_used=2489 vram_slots=2523 ram_used=11420 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+T 4625
+T 7197
+T 198
+T 72325
+T 256
+T 79843
+T 4119
+T 7197
+STAT tok_s=37.07 ms_tok=26.98 vram_hit=0.7682 ram_fetch=40.281 disk=0.000 promo=24.750 vram_used=2486 vram_slots=2523 ram_used=11425 ram_slots=11902 ram_gb=98.5 vram_gb=20.6
+DONE 64 40 28.7 1727.9 length 49 72 39 23230 30240

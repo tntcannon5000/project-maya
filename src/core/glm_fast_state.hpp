@@ -451,6 +451,11 @@ struct Glm5Model::FastState {
     std::atomic<uint64_t> verify_cpu_batches{0}, verify_cpu_rows{0}, verify_cpu_unique{0};
     std::vector<uint8_t*> stage;   // pinned: disk reads when no RAM slot is free
     size_t stage_bytes = 0;        // ... each (an expert's blob); the start's uploads go through stage[0] too
+    // MAYA_WIN_ASYNC_FETCH: disk fallback storage per window token/entry.
+    // Kept outside Win so it outlives the service thread during teardown.
+    uint8_t* win_fetch_stage = nullptr;
+    size_t win_fetch_stage_n = 0;
+    std::atomic<uint64_t> win_fetch_stage_uses{0};
     std::mutex mu;   // the service thread vs the between-token boundary
     std::unique_ptr<glmfast::Workers> workers;   // parallel disk reads
     // ---- the CPU LANE (STRATA_GLM_CPU_LANE=<threads>, 0 off): a route's RAM-tier experts split between the device's
@@ -543,6 +548,22 @@ struct Glm5Model::FastState {
         void* ans_d[16] = {};
         bool per_token = false;             // the batched MoE off for this pass (the redo after a scratch clash)
         uint64_t windows = 0, retries = 0, reuses = 0;
+        cudaStream_t fetch_stream = nullptr;  // dedicated, full-layer verification fetches only
+        cudaEvent_t fetch_ready[16] = {}, fetch_done = nullptr;
+        uint64_t async_fetch_layers = 0, async_fetch_submissions = 0;
+        void release_fetch() {
+            // Every queued wait follows a successfully recorded ready event.
+            // Drain before any event/plan/source storage can be destroyed.
+            if (fetch_stream) cudaStreamSynchronize(fetch_stream);
+            for (auto& e : fetch_ready) {
+                if (e) cudaEventDestroy(e);
+                e = nullptr;
+            }
+            if (fetch_done) cudaEventDestroy(fetch_done);
+            fetch_done = nullptr;
+            if (fetch_stream) cudaStreamDestroy(fetch_stream);
+            fetch_stream = nullptr;
+        }
         // MAYA_WIN_GROUP_DIAG=1: synchronous, deliberately perturbing readback
         // after grouped experts. Key: gate/up type, down type, token count, gid, part.
         struct GroupDiag {

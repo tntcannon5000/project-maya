@@ -1,5 +1,7 @@
 // Fixed-input verification windows, partial commits and repeated-request state reuse.
 #include "../src/core/glm_fast_state.hpp"
+#include <cuda_profiler_api.h>
+#include <cstdlib>
 #include <cmath>
 #include <cstdio>
 #include <fstream>
@@ -19,10 +21,12 @@ int main(int argc, char** argv) {
     FILE* f = std::fopen(argv[3], "wb");
     if (f == nullptr) return 4;
     std::vector<float> logits;
+    const bool trace = std::getenv("MAYA_VERIFY_TRACE") != nullptr;
     for (int rep = 0; rep < 2; ++rep) {
         m.reset();
         if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+40), logits, err)) return 5;
         for (int pos=40, step=0; pos < 104; ++step) {
+            if (trace && rep == 1 && step == 0) cudaProfilerStart();
             const int T = step % 2 == 0 ? 5 : 8;
             int32_t picks[8];
             if (!m.window(ids.data()+pos, T, picks, err)) {
@@ -34,6 +38,7 @@ int main(int argc, char** argv) {
             if (std::fwrite(logits.data(),sizeof(float),logits.size(),f)!=logits.size()) return 9;
             const int keep = step % 3 == 0 ? 1 : T;
             if (!m.window_commit(keep,err)) return 10;
+            if (trace && rep == 1 && step == 3) cudaProfilerStop();
             pos += keep;
         }
         m.win_prof_report();

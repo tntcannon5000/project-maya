@@ -16,7 +16,7 @@ def main():
     ids=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/manifest.json').read_text())['prompt_ids']+q['output_ids']
     tokenfile=OUT/'tokens.txt';tokenfile.write_text('\n'.join(map(str,ids)))
     records=[]
-    for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1)]:
+    for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1),('async-off',64,1),('async-on',64,1)]:
         if label not in a.cases.split(','):continue
         env={k:v for k,v in os.environ.items() if not k.startswith(('MAYA_','STRATA_'))}
         env.update(cfg['env']);env.update(STRATA_GLM_CPU_PLAN='000000000',STRATA_GLM_POOL_GB='16',
@@ -26,6 +26,8 @@ def main():
             key,value=setting.split('=',1);env[key]=value
         if label.startswith('grouped-'):
             env['MAYA_WIN_GROUPED']='1' if label=='grouped-on' else '0'
+        if label.startswith('async-'):
+            env['MAYA_WIN_ASYNC_FETCH']='1' if label=='async-on' else '0'
         if label=='token-path':env['STRATA_GLM_WIN_BATCH']='0'
         if label.startswith('cpu-'):
             env.update(STRATA_GLM_CPU_PLAN='012345678',STRATA_GLM_WIN_ALLCPU='1',

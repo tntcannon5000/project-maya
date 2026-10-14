@@ -1509,6 +1509,22 @@ bool Glm5Model::fast_setup(std::string& err) {
                 return false;
             }
         F->stage_bytes = sstride;
+        if (const char* v = getenv("MAYA_WIN_ASYNC_FETCH"); v != nullptr && std::atoi(v) != 0 && F->scratch_count >= 16) {
+            // A later window route must never overwrite a disk fallback source
+            // while the dedicated verification stream still reads it. Ordinary
+            // decode/startup keep the original small staging pool above.
+            F->win_fetch_stage_n = (size_t) F->scratch_count;
+            if (cudaHostAlloc((void**) &F->win_fetch_stage, F->win_fetch_stage_n * sstride,
+                              cudaHostAllocPortable) != cudaSuccess) {
+                F->win_fetch_stage = nullptr;
+                F->win_fetch_stage_n = 0;
+                cudaGetLastError();
+                err = "glm window: pinned per-token async disk staging did not allocate";
+                return false;
+            }
+            std::fprintf(stderr, "maya verify async fetch: CUDA%d %zu token-owned disk staging slots, %.2f MiB extra pinned RAM\n",
+                         dev_, F->win_fetch_stage_n, (double) (F->win_fetch_stage_n * sstride) / (1 << 20));
+        }
         // at a pinning cap's first refusal the room left under it is measured (pin_room), and from there on each class
         // takes its planned share of what is left - less the room kept above the tier
         int64_t pin_left = -1;
@@ -3434,6 +3450,8 @@ void Glm5Model::fast_destroy() {
     for (auto e : F->ev_free) cudaEventDestroy(e);
     for (auto* sb : F->stage)
         if (sb) cudaFreeHost(sb);
+    // win_free drained verification transfers; the service thread joined above.
+    if (F->win_fetch_stage) cudaFreeHost(F->win_fetch_stage);
     if (F->upd_key_h) cudaFreeHost(F->upd_key_h);
     if (F->upd_val_h) cudaFreeHost(F->upd_val_h);
     if (F->upd_key_d) cudaFree(F->upd_key_d);
@@ -4003,7 +4021,15 @@ void Glm5Model::fast_service() {
                         dst[m] = R.base + (size_t) rs * R.stride;
                         if ((promo >> mi[m]) & 1u) R.key[(size_t) rs] = -1;   // a pure staging use: freed at the boundary
                     } else {
-                        dst[m] = F->stage[(size_t) m];
+                        const size_t ws = rq->win >= 0 ? (size_t) rq->win * 8 + (size_t) m : F->win_fetch_stage_n;
+                        if (rq->win_n > 0 && rq->win >= 0 && rq->win < rq->win_n &&
+                            (size_t) rq->win_n <= F->win_fetch_stage_n / 8 &&
+                            F->win_fetch_stage != nullptr && ws < F->win_fetch_stage_n) {
+                            dst[m] = F->win_fetch_stage + ws * F->stage_bytes;
+                            F->win_fetch_stage_uses.fetch_add(1, std::memory_order_relaxed);
+                        } else {
+                            dst[m] = F->stage[(size_t) m];
+                        }
                     }
                 }
                 // each part in chunks across the workers: the O_DIRECT bounce copy of a whole part was ~0.4 ms of the

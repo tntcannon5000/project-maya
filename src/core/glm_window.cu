@@ -41,6 +41,14 @@ namespace strata::core {
 
 namespace {
 
+bool win_async_fetch_enabled() {
+    static const bool on = [] {
+        const char* v = getenv("MAYA_WIN_ASYNC_FETCH");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    return on;
+}
+
 float* take_f(uint8_t*& at, size_t floats) {
     float* p = (float*) at;
     at += (floats * sizeof(float) + 255u) & ~(size_t) 255u;
@@ -103,6 +111,9 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
     FastState* F = fast_;
     auto& W = F->win;
     if (W.tmax >= tmax) return true;
+    if (W.fetch_stream && !glmfast::cuda_ok(cudaStreamSynchronize(F->cs), "window async fetch resize drain", err))
+        return false;
+    W.release_fetch();
     if (W.arena) cudaFree(W.arena);
     if (W.tok_h) cudaFreeHost(W.tok_h);
     if (W.emb_h) cudaFreeHost(W.emb_h);
@@ -269,6 +280,21 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
             err = "glm window: the window's events did not create";
             return false;
         }
+    if (win_async_fetch_enabled()) {
+        if (!glmfast::cuda_ok(cudaStreamCreateWithFlags(&W.fetch_stream, cudaStreamNonBlocking),
+                             "window async fetch stream", err)) return false;
+        for (auto& e : W.fetch_ready)
+            if (!glmfast::cuda_ok(cudaEventCreateWithFlags(&e, cudaEventDisableTiming),
+                                 "window async fetch readiness event", err)) {
+                W.release_fetch();
+                return false;
+            }
+        if (!glmfast::cuda_ok(cudaEventCreateWithFlags(&W.fetch_done, cudaEventDisableTiming),
+                             "window async fetch completion event", err)) {
+            W.release_fetch();
+            return false;
+        }
+    }
     if (getenv("STRATA_GLM_WIN_UNION") != nullptr) {
         const size_t nu = (size_t) (l1_ - l0_) * (size_t) tmax * 8;
         if (cudaMalloc((void**) &W.uid, nu * sizeof(int)) != cudaSuccess) {
@@ -312,6 +338,8 @@ void Glm5Model::win_free() {
     win_crew_stop();
     if (fast_ == nullptr) return;
     auto& W = fast_->win;
+    if (W.fetch_stream) cudaStreamSynchronize(fast_->cs);
+    W.release_fetch();
     for (cudaEvent_t e : W.ev_tok)
         if (e) cudaEventDestroy(e);
     for (cudaEvent_t e : W.ev_pick)
@@ -546,6 +574,14 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
     }();
     if (batch_env && !W.per_token && W.mplan_ptr != nullptr && (T > 1 || part != 0)) {
         const bool row_scratch = F->scratch_count >= W.T * 8;
+        const bool async_fetch = win_async_fetch_enabled() && part == 0 && t0 == 0 && T == W.T && T > 1 &&
+                                 T <= kWinMax && row_scratch && !Ly.exl3 && W.fetch_stream != nullptr &&
+                                 F->win_fetch_stage != nullptr && F->win_fetch_stage_n >= (size_t) T * 8;
+        struct FetchDrainOnError {
+            cudaStream_t stream;
+            bool joined = false;
+            ~FetchDrainOnError() { if (stream && !joined) cudaStreamSynchronize(stream); }
+        } fetch_drain{async_fetch ? W.fetch_stream : nullptr};
         static const bool reuse = [] {
             const char* v = getenv("MAYA_WIN_REUSE");
             return v != nullptr && std::atoi(v) != 0;
@@ -591,11 +627,37 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             if (prof_b) W.mark("moe_route", s);
             gf::moe_wait(mt, E, s);
             if (prof_b) W.mark("moe_disk_wait", s);
-            gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
-            if (prof_b) W.mark("moe_fetch", s);
+            if (async_fetch) {
+                // Routes and their shared disk-response word remain sequential
+                // on cs. Each token's immutable plans/sources are published to
+                // the transfer stream only after its disk answer has arrived.
+                // Later routes may borrow pending pointers; no consumer reads
+                // expert bytes until the final transfer join below.
+                if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_ready[t], s), "window async fetch ready", err) ||
+                    !glmfast::cuda_ok(cudaStreamWaitEvent(W.fetch_stream, W.fetch_ready[t], 0),
+                                     "window async fetch source wait", err)) return false;
+                gf::moe_fetch(mt, g.n_exp_used, Ly.blob, W.fetch_stream);
+                ++W.async_fetch_submissions;
+                // This cs interval measures submission gaps, not copy duration.
+                if (prof_b) W.mark("moe_fetch_submission", s);
+            } else {
+                gf::moe_fetch(mt, g.n_exp_used, Ly.blob, s);
+                if (prof_b) W.mark("moe_fetch", s);
+            }
             if (W.uid != nullptr)
                 cudaMemcpyAsync(W.uid + ((size_t) (il - l0_) * kWinMax + t) * 8, mt.plan_id, 8 * sizeof(int),
                                 cudaMemcpyDeviceToDevice, s);
+        }
+        if (async_fetch) {
+            if (!glmfast::cuda_ok(cudaEventRecord(W.fetch_done, W.fetch_stream),
+                                 "window async fetch completion", err) ||
+                !glmfast::cuda_ok(cudaStreamWaitEvent(s, W.fetch_done, 0),
+                                 "window async fetch consumer join", err)) return false;
+            fetch_drain.joined = true;
+            ++W.async_fetch_layers;
+            // Residual completion wait after all route submissions; includes
+            // contention and gaps, not the sum of transfer kernel durations.
+            if (prof_b) W.mark("moe_fetch_completion_join", s);
         }
         }
         if (part == 1) return true;
@@ -1605,6 +1667,14 @@ void Glm5Model::win_prof_report() {
     for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
         if (m->fast_ == nullptr) continue;
         auto& W = m->fast_->win;
+        const uint64_t staging_uses = m->fast_->win_fetch_stage_uses.exchange(0);
+        if (win_async_fetch_enabled()) {
+            std::fprintf(stderr, "maya verify async fetch CUDA%d: %llu full-layer groups, %llu token fetch submissions, "
+                                 "%llu token-owned disk staging uses (submission/join timings are not copy durations)\n",
+                         m->dev_, (unsigned long long) W.async_fetch_layers,
+                         (unsigned long long) W.async_fetch_submissions, (unsigned long long) staging_uses);
+            W.async_fetch_layers = W.async_fetch_submissions = 0;
+        }
         if (W.group_diag_readbacks > 0) {
             std::fprintf(stderr, "maya verify group diagnostic CUDA%d: %llu synchronous readbacks, %llu bytes; "
                                  "preceding GPU work drain %.3f ms, copy/wait %.3f ms, host reduction %.3f ms "

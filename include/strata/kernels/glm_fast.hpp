@@ -205,7 +205,8 @@ struct MoeDev {
     unsigned long long* tab = nullptr;         // [3 tables, see above]
     int n_keys = 0;                            // N = n_layers * n_expert
     unsigned long long* scratch = nullptr;     // [8] VRAM slots for fetched experts that could not be promoted
-    // Earlier rows in the same verification group, whose fetches completed on this stream.
+    // Earlier rows in the same verification group. Fetches are either completed
+    // on this stream or protected by the window's final transfer-stream join.
     const unsigned long long* win_prev_ptr = nullptr;
     const int* win_prev_id = nullptr;
     int win_prev_n = 0;
