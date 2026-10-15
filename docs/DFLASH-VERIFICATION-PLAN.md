@@ -74,3 +74,9 @@ must preserve ownership. No parameter sweep.
 ## Current gate update — 2026-10-15
 
 The HC, moderate-CPU and component experiments above have completed. Bounded corrected pressure qualification passes. Moderate CPU allocation failed its speed gate; component streaming is exact but only1.2% ahead in the contemporary clean comparison. Follow HYBRID-PHASE-ATTRIBUTION.md for current attribution. Next: corrected route/ownership metadata to bound broader placement, plus standalone exact Q4_K tensor-core feasibility. Do not repeat old pending gates or presume these experiments justify production defaults.
+
+## Exact-column DP4A follow-up
+
+The complete exact IMMA experiment passes246 cases but actual-model shape scaling predicts only~0.1ms/round: do not integrate. Corrected fixed-budget union placement has4.29%/9.62% total-copy oracle ceilings and is deferred.
+
+Source exposes a simpler redundant-work hypothesis: current DP4A rounds verification columns3->4 and5->8, executing unused columns and carrying their registers. Implement opt-in exact3/5 instantiations of the existing kernel while preserving original row geometry, reduction order and mixed-job batching. Prove dispatch, pass mixed-format/same-type-mixed-column tests, then one bounded microbenchmark. Only if meaningful: controlled full-model narrow-window logits and one coding width2/4 comparison; no general sweep. Prefill/single-column dispatch remains unchanged by design, but report what was actually tested.

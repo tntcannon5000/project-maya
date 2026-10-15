@@ -24,16 +24,21 @@ int main(int argc, char** argv) {
     const bool trace = std::getenv("MAYA_VERIFY_TRACE") != nullptr;
     const char* reps_env = std::getenv("MAYA_VERIFY_REPEATS");
     const char* steps_env = std::getenv("MAYA_VERIFY_STEPS");
+    const char* wa_env = std::getenv("MAYA_VERIFY_WIDTH_A");
+    const char* wb_env = std::getenv("MAYA_VERIFY_WIDTH_B");
+    const int width_a = wa_env ? std::atoi(wa_env) : 5;
+    const int width_b = wb_env ? std::atoi(wb_env) : 8;
     const int repeats = reps_env ? std::atoi(reps_env) : 2;
     const int steps = steps_env ? std::atoi(steps_env) : 14;
     if (repeats < 1 || repeats > 2 || steps < 1 || steps > 14) return 2;
-    std::fprintf(stderr, "verify fixture: repeats=%d, max windows/repeat=%d\n", repeats, steps);
+    if (width_a < 2 || width_a > 8 || width_b < 2 || width_b > 8) return 2;
+    std::fprintf(stderr, "verify fixture: repeats=%d, max windows/repeat=%d, widths=%d/%d\n", repeats, steps, width_a, width_b);
     for (int rep = 0; rep < repeats; ++rep) {
         m.reset();
         if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+40), logits, err)) return 5;
         for (int pos=40, step=0; pos < 104 && step < steps; ++step) {
             if (trace && rep == 1 && step == 0) cudaProfilerStart();
-            const int T = step % 2 == 0 ? 5 : 8;
+            const int T = step % 2 == 0 ? width_a : width_b;
             int32_t picks[8];
             if (!m.window(ids.data()+pos, T, picks, err)) {
                 std::fprintf(stderr, "%s\n", err.c_str()); return 6;

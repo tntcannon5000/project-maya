@@ -1665,12 +1665,24 @@ __global__ void __launch_bounds__(MMA_W * 32) mvc_mma_q4_K(const __grid_constant
 
 // ---- several columns, register-blocked dp4a (any device; bit for bit the single-column kernel's sums): a warp takes
 // MVC_R rows at once, each lane decodes its weight call of every row ONCE (DecW<T>) and loads each column's values for
-// the call ONCE (DecW<T>::load_x) for all of them - NC columns, a compile-time 2 / 4 / 8 / 16 (the job's ncol rounded
-// up: a padding column re-reads the last one and is not stored).  Each lane visits its k steps in row_dot's order with
+// the call ONCE (DecW<T>::load_x) for all of them - NC columns, normally a compile-time 2 / 4 / 8 / 16 (the job's ncol
+// rounded up: a padding column re-reads the last one and is not stored). MAYA_MV_EXACT_COLS=1 also instantiates 3/5
+// columns while retaining the legacy rounded bucket's row geometry. Each lane visits its k steps in row_dot's order with
 // the same arithmetic, so a (row, column) sum is the single-column kernel's.
 constexpr int MVC_R = 4;   // rows a warp - 2 for Q8_0 / Q4_K from 8 columns (four rows of those ran out of registers:
                            // 8 columns took 2.7x the time of 4; with two, 1.6-1.8x), Q6_K keeps four (two: slower)
 constexpr int mvc_rows(int type, int nc) { return nc >= 8 && type != 14 ? 2 : MVC_R; }
+constexpr int mvc_column_bucket(int nc) { return nc <= 2 ? 2 : nc <= 4 ? 4 : nc <= 8 ? 8 : 16; }
+// Both blk_end/per and mvc_launch use this geometry, including mixed-ncol batches.
+// In particular, five Q4_K/Q8_0 columns keep two rows rather than silently using four.
+constexpr int mvc_dispatch_rows(int type, int nc) { return mvc_rows(type, mvc_column_bucket(nc)); }
+bool mvc_exact_cols_enabled() {
+    static const bool on = [] {
+        const char* v = getenv("MAYA_MV_EXACT_COLS");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    return on;
+}
 
 template<int T, int NC, int R = mvc_rows(T, NC)>
 __global__ void __launch_bounds__(256) mvc_kernel_t(const __grid_constant__ MvBatch b) {
@@ -1723,7 +1735,19 @@ __global__ void __launch_bounds__(256) mvc_kernel_t(const __grid_constant__ MvBa
 
 template<int T>
 void mvc_launch(const MvBatch& b, int blocks, int nc, cudaStream_t s) {
-    if (nc <= 2) mvc_kernel_t<T, 2><<<blocks, 256, 0, s>>>(b);
+    if (mvc_exact_cols_enabled() && nc == 3) {
+        mvc_kernel_t<T, 3, mvc_dispatch_rows(T, 3)><<<blocks, 256, 0, s>>>(b);
+        static std::atomic<bool> noted{false};
+        if (!noted.load(std::memory_order_relaxed) && !noted.exchange(true, std::memory_order_relaxed))
+            std::fprintf(stderr, "maya mv exact cols: selected type=%d columns=3 rows_per_warp=%d jobs=%d blocks=%d "
+                                 "(host dispatch, including capture)\n", T, mvc_dispatch_rows(T, 3), b.n, blocks);
+    } else if (mvc_exact_cols_enabled() && nc == 5) {
+        mvc_kernel_t<T, 5, mvc_dispatch_rows(T, 5)><<<blocks, 256, 0, s>>>(b);
+        static std::atomic<bool> noted{false};
+        if (!noted.load(std::memory_order_relaxed) && !noted.exchange(true, std::memory_order_relaxed))
+            std::fprintf(stderr, "maya mv exact cols: selected type=%d columns=5 rows_per_warp=%d jobs=%d blocks=%d "
+                                 "(host dispatch, including capture)\n", T, mvc_dispatch_rows(T, 5), b.n, blocks);
+    } else if (nc <= 2) mvc_kernel_t<T, 2><<<blocks, 256, 0, s>>>(b);
     else if (nc <= 4) mvc_kernel_t<T, 4><<<blocks, 256, 0, s>>>(b);
     else if (nc <= 8) mvc_kernel_t<T, 8><<<blocks, 256, 0, s>>>(b);
     else mvc_kernel_t<T, 16><<<blocks, 256, 0, s>>>(b);
@@ -4430,8 +4454,8 @@ bool mv(const MvJob* jobs, int n, cudaStream_t s) {
             const bool use_mma = T == 8 && mma;
             for (int i = 0; i < n; ++i)
                 if (!done[i] && jobs[i].type == T && jobs[i].ncol > 1) nc = std::max(nc, jobs[i].ncol);
-            const int nc_t = nc <= 2 ? 2 : nc <= 4 ? 4 : nc <= 8 ? 8 : 16;   // mvc_launch's instantiation
-            const int per = T == kTypeBF16 ? MV_ROWS : use_mma ? 16 : MV_ROWS * mvc_rows(T, nc_t);   // rows a block
+            // Same legacy row geometry for the optional exact 3/5-column instantiations.
+            const int per = T == kTypeBF16 ? MV_ROWS : use_mma ? 16 : MV_ROWS * mvc_dispatch_rows(T, nc);
             for (int i = 0; i < n; ++i)
                 if (!done[i] && jobs[i].type == T && jobs[i].ncol > 1) {
                     b.j[m] = jobs[i];

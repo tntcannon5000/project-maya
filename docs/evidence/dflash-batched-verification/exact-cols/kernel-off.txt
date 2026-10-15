@@ -1,0 +1,1 @@
+glm_mv_nt_test: 587 cases, every output bit for bit the one-activation GEMV's

@@ -182,6 +182,51 @@ bool run_case(const char* name, const std::vector<Job>& jobs, int nt, cudaStream
     return ok;
 }
 
+// A type's batch uses its maximum ncol for both the compiled column count and
+// row geometry. Exercise heterogeneous columns, block offsets, tails and output
+// strides so a 3/5-column specialization cannot silently drop or overlap rows.
+bool run_mixed_columns(const std::vector<Job>& jobs, const std::vector<int>& counts, cudaStream_t s) {
+    const int n = (int) jobs.size();
+    std::vector<gf::MvJob> cols((size_t) n);
+    std::vector<float*> y((size_t) n), one((size_t) n);
+    for (int i = 0; i < n; ++i) {
+        const int stride = jobs[i].w.n_out + 13;
+        const size_t bytes = (size_t) counts[i] * stride * sizeof(float);
+        check(cudaMalloc(&y[i], bytes), "mixed-column output");
+        check(cudaMalloc(&one[i], bytes), "mixed-column reference");
+        check(cudaMemset(y[i], 0x5a, bytes), "mixed-column canary");
+        check(cudaMemset(one[i], 0x5a, bytes), "mixed-column reference canary");
+        cols[i] = mv_job(jobs[i], 0, y[i]);
+        cols[i].ncol = counts[i];
+        cols[i].xq_cstride = (int64_t) jobs[i].w.n_in / 32 * kQ8;
+        cols[i].xf_cstride = jobs[i].w.n_in;
+        cols[i].y_cstride = stride;
+    }
+    if (!gf::mv(cols.data(), n, s)) return false;
+    for (int i = 0; i < n; ++i) for (int c = 0; c < counts[i]; ++c) {
+        gf::MvJob sj = mv_job(jobs[i], c, one[i] + (size_t) c * (jobs[i].w.n_out + 13));
+        if (!gf::mv(&sj, 1, s)) return false;
+    }
+    check(cudaStreamSynchronize(s), "mixed-column launches");
+    bool ok = gf::launch_errors() == 0;
+    for (int i = 0; i < n; ++i) {
+        const size_t values = (size_t) counts[i] * (jobs[i].w.n_out + 13);
+        std::vector<float> actual(values), expected(values);
+        check(cudaMemcpy(actual.data(), y[i], values * 4, cudaMemcpyDeviceToHost), "mixed-column readback");
+        check(cudaMemcpy(expected.data(), one[i], values * 4, cudaMemcpyDeviceToHost), "mixed-column reference readback");
+        for (size_t at = 0; at < values; ++at) {
+            if (!std::isfinite(expected[at]) || std::memcmp(&actual[at], &expected[at], 4)) {
+                std::fprintf(stderr, "mixed-column batch: job=%d type=%d ncol=%d n_out=%d at=%zu actual=%.9g expected=%.9g\n",
+                             i, jobs[i].w.type, counts[i], jobs[i].w.n_out, at, actual[at], expected[at]);
+                ok = false;
+                break;
+            }
+        }
+        cudaFree(y[i]); cudaFree(one[i]);
+    }
+    return ok;
+}
+
 int bench(cudaStream_t s) {
     std::mt19937 rng(7);
     const Weights w = make_weights(14, 4096, 12288, rng);
@@ -275,6 +320,19 @@ int main(int argc, char** argv) {
             }
         }
     }
+    // Same-type and mixed-type batches with heterogeneous ncol. Maxima 3/5
+    // exercise the optional exact columns; maxima 4/8 retain the legacy buckets.
+    const std::vector<std::vector<int>> column_mixes = {{2, 3, 3}, {2, 3, 5}, {5, 3, 4},
+                                                     {3, 5, 8}, {2, 3, 4}, {1, 2, 3}};
+    for (int base : {4, 6, 8}) { // Q6_K, Q8_0, Q4_K, each large/tail pair
+        const std::vector<Job> jobs = {all[base], all[base + 1], all[base]};
+        for (const auto& counts : column_mixes) {
+            ++cases;
+            if (!run_mixed_columns(jobs, counts, s)) ++failed;
+        }
+    }
+    ++cases;
+    if (!run_mixed_columns({all[4], all[6], all[8], all[5], all[7], all[9]}, {3, 5, 2, 2, 3, 5}, s)) ++failed;
     // one activation is mv() itself
     {
         ++cases;

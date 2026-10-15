@@ -1,0 +1,10 @@
+maya mv exact cols: selected type=12 columns=3 rows_per_warp=4 jobs=1 blocks=1 (host dispatch, including capture)
+maya mv exact cols: selected type=12 columns=5 rows_per_warp=2 jobs=1 blocks=1 (host dispatch, including capture)
+Device NVIDIA GeForce RTX 5090 sm_120, strict bitwise comparison against linked engine archive
+PASS 240 cases: all valid floats and padding bitwise equal to mvc and singleton mv
+TIMING 8192x4096 nc=3 ring=11 198.0MiB L2=96.0MiB engine_us=22.410/18.406 trial_us=28.099/28.739
+TIMING 8192x4096 nc=5 ring=11 198.0MiB L2=96.0MiB engine_us=26.540/29.345 trial_us=30.729/33.662
+TIMING 8192x8192 nc=3 ring=6 216.0MiB L2=96.0MiB engine_us=30.929/29.947 trial_us=49.699/49.937
+TIMING 8192x8192 nc=5 ring=6 216.0MiB L2=96.0MiB engine_us=48.807/48.401 trial_us=51.004/51.132
+TIMING 8192x12288 nc=3 ring=4 216.0MiB L2=96.0MiB engine_us=42.041/41.977 trial_us=71.129/71.317
+TIMING 8192x12288 nc=5 ring=4 216.0MiB L2=96.0MiB engine_us=69.242/68.762 trial_us=71.386/71.193

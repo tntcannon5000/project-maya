@@ -1,0 +1,7 @@
+maya mv exact cols: selected type=14 columns=3 rows_per_warp=4 jobs=1 blocks=10 (host dispatch, including capture)
+maya mv exact cols: selected type=14 columns=5 rows_per_warp=4 jobs=1 blocks=10 (host dispatch, including capture)
+maya mv exact cols: selected type=8 columns=3 rows_per_warp=4 jobs=1 blocks=10 (host dispatch, including capture)
+maya mv exact cols: selected type=8 columns=5 rows_per_warp=2 jobs=1 blocks=19 (host dispatch, including capture)
+maya mv exact cols: selected type=12 columns=3 rows_per_warp=4 jobs=1 blocks=10 (host dispatch, including capture)
+maya mv exact cols: selected type=12 columns=5 rows_per_warp=2 jobs=1 blocks=19 (host dispatch, including capture)
+glm_mv_nt_test: 587 cases, every output bit for bit the one-activation GEMV's
