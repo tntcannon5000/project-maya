@@ -19,3 +19,20 @@ Cold prompt preparation731.1 ->718.9ms; warm prompt times29.6 ->29.4ms. This sma
 Decision: modest positive gate, retain opt-in and check the existing longer coding task (6,793occupied tokens) with reversed launch order. Do not credit this experiment with all50+TPS: the graph contribution is the paired3-4.6%, not the whole combined implementation. No60TPS claim, default change or production sign-off. Historical numerical failure remains unattributed.
 
 The earlier serving-off attempt lacked the fixture scheduling/scratch settings and is excluded. The summary tool now rejects non-engagement, mismatched manifests/environments and graph errors. Raw logits remain local.
+
+## Longer occupied-context gate
+
+Same saved6,793-token coding prompt,128output-token cap. Graph-on launched first to reverse the short test order. Both arms have identical settings except the graph flag; all paired histories and acceptance counts match.
+
+| Measurement | Graph off | Graph on |
+|---|---:|---:|
+| Ordinary TPS |40.87|40.96|
+| Two-draft TPS |24.02|25.05|
+| Four-draft TPS |23.57|23.78|
+| Two-draft verify ms/round |68.253|65.319|
+| Four-draft verify ms/round |91.485|90.596|
+| Cold prefill ms |3232.9|3219.8|
+| Two-draft accepted/offered |53/148|53/148|
+| Four-draft accepted/offered |70/228|70/228|
+
+Two-draft gain4.29%; four-draft0.91% is within plausible variation. Prefill shows no regression in this bounded pair, not statistical assurance. Cache/graph engagement and complete manifests are preserved in long-serving-summary.json. This task's forced drafting remains slower than ordinary. Post-hoc confidence counts in acceptance-budget.json motivate a bounded existing-policy check, not a claimed speedup or an acceptance guarantee. Retain graphs opt-in; no additional broad tests.

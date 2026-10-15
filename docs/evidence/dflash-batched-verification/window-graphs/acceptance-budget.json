@@ -1,0 +1,159 @@
+{
+  "scope": "Post-hoc descriptive first-draft confidence only. Later draft positions after the first rejection are not independent acceptance labels. Filtering changes future histories, so these counts do not simulate an adaptive policy or predict TPS.",
+  "tasks": {
+    "serving-matched-on": [
+      {
+        "width": 2,
+        "rounds": 45,
+        "emitted_per_round": 2.8444444444444446,
+        "mean_verify_ms": 52.24013333333333,
+        "mean_draft_ms": 2.059088888888889,
+        "total_round_budget_at_60tps_ms": 47.407407407407405,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 45,
+            "first_draft_accepted": 42
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 37,
+            "first_draft_accepted": 37
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 36,
+            "first_draft_accepted": 36
+          }
+        ]
+      },
+      {
+        "width": 4,
+        "rounds": 31,
+        "emitted_per_round": 4.129032258064516,
+        "mean_verify_ms": 77.73629032258064,
+        "mean_draft_ms": 1.8921935483870969,
+        "total_round_budget_at_60tps_ms": 68.81720430107526,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 31,
+            "first_draft_accepted": 26
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 27,
+            "first_draft_accepted": 25
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 21,
+            "first_draft_accepted": 20
+          }
+        ]
+      },
+      {
+        "width": 2,
+        "rounds": 45,
+        "emitted_per_round": 2.8444444444444446,
+        "mean_verify_ms": 51.86737777777778,
+        "mean_draft_ms": 2.038422222222222,
+        "total_round_budget_at_60tps_ms": 47.407407407407405,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 45,
+            "first_draft_accepted": 42
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 37,
+            "first_draft_accepted": 37
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 35,
+            "first_draft_accepted": 35
+          }
+        ]
+      },
+      {
+        "width": 4,
+        "rounds": 30,
+        "emitted_per_round": 4.266666666666667,
+        "mean_verify_ms": 77.8091,
+        "mean_draft_ms": 1.9651,
+        "total_round_budget_at_60tps_ms": 71.11111111111111,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 30,
+            "first_draft_accepted": 27
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 26,
+            "first_draft_accepted": 25
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 22,
+            "first_draft_accepted": 21
+          }
+        ]
+      }
+    ],
+    "long-serving-on": [
+      {
+        "width": 2,
+        "rounds": 74,
+        "emitted_per_round": 1.7297297297297298,
+        "mean_verify_ms": 65.31886486486488,
+        "mean_draft_ms": 2.3332027027027027,
+        "total_round_budget_at_60tps_ms": 28.82882882882883,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 74,
+            "first_draft_accepted": 35
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 19,
+            "first_draft_accepted": 17
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 11,
+            "first_draft_accepted": 10
+          }
+        ]
+      },
+      {
+        "width": 4,
+        "rounds": 57,
+        "emitted_per_round": 2.245614035087719,
+        "mean_verify_ms": 90.59566666666667,
+        "mean_draft_ms": 2.2220877192982456,
+        "total_round_budget_at_60tps_ms": 37.42690058479532,
+        "first_draft_confidence": [
+          {
+            "minimum_confidence": 0,
+            "rounds": 57,
+            "first_draft_accepted": 35
+          },
+          {
+            "minimum_confidence": 0.95,
+            "rounds": 18,
+            "first_draft_accepted": 16
+          },
+          {
+            "minimum_confidence": 0.99,
+            "rounds": 14,
+            "first_draft_accepted": 13
+          }
+        ]
+      }
+    ]
+  }
+}

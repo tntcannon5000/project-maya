@@ -1,0 +1,152 @@
+{
+  "scope": "One short coding prompt; repeated requests, not independent trials. No profiler. Raw per-round drafter timing is enabled equally.",
+  "off": {
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tokens": 128,
+        "tps": 35.056007449401584,
+        "prompt_ms": 3232.9,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tokens": 128,
+        "tps": 40.87367479882489,
+        "prompt_ms": 39.0,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tokens": 128,
+        "tps": 24.022671396130097,
+        "prompt_ms": 38.8,
+        "acceptance": 0.3581081081081081,
+        "draft_ms": 170.028,
+        "verify_ms": 5050.75
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tokens": 128,
+        "tps": 23.56970556281879,
+        "prompt_ms": 40.0,
+        "acceptance": 0.30701754385964913,
+        "draft_ms": 124.705,
+        "verify_ms": 5214.664
+      }
+    ],
+    "captures": 0,
+    "replays": 0,
+    "memory_and_graph_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)",
+      "glm fast: CUDA0 RAM tier 93.99 GB pinned, 11365 slots"
+    ]
+  },
+  "on": {
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tokens": 128,
+        "tps": 35.044490075290895,
+        "prompt_ms": 3219.8,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tokens": 128,
+        "tps": 40.96262160778289,
+        "prompt_ms": 37.7,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "matrix",
+        "width": 2,
+        "tokens": 128,
+        "tps": 25.053336204028106,
+        "prompt_ms": 39.2,
+        "acceptance": 0.3581081081081081,
+        "draft_ms": 172.657,
+        "verify_ms": 4833.5960000000005
+      },
+      {
+        "kind": "matrix",
+        "width": 4,
+        "tokens": 128,
+        "tps": 23.784306074288793,
+        "prompt_ms": 39.6,
+        "acceptance": 0.30701754385964913,
+        "draft_ms": 126.65899999999999,
+        "verify_ms": 5163.953
+      }
+    ],
+    "captures": 84,
+    "replays": 5418,
+    "memory_and_graph_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)",
+      "glm fast: CUDA0 RAM tier 93.99 GB pinned, 11365 slots",
+      "maya verify MoE graph CUDA0 host totals: capture/build/instantiate 43.384 ms, first-launch submission 1.397 ms, replay submission 79.882 ms; ring-credit waits 1508 / 2266.804 ms / 0 timeouts (30 s bound); submission times are not GPU execution times",
+      "maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T3/T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging",
+      "maya verify MoE graph CUDA0 host totals: capture/build/instantiate 38.630 ms, first-launch submission 1.531 ms, replay submission 74.891 ms; ring-credit waits 1675 / 3235.231 ms / 0 timeouts (30 s bound); submission times are not GPU execution times",
+      "maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T3/T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging"
+    ]
+  },
+  "paired": [
+    {
+      "kind": "warmup",
+      "width": 0,
+      "off_tps": 35.056007449401584,
+      "on_tps": 35.044490075290895,
+      "change_percent": -0.03285420944558748,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    },
+    {
+      "kind": "control",
+      "width": 0,
+      "off_tps": 40.87367479882489,
+      "on_tps": 40.96262160778289,
+      "change_percent": 0.2176139272913158,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    },
+    {
+      "kind": "matrix",
+      "width": 2,
+      "off_tps": 24.022671396130097,
+      "on_tps": 25.053336204028106,
+      "change_percent": 4.290383824939825,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    },
+    {
+      "kind": "matrix",
+      "width": 4,
+      "off_tps": 23.56970556281879,
+      "on_tps": 23.784306074288793,
+      "change_percent": 0.9104929669063733,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    }
+  ],
+  "occupied_prompt_tokens": 6793
+}

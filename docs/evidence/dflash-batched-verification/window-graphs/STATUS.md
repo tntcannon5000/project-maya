@@ -33,3 +33,13 @@ One original six-window/two-reset graph-on fixture demonstrated competing promot
 Source mechanism: the background H2D destination is Landing while the source remains routeable RAM. A demand route can promote the same expert into another spare. Background retirement then unconditionally assigns `slot_of[key]` to its own destination, orphaning the demand copy. Existing published-pointer checks explicitly did not reject duplicate unreferenced residents. Both copies can contain correct bytes, but this wastes capacity and complicates subsequent demotion ownership.
 
 Next work should preserve one authoritative owner through competing promotion retirement and conditional table clearing, including in-flight demotions and retained RAM backing. Do not blindly free a duplicate that remains a live transfer source. Diagnose the original numerical failure separately; do not label this discovered ownership case as its cause. Graph performance remains unqualified; no serving A/B was run.
+
+## Completed graph speed gate (2026-10-15)
+
+Current exact GPU/hybrid qualification is followed by two bounded coding workloads. Short40-token prompt: warm two-draft50.82 ->52.42TPS, four-draft51.22 ->52.91TPS. Ordinary control45.27/45.06TPS. Actual84captures/6258replays across the four speculative requests, zero bypass/errors; STOP/recovery and teardown pass. Every paired output history and acceptance count matches.
+
+Reversed-order6,793-token coding prompt: ordinary40.87/40.96TPS; two-draft24.02 ->25.05TPS (+4.29%), four-draft23.57 ->23.78TPS (+0.91%, not a reliable gain from one pair). Cold prefill3232.9 ->3219.8ms, a bounded smoke check. Full paired histories/counts match. Forced drafting remains much slower than ordinary on this task because acceptance is only35.8%/30.7%.
+
+Retain graph implementation opt-in; no default or launcher change. The short-task graph gain is modest, and60TPS is not achieved. Preserve historical intermittent failure as unattributed; production sign-off and forced ownership edge-case validation remain open. Do not repeat the same width/quant matrix.
+
+Next decision: inspect and exercise the existing confidence-based policy with this complete combination, rather than add more unconditional drafting or another general kernel sweep. Offline first-draft counts show the long two-draft task accepts35/74 first drafts overall, but17/19 when confidence>=0.95; this is descriptive only, not a simulated policy/TPS result. Confidence gating changes histories and must be measured if used. At the forced policy's1.73emitted tokens/round,60TPS requires28.83ms total per round versus65.32ms verification alone; dispatch optimisation cannot bridge that gap. See window-graphs/SERVING-RESULTS.md and acceptance-budget.json.

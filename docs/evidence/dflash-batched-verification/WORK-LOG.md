@@ -296,3 +296,13 @@ With the ownership fix enabled in both arms, 7,434,240 verification logits (48 r
 Warm fixed-input call means: T3 61.113 -> 59.450 ms; T5 96.916 -> 95.323 ms. First-request means do not improve (T3 91.422 -> 91.584, T5 126.163 -> 126.852 ms). These are diagnostic call timings, not TPS; prefix logging and ownership diagnostics are enabled.
 
 The original intermittent failure remains preserved and its cause unproven. Current matched graph-off/on qualification passes, allowing a bounded experimental serving speed gate, not production sign-off. Superseded-winner eviction and replacement-RAM edge cases remain source-reviewed rather than separately forced runtime cases. See window-graphs/hybrid-owner-fix/qualification.json and summary.json.
+
+## Completed graph speed gate (2026-10-15)
+
+Current exact GPU/hybrid qualification is followed by two bounded coding workloads. Short40-token prompt: warm two-draft50.82 ->52.42TPS, four-draft51.22 ->52.91TPS. Ordinary control45.27/45.06TPS. Actual84captures/6258replays across the four speculative requests, zero bypass/errors; STOP/recovery and teardown pass. Every paired output history and acceptance count matches.
+
+Reversed-order6,793-token coding prompt: ordinary40.87/40.96TPS; two-draft24.02 ->25.05TPS (+4.29%), four-draft23.57 ->23.78TPS (+0.91%, not a reliable gain from one pair). Cold prefill3232.9 ->3219.8ms, a bounded smoke check. Full paired histories/counts match. Forced drafting remains much slower than ordinary on this task because acceptance is only35.8%/30.7%.
+
+Retain graph implementation opt-in; no default or launcher change. The short-task graph gain is modest, and60TPS is not achieved. Preserve historical intermittent failure as unattributed; production sign-off and forced ownership edge-case validation remain open. Do not repeat the same width/quant matrix.
+
+Next decision: inspect and exercise the existing confidence-based policy with this complete combination, rather than add more unconditional drafting or another general kernel sweep. Offline first-draft counts show the long two-draft task accepts35/74 first drafts overall, but17/19 when confidence>=0.95; this is descriptive only, not a simulated policy/TPS result. Confidence gating changes histories and must be measured if used. At the forced policy's1.73emitted tokens/round,60TPS requires28.83ms total per round versus65.32ms verification alone; dispatch optimisation cannot bridge that gap. See window-graphs/SERVING-RESULTS.md and acceptance-budget.json.

@@ -56,9 +56,12 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Validate all gap-ending CUDA API correlations and explicitly test missing-correlation handling.
 - [x] Implement complete opt-in native MoE layer graphs with safe replay credits, capture cleanup and teardown; actual CUDA helper test passes.
 - [x] Verify current graph engagement and exact GPU/matched-hybrid fixed-input logits with partial commits/reset; historical intermittent failure remains unattributed.
-- [ ] Gate further graph work on one bounded coding throughput comparison.
+- [x] Gate further graph work on bounded short/long coding throughput comparisons; retain opt-in, no production sign-off.
 
 - [x] Preserve original graph parity failure alongside exact reruns; no numerical threshold change.
 - [x] Measure competing promotion/duplicate resident metadata without claiming it explains the numerical failure.
 - [x] Resolve measured competing-promotion ownership defect and pass current GPU/hybrid exact checks before the experimental speed gate.
 - [ ] Attribute historical intermittent failure before production sign-off; force remaining ownership edge cases.
+
+- [x] Verify serving capture/replay, matched outputs/acceptance, short and6793-token occupied contexts, prefill smoke and STOP/recovery.
+- [ ] Evaluate existing confidence policy with the complete candidate before adding unconditional drafting work; do not infer TPS from offline confidence filtering.
