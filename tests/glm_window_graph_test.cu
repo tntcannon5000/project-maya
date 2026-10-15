@@ -23,13 +23,13 @@ int main() {
     check(cudaMemset(output,0,sizeof(int)));
     Cache cache; Cache::Accounts accounts{}; std::string err;
     int wanted=0; uint64_t credits=0;
-    for(int step=0;step<12;++step) {
-        const int width=step%2 ? 5 : 3, selected=step%2;
+    for(int step=0;step<24;++step) {
+        const int width=2+step%4, selected=step%2;
         int vals[2]={step+2,step+7};const int* pointers[2]={values+(step%2),values+(1-step%2)};
         check(cudaMemcpyAsync(values,vals,sizeof vals,cudaMemcpyHostToDevice,stream));
         check(cudaMemcpyAsync(index,&selected,sizeof selected,cudaMemcpyHostToDevice,stream));
         check(cudaMemcpyAsync(table,pointers,sizeof pointers,cudaMemcpyHostToDevice,stream));
-        Cache::Key key{}; key[0]=step<6 ? 1 : 2;
+        Cache::Key key{}; key[0]=step<12 ? 1 : 2;
         const auto body=[&]() {
             check(cudaEventRecord(ready,stream));check(cudaStreamWaitEvent(side,ready,0));
             add_selected<<<1,1,0,side>>>(table,index,output,width);
@@ -51,8 +51,8 @@ int main() {
     require(cache.enqueue(99,3,key,stream,side,accounts,fail,err)==Cache::Result::Fallback,"disabled key must remain bypassed");
     check(cudaStreamSynchronize(stream));int actual;check(cudaMemcpy(&actual,output,sizeof actual,cudaMemcpyDeviceToHost));
     require(actual==wanted,"abandoned capture executed work");
-    require(cache.stats.captures==4 && cache.stats.replays==8 && cache.stats.invalidations==2 && cache.stats.capture_failures==1 && cache.stats.disabled_fallbacks==1,"engagement counters mismatch");
-    std::printf("PASS window graphs: dynamic pointers, T3/T5, side join, invalidation, exact credits, abandoned capture; %llu captures %llu replays\n",cache.stats.captures,cache.stats.replays);
+    require(cache.stats.captures==8 && cache.stats.replays==16 && cache.stats.invalidations==4 && cache.stats.capture_failures==1 && cache.stats.disabled_fallbacks==1,"engagement counters mismatch");
+    std::printf("PASS window graphs: dynamic pointers, T2..T5, side join, invalidation, exact credits, abandoned capture; %llu captures %llu replays\n",cache.stats.captures,cache.stats.replays);
     cache.clear();check(cudaFree(table));check(cudaFree(values));check(cudaFree(index));check(cudaFree(output));
     check(cudaEventDestroy(ready));check(cudaEventDestroy(done));check(cudaStreamDestroy(side));check(cudaStreamDestroy(stream));
 }

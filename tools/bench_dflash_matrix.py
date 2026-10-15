@@ -17,7 +17,7 @@ def main():
     ap.add_argument('--out',type=Path,default=OUT)
     ap.add_argument('--exe',type=Path,default=ROOT/'build/strata.exe')
     ap.add_argument('--stock',action='store_true')
-    ap.add_argument('--widths',default='4,1,7,2,6,3,5')
+    ap.add_argument('--widths',default='4,1,7,2,6,3,5', help='Comma-separated forced draft widths; empty skips forced policies')
     ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
     ap.add_argument('--env',action='append',default=[])
     ap.add_argument('--cancel-smoke',action='store_true')
@@ -32,6 +32,8 @@ def main():
     prompt=a.prompt_file.read_text(encoding='utf-8') if a.prompt_file else PROMPT
     if a.tokens < 1:ap.error('--tokens must be positive')
     if not 0 <= a.confidence_max_drafts <= 7:ap.error('--confidence-max-drafts must be 0..7')
+    widths = [int(x) for x in a.widths.split(',') if x.strip()]
+    if any(w < 1 or w > 7 for w in widths):ap.error('--widths entries must be 1..7')
     ids = tok.encode('[gMASK]<sop><|user|>\n'+prompt+'<|assistant|>\n</think>', parse_special=True)
     exe = a.exe.resolve()
     for quant in a.quant:
@@ -54,7 +56,7 @@ def main():
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
                         context_capacity=131072, occupied_prompt_tokens=len(ids), output_cap=a.tokens,
-                        width_order=list(map(int,a.widths.split(','))), confidence_max_drafts=a.confidence_max_drafts,
+                        width_order=widths, confidence_max_drafts=a.confidence_max_drafts,
                         stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]

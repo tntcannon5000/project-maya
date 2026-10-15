@@ -618,10 +618,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         if (cpu_override.requested) plan = cpu_override.plan;
         const char* bypass = nullptr;
         if (n_parts_ != 1 || split_next_ || part != 0 || gid != 0 || t0 != 0 || T != W.T ||
-            (T != 3 && T != 5) || W.per_token || W.pipe_t >= 0 || W.from != nullptr || F->md.skip != nullptr ||
+            (T < 2 || T > 5) || W.per_token || W.pipe_t >= 0 || W.from != nullptr || F->md.skip != nullptr ||
             !env_on("STRATA_GLM_WIN_BATCH", true) || keep < g.n_exp_used || F->spec_gate) {
             ++graphs.stats.bypass_scope;
-            bypass = "scope (requires complete T3/T5, single-device nonstaggered/nonpipeline native batch)";
+            bypass = "scope (requires complete T2..T5, single-device nonstaggered/nonpipeline native batch)";
         } else if (prof || F->prof_on || env_on("MAYA_WIN_GROUP_DIAG", false) ||
                    (union_diag && *union_diag) || F->window_weight_verify_active || W.uid) {
             ++graphs.stats.bypass_diag;
@@ -2463,7 +2463,7 @@ void Glm5Model::win_prof_report() {
                          d.credit_ms, (unsigned long long) d.credit_timeouts);
             std::fprintf(stderr, "maya verify MoE graph CUDA%d bypass reasons: scope=%llu diagnostics=%llu "
                                  "format=%llu storage/service=%llu async-fetch=%llu; "
-                                 "requires full T3/T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging\n",
+                                 "requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging\n",
                          m->dev_, (unsigned long long) d.bypass_scope, (unsigned long long) d.bypass_diag,
                          (unsigned long long) d.bypass_format, (unsigned long long) d.bypass_storage,
                          (unsigned long long) d.bypass_async);
