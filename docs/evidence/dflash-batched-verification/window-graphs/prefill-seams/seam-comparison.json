@@ -1,0 +1,1262 @@
+[
+  {
+    "layer": 0,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 0,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 0,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 0,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 1,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 1,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 1,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 1,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 2,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 2,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 2,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 2,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 3,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 3,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 3,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": true,
+    "max_abs": 0.0
+  },
+  {
+    "layer": 3,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 1.4901161193847656e-07
+  },
+  {
+    "layer": 4,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 8.940696716308594e-08
+  },
+  {
+    "layer": 4,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 1.1548399925231934e-06
+  },
+  {
+    "layer": 4,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 1.726299524307251e-05
+  },
+  {
+    "layer": 4,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0011363103985786438
+  },
+  {
+    "layer": 5,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0017254902049899101
+  },
+  {
+    "layer": 5,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 4.4193584471940994e-05
+  },
+  {
+    "layer": 5,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.003578752279281616
+  },
+  {
+    "layer": 5,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0067601799964904785
+  },
+  {
+    "layer": 6,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0076828524470329285
+  },
+  {
+    "layer": 6,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0002172626554965973
+  },
+  {
+    "layer": 6,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.016866534948349
+  },
+  {
+    "layer": 6,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.008678186684846878
+  },
+  {
+    "layer": 7,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0014359783381223679
+  },
+  {
+    "layer": 7,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.009727535769343376
+  },
+  {
+    "layer": 7,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.017004311084747314
+  },
+  {
+    "layer": 7,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.005841046571731567
+  },
+  {
+    "layer": 8,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.009984582662582397
+  },
+  {
+    "layer": 8,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0001229853369295597
+  },
+  {
+    "layer": 8,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.01645616814494133
+  },
+  {
+    "layer": 8,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.006613327190279961
+  },
+  {
+    "layer": 9,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.009674027562141418
+  },
+  {
+    "layer": 9,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.00014059711247682571
+  },
+  {
+    "layer": 9,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.016509950160980225
+  },
+  {
+    "layer": 9,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.00645563006401062
+  },
+  {
+    "layer": 10,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.009965283796191216
+  },
+  {
+    "layer": 10,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0003698403015732765
+  },
+  {
+    "layer": 10,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.022787369787693024
+  },
+  {
+    "layer": 10,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.010111475363373756
+  },
+  {
+    "layer": 11,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0019412841647863388
+  },
+  {
+    "layer": 11,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.017691969871520996
+  },
+  {
+    "layer": 11,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02576380968093872
+  },
+  {
+    "layer": 11,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.010747477412223816
+  },
+  {
+    "layer": 12,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.014361664652824402
+  },
+  {
+    "layer": 12,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0002891302574425936
+  },
+  {
+    "layer": 12,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02505400776863098
+  },
+  {
+    "layer": 12,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.007669894490391016
+  },
+  {
+    "layer": 13,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.019232168793678284
+  },
+  {
+    "layer": 13,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0007224567234516144
+  },
+  {
+    "layer": 13,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.05003112554550171
+  },
+  {
+    "layer": 13,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.017242439091205597
+  },
+  {
+    "layer": 14,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.024957826361060143
+  },
+  {
+    "layer": 14,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0008781487122178078
+  },
+  {
+    "layer": 14,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.04865232855081558
+  },
+  {
+    "layer": 14,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0464329794049263
+  },
+  {
+    "layer": 15,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.005542682483792305
+  },
+  {
+    "layer": 15,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.05154137313365936
+  },
+  {
+    "layer": 15,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.08223246037960052
+  },
+  {
+    "layer": 15,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.024898570030927658
+  },
+  {
+    "layer": 16,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.043903648853302
+  },
+  {
+    "layer": 16,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0014692926779389381
+  },
+  {
+    "layer": 16,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.07443486154079437
+  },
+  {
+    "layer": 16,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.025071725249290466
+  },
+  {
+    "layer": 17,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.05762283504009247
+  },
+  {
+    "layer": 17,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0024096774868667126
+  },
+  {
+    "layer": 17,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.06581760942935944
+  },
+  {
+    "layer": 17,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02545936591923237
+  },
+  {
+    "layer": 18,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.04715241864323616
+  },
+  {
+    "layer": 18,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.003039587289094925
+  },
+  {
+    "layer": 18,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.08590948581695557
+  },
+  {
+    "layer": 18,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.034193962812423706
+  },
+  {
+    "layer": 19,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.008382678031921387
+  },
+  {
+    "layer": 19,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0842316597700119
+  },
+  {
+    "layer": 19,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.07473057508468628
+  },
+  {
+    "layer": 19,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02988271228969097
+  },
+  {
+    "layer": 20,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.06531479209661484
+  },
+  {
+    "layer": 20,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.004585670307278633
+  },
+  {
+    "layer": 20,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.08365747332572937
+  },
+  {
+    "layer": 20,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02814262919127941
+  },
+  {
+    "layer": 21,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.05720625817775726
+  },
+  {
+    "layer": 21,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.005257829558104277
+  },
+  {
+    "layer": 21,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.08504407852888107
+  },
+  {
+    "layer": 21,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0633409321308136
+  },
+  {
+    "layer": 22,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.12160547077655792
+  },
+  {
+    "layer": 22,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.012613115832209587
+  },
+  {
+    "layer": 22,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.11673171818256378
+  },
+  {
+    "layer": 22,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0575481653213501
+  },
+  {
+    "layer": 23,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.023353468626737595
+  },
+  {
+    "layer": 23,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.15387636423110962
+  },
+  {
+    "layer": 23,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.14691710472106934
+  },
+  {
+    "layer": 23,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.04495954513549805
+  },
+  {
+    "layer": 24,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.09981925040483475
+  },
+  {
+    "layer": 24,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.011005830019712448
+  },
+  {
+    "layer": 24,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.12238875031471252
+  },
+  {
+    "layer": 24,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.05076234042644501
+  },
+  {
+    "layer": 25,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10898852348327637
+  },
+  {
+    "layer": 25,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.019779611378908157
+  },
+  {
+    "layer": 25,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10396003723144531
+  },
+  {
+    "layer": 25,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.058257922530174255
+  },
+  {
+    "layer": 26,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.1009758859872818
+  },
+  {
+    "layer": 26,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.016219832003116608
+  },
+  {
+    "layer": 26,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.11273787915706635
+  },
+  {
+    "layer": 26,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.06368400156497955
+  },
+  {
+    "layer": 27,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.021497491747140884
+  },
+  {
+    "layer": 27,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.057964932173490524
+  },
+  {
+    "layer": 27,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.11811789870262146
+  },
+  {
+    "layer": 27,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0550515279173851
+  },
+  {
+    "layer": 28,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.12024442106485367
+  },
+  {
+    "layer": 28,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0072583360597491264
+  },
+  {
+    "layer": 28,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.12945353984832764
+  },
+  {
+    "layer": 28,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.06319275498390198
+  },
+  {
+    "layer": 29,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.0987291932106018
+  },
+  {
+    "layer": 29,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.01624145917594433
+  },
+  {
+    "layer": 29,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.14580866694450378
+  },
+  {
+    "layer": 29,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.09128569066524506
+  },
+  {
+    "layer": 30,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10376423597335815
+  },
+  {
+    "layer": 30,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.030190475285053253
+  },
+  {
+    "layer": 30,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.16810199618339539
+  },
+  {
+    "layer": 30,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.07150210440158844
+  },
+  {
+    "layer": 31,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.016205105930566788
+  },
+  {
+    "layer": 31,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.09610158205032349
+  },
+  {
+    "layer": 31,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.1873486489057541
+  },
+  {
+    "layer": 31,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.07257035374641418
+  },
+  {
+    "layer": 32,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10459879040718079
+  },
+  {
+    "layer": 32,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.011067311279475689
+  },
+  {
+    "layer": 32,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.20682430267333984
+  },
+  {
+    "layer": 32,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.09120092540979385
+  },
+  {
+    "layer": 33,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.1334373950958252
+  },
+  {
+    "layer": 33,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.028211288154125214
+  },
+  {
+    "layer": 33,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.2329345941543579
+  },
+  {
+    "layer": 33,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10695943981409073
+  },
+  {
+    "layer": 34,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.11223387718200684
+  },
+  {
+    "layer": 34,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.1047038584947586
+  },
+  {
+    "layer": 34,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.20981353521347046
+  },
+  {
+    "layer": 34,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.12141197919845581
+  },
+  {
+    "layer": 35,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.017330452799797058
+  },
+  {
+    "layer": 35,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.1265106499195099
+  },
+  {
+    "layer": 35,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.23894521594047546
+  },
+  {
+    "layer": 35,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.15133443474769592
+  },
+  {
+    "layer": 36,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.16673144698143005
+  },
+  {
+    "layer": 36,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.06336526572704315
+  },
+  {
+    "layer": 36,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.29607099294662476
+  },
+  {
+    "layer": 36,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.13731276988983154
+  },
+  {
+    "layer": 37,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.23998205363750458
+  },
+  {
+    "layer": 37,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.03187941759824753
+  },
+  {
+    "layer": 37,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.3566528260707855
+  },
+  {
+    "layer": 37,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.19286704063415527
+  },
+  {
+    "layer": 38,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.20687055587768555
+  },
+  {
+    "layer": 38,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.02305280975997448
+  },
+  {
+    "layer": 38,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.35252538323402405
+  },
+  {
+    "layer": 38,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.2046530842781067
+  },
+  {
+    "layer": 39,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.026561545208096504
+  },
+  {
+    "layer": 39,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.10004448890686035
+  },
+  {
+    "layer": 39,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.450506329536438
+  },
+  {
+    "layer": 39,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.20952126383781433
+  },
+  {
+    "layer": 40,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.28818801045417786
+  },
+  {
+    "layer": 40,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.04437717795372009
+  },
+  {
+    "layer": 40,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.44223320484161377
+  },
+  {
+    "layer": 40,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.2933640778064728
+  },
+  {
+    "layer": 41,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.29073211550712585
+  },
+  {
+    "layer": 41,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.07956257462501526
+  },
+  {
+    "layer": 41,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.5091291069984436
+  },
+  {
+    "layer": 41,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.3610855042934418
+  },
+  {
+    "layer": 42,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.2595006823539734
+  },
+  {
+    "layer": 42,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.08047538995742798
+  },
+  {
+    "layer": 42,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.5717501640319824
+  },
+  {
+    "layer": 42,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.44041866064071655
+  },
+  {
+    "layer": 43,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.029533028602600098
+  },
+  {
+    "layer": 43,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.164552241563797
+  },
+  {
+    "layer": 43,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.5121694207191467
+  },
+  {
+    "layer": 43,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.29669201374053955
+  },
+  {
+    "layer": 44,
+    "stage": "attn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.22698767483234406
+  },
+  {
+    "layer": 44,
+    "stage": "mixer",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.27846992015838623
+  },
+  {
+    "layer": 44,
+    "stage": "ffn_norm",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 0.43052732944488525
+  },
+  {
+    "layer": 44,
+    "stage": "ffn_out",
+    "values": 4096,
+    "exact": false,
+    "max_abs": 1.0000219345092773
+  }
+]

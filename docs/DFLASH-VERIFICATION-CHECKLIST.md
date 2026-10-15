@@ -70,3 +70,7 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Qualify complete adaptive candidate on one writing task; paired histories/counts match, bounded prefill smoke passes.
 - [x] Force24production metadata transition cases and qualify extraction against full-model logits; not DMA race stress.
 - [ ] Close historical numerical attribution and any required DMA-specific ownership gates before production recommendation.
+
+- [x] Capture and compare serialized pre-verification state; localize repeat-prefill divergence before verification.
+- [x] Locate first sampled prefill seam difference at layer3FFNoutput using existing diagnostics, with instrumentation caveat recorded.
+- [ ] Distinguish layer3combine grouping from MMQ product differences using captured values; historical failure remains unattributed.

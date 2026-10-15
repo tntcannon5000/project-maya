@@ -1,0 +1,206 @@
+[
+  {
+    "recurrent_index": 0,
+    "bitwise_exact": true,
+    "max_abs": 0.0,
+    "layer": 0
+  },
+  {
+    "recurrent_index": 1,
+    "bitwise_exact": true,
+    "max_abs": 0.0,
+    "layer": 1
+  },
+  {
+    "recurrent_index": 2,
+    "bitwise_exact": true,
+    "max_abs": 0.0,
+    "layer": 2
+  },
+  {
+    "recurrent_index": 3,
+    "bitwise_exact": false,
+    "max_abs": 5.245208740234375e-06,
+    "layer": 4
+  },
+  {
+    "recurrent_index": 4,
+    "bitwise_exact": false,
+    "max_abs": 0.00713242357596755,
+    "layer": 5
+  },
+  {
+    "recurrent_index": 5,
+    "bitwise_exact": false,
+    "max_abs": 0.01734839752316475,
+    "layer": 6
+  },
+  {
+    "recurrent_index": 6,
+    "bitwise_exact": false,
+    "max_abs": 0.022265851497650146,
+    "layer": 8
+  },
+  {
+    "recurrent_index": 7,
+    "bitwise_exact": false,
+    "max_abs": 0.021830439567565918,
+    "layer": 9
+  },
+  {
+    "recurrent_index": 8,
+    "bitwise_exact": false,
+    "max_abs": 0.018164820969104767,
+    "layer": 10
+  },
+  {
+    "recurrent_index": 9,
+    "bitwise_exact": false,
+    "max_abs": 0.03774106502532959,
+    "layer": 12
+  },
+  {
+    "recurrent_index": 10,
+    "bitwise_exact": false,
+    "max_abs": 0.04760652780532837,
+    "layer": 13
+  },
+  {
+    "recurrent_index": 11,
+    "bitwise_exact": false,
+    "max_abs": 0.0458066463470459,
+    "layer": 14
+  },
+  {
+    "recurrent_index": 12,
+    "bitwise_exact": false,
+    "max_abs": 0.062230587005615234,
+    "layer": 16
+  },
+  {
+    "recurrent_index": 13,
+    "bitwise_exact": false,
+    "max_abs": 0.08053958415985107,
+    "layer": 17
+  },
+  {
+    "recurrent_index": 14,
+    "bitwise_exact": false,
+    "max_abs": 0.06739327311515808,
+    "layer": 18
+  },
+  {
+    "recurrent_index": 15,
+    "bitwise_exact": false,
+    "max_abs": 0.1346874237060547,
+    "layer": 20
+  },
+  {
+    "recurrent_index": 16,
+    "bitwise_exact": false,
+    "max_abs": 0.14264583587646484,
+    "layer": 21
+  },
+  {
+    "recurrent_index": 17,
+    "bitwise_exact": false,
+    "max_abs": 0.32325631380081177,
+    "layer": 22
+  },
+  {
+    "recurrent_index": 18,
+    "bitwise_exact": false,
+    "max_abs": 0.17949575185775757,
+    "layer": 24
+  },
+  {
+    "recurrent_index": 19,
+    "bitwise_exact": false,
+    "max_abs": 0.24241995811462402,
+    "layer": 25
+  },
+  {
+    "recurrent_index": 20,
+    "bitwise_exact": false,
+    "max_abs": 0.1953643560409546,
+    "layer": 26
+  },
+  {
+    "recurrent_index": 21,
+    "bitwise_exact": false,
+    "max_abs": 0.2322484254837036,
+    "layer": 28
+  },
+  {
+    "recurrent_index": 22,
+    "bitwise_exact": false,
+    "max_abs": 0.1861351877450943,
+    "layer": 29
+  },
+  {
+    "recurrent_index": 23,
+    "bitwise_exact": false,
+    "max_abs": 0.21643364429473877,
+    "layer": 30
+  },
+  {
+    "recurrent_index": 24,
+    "bitwise_exact": false,
+    "max_abs": 0.18268245458602905,
+    "layer": 32
+  },
+  {
+    "recurrent_index": 25,
+    "bitwise_exact": false,
+    "max_abs": 0.1951521635055542,
+    "layer": 33
+  },
+  {
+    "recurrent_index": 26,
+    "bitwise_exact": false,
+    "max_abs": 0.28208696842193604,
+    "layer": 34
+  },
+  {
+    "recurrent_index": 27,
+    "bitwise_exact": false,
+    "max_abs": 0.24319933354854584,
+    "layer": 36
+  },
+  {
+    "recurrent_index": 28,
+    "bitwise_exact": false,
+    "max_abs": 0.41661593317985535,
+    "layer": 37
+  },
+  {
+    "recurrent_index": 29,
+    "bitwise_exact": false,
+    "max_abs": 0.40727925300598145,
+    "layer": 38
+  },
+  {
+    "recurrent_index": 30,
+    "bitwise_exact": false,
+    "max_abs": 0.5912560820579529,
+    "layer": 40
+  },
+  {
+    "recurrent_index": 31,
+    "bitwise_exact": false,
+    "max_abs": 0.6050515174865723,
+    "layer": 41
+  },
+  {
+    "recurrent_index": 32,
+    "bitwise_exact": false,
+    "max_abs": 0.5588071346282959,
+    "layer": 42
+  },
+  {
+    "recurrent_index": 33,
+    "bitwise_exact": false,
+    "max_abs": 0.6275994777679443,
+    "layer": 44
+  }
+]

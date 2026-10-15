@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdio>
 #include <fstream>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -49,6 +50,28 @@ int main(int argc, char** argv) {
             if (!m.prefill(std::vector<int32_t>(ids.begin(), ids.begin()+prefix-1), err, ids[prefix-1])) {
                 std::fprintf(stderr, "batched fixture prefill failed or unavailable: %s\n", err.c_str()); return 5;
             }
+            if (std::getenv("MAYA_VERIFY_SAVE_PREFILL_SEAMS") != nullptr) {
+                // Preserve the existing diagnostic seams before forward() can
+                // overwrite their filenames with the final token's activations.
+                const char* source = std::getenv("GLM_CB_DIR");
+                if (!source || !*source) return 13;
+                try {
+                    const auto target = std::filesystem::path(std::string(argv[3]) + ".prefill-" + std::to_string(rep));
+                    std::filesystem::create_directories(target);
+                    int copied = 0;
+                    for (const auto& entry : std::filesystem::directory_iterator(source)) {
+                        if (entry.is_regular_file() && entry.path().extension() == ".f32") {
+                            std::filesystem::copy_file(entry.path(), target / entry.path().filename(),
+                                std::filesystem::copy_options::overwrite_existing);
+                            ++copied;
+                        }
+                    }
+                    if (!copied) return 13;
+                    std::fprintf(stderr, "verify prefill seams: repeat=%d files=%d path=%s\n", rep, copied, target.string().c_str());
+                } catch (const std::filesystem::filesystem_error& e) {
+                    std::fprintf(stderr, "prefill seam preservation: %s\n", e.what()); return 13;
+                }
+            }
             if (!m.forward({ids[prefix-1]}, logits, err)) return 5;
             std::fprintf(stderr, "verify fixture: completed batched prefix %d, repeat %d\n", prefix, rep);
         } else if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+prefix), logits, err)) return 5;
@@ -59,6 +82,22 @@ int main(int argc, char** argv) {
             const bool written = std::fwrite(logits.data(), sizeof(float), logits.size(), pf) == logits.size();
             std::fclose(pf);
             if (!written) return 11;
+        }
+        if (std::getenv("MAYA_VERIFY_PREFIX_STATE") != nullptr) {
+            // Diagnostic only: use the engine's conversation serializer to
+            // retain recurrent state and occupied DSA caches before verification.
+            // Snapshot allocation/copies perturb memory/timing; never use this
+            // mode as throughput evidence. Prefix logits were recorded above.
+            size_t free_before = 0, total = 0, free_after = 0;
+            if (cudaMemGetInfo(&free_before, &total) != cudaSuccess) return 12;
+            if (!m.snapshot_save()) { std::fprintf(stderr, "prefix snapshot failed\n"); return 12; }
+            const std::string path = std::string(argv[3]) + ".prefix-" + std::to_string(rep) + ".slot";
+            const uint64_t bytes = m.slot_save(path, err);
+            if (!bytes) { std::fprintf(stderr, "prefix state save: %s\n", err.c_str()); return 12; }
+            if (cudaMemGetInfo(&free_after, &total) != cudaSuccess) return 12;
+            std::fprintf(stderr, "verify prefix state: repeat=%d bytes=%llu free_before=%llu free_after=%llu path=%s\n",
+                rep, (unsigned long long)bytes, (unsigned long long)free_before,
+                (unsigned long long)free_after, path.c_str());
         }
         if (reference_mode != "windows") {
             if (logits.size() != (size_t)m.geometry().n_vocab) return 7;

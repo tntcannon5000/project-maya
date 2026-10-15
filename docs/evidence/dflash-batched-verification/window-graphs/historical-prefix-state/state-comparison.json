@@ -1,0 +1,77 @@
+{
+  "prefix_logits": {
+    "values": 309760,
+    "finite": true,
+    "bitwise_exact": true,
+    "first_different_row": null,
+    "max_abs": 0.0
+  },
+  "verification_logits": {
+    "values": 7434240,
+    "finite": true,
+    "bitwise_exact": true,
+    "first_different_row": null,
+    "max_abs": 0.0
+  },
+  "snapshots": [
+    {
+      "repeat": 0,
+      "layout": {
+        "header_hex": "4d4159414c53543201000000891a000000000000000000002d0000002200000016000000002011000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a00000000008051030000000000",
+        "position": 6793,
+        "payload_offset": 220,
+        "recurrent_layers": 34,
+        "recurrent_bytes": 152633344,
+        "bytes": 238752476
+      },
+      "recurrent_state_and_conv": {
+        "bytes": 152633344,
+        "bitwise_exact": true,
+        "first_different_file_byte": null,
+        "sha256": [
+          "887683f0056218191a115e2663b7acfe615a7b6bfb0ecc02debe9ce6be5ef58b",
+          "887683f0056218191a115e2663b7acfe615a7b6bfb0ecc02debe9ce6be5ef58b"
+        ]
+      },
+      "indexer_pool_and_dsa": {
+        "bytes": 86118912,
+        "bitwise_exact": true,
+        "first_different_file_byte": null,
+        "sha256": [
+          "c2ed2ac09bae3f2187d9b4b57e81639a302e3bd37c86fdfe66b5fc446cb9cbba",
+          "c2ed2ac09bae3f2187d9b4b57e81639a302e3bd37c86fdfe66b5fc446cb9cbba"
+        ]
+      }
+    },
+    {
+      "repeat": 1,
+      "layout": {
+        "header_hex": "4d4159414c53543201000000891a000000000000000000002d0000002200000016000000002011000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a0000000000805103000000000000891a00000000008051030000000000",
+        "position": 6793,
+        "payload_offset": 220,
+        "recurrent_layers": 34,
+        "recurrent_bytes": 152633344,
+        "bytes": 238752476
+      },
+      "recurrent_state_and_conv": {
+        "bytes": 152633344,
+        "bitwise_exact": true,
+        "first_different_file_byte": null,
+        "sha256": [
+          "97130850562f8fd9d9408a97c145817266f58bc9955b2d88cd16c835847b5f87",
+          "97130850562f8fd9d9408a97c145817266f58bc9955b2d88cd16c835847b5f87"
+        ]
+      },
+      "indexer_pool_and_dsa": {
+        "bytes": 86118912,
+        "bitwise_exact": true,
+        "first_different_file_byte": null,
+        "sha256": [
+          "b3bbf0b6b16be9b2b1ec8858029e71197033534f565a973e25a13d52fcdb55c7",
+          "b3bbf0b6b16be9b2b1ec8858029e71197033534f565a973e25a13d52fcdb55c7"
+        ]
+      }
+    }
+  ],
+  "limitations": "Snapshots allocate/copy state and may perturb timing. Identical serialized state proves equality of captured state, not expert residency/backend placement. Open indexer-pool storage includes rows not yet occupied; a difference confined there is not automatically causal. Historical failure without saved state cannot be attributed from a passing rerun."
+}
