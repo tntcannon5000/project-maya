@@ -39,3 +39,9 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Implement exact three/five-column DP4A without padded arithmetic; preserve mixed-job geometry.
 - [x] Pass 587 strict kernel cases per configuration and 7,434,240 full-model exact logits.
 - [x] Complete contemporary four-draft coding comparison; retain opt-in, no robust default speed claim.
+
+- [x] Qualify full combination after 6,793 occupied tokens: 7,434,240 exact GPU logits.
+- [x] Record longer coding cold-prefill/ordinary/forced-width/lifecycle comparison.
+- [x] Audit transient mapped-RAM arithmetic ownership and prior experiments.
+- [ ] Measure complete direct-RAM arithmetic versus staged arithmetic, with exact outputs and CPU co-execution.
+- [ ] Integrate only if this bounded feasibility gate identifies material headroom.

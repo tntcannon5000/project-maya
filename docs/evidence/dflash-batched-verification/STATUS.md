@@ -75,3 +75,20 @@ Corrected bounded pressure passes; prior unresolved pre-fix pressure observation
 Corrected fixed-CPU-budget union placement is deferred: total-copy oracle ceilings 4.29% (T3) / 9.62% (T5), before overhead. Exact IMMA passes 246 strict cases but actual model shapes imply only about 0.1 ms/round saved; production integration rejected.
 
 Exact-column DP4A removes padding, passes 7,434,240 full-model exact logits and 587 native/mixed-column cases. Coding four-draft A/B is 47.82 / 48.32 TPS with identical histories; ordinary controls vary 44.32 / 44.66. Retain opt-in only. See exact-cols/DECISION.md. No substantial new default gain and no 60 TPS claim. Broader qualification is not justified by this small result; future work needs a larger evidence-backed opportunity.
+
+## Direct mapped-RAM feasibility follow-up (2026-10-15)
+
+Long-context combined qualification is complete: 7,434,240 exact controlled-GPU
+logits after 6,793 occupied tokens; cold prefill and lifecycle checks recorded.
+No substantial throughput gain was established and all performance flags remain
+opt-in. Do not rerun those completed gates.
+
+Next bounded hypothesis: compute transient experts directly from their stable
+pinned-RAM backing, retaining all native arithmetic. Saved T3/T5 traces identify
+34.76%/53.70% of fetched bytes as transient destinations. This does not remove
+PCIe bytes: it removes the intermediate scratch write/read and copy dependency,
+and may be slower because native K-quant loads issue inefficient host reads.
+The first gate is complete copied versus direct GU/down arithmetic on actual
+recorded sources with identical outputs and CPU co-execution. No serving-path
+integration unless that decisive feasibility test shows worthwhile headroom.
+See DIRECT-RAM-FEASIBILITY.md.

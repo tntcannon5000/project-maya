@@ -80,3 +80,20 @@ The HC, moderate-CPU and component experiments above have completed. Bounded cor
 The complete exact IMMA experiment passes246 cases but actual-model shape scaling predicts only~0.1ms/round: do not integrate. Corrected fixed-budget union placement has4.29%/9.62% total-copy oracle ceilings and is deferred.
 
 Source exposes a simpler redundant-work hypothesis: current DP4A rounds verification columns3->4 and5->8, executing unused columns and carrying their registers. Implement opt-in exact3/5 instantiations of the existing kernel while preserving original row geometry, reduction order and mixed-job batching. Prove dispatch, pass mixed-format/same-type-mixed-column tests, then one bounded microbenchmark. Only if meaningful: controlled full-model narrow-window logits and one coding width2/4 comparison; no general sweep. Prefill/single-column dispatch remains unchanged by design, but report what was actually tested.
+
+## Direct mapped-RAM feasibility follow-up (2026-10-15)
+
+Long-context combined qualification is complete: 7,434,240 exact controlled-GPU
+logits after 6,793 occupied tokens; cold prefill and lifecycle checks recorded.
+No substantial throughput gain was established and all performance flags remain
+opt-in. Do not rerun those completed gates.
+
+Next bounded hypothesis: compute transient experts directly from their stable
+pinned-RAM backing, retaining all native arithmetic. Saved T3/T5 traces identify
+34.76%/53.70% of fetched bytes as transient destinations. This does not remove
+PCIe bytes: it removes the intermediate scratch write/read and copy dependency,
+and may be slower because native K-quant loads issue inefficient host reads.
+The first gate is complete copied versus direct GU/down arithmetic on actual
+recorded sources with identical outputs and CPU co-execution. No serving-path
+integration unless that decisive feasibility test shows worthwhile headroom.
+See DIRECT-RAM-FEASIBILITY.md.

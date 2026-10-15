@@ -1,8 +1,9 @@
 # Verification campaign completion and remaining-work audit
 
 2026-10-15. Read-only audit against `docs/DFLASH-VERIFICATION-PLAN.md`, its
-checklist and saved evidence. The parent is running the longer-prefix
-controlled-GPU combined-logit check; this audit does not presume its result.
+checklist and saved evidence. Updated after the longer-prefix controlled-GPU combined-logit check completed.
+Its replacement batched-prefill fixture passed; the initial serial-prefill fixture
+was deliberately stopped before producing logits.
 
 **The substantial throughput objective is not achieved.** Completing kernels,
 diagnostics and numerical tests is a useful R&D result, but does not establish
@@ -16,7 +17,7 @@ correctness result; performance flags remain research options.
 |---|---|
 | Complete exact expert arithmetic and real engagement | Grouped/paired native Q2/Q3/Q4 paths, HC phases, component copies and exact-column DP4A are implemented and exercised. Dense projections already batch columns. No skipping/extra weight quantization was introduced. |
 | Correct reference and ownership | Missing deferred-demotion submission fixed; immutable pack matches 1,599 copies/14.56GB. Corrected bounded pressure replay passes 6,040,320 exact logits. Pre-fix pressure failures are historical, not an unresolved current-control gate. |
-| Full logits, partial commit, reset/repeat | HC/paired and component each have 28,188,160 corrected exact logits; exact columns have 7,434,240 controlled logits. **Finish the currently running combined long-prefix controlled-GPU comparison**, retaining exact count, first mismatch if any, manifests and engagement. A combined pass cannot be assumed from separate passes. |
+| Full logits, partial commit, reset/repeat | HC/paired and component each have 28,188,160 corrected exact logits; exact columns have 7,434,240 controlled logits. **Combined long-prefix comparison passed: 7,434,240 exact logits / 48 rows**, after 6,793 occupied prompt tokens, T3/T5, partial commits and two repeats; see long-context-combination/parity.json. This is controlled GPU-only evidence, not hybrid equivalence to ordinary decode. |
 | Whole-round attribution | Corrected phase attribution separates fetch/GU/down readiness and CPU tail; clean component confirmation is only about 1.2% TPS. Exact-column coding is about 1.05%. Neither supports adding isolated gains together. |
 | One longer occupied coding task | New 6,793-token A/B covers fixed two/four drafts with identical corresponding output IDs. Rates 29.27->29.88 / 19.39->19.62 TPS; ordinary 36.27->36.75. Verification falls about 2.09%/1.25%, comparable in scale to ordinary variation. This is bounded coverage, not evidence at 128K occupied context. |
 | Prefill/ordinary decode | That same fresh-process longer-input pair already records cold prefill 3224.4->3212.7ms and ordinary decode above. This closes a bounded prefill/ordinary smoke check; one pair does not establish robust universal nonregression. Reused-prefix prompt times are not cold-prefill measurements. |
@@ -61,11 +62,10 @@ established merely by the existing policy differences, either.
 
 ## Finite next work and performance decision
 
-1. Finish the in-flight long-prefix combined numerical comparison. Investigate
-   a failure rather than widening the benchmark matrix. On a pass, record its
-   actual scope, including partial commits/reset/repeat and engagement.
-2. Publish the compact longer coding/cold-prefill/lifecycle comparison using
-   already captured data. Keep the confidence sample separate and explicitly
+1. Completed: long-prefix combined comparison passed exactly, including
+   partial commits/reset/repeat and component engagement.
+2. Completed locally in long-context-combination/RESULTS.md: compact longer
+   coding/cold-prefill/lifecycle comparison using already captured data. Keep the confidence sample separate and explicitly
    unmatched. Do not rerun completed samples solely to obtain a larger gain.
 3. Reconcile the checklist and checkpoint the tools/evidence. State that the
    current bounded R&D round is complete with no substantial performance
