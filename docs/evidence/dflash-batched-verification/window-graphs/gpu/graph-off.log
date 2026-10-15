@@ -1,0 +1,49 @@
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 9.28 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 2.38
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 16.00 GB, 46-49 slots/layer (1939 total)
+maya verify fetch staging: CUDA0 64 token-owned disk staging slots, 864.00 MiB extra pinned RAM
+glm fast: CUDA0 RAM tier 94.00 GB pinned, 11389 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.7 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.56 GB/s)
+glm fast: CUDA0 CPU lane off: an expert 0.190 ms on the CPU vs 0.247 ms over PCIe
+verify fixture: repeats=2, max windows/repeat=6, widths=3/5, occupied prefix=6793
+verify fixture: reference mode=windows (forward/window_first advance one fixed input per step)
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+verify fixture: completed batched prefix 6793, repeat 0
+maya mv exact cols: selected type=12 columns=3 rows_per_warp=4 jobs=3 blocks=768 (host dispatch, including capture)
+verify call: repeat=0 step=0 width=3 position=6793 ms=148.243000
+maya mv exact cols: selected type=12 columns=5 rows_per_warp=2 jobs=3 blocks=1536 (host dispatch, including capture)
+verify call: repeat=0 step=1 width=5 position=6794 ms=185.605200
+verify call: repeat=0 step=2 width=3 position=6799 ms=122.416100
+verify call: repeat=0 step=3 width=5 position=6802 ms=171.637300
+verify call: repeat=0 step=4 width=3 position=6803 ms=118.252200
+verify call: repeat=0 step=5 width=5 position=6806 ms=183.574000
+maya verify: 6 windows, 0 retries, 801 reused GPU expert rows
+maya verify HC CUDA0: 540 executed HC3 phase batches, 2160 token rows
+maya verify component fetch CUDA0: 252 full-layer groups, 0 fallback fronts, 252 prefix / 252 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+verify fixture: completed batched prefix 6793, repeat 1
+verify call: repeat=1 step=0 width=3 position=6793 ms=84.555700
+verify call: repeat=1 step=1 width=5 position=6794 ms=149.425000
+verify call: repeat=1 step=2 width=3 position=6799 ms=99.596200
+verify call: repeat=1 step=3 width=5 position=6802 ms=138.744700
+verify call: repeat=1 step=4 width=3 position=6803 ms=95.140000
+verify call: repeat=1 step=5 width=5 position=6806 ms=163.280200
+maya verify: 6 windows, 0 retries, 367 reused GPU expert rows
+maya verify HC CUDA0: 540 executed HC3 phase batches, 2160 token rows
+maya verify component fetch CUDA0: 252 full-layer groups, 0 fallback fronts, 252 prefix / 252 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+maya reuse policy: observations=2100 changed_victims=87 horizon=1 matured_anchors=0
+glm KDA graphs: 34 captures, 34 replays, 0 invalidations
+maya MoE suffix graphs: 11 captures, 11 replays, 0 invalidations
+PASS finite logits (mode=windows, 2 repeat(s), max 6 steps/repeat)
