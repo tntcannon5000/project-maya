@@ -208,3 +208,9 @@ The clean contemporary comparison remains45.23 versus44.70TPS (1.2%), insufficie
 Implemented opt-in pre-route residency/ownership snapshots and actual route/copy-owner metadata. Corrected64-token T3/T5 sample validated1008/714layer records. All available corresponding output IDs match contemporary corrected histories. Fixed-CPU-budget oracle ceilings are4.29%/9.62% of total fetched bytes; this ignores planning costs and relaxed per-token quotas. Pending unpublished demotions require host responses, not necessarily disk reads. Raw trace stays local; compact summary includes its hash.
 
 Built complete standalone exact Q4_K IMMA kernel.240 varied cases plus6actual model-shape cases pass bit-exactly. T3 slower; actual T5 model-shape gains extrapolate to only~0.098ms/round. Defer production integration. Checkpoint source/harness/evidence; no daily/default changes.
+
+## Exact-column DP4A checkpoint
+
+Implemented complete opt-in three/five-column instantiations, retaining legacy row geometry and mixed-job block accounting. Baseline and candidate each pass 587 strict native/mixed-column cases; full-model T3/T5 verification passes 7,434,240 exact logits. Compiled registers fall (Q4: 103 to 80 for T3, 80 to 75 for T5).
+
+Contemporary four-draft coding A/B: 47.82 to 48.32 TPS, verification 86.393 to 85.417 ms/round, identical output IDs and 97/120 accepted drafts. Ordinary control 44.32 to 44.66 TPS. Small result is not a robust default recommendation; keep opt-in. Do not launch a larger suite or claim additive component gains. No inference remains running after the checks.

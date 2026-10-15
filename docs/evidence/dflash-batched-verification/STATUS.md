@@ -69,3 +69,9 @@ Detailed chronology: `WORK-LOG.md`. Long-term plan: `docs/DFLASH-VERIFICATION-PL
 ## Latest phase attribution (supersedes pending-test wording above)
 
 Corrected bounded pressure passes; prior unresolved pre-fix pressure observations are historical. Hybrid component-off/on diagnostics measure59.417/57.431ms verification, with83/90 accepted drafts and identical output IDs. Fetch/expert span34.50/33.02ms;6.56ms remains exposed at down readiness. These are profiled runs, not clean speed qualification. See HYBRID-PHASE-ATTRIBUTION.md. Broader union metadata and standalone exact IMMA feasibility are in progress.
+
+## Latest checkpoint: placement, IMMA and exact columns
+
+Corrected fixed-CPU-budget union placement is deferred: total-copy oracle ceilings 4.29% (T3) / 9.62% (T5), before overhead. Exact IMMA passes 246 strict cases but actual model shapes imply only about 0.1 ms/round saved; production integration rejected.
+
+Exact-column DP4A removes padding, passes 7,434,240 full-model exact logits and 587 native/mixed-column cases. Coding four-draft A/B is 47.82 / 48.32 TPS with identical histories; ordinary controls vary 44.32 / 44.66. Retain opt-in only. See exact-cols/DECISION.md. No substantial new default gain and no 60 TPS claim. Broader qualification is not justified by this small result; future work needs a larger evidence-backed opportunity.
