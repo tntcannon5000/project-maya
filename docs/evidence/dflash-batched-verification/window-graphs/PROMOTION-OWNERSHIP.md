@@ -27,3 +27,11 @@ Both graph-off and graph-on retire 51 superseded uploads. Across all recorded bo
 Against the older ownership policy, the first 24 rows (first request) are exact; the second request differs after reset and batched prefill (max abs 2.32879). Cache layout has changed; this is not yet attributed. The next fixture records prefix logits separately. No claim that the original intermittent graph failure has been causally fixed.
 
 Warm GPU-only window call means: T3 91.621 -> 87.724 ms; T5 148.532 -> 144.738 ms. These are diagnostic fixed-input call timings, not generated-token TPS, and do not include the hybrid backend. They are consistent with a modest dispatch saving, not a transformative speedup.
+
+## Hybrid graph qualification (2026-10-15)
+
+With the ownership fix enabled in both arms, 7,434,240 verification logits (48 rows) and 309,760 separately recorded prefix logits (two resets) are bitwise exact and finite. Each arm retires 44 superseded uploads; all 16 sampled boundaries have zero duplicate residents, orphan residents or invalid pinned sources. Requested 22 GiB pool gives the same actual 20.95 GiB / 2,564 slots. Graphs perform 84 captures and 420 replays with no reported graph errors or bypasses.
+
+Warm fixed-input call means: T3 61.113 -> 59.450 ms; T5 96.916 -> 95.323 ms. First-request means do not improve (T3 91.422 -> 91.584, T5 126.163 -> 126.852 ms). These are diagnostic call timings, not TPS; prefix logging and ownership diagnostics are enabled.
+
+The original intermittent failure remains preserved and its cause unproven. Current matched graph-off/on qualification passes, allowing a bounded experimental serving speed gate, not production sign-off. Superseded-winner eviction and replacement-RAM edge cases remain source-reviewed rather than separately forced runtime cases. See window-graphs/hybrid-owner-fix/qualification.json and summary.json.

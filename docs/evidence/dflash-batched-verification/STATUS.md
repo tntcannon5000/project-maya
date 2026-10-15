@@ -131,3 +131,11 @@ The layer-position causal scratch policy saves only 9.36%/9.17% of replay bytes 
 ## Current checkpoint: graph parity failure and ownership evidence
 
 Native MoE graphs are implemented opt-in with actual CUDA unit coverage. Original full GPU-only parity failed; unchanged repeated and narrow checks passed. Do not accept passing reruns as a fix. Host-only owner diagnostics prove competing background/demand promotions leave up to 34 duplicate/orphan resident slots on the fixture, but that diagnostic's logits are exact, so numerical causation remains open. No serving graph TPS comparison has been run. See window-graphs/STATUS.md. Baseline/defaults remain intact; goal is not achieved.
+
+## Hybrid graph qualification (2026-10-15)
+
+With the ownership fix enabled in both arms, 7,434,240 verification logits (48 rows) and 309,760 separately recorded prefix logits (two resets) are bitwise exact and finite. Each arm retires 44 superseded uploads; all 16 sampled boundaries have zero duplicate residents, orphan residents or invalid pinned sources. Requested 22 GiB pool gives the same actual 20.95 GiB / 2,564 slots. Graphs perform 84 captures and 420 replays with no reported graph errors or bypasses.
+
+Warm fixed-input call means: T3 61.113 -> 59.450 ms; T5 96.916 -> 95.323 ms. First-request means do not improve (T3 91.422 -> 91.584, T5 126.163 -> 126.852 ms). These are diagnostic call timings, not TPS; prefix logging and ownership diagnostics are enabled.
+
+The original intermittent failure remains preserved and its cause unproven. Current matched graph-off/on qualification passes, allowing a bounded experimental serving speed gate, not production sign-off. Superseded-winner eviction and replacement-RAM edge cases remain source-reviewed rather than separately forced runtime cases. See window-graphs/hybrid-owner-fix/qualification.json and summary.json.

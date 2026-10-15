@@ -288,3 +288,11 @@ The new host-only, pre-boundary audit found actual duplicate/orphan residents ri
 Implemented opt-in MAYA_PROMOTION_OWNER_FIX: demand/predicted commits latch losing background uploads; source and destination remain reserved until their completion event; retirement preserves the authoritative GPU owner and republishes ready replacement RAM backing before releasing old pinned bytes. Owner-validation failures latch the copy error. Review caught the distinction between ram_of metadata and the currently published device pointer; addressed before running.
 
 Current GPU-only graph-off/on each retired 51 superseded uploads, with zero duplicate/orphan residents or invalid sources and 7,434,240 exact logits. The first request matches the older ownership policy; reset/prefill then diverges, so new prefix-logit recording will separate prefill from verification. Full objective remains open; no default or launcher change.
+
+## Hybrid graph qualification (2026-10-15)
+
+With the ownership fix enabled in both arms, 7,434,240 verification logits (48 rows) and 309,760 separately recorded prefix logits (two resets) are bitwise exact and finite. Each arm retires 44 superseded uploads; all 16 sampled boundaries have zero duplicate residents, orphan residents or invalid pinned sources. Requested 22 GiB pool gives the same actual 20.95 GiB / 2,564 slots. Graphs perform 84 captures and 420 replays with no reported graph errors or bypasses.
+
+Warm fixed-input call means: T3 61.113 -> 59.450 ms; T5 96.916 -> 95.323 ms. First-request means do not improve (T3 91.422 -> 91.584, T5 126.163 -> 126.852 ms). These are diagnostic call timings, not TPS; prefix logging and ownership diagnostics are enabled.
+
+The original intermittent failure remains preserved and its cause unproven. Current matched graph-off/on qualification passes, allowing a bounded experimental serving speed gate, not production sign-off. Superseded-winner eviction and replacement-RAM edge cases remain source-reviewed rather than separately forced runtime cases. See window-graphs/hybrid-owner-fix/qualification.json and summary.json.
