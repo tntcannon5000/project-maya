@@ -64,4 +64,7 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [ ] Attribute historical intermittent failure before production sign-off; force remaining ownership edge cases.
 
 - [x] Verify serving capture/replay, matched outputs/acceptance, short and6793-token occupied contexts, prefill smoke and STOP/recovery.
-- [ ] Evaluate existing confidence policy with the complete candidate before adding unconditional drafting work; do not infer TPS from offline confidence filtering.
+- [x] Evaluate existing confidence policy on short/long coding; extend graphs to all adaptive widths with exact qualification and verified engagement. No60TPSclaim.
+
+- [x] Complete T2/T4 hybrid exact checks, prefix checks and adaptive-policy STOP/recovery.
+- [ ] Qualify current complete adaptive candidate on one writing task and close unresolved ownership/numerical gates before any production recommendation.

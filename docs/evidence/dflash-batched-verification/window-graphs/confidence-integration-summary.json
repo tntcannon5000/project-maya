@@ -1,0 +1,109 @@
+{
+  "scope": "Bounded confidence-policy integration check: one coding request per condition, short40 and longer6793 occupied tokens,128K capacity,128output cap. Old coverageT3/T5 versus newT2..T5; different binary hashes are intentional. No statistical confidence interval.",
+  "tasks": {
+    "short": {
+      "old_binary_sha256": "0f4fee4abf9273d5601098dbbf6019d7aac09f5640af001750ff7c2aa452949e",
+      "new_binary_sha256": "4bb79c79121fa56a67955e688dd182e6ffb49ba13e6d6d30ecf0ebe9a3180ffa",
+      "comparisons": [
+        {
+          "kind": "warmup",
+          "old_tps": 37.38208580356882,
+          "new_tps": 37.51135597690707,
+          "old_prompt_ms": 718.2,
+          "new_prompt_ms": 718.4,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        },
+        {
+          "kind": "control",
+          "old_tps": 44.926468007440945,
+          "new_tps": 44.03770728686438,
+          "old_prompt_ms": 29.7,
+          "new_prompt_ms": 30.0,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        },
+        {
+          "kind": "confidence",
+          "old_tps": 57.06134094151213,
+          "new_tps": 56.775338212463964,
+          "old_prompt_ms": 30.5,
+          "new_prompt_ms": 30.8,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        }
+      ],
+      "width_histogram": {
+        "0": 3,
+        "3": 5,
+        "1": 6,
+        "4": 17,
+        "2": 4
+      },
+      "acceptance": 0.9484536082474226,
+      "captures": 168,
+      "replays": 1806,
+      "all_graph_bypasses_zero": true,
+      "lifecycle": [
+        {
+          "kind": "cancel",
+          "done": "DONE 8 40 34.1 289.0 cancel 4 12 39 3581 5040"
+        },
+        {
+          "kind": "recovery",
+          "done": "DONE 32 40 29.5 724.7 length 19 24 39 8976 12096"
+        }
+      ]
+    },
+    "long": {
+      "old_binary_sha256": "0f4fee4abf9273d5601098dbbf6019d7aac09f5640af001750ff7c2aa452949e",
+      "new_binary_sha256": "4bb79c79121fa56a67955e688dd182e6ffb49ba13e6d6d30ecf0ebe9a3180ffa",
+      "comparisons": [
+        {
+          "kind": "warmup",
+          "old_tps": 34.74389945984094,
+          "new_tps": 34.77882838821867,
+          "old_prompt_ms": 3234.8,
+          "new_prompt_ms": 3215.0,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        },
+        {
+          "kind": "control",
+          "old_tps": 40.78251449690945,
+          "new_tps": 40.83064850553446,
+          "old_prompt_ms": 38.0,
+          "new_prompt_ms": 37.8,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        },
+        {
+          "kind": "confidence",
+          "old_tps": 39.05296558457408,
+          "new_tps": 39.63584566792593,
+          "old_prompt_ms": 40.3,
+          "new_prompt_ms": 38.9,
+          "output_ids_exact": true,
+          "offered_equal": true,
+          "accepted_equal": true
+        }
+      ],
+      "width_histogram": {
+        "1": 26,
+        "0": 48,
+        "2": 5,
+        "3": 4
+      },
+      "acceptance": 0.9791666666666666,
+      "captures": 126,
+      "replays": 1344,
+      "all_graph_bypasses_zero": true,
+      "lifecycle": []
+    }
+  }
+}
