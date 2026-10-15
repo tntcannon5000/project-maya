@@ -1,0 +1,12 @@
+{
+  "cold_groups": 3, "warm_groups": 4,
+  "weights": {"max_abs": 0, "different_bits": 0},
+  "initial": {"max_abs": 0, "different_bits": 0},
+  "expert_outputs": {"max_abs": 1.78813934326e-07, "different_bits": 9843},
+  "captured_final": {"max_abs": 1.49011611938e-07, "different_bits": 3213},
+  "cold_replay": {"max_abs": 0, "different_bits": 0},
+  "warm_replay": {"max_abs": 0, "different_bits": 0},
+  "cold_values_warm_partition_vs_cold": {"max_abs": 5.96046447754e-08, "different_bits": 2135},
+  "cold_values_warm_partition_vs_warm": {"max_abs": 1.34110450745e-07, "different_bits": 2859},
+  "warm_values_cold_partition_vs_cold": {"max_abs": 1.49011611938e-07, "different_bits": 2820}
+}

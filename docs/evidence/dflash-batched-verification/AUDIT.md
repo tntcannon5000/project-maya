@@ -88,3 +88,7 @@ but current evidence neither identifies a large removable traffic set nor
 proves an inefficient transfer primitive. Confidence gating may avoid losses
 on low-acceptance tasks; it is a separate policy question and cannot stand in
 for the requested cheaper complete multi-token verification.
+
+## 2026-10-15: first-MoE production replay
+
+Captured layer3 last-row route weights, expert outputs, initial/final FFN and chronological combine groups on the same6793-token occupied prefix across two resets. Both outputs replay bitwise exactly through the production CUDA combine. Groups change3->4; swapping only partitions changes2135float bit patterns (max5.96e-8). Five/eight expert vectors also differ (max1.788e-7); combine order is not the sole source. Three focused replay tests pass. Diagnostic only, no TPS/threshold/default change. Historical failed graph run remains unattributed. See window-graphs/MOE-COMBINE-INVESTIGATION.md. Next, only if attribution requires it: selected MMQ intermediate/dispatch capture; no new throughput matrix.

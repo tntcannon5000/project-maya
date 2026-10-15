@@ -1,0 +1,115 @@
+{
+  "tokens": 6792,
+  "experts": 8,
+  "embedding": 4096,
+  "cold_sha256": "555d806c32f519f48d1ff0cb1bc0b5af2bdfc66e09c92416185ad1346f33a50f",
+  "warm_sha256": "3d648cf538baae021e6d58ec2c580df4a189c78b3663765924800958a8143883",
+  "cold_groups_route_indices": [
+    [
+      3,
+      5
+    ],
+    [
+      0,
+      4,
+      7
+    ],
+    [
+      1,
+      2,
+      6
+    ]
+  ],
+  "warm_groups_route_indices": [
+    [
+      3
+    ],
+    [
+      1
+    ],
+    [
+      0,
+      4,
+      5,
+      7
+    ],
+    [
+      2,
+      6
+    ]
+  ],
+  "routes": [
+    {
+      "route": 0,
+      "expert": 61,
+      "cold_sorted_row": 25882,
+      "warm_sorted_row": 45234,
+      "weight": 0.8228089213371277,
+      "expert_output_max_abs": 1.7881393432617188e-07,
+      "expert_output_different_bits": 3349
+    },
+    {
+      "route": 1,
+      "expert": 237,
+      "cold_sorted_row": 46860,
+      "warm_sorted_row": 23617,
+      "weight": 0.6547528505325317,
+      "expert_output_max_abs": 1.4901161193847656e-07,
+      "expert_output_different_bits": 1177
+    },
+    {
+      "route": 2,
+      "expert": 217,
+      "cold_sorted_row": 43235,
+      "warm_sorted_row": 51213,
+      "weight": 0.3185858130455017,
+      "expert_output_max_abs": 2.9802322387695312e-08,
+      "expert_output_different_bits": 167
+    },
+    {
+      "route": 3,
+      "expert": 10,
+      "cold_sorted_row": 383,
+      "warm_sorted_row": 383,
+      "weight": 0.13889996707439423,
+      "expert_output_max_abs": 0.0,
+      "expert_output_different_bits": 0
+    },
+    {
+      "route": 4,
+      "expert": 121,
+      "cold_sorted_row": 10872,
+      "warm_sorted_row": 31931,
+      "weight": 0.1696806401014328,
+      "expert_output_max_abs": 0.0,
+      "expert_output_different_bits": 0
+    },
+    {
+      "route": 5,
+      "expert": 5,
+      "cold_sorted_row": 2518,
+      "warm_sorted_row": 34752,
+      "weight": 0.13287237286567688,
+      "expert_output_max_abs": 0.0,
+      "expert_output_different_bits": 0
+    },
+    {
+      "route": 6,
+      "expert": 214,
+      "cold_sorted_row": 42757,
+      "warm_sorted_row": 50985,
+      "weight": 0.1312563717365265,
+      "expert_output_max_abs": 5.960464477539063e-08,
+      "expert_output_different_bits": 3108
+    },
+    {
+      "route": 7,
+      "expert": 44,
+      "cold_sorted_row": 20069,
+      "warm_sorted_row": 44164,
+      "weight": 0.13114316761493683,
+      "expert_output_max_abs": 7.450580596923828e-08,
+      "expert_output_different_bits": 2042
+    }
+  ]
+}

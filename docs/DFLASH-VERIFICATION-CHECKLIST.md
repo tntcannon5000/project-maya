@@ -74,3 +74,6 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Capture and compare serialized pre-verification state; localize repeat-prefill divergence before verification.
 - [x] Locate first sampled prefill seam difference at layer3FFNoutput using existing diagnostics, with instrumentation caveat recorded.
 - [ ] Distinguish layer3combine grouping from MMQ product differences using captured values; historical failure remains unattributed.
+
+- [x] Replay captured layer3combines with the production CUDA kernel: both exact. Partition changes and individual expert-output changes both contribute; historical failure remains separate.
+- [x] Test replay partition sensitivity and reject unsafe K>8/truncated captures (3tests).

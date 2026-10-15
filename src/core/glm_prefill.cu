@@ -17,6 +17,7 @@
 // routing also feeds the expert tiers' LFU counts, so the decode that follows starts from this conversation's
 // experts.  STRATA_GLM_NO_PREFILL=1 keeps the token-at-a-time prompt (A/B).
 #include "glm_fast_state.hpp"
+#include "glm_prefill_moe_capture.hpp"
 
 #include "strata/core/progress.hpp"
 #include "strata/kernels/cpu/kq_avx512.hpp"
@@ -2173,8 +2174,10 @@ bool Glm5Model::prefill_half(int64_t p0, int T, std::string& err, const int32_t*
         //      A set's rows go in contiguous with what it holds, else the window is added into ffn first (moe_combine_add)
         //      and starts at the set; a set larger than the window runs in parts at expert boundaries
         const int W = moe_window_rows((size_t) T, g);
+        PrefillMoeCapture moe_capture(il, T, K, E, cpu_nrows, M.ids, M.pos, M.rw, S->ffn, s);
         int wb = 0, w_lo = 0, w_hi = 0;
         const auto flush = [&]() {
+            if (w_hi > w_lo) moe_capture.flush(M.OUTP, wb, w_lo, w_hi);
             if (w_hi > w_lo) gb::moe_combine_add(M.OUTP, wb, w_lo, w_hi, M.pos, M.rw, T, K, E, S->ffn, s);
             w_lo = w_hi = 0;
         };
@@ -2706,6 +2709,7 @@ bool Glm5Model::prefill_half(int64_t p0, int T, std::string& err, const int32_t*
         dump_row("pf_shexp-" + std::to_string(il), S->ffn, E);
         flush();
         if (cpu_nrows > 0) gb::moe_combine_add(M.OUTPc, cpu_r0, cpu_r0, rows, M.pos, M.rw, T, K, E, S->ffn, s);
+        moe_capture.finish(S->ffn, T);
         S->mark("combine", s);
         if (S->trace) cudaEventRecord(S->tr[(size_t) il].end, s);
         dump_row("ffn_out-" + std::to_string(il), S->ffn, E);
