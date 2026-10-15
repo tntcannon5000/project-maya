@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdio>
 #include <fstream>
+#include <string>
 #include <vector>
 
 int main(int argc, char** argv) {
@@ -34,9 +35,13 @@ int main(int argc, char** argv) {
     const int width_b = wb_env ? std::atoi(wb_env) : 8;
     const int repeats = reps_env ? std::atoi(reps_env) : 2;
     const int steps = steps_env ? std::atoi(steps_env) : 14;
+    const char* mode_env = std::getenv("MAYA_VERIFY_REFERENCE_MODE");
+    const std::string reference_mode = mode_env ? mode_env : "windows";
+    if (reference_mode != "windows" && reference_mode != "forward" && reference_mode != "window_first") return 2;
     if (repeats < 1 || repeats > 2 || steps < 1 || steps > 14) return 2;
     if (width_a < 2 || width_a > 8 || width_b < 2 || width_b > 8) return 2;
     std::fprintf(stderr, "verify fixture: repeats=%d, max windows/repeat=%d, widths=%d/%d, occupied prefix=%d\n", repeats, steps, width_a, width_b, prefix);
+    std::fprintf(stderr, "verify fixture: reference mode=%s (forward/window_first advance one fixed input per step)\n", reference_mode.c_str());
     for (int rep = 0; rep < repeats; ++rep) {
         m.reset();
         if (batch_prefill && prefix > 1) {
@@ -46,24 +51,37 @@ int main(int argc, char** argv) {
             if (!m.forward({ids[prefix-1]}, logits, err)) return 5;
             std::fprintf(stderr, "verify fixture: completed batched prefix %d, repeat %d\n", prefix, rep);
         } else if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+prefix), logits, err)) return 5;
+        if (reference_mode != "windows") {
+            if (logits.size() != (size_t)m.geometry().n_vocab) return 7;
+            for (float v : logits) if (!std::isfinite(v)) return 8;
+            if (std::fwrite(logits.data(),sizeof(float),logits.size(),f)!=logits.size()) return 9;
+        }
         for (int pos=prefix, step=0; pos < prefix+64 && step < steps; ++step) {
             if (trace && rep == 1 && step == 0) cudaProfilerStart();
             const int T = step % 2 == 0 ? width_a : width_b;
             int32_t picks[8];
-            if (!m.window(ids.data()+pos, T, picks, err)) {
+            if (reference_mode == "forward") {
+                if (!m.forward({ids[(size_t)pos]}, logits, err)) {
+                    std::fprintf(stderr, "%s\n", err.c_str()); return 6;
+                }
+            } else if (!m.window(ids.data()+pos, T, picks, err)) {
                 std::fprintf(stderr, "%s\n", err.c_str()); return 6;
             }
-            logits.resize((size_t)T*m.geometry().n_vocab);
-            if (cudaMemcpy(logits.data(), m.fast_->win.logits, logits.size()*sizeof(float), cudaMemcpyDeviceToHost) != cudaSuccess) return 7;
+            const int rows = reference_mode == "windows" ? T : 1;
+            if (reference_mode != "forward") {
+                logits.resize((size_t)rows*m.geometry().n_vocab);
+                if (cudaMemcpy(logits.data(), m.fast_->win.logits, logits.size()*sizeof(float), cudaMemcpyDeviceToHost) != cudaSuccess) return 7;
+            }
+            if (logits.size() != (size_t)rows*m.geometry().n_vocab) return 7;
             for (float v:logits) if (!std::isfinite(v)) return 8;
             if (std::fwrite(logits.data(),sizeof(float),logits.size(),f)!=logits.size()) return 9;
-            const int keep = step % 3 == 0 ? 1 : T;
-            if (!m.window_commit(keep,err)) return 10;
+            const int keep = reference_mode == "windows" ? (step % 3 == 0 ? 1 : T) : 1;
+            if (reference_mode != "forward" && !m.window_commit(keep,err)) return 10;
             if (trace && rep == 1 && step == 3) cudaProfilerStop();
             pos += keep;
         }
         m.win_prof_report();
     }
     std::fclose(f);
-    std::printf("PASS finite logits and partial commits (%d repeat(s), max %d windows/repeat)\n", repeats, steps);
+    std::printf("PASS finite logits (mode=%s, %d repeat(s), max %d steps/repeat)\n", reference_mode.c_str(), repeats, steps);
 }

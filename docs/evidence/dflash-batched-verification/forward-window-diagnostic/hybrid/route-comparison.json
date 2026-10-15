@@ -1,0 +1,779 @@
+{
+  "scope": "Route IDs and masks only; input floats, weights and source bytes are not logged.",
+  "rows": [
+    {
+      "row": 0,
+      "route_records_equal": true,
+      "changed_layers": 0,
+      "first_difference": null,
+      "first_cpu_difference": null,
+      "first_id_difference": null
+    },
+    {
+      "row": 1,
+      "route_records_equal": true,
+      "changed_layers": 0,
+      "first_difference": null,
+      "first_cpu_difference": null,
+      "first_id_difference": null
+    },
+    {
+      "row": 2,
+      "route_records_equal": false,
+      "changed_layers": 32,
+      "first_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          17,
+          36,
+          77,
+          165
+        ],
+        "window_cpu": [
+          17,
+          36,
+          77,
+          256
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            176,
+            16,
+            225,
+            256,
+            165,
+            36,
+            77,
+            17
+          ],
+          "fetch": 13,
+          "miss": 0,
+          "cpu": 240,
+          "promo": 13
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            176,
+            16,
+            225,
+            256,
+            165,
+            36,
+            77,
+            17
+          ],
+          "fetch": 21,
+          "miss": 0,
+          "cpu": 232,
+          "promo": 21
+        }
+      },
+      "first_cpu_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          17,
+          36,
+          77,
+          165
+        ],
+        "window_cpu": [
+          17,
+          36,
+          77,
+          256
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            176,
+            16,
+            225,
+            256,
+            165,
+            36,
+            77,
+            17
+          ],
+          "fetch": 13,
+          "miss": 0,
+          "cpu": 240,
+          "promo": 13
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            176,
+            16,
+            225,
+            256,
+            165,
+            36,
+            77,
+            17
+          ],
+          "fetch": 21,
+          "miss": 0,
+          "cpu": 232,
+          "promo": 21
+        }
+      },
+      "first_id_difference": {
+        "layer": 7,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          23,
+          94,
+          284
+        ],
+        "window_cpu": [
+          23,
+          94
+        ],
+        "forward": {
+          "layer": 7,
+          "ids": [
+            180,
+            68,
+            284,
+            217,
+            83,
+            23,
+            94,
+            12
+          ],
+          "fetch": 9,
+          "miss": 0,
+          "cpu": 100,
+          "promo": 9
+        },
+        "window": {
+          "layer": 7,
+          "ids": [
+            180,
+            68,
+            284,
+            83,
+            217,
+            23,
+            94,
+            12
+          ],
+          "fetch": 20,
+          "miss": 0,
+          "cpu": 96,
+          "promo": 20
+        }
+      }
+    },
+    {
+      "row": 3,
+      "route_records_equal": false,
+      "changed_layers": 38,
+      "first_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": true,
+        "forward_cpu": [
+          51,
+          60,
+          250
+        ],
+        "window_cpu": [
+          51,
+          60,
+          250
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            155,
+            104,
+            60,
+            51,
+            250,
+            176,
+            165,
+            8
+          ],
+          "fetch": 67,
+          "miss": 0,
+          "cpu": 28,
+          "promo": 67
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            155,
+            104,
+            60,
+            51,
+            250,
+            176,
+            165,
+            8
+          ],
+          "fetch": 3,
+          "miss": 0,
+          "cpu": 28,
+          "promo": 3
+        }
+      },
+      "first_cpu_difference": {
+        "layer": 4,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          198,
+          207,
+          272
+        ],
+        "window_cpu": [
+          198,
+          207
+        ],
+        "forward": {
+          "layer": 4,
+          "ids": [
+            241,
+            3,
+            155,
+            195,
+            198,
+            207,
+            272,
+            46
+          ],
+          "fetch": 12,
+          "miss": 0,
+          "cpu": 112,
+          "promo": 12
+        },
+        "window": {
+          "layer": 4,
+          "ids": [
+            241,
+            3,
+            155,
+            195,
+            198,
+            207,
+            272,
+            46
+          ],
+          "fetch": 72,
+          "miss": 0,
+          "cpu": 48,
+          "promo": 8
+        }
+      },
+      "first_id_difference": {
+        "layer": 14,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          71,
+          272
+        ],
+        "window_cpu": [
+          135,
+          272
+        ],
+        "forward": {
+          "layer": 14,
+          "ids": [
+            150,
+            86,
+            33,
+            70,
+            19,
+            71,
+            69,
+            272
+          ],
+          "fetch": 80,
+          "miss": 0,
+          "cpu": 160,
+          "promo": 80
+        },
+        "window": {
+          "layer": 14,
+          "ids": [
+            150,
+            86,
+            33,
+            70,
+            19,
+            71,
+            272,
+            135
+          ],
+          "fetch": 32,
+          "miss": 0,
+          "cpu": 192,
+          "promo": 32
+        }
+      }
+    },
+    {
+      "row": 4,
+      "route_records_equal": false,
+      "changed_layers": 38,
+      "first_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": true,
+        "forward_cpu": [
+          15,
+          105,
+          215
+        ],
+        "window_cpu": [
+          15,
+          105,
+          215
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            178,
+            1,
+            53,
+            15,
+            215,
+            105,
+            275,
+            10
+          ],
+          "fetch": 7,
+          "miss": 0,
+          "cpu": 56,
+          "promo": 7
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            178,
+            1,
+            53,
+            15,
+            215,
+            105,
+            275,
+            10
+          ],
+          "fetch": 6,
+          "miss": 0,
+          "cpu": 56,
+          "promo": 6
+        }
+      },
+      "first_cpu_difference": {
+        "layer": 6,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          67,
+          134,
+          161
+        ],
+        "window_cpu": [
+          67,
+          134
+        ],
+        "forward": {
+          "layer": 6,
+          "ids": [
+            280,
+            54,
+            161,
+            67,
+            237,
+            1,
+            3,
+            134
+          ],
+          "fetch": 3,
+          "miss": 0,
+          "cpu": 140,
+          "promo": 1
+        },
+        "window": {
+          "layer": 6,
+          "ids": [
+            280,
+            54,
+            161,
+            67,
+            1,
+            237,
+            3,
+            134
+          ],
+          "fetch": 6,
+          "miss": 0,
+          "cpu": 136,
+          "promo": 6
+        }
+      },
+      "first_id_difference": {
+        "layer": 6,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          67,
+          134,
+          161
+        ],
+        "window_cpu": [
+          67,
+          134
+        ],
+        "forward": {
+          "layer": 6,
+          "ids": [
+            280,
+            54,
+            161,
+            67,
+            237,
+            1,
+            3,
+            134
+          ],
+          "fetch": 3,
+          "miss": 0,
+          "cpu": 140,
+          "promo": 1
+        },
+        "window": {
+          "layer": 6,
+          "ids": [
+            280,
+            54,
+            161,
+            67,
+            1,
+            237,
+            3,
+            134
+          ],
+          "fetch": 6,
+          "miss": 0,
+          "cpu": 136,
+          "promo": 6
+        }
+      }
+    },
+    {
+      "row": 5,
+      "route_records_equal": false,
+      "changed_layers": 40,
+      "first_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          134,
+          230,
+          251,
+          274
+        ],
+        "window_cpu": [
+          134,
+          251,
+          274
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            95,
+            242,
+            93,
+            76,
+            230,
+            251,
+            134,
+            274
+          ],
+          "fetch": 15,
+          "miss": 0,
+          "cpu": 240,
+          "promo": 0
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            95,
+            242,
+            93,
+            76,
+            230,
+            251,
+            134,
+            274
+          ],
+          "fetch": 26,
+          "miss": 0,
+          "cpu": 224,
+          "promo": 26
+        }
+      },
+      "first_cpu_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          134,
+          230,
+          251,
+          274
+        ],
+        "window_cpu": [
+          134,
+          251,
+          274
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            95,
+            242,
+            93,
+            76,
+            230,
+            251,
+            134,
+            274
+          ],
+          "fetch": 15,
+          "miss": 0,
+          "cpu": 240,
+          "promo": 0
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            95,
+            242,
+            93,
+            76,
+            230,
+            251,
+            134,
+            274
+          ],
+          "fetch": 26,
+          "miss": 0,
+          "cpu": 224,
+          "promo": 26
+        }
+      },
+      "first_id_difference": {
+        "layer": 10,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          112,
+          134,
+          204,
+          255
+        ],
+        "window_cpu": [
+          112,
+          134,
+          255
+        ],
+        "forward": {
+          "layer": 10,
+          "ids": [
+            147,
+            103,
+            212,
+            204,
+            284,
+            112,
+            134,
+            255
+          ],
+          "fetch": 7,
+          "miss": 0,
+          "cpu": 232,
+          "promo": 0
+        },
+        "window": {
+          "layer": 10,
+          "ids": [
+            147,
+            103,
+            212,
+            204,
+            112,
+            284,
+            134,
+            255
+          ],
+          "fetch": 14,
+          "miss": 0,
+          "cpu": 208,
+          "promo": 14
+        }
+      }
+    },
+    {
+      "row": 6,
+      "route_records_equal": false,
+      "changed_layers": 39,
+      "first_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          244,
+          253,
+          255
+        ],
+        "window_cpu": [
+          244,
+          255
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            253,
+            255,
+            93,
+            109,
+            254,
+            68,
+            244,
+            10
+          ],
+          "fetch": 12,
+          "miss": 0,
+          "cpu": 67,
+          "promo": 12
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            253,
+            255,
+            93,
+            109,
+            254,
+            68,
+            244,
+            10
+          ],
+          "fetch": 9,
+          "miss": 0,
+          "cpu": 66,
+          "promo": 0
+        }
+      },
+      "first_cpu_difference": {
+        "layer": 3,
+        "ordered_ids_equal": true,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          244,
+          253,
+          255
+        ],
+        "window_cpu": [
+          244,
+          255
+        ],
+        "forward": {
+          "layer": 3,
+          "ids": [
+            253,
+            255,
+            93,
+            109,
+            254,
+            68,
+            244,
+            10
+          ],
+          "fetch": 12,
+          "miss": 0,
+          "cpu": 67,
+          "promo": 12
+        },
+        "window": {
+          "layer": 3,
+          "ids": [
+            253,
+            255,
+            93,
+            109,
+            254,
+            68,
+            244,
+            10
+          ],
+          "fetch": 9,
+          "miss": 0,
+          "cpu": 66,
+          "promo": 0
+        }
+      },
+      "first_id_difference": {
+        "layer": 14,
+        "ordered_ids_equal": false,
+        "cpu_experts_equal": false,
+        "forward_cpu": [
+          117,
+          247,
+          271
+        ],
+        "window_cpu": [
+          73,
+          271
+        ],
+        "forward": {
+          "layer": 14,
+          "ids": [
+            277,
+            130,
+            247,
+            172,
+            207,
+            190,
+            271,
+            117
+          ],
+          "fetch": 34,
+          "miss": 0,
+          "cpu": 196,
+          "promo": 2
+        },
+        "window": {
+          "layer": 14,
+          "ids": [
+            277,
+            130,
+            247,
+            172,
+            207,
+            190,
+            271,
+            73
+          ],
+          "fetch": 6,
+          "miss": 0,
+          "cpu": 192,
+          "promo": 6
+        }
+      }
+    }
+  ]
+}

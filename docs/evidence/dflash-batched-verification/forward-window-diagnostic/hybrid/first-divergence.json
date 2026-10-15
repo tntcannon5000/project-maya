@@ -1,0 +1,67 @@
+{
+  "first_divergent_input_position": 6794,
+  "first_backend_difference_layer": 3,
+  "matched_selected_experts": [
+    176,
+    16,
+    225,
+    256,
+    165,
+    36,
+    77,
+    17
+  ],
+  "forward_cpu_experts": [
+    17,
+    36,
+    77,
+    165
+  ],
+  "window_cpu_experts": [
+    17,
+    36,
+    77,
+    256
+  ],
+  "forward_nonresident_mask": 253,
+  "window_nonresident_mask": 253,
+  "prior_discarded_layer3_rows": [
+    [
+      176,
+      16,
+      225,
+      256,
+      165,
+      36,
+      77,
+      17
+    ],
+    [
+      155,
+      104,
+      60,
+      51,
+      250,
+      176,
+      165,
+      8
+    ]
+  ],
+  "extra_usage_increments": {
+    "176": 2,
+    "16": 1,
+    "225": 1,
+    "256": 1,
+    "165": 2,
+    "36": 1,
+    "77": 1,
+    "17": 1,
+    "155": 1,
+    "104": 1,
+    "60": 1,
+    "51": 1,
+    "250": 1,
+    "8": 1
+  },
+  "caveat": "Reconstructed from actual route records and route counter increment source; not a direct counter-memory dump."
+}

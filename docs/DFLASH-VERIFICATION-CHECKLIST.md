@@ -47,3 +47,8 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Apply direct-RAM integration gate: no headroom demonstrated, no serving integration.
 
 - [x] Screen cross-window transient scratch retention with capacity/live-workspace accounting; defer serving integration pending a practical policy with material headroom.
+
+- [x] Screen causal scratch policies with six causal/capacity/ownership checks; no practical large saving demonstrated.
+- [x] Compare ordinary forward against verification first rows/partial commits on one occupied coding input: controlled GPU exact.
+- [x] Attribute first hybrid divergence through actual route masks and a two-step cold-ranking ablation; counter and residency history change placement.
+- [ ] Any future claim of full ordinary/hybrid equivalence requires consistent backend placement/quantization, not current GPU-only evidence.

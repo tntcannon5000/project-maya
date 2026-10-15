@@ -249,3 +249,14 @@ Protected LRU, weighted frequency and GreedyDual screened without future data.
 Best T5 byte reduction8.78% falls to7.38% in later half; T3 does not beatLRU.
 Six causal/ownership/capacity toy checks pass; legacy figures reproduce.
 No serving integration orTPSclaim. See SCRATCH-CAUSAL-POLICIES.md.
+
+## Ordinary-forward attribution checkpoint
+
+Added fixed-input ordinary-forward/window-first comparison with1-token commits.
+After6793occupied tokens, GPU-only1,084,160logits match exactly. Hybrid prefix
+and first input exact; next input differs with sameIDs/residency atlayer3 but
+CPU165/GPU256 swapped. Discarded future rows increment cold-selection counters;
+commit does not rewind them. Ranking-off ablation removeslayer3difference but
+residency changes cause CPU-placement difference atlayer6. No thresholds
+relaxed, nohybridexact claim orperformance recommendation. See
+forward-window-diagnostic/RESULTS.md. No new serving changes.
