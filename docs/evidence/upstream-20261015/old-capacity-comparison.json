@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "warmup",
+    "before_tps": 38.01321553196228,
+    "after_tps": 37.20713911981862,
+    "output_exact": true,
+    "first_difference": null,
+    "offered": [
+      0,
+      0
+    ],
+    "accepted": [
+      0,
+      0
+    ]
+  },
+  {
+    "kind": "control",
+    "before_tps": 40.71505820980978,
+    "after_tps": 39.28850964563606,
+    "output_exact": false,
+    "first_difference": 37,
+    "offered": [
+      0,
+      0
+    ],
+    "accepted": [
+      0,
+      0
+    ]
+  },
+  {
+    "kind": "confidence",
+    "before_tps": 50.9483153223078,
+    "after_tps": 50.22956480791115,
+    "output_exact": true,
+    "first_difference": null,
+    "offered": [
+      185.0,
+      187.0
+    ],
+    "accepted": [
+      177.0,
+      178.0
+    ]
+  }
+]

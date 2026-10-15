@@ -1,0 +1,9 @@
+[1/5] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_window.cu.obj
+glm_window.cu
+tmpxft_00005778_00000000-7_glm_window.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[2/5] Linking CXX static library strata_engine.lib
+[3/5] Linking CXX executable maya_promotion_owner_test.exe
+[4/5] Linking CXX executable maya_verify_scratch_test.exe
+[5/5] Linking CXX executable strata.exe

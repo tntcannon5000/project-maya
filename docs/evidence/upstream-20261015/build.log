@@ -1,0 +1,507 @@
+[0/1] Re-running CMake...
+-- Strata: CUDA enabled, arch 120
+-- strata: pack/full/experts.bin absent - the expert arena load test is NOT registered
+-- Warning: ccache not found - consider installing it for faster compilation or disable this warning with GGML_CCACHE=OFF
+-- CMAKE_SYSTEM_PROCESSOR: AMD64
+-- CMAKE_GENERATOR_PLATFORM: 
+-- GGML_SYSTEM_ARCH: x86
+-- Including CPU backend
+-- x86 detected
+-- Adding CPU backend variant ggml-cpu: /arch:AVX512 GGML_AVX512
+-- ggml version: 0.24.0
+-- ggml commit:  2ce956f
+-- Configuring done (2.1s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/niran/Documents/Code Projects/LocalLLMs/project-maya/build
+[1/28] Building C object ggml\src\CMakeFiles\ggml-base.dir\ggml.c.obj
+C:\Program Files (x86)\Windows Kits\10\\include\10.0.19041.0\\um\winbase.h(9531): warning C5105: macro expansion producing 'defined' has undefined behavior
+[2/28] Linking CXX static library ggml\src\ggml-base.lib
+[3/28] Building CXX object CMakeFiles\strata_kernels.dir\src\kernels\ngram.cpp.obj
+[4/28] Building CXX object CMakeFiles\strata_engine.dir\src\core\native_head.cpp.obj
+[5/28] Building CXX object CMakeFiles\strata_engine.dir\src\core\native_dense.cpp.obj
+[6/28] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\sampler.cu.obj
+sampler.cu
+tmpxft_00004a20_00000000-7_sampler.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a20_00000000-7_sampler.cudafe1.stub.c(39): warning C4211: nonstandard extension used: redefined extern to static
+[7/28] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\glm_batch.cu.obj
+glm_batch.cu
+tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(67): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(37): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(23): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(23): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00006e6c_00000000-7_glm_batch.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+[8/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_multi.cu.obj
+glm_multi.cu
+tmpxft_00004f58_00000000-7_glm_multi.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[9/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_rows.cu.obj
+glm_rows.cu
+tmpxft_00003484_00000000-7_glm_rows.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[10/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_window.cu.obj
+glm_window.cu
+tmpxft_00004080_00000000-7_glm_window.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[11/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_dflash.cu.obj
+glm_dflash.cu
+tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_dflash.cu(1713): warning C4456: declaration of 't_win' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_dflash.cu(1523): note: see declaration of 't_win'
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(39): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(35): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(37): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00003f70_00000000-7_glm_dflash.cudafe1.stub.c(31): warning C4211: nonstandard extension used: redefined extern to static
+[12/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_prefill.cu.obj
+glm_prefill.cu
+tmpxft_00007340_00000000-7_glm_prefill.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1203): warning C4456: declaration of 'parked' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1141): note: see declaration of 'parked'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(2166): warning C4456: declaration of 'c' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_prefill.cu(1956): note: see declaration of 'c'
+[13/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_model.cu.obj
+glm_model.cu
+tmpxft_00002a90_00000000-7_glm_model.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(43): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00002a90_00000000-7_glm_model.cudafe1.stub.c(15): warning C4211: nonstandard extension used: redefined extern to static
+[14/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_transport_probe.cu.obj
+glm_transport_probe.cu
+tmpxft_00006a88_00000000-7_glm_transport_probe.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+[15/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_mtp.cu.obj
+glm_mtp.cu
+tmpxft_00007060_00000000-7_glm_mtp.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_mtp.cu(530) : warning C4706: assignment within conditional expression
+[16/28] Building CUDA object CMakeFiles\strata_engine.dir\src\core\glm_fast_path.cu.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(3882): warning #549-D: variable "w_rq" is used before its value is set
+          if (w_n > 0) win_cpu_merged(w_rq[0]->layer, w_n, w_rq, w_ans, w_seq);
+                                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(3882): warning #549-D: variable "w_rq" is used before its value is set
+          if (w_n > 0) win_cpu_merged(w_rq[0]->layer, w_n, w_rq, w_ans, w_seq);
+                                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+glm_fast_path.cu
+tmpxft_000072d0_00000000-7_glm_fast_path.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(862): warning C4458: declaration of 'ms' hides class member
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_state.hpp(826): note: see declaration of 'strata::core::Glm5Model::FastState::ms'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1100): warning C4456: declaration of 'need' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(819): note: see declaration of 'need'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1246): warning C4456: declaration of 'need' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(819): note: see declaration of 'need'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1794): warning C4456: declaration of 'total' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(1454): note: see declaration of 'total'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(5969): warning C4456: declaration of 'last' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\core\glm_fast_path.cu(5889): note: see declaration of 'last'
+[17/28] Building CUDA object CMakeFiles\glm_dflash_test.dir\tests\glm_dflash_test.cu.obj
+glm_dflash_test.cu
+tmpxft_00004f90_00000000-7_glm_dflash_test.cudafe1.cpp
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\glm_dflash_test.cu(275): warning C4456: declaration of 'f' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\tests\glm_dflash_test.cu(260): note: see declaration of 'f'
+[18/28] Building CXX object CMakeFiles\strata_kernels_cpu.dir\src\kernels\cpu\exl3_cpu.cpp.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(173): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(225): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(227): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(237): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(240): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(281): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(283): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(293): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(296): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(331): warning C4068: unknown pragma 'GCC'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cpu\exl3_cpu.cpp(358): warning C4068: unknown pragma 'GCC'
+[19/28] Linking CXX static library strata_kernels_cpu.lib
+[20/28] Building CXX object CMakeFiles\strata.dir\src\program\generate.cpp.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(210): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(211): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(212): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(213): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(214): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/kernels/cpu/pool.hpp(217): warning C4324: 'strata::kernels::cpu::ExpertPool': structure was padded due to alignment specifier
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\include\strata/core/glm_dflash.hpp(30): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(96): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(737): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(764): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1194): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1532): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1571): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1681): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1195): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1203): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1274): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(1449): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2579): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2581): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2808): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2810): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2811): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2812): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2813): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2814): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2815): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2833): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3191): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5521): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5546): warning C4456: declaration of 'sp' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5038): note: see declaration of 'sp'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6059): warning C4456: declaration of 'tok' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5119): note: see declaration of 'tok'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6495): warning C4456: declaration of 'sbuf' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3996): note: see declaration of 'sbuf'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6714): warning C4456: declaration of 'pool' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4313): note: see declaration of 'pool'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6722): warning C4456: declaration of 'pool' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4313): note: see declaration of 'pool'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(7256): warning C4456: declaration of 'sbuf' hides previous local declaration
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3996): note: see declaration of 'sbuf'
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3281): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3546): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3552): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3849): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4035): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4375): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4563): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(4920): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5062): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5091): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5970): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6110): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6254): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6308): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6510): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6648): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6677): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6754): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(6797): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(7450): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(7470): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(4068): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(1298): note: see reference to function template instantiation '_OutIt *std::_Copy_unchecked<_Iter,int*>(_InIt,_InIt,_OutIt)' being compiled
+        with
+        [
+            _OutIt=int *,
+            _Iter=__int64 *,
+            _InIt=__int64 *
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(1321): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Assign_range<__int64*>(_Iter,_Iter,std::forward_iterator_tag)' being compiled
+        with
+        [
+            _Iter=__int64 *
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(1321): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Assign_range<__int64*>(_Iter,_Iter,std::forward_iterator_tag)' being compiled
+        with
+        [
+            _Iter=__int64 *
+        ]
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5768): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::assign<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>
+        ]
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(5740): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::assign<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(135): warning C4244: 'initializing': conversion from 'const int64_t' to '_Ty', possible loss of data
+        with
+        [
+            _Ty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(134): note: see reference to function template instantiation '_Ty *std::construct_at<_Objty,const int64_t&,void>(_Ty *const ,const int64_t &) noexcept(<expr>)' being compiled
+        with
+        [
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1655): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const int64_t&>(_Alloc &,_Objty *const ,const int64_t &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1656): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const int64_t&>(_Alloc &,_Objty *const ,const int64_t &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1673): note: see reference to function template instantiation 'void std::_Uninitialized_backout_al<std::allocator<int>>::_Emplace_back<const _Elem&>(const _Elem &)' being compiled
+        with
+        [
+            _Elem=int64_t
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1695): note: see reference to function template instantiation 'void std::_Uninitialized_backout_al<std::allocator<int>>::_Emplace_back<const _Elem&>(const _Elem &)' being compiled
+        with
+        [
+            _Elem=int64_t
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(1902): note: see reference to function template instantiation 'int *std::_Uninitialized_copy<_Ty,std::allocator<int>>(const _InIt,const _InIt,int *,_Alloc &)' being compiled
+        with
+        [
+            _Ty=const int64_t *,
+            _InIt=const int64_t *,
+            _Alloc=std::allocator<int>
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(685): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Construct_n<const __int64*,const __int64*>(const unsigned __int64,const __int64 *&&,const __int64 *&&)' being compiled
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(685): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Construct_n<const __int64*,const __int64*>(const unsigned __int64,const __int64 *&&,const __int64 *&&)' being compiled
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2835): note: see reference to function template instantiation 'std::vector<int32_t,std::allocator<int>>::vector<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>,
+            _Alloc=std::allocator<int>
+        ]
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(2835): note: see reference to function template instantiation 'std::vector<int32_t,std::allocator<int>>::vector<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>,
+            _Alloc=std::allocator<int>
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(680): warning C4244: 'initializing': conversion from 'const int64_t' to '_Objty', possible loss of data
+        with
+        [
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(135): warning C4244: 'initializing': conversion from '__int64' to '_Ty', possible loss of data
+        with
+        [
+            _Ty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(134): note: see reference to function template instantiation '_Ty *std::construct_at<_Objty,__int64&,void>(_Ty *const ,__int64 &) noexcept(<expr>)' being compiled
+        with
+        [
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1655): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,__int64&>(_Alloc &,_Objty *const ,__int64 &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1656): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,__int64&>(_Alloc &,_Objty *const ,__int64 &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1673): note: see reference to function template instantiation 'void std::_Uninitialized_backout_al<std::allocator<int>>::_Emplace_back<__int64&>(__int64 &)' being compiled
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1695): note: see reference to function template instantiation 'void std::_Uninitialized_backout_al<std::allocator<int>>::_Emplace_back<__int64&>(__int64 &)' being compiled
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(1902): note: see reference to function template instantiation 'int *std::_Uninitialized_copy<_Ty,std::allocator<int>>(const _InIt,const _InIt,int *,_Alloc &)' being compiled
+        with
+        [
+            _Ty=__int64 *,
+            _InIt=__int64 *,
+            _Alloc=std::allocator<int>
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(685): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Construct_n<__int64*,__int64*>(const unsigned __int64,__int64 *&&,__int64 *&&)' being compiled
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vector(685): note: see reference to function template instantiation 'void std::vector<int32_t,std::allocator<int>>::_Construct_n<__int64*,__int64*>(const unsigned __int64,__int64 *&&,__int64 *&&)' being compiled
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3045): note: see reference to function template instantiation 'std::vector<int32_t,std::allocator<int>>::vector<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>,
+            _Alloc=std::allocator<int>
+        ]
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\program\generate.cpp(3045): note: see reference to function template instantiation 'std::vector<int32_t,std::allocator<int>>::vector<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+        with
+        [
+            _Ty=int64_t,
+            _Iter=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int64_t>>>,
+            _Alloc=std::allocator<int>
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(680): warning C4244: 'initializing': conversion from '__int64' to '_Objty', possible loss of data
+        with
+        [
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(136): warning C4244: 'initializing': conversion from 'const int64_t' to '_Objty', possible loss of data
+        with
+        [
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(673): note: see reference to function template instantiation '_Ty *std::construct_at<_Objty,const int64_t&,void>(_Ty *const ,const int64_t &) noexcept' being compiled
+        with
+        [
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1655): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const int64_t&>(_Alloc &,_Objty *const ,const int64_t &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1656): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,const int64_t&>(_Alloc &,_Objty *const ,const int64_t &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xutility(136): warning C4244: 'initializing': conversion from '__int64' to '_Objty', possible loss of data
+        with
+        [
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(673): note: see reference to function template instantiation '_Ty *std::construct_at<_Objty,__int64&,void>(_Ty *const ,__int64 &) noexcept' being compiled
+        with
+        [
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1655): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,__int64&>(_Alloc &,_Objty *const ,__int64 &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\xmemory(1656): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,__int64&>(_Alloc &,_Objty *const ,__int64 &)' being compiled
+        with
+        [
+            _Alloc=std::allocator<int>,
+            _Ty=int,
+            _Objty=int
+        ]
+[21/28] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\glm_fast.cu.obj
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(723): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=23]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<23>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t*) { return dot_iq4_xs(v, y, kbx, iqs); }
+                                                        ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(722): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=18]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<18>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq3_xxs_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(721): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=16]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<16>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq2_xxs_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\src\kernels\cuda\glm_fast.cu(720): warning #177-D: function "strata::kernels::glmf::<unnamed>::dot_t<T>(const void *, const block_q8_1 *, int, int, const uint32_t *) [with T=19]" was declared but never referenced
+  template<> __declspec(__device__) __forceinline float dot_t<19>(const void* v, const block_q8_1* y, int kbx, int iqs, const uint32_t* tab) { return dot_iq1_s_t(v, y, kbx, iqs, tab); }
+                                                        ^
+
+glm_fast.cu
+tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(221): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(29): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(29): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(27): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(23): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(25): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(11): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(13): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(85): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(19): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(1217): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(9): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_00004a7c_00000000-7_glm_fast.cudafe1.stub.c(543): warning C4211: nonstandard extension used: redefined extern to static
+[22/28] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\exl3.cu.obj
+exl3.cu
+tmpxft_000079dc_00000000-7_exl3.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_000079dc_00000000-7_exl3.cudafe1.stub.c(891): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_000079dc_00000000-7_exl3.cudafe1.stub.c(21): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_000079dc_00000000-7_exl3.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+C:\Users\niran\AppData\Local\Temp\tmpxft_000079dc_00000000-7_exl3.cudafe1.stub.c(17): warning C4211: nonstandard extension used: redefined extern to static
+[23/28] Building CUDA object CMakeFiles\strata_kernels.dir\src\kernels\cuda\exl3_legacy.cu.obj
+exl3_legacy.cu
+tmpxft_00000480_00000000-7_exl3_legacy.cudafe1.cpp
+C:\Users\niran\AppData\Local\Temp\tmpxft_00000480_00000000-7_exl3_legacy.cudafe1.stub.c(167): warning C4211: nonstandard extension used: redefined extern to static
+[24/28] Linking CXX static library strata_kernels.lib
+[25/28] Linking CXX static library strata_engine.lib
+[26/28] Linking CXX executable glm_dflash_test.exe
+[27/28] Linking CXX executable strata.exe
