@@ -45,3 +45,6 @@ fig.text(.03, .025,
          fontsize=9, color='#444')
 for extension in ('png', 'svg'):
     fig.savefig(OUT / f'hybrid-phase-breakdown.{extension}', dpi=170)
+
+svg = OUT / "hybrid-phase-breakdown.svg"
+svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
