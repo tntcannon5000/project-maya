@@ -1,0 +1,299 @@
+{
+  "graph-off": {
+    "calls": [
+      {
+        "repeat": 0,
+        "step": 0,
+        "width": 2,
+        "position": 6793,
+        "ms": 88.1353
+      },
+      {
+        "repeat": 0,
+        "step": 1,
+        "width": 4,
+        "position": 6794,
+        "ms": 116.2863
+      },
+      {
+        "repeat": 0,
+        "step": 2,
+        "width": 2,
+        "position": 6798,
+        "ms": 71.1702
+      },
+      {
+        "repeat": 0,
+        "step": 3,
+        "width": 4,
+        "position": 6800,
+        "ms": 106.6444
+      },
+      {
+        "repeat": 0,
+        "step": 4,
+        "width": 2,
+        "position": 6801,
+        "ms": 62.735
+      },
+      {
+        "repeat": 0,
+        "step": 5,
+        "width": 4,
+        "position": 6803,
+        "ms": 98.1553
+      },
+      {
+        "repeat": 1,
+        "step": 0,
+        "width": 2,
+        "position": 6793,
+        "ms": 42.1723
+      },
+      {
+        "repeat": 1,
+        "step": 1,
+        "width": 4,
+        "position": 6794,
+        "ms": 80.758
+      },
+      {
+        "repeat": 1,
+        "step": 2,
+        "width": 2,
+        "position": 6798,
+        "ms": 50.8666
+      },
+      {
+        "repeat": 1,
+        "step": 3,
+        "width": 4,
+        "position": 6800,
+        "ms": 76.03
+      },
+      {
+        "repeat": 1,
+        "step": 4,
+        "width": 2,
+        "position": 6801,
+        "ms": 44.6298
+      },
+      {
+        "repeat": 1,
+        "step": 5,
+        "width": 4,
+        "position": 6803,
+        "ms": 81.9674
+      }
+    ],
+    "groups": [
+      {
+        "repeat": 0,
+        "width": 2,
+        "n": 3,
+        "mean_ms": 74.0135,
+        "min_ms": 62.735,
+        "max_ms": 88.1353
+      },
+      {
+        "repeat": 0,
+        "width": 4,
+        "n": 3,
+        "mean_ms": 107.02866666666667,
+        "min_ms": 98.1553,
+        "max_ms": 116.2863
+      },
+      {
+        "repeat": 1,
+        "width": 2,
+        "n": 3,
+        "mean_ms": 45.88956666666667,
+        "min_ms": 42.1723,
+        "max_ms": 50.8666
+      },
+      {
+        "repeat": 1,
+        "width": 4,
+        "n": 3,
+        "mean_ms": 79.58513333333333,
+        "min_ms": 76.03,
+        "max_ms": 81.9674
+      }
+    ],
+    "engagement_reports": [],
+    "memory_and_guard_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.95 GB, 49-84 slots/layer (2564 total)",
+      "glm fast: CUDA0 RAM tier 94.00 GB pinned, 11363 slots"
+    ]
+  },
+  "graph-on": {
+    "calls": [
+      {
+        "repeat": 0,
+        "step": 0,
+        "width": 2,
+        "position": 6793,
+        "ms": 90.352
+      },
+      {
+        "repeat": 0,
+        "step": 1,
+        "width": 4,
+        "position": 6794,
+        "ms": 114.7957
+      },
+      {
+        "repeat": 0,
+        "step": 2,
+        "width": 2,
+        "position": 6798,
+        "ms": 67.8948
+      },
+      {
+        "repeat": 0,
+        "step": 3,
+        "width": 4,
+        "position": 6800,
+        "ms": 103.6447
+      },
+      {
+        "repeat": 0,
+        "step": 4,
+        "width": 2,
+        "position": 6801,
+        "ms": 60.2631
+      },
+      {
+        "repeat": 0,
+        "step": 5,
+        "width": 4,
+        "position": 6803,
+        "ms": 94.9914
+      },
+      {
+        "repeat": 1,
+        "step": 0,
+        "width": 2,
+        "position": 6793,
+        "ms": 41.5789
+      },
+      {
+        "repeat": 1,
+        "step": 1,
+        "width": 4,
+        "position": 6794,
+        "ms": 80.6766
+      },
+      {
+        "repeat": 1,
+        "step": 2,
+        "width": 2,
+        "position": 6798,
+        "ms": 49.7975
+      },
+      {
+        "repeat": 1,
+        "step": 3,
+        "width": 4,
+        "position": 6800,
+        "ms": 73.7621
+      },
+      {
+        "repeat": 1,
+        "step": 4,
+        "width": 2,
+        "position": 6801,
+        "ms": 43.9649
+      },
+      {
+        "repeat": 1,
+        "step": 5,
+        "width": 4,
+        "position": 6803,
+        "ms": 78.3442
+      }
+    ],
+    "groups": [
+      {
+        "repeat": 0,
+        "width": 2,
+        "n": 3,
+        "mean_ms": 72.83663333333334,
+        "min_ms": 60.2631,
+        "max_ms": 90.352
+      },
+      {
+        "repeat": 0,
+        "width": 4,
+        "n": 3,
+        "mean_ms": 104.47726666666667,
+        "min_ms": 94.9914,
+        "max_ms": 114.7957
+      },
+      {
+        "repeat": 1,
+        "width": 2,
+        "n": 3,
+        "mean_ms": 45.11376666666666,
+        "min_ms": 41.5789,
+        "max_ms": 49.7975
+      },
+      {
+        "repeat": 1,
+        "width": 4,
+        "n": 3,
+        "mean_ms": 77.5943,
+        "min_ms": 73.7621,
+        "max_ms": 80.6766
+      }
+    ],
+    "engagement_reports": [
+      {
+        "eligible": 252,
+        "captures": 84,
+        "replays": 168,
+        "route_credits": 756,
+        "nodes_built": 1764,
+        "cached_keys": 84,
+        "capture_failures": 0,
+        "disabled_fallbacks": 0,
+        "launch_failures": 0,
+        "invalidations": 0
+      },
+      {
+        "eligible": 252,
+        "captures": 0,
+        "replays": 252,
+        "route_credits": 756,
+        "nodes_built": 0,
+        "cached_keys": 84,
+        "capture_failures": 0,
+        "disabled_fallbacks": 0,
+        "launch_failures": 0,
+        "invalidations": 0
+      }
+    ],
+    "memory_and_guard_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.95 GB, 49-84 slots/layer (2564 total)",
+      "glm fast: CUDA0 RAM tier 94.00 GB pinned, 11363 slots",
+      "maya verify MoE graph CUDA0 host totals: capture/build/instantiate 109.008 ms, first-launch submission 2.284 ms, replay submission 4.060 ms; ring-credit waits 75 / 155.960 ms / 0 timeouts (30 s bound); submission times are not GPU execution times",
+      "maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging",
+      "maya verify MoE graph CUDA0 host totals: capture/build/instantiate 0.000 ms, first-launch submission 0.000 ms, replay submission 5.875 ms; ring-credit waits 103 / 144.370 ms / 0 timeouts (30 s bound); submission times are not GPU execution times",
+      "maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging"
+    ]
+  },
+  "parity": {
+    "left": "graph-off",
+    "right": "graph-on",
+    "values": 5575680,
+    "exact": true,
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "mismatched_values": 0,
+    "greedy_matches": 36,
+    "rows": 36
+  },
+  "scope": "Fixed-input call wall latency including window synchronization; excludes fixture logit readback and file writes. First calls include graph creation. Only repeated warm calls assess reuse. Not generated-token TPS."
+}

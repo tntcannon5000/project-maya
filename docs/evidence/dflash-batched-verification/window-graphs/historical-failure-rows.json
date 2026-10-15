@@ -1,0 +1,245 @@
+{
+  "scope": "Historical failure only; first recorded verification row already differs, but prefix logits were not saved. This does not attribute the difference to prefill or graph execution.",
+  "rows": [
+    {
+      "row": 0,
+      "different_bits": 154880,
+      "max_abs": 0.42862388491630554
+    },
+    {
+      "row": 1,
+      "different_bits": 154880,
+      "max_abs": 0.2804718017578125
+    },
+    {
+      "row": 2,
+      "different_bits": 154880,
+      "max_abs": 0.39952850341796875
+    },
+    {
+      "row": 3,
+      "different_bits": 154880,
+      "max_abs": 0.2804718017578125
+    },
+    {
+      "row": 4,
+      "different_bits": 154880,
+      "max_abs": 0.39952850341796875
+    },
+    {
+      "row": 5,
+      "different_bits": 154879,
+      "max_abs": 0.21403026580810547
+    },
+    {
+      "row": 6,
+      "different_bits": 154880,
+      "max_abs": 0.49274468421936035
+    },
+    {
+      "row": 7,
+      "different_bits": 154879,
+      "max_abs": 0.33477067947387695
+    },
+    {
+      "row": 8,
+      "different_bits": 154880,
+      "max_abs": 0.29574474692344666
+    },
+    {
+      "row": 9,
+      "different_bits": 154880,
+      "max_abs": 0.43042564392089844
+    },
+    {
+      "row": 10,
+      "different_bits": 154880,
+      "max_abs": 0.3810601234436035
+    },
+    {
+      "row": 11,
+      "different_bits": 154880,
+      "max_abs": 0.90517258644104
+    },
+    {
+      "row": 12,
+      "different_bits": 154880,
+      "max_abs": 0.7173166275024414
+    },
+    {
+      "row": 13,
+      "different_bits": 154879,
+      "max_abs": 0.8181966543197632
+    },
+    {
+      "row": 14,
+      "different_bits": 154880,
+      "max_abs": 0.8389356136322021
+    },
+    {
+      "row": 15,
+      "different_bits": 154880,
+      "max_abs": 0.8000055551528931
+    },
+    {
+      "row": 16,
+      "different_bits": 154880,
+      "max_abs": 0.7173166275024414
+    },
+    {
+      "row": 17,
+      "different_bits": 154879,
+      "max_abs": 0.8181966543197632
+    },
+    {
+      "row": 18,
+      "different_bits": 154880,
+      "max_abs": 0.8389356136322021
+    },
+    {
+      "row": 19,
+      "different_bits": 154880,
+      "max_abs": 0.8000055551528931
+    },
+    {
+      "row": 20,
+      "different_bits": 154880,
+      "max_abs": 0.6627397537231445
+    },
+    {
+      "row": 21,
+      "different_bits": 154880,
+      "max_abs": 0.34450507164001465
+    },
+    {
+      "row": 22,
+      "different_bits": 154880,
+      "max_abs": 0.26589012145996094
+    },
+    {
+      "row": 23,
+      "different_bits": 154880,
+      "max_abs": 0.1964554786682129
+    },
+    {
+      "row": 24,
+      "different_bits": 154880,
+      "max_abs": 0.6893860101699829
+    },
+    {
+      "row": 25,
+      "different_bits": 154880,
+      "max_abs": 0.37535107135772705
+    },
+    {
+      "row": 26,
+      "different_bits": 154880,
+      "max_abs": 0.6255595088005066
+    },
+    {
+      "row": 27,
+      "different_bits": 154880,
+      "max_abs": 0.37535107135772705
+    },
+    {
+      "row": 28,
+      "different_bits": 154880,
+      "max_abs": 0.6255595088005066
+    },
+    {
+      "row": 29,
+      "different_bits": 154880,
+      "max_abs": 0.35638952255249023
+    },
+    {
+      "row": 30,
+      "different_bits": 154880,
+      "max_abs": 0.3549928665161133
+    },
+    {
+      "row": 31,
+      "different_bits": 154880,
+      "max_abs": 0.5191073417663574
+    },
+    {
+      "row": 32,
+      "different_bits": 154880,
+      "max_abs": 0.6497762203216553
+    },
+    {
+      "row": 33,
+      "different_bits": 154880,
+      "max_abs": 1.0584888458251953
+    },
+    {
+      "row": 34,
+      "different_bits": 154880,
+      "max_abs": 0.41171538829803467
+    },
+    {
+      "row": 35,
+      "different_bits": 154880,
+      "max_abs": 0.9040530323982239
+    },
+    {
+      "row": 36,
+      "different_bits": 154880,
+      "max_abs": 0.37231117486953735
+    },
+    {
+      "row": 37,
+      "different_bits": 154880,
+      "max_abs": 0.37618446350097656
+    },
+    {
+      "row": 38,
+      "different_bits": 154880,
+      "max_abs": 0.4640998840332031
+    },
+    {
+      "row": 39,
+      "different_bits": 154880,
+      "max_abs": 2.012939453125
+    },
+    {
+      "row": 40,
+      "different_bits": 154880,
+      "max_abs": 0.37231117486953735
+    },
+    {
+      "row": 41,
+      "different_bits": 154880,
+      "max_abs": 0.37618446350097656
+    },
+    {
+      "row": 42,
+      "different_bits": 154880,
+      "max_abs": 0.4640998840332031
+    },
+    {
+      "row": 43,
+      "different_bits": 154880,
+      "max_abs": 2.012939453125
+    },
+    {
+      "row": 44,
+      "different_bits": 154880,
+      "max_abs": 0.5642900466918945
+    },
+    {
+      "row": 45,
+      "different_bits": 154880,
+      "max_abs": 0.267376184463501
+    },
+    {
+      "row": 46,
+      "different_bits": 154878,
+      "max_abs": 0.3285636901855469
+    },
+    {
+      "row": 47,
+      "different_bits": 154880,
+      "max_abs": 0.4727287292480469
+    }
+  ]
+}

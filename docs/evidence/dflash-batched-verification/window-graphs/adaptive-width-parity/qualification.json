@@ -1,0 +1,25 @@
+{
+  "prefix_values": 309760,
+  "prefix_bitwise_exact": true,
+  "prefix_finite": true,
+  "arms": {
+    "graph-off": {
+      "boundaries": 16,
+      "maximum_duplicate_orphan_invalid": [
+        0,
+        0,
+        0
+      ],
+      "superseded_retirements": 33
+    },
+    "graph-on": {
+      "boundaries": 16,
+      "maximum_duplicate_orphan_invalid": [
+        0,
+        0,
+        0
+      ],
+      "superseded_retirements": 33
+    }
+  }
+}

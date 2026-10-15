@@ -1,0 +1,97 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 10.20 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 3.31
+glm fast: the expert profile data/expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 20.95 GB, 49-84 slots/layer (2564 total)
+maya verify fetch staging: CUDA0 64 token-owned disk staging slots, 864.00 MiB extra pinned RAM
+glm fast: CUDA0 RAM tier 94.00 GB pinned, 11363 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 7 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 10 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 13 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 16 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.4 of 107.2 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 22 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 30 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 30 s (3.53 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.188 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 717 MB on CUDA0
+verify fixture: repeats=2, max windows/repeat=6, widths=2/4, occupied prefix=6793
+verify fixture: reference mode=windows (forward/window_first advance one fixed input per step)
+maya owner counts CUDA0 clock=0: residents=2438 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+maya owner counts CUDA0 clock=0: residents=2047 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+verify fixture: completed batched prefix 6793, repeat 0
+maya owner counts CUDA0 clock=42: residents=2130 duplicates=0 orphan_residents=0 competing_promotions=1 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=4 expert=0 slot=30 total=1
+verify call: repeat=0 step=0 width=2 position=6793 ms=88.135300
+maya owner counts CUDA0 clock=126: residents=2212 duplicates=0 orphan_residents=0 competing_promotions=5 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=10 expert=176 slot=40 total=2
+maya promotion ownership CUDA0: retired superseded upload layer=4 expert=105 slot=30 total=3
+maya promotion ownership CUDA0: retired superseded upload layer=10 expert=216 slot=42 total=4
+maya promotion ownership CUDA0: retired superseded upload layer=5 expert=196 slot=45 total=5
+maya promotion ownership CUDA0: retired superseded upload layer=9 expert=59 slot=49 total=6
+verify call: repeat=0 step=1 width=4 position=6794 ms=116.286300
+maya owner counts CUDA0 clock=294: residents=2297 duplicates=0 orphan_residents=0 competing_promotions=8 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=12 expert=244 slot=64 total=7
+maya promotion ownership CUDA0: retired superseded upload layer=16 expert=85 slot=65 total=8
+maya promotion ownership CUDA0: retired superseded upload layer=18 expert=193 slot=58 total=9
+maya promotion ownership CUDA0: retired superseded upload layer=11 expert=161 slot=38 total=10
+maya promotion ownership CUDA0: retired superseded upload layer=19 expert=0 slot=66 total=11
+maya promotion ownership CUDA0: retired superseded upload layer=19 expert=89 slot=70 total=12
+maya promotion ownership CUDA0: retired superseded upload layer=20 expert=204 slot=69 total=13
+maya promotion ownership CUDA0: retired superseded upload layer=22 expert=38 slot=72 total=14
+verify call: repeat=0 step=2 width=2 position=6798 ms=71.170200
+maya owner counts CUDA0 clock=378: residents=2369 duplicates=0 orphan_residents=0 competing_promotions=3 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=13 expert=156 slot=57 total=15
+maya promotion ownership CUDA0: retired superseded upload layer=14 expert=172 slot=54 total=16
+maya promotion ownership CUDA0: retired superseded upload layer=19 expert=55 slot=66 total=17
+verify call: repeat=0 step=3 width=4 position=6800 ms=106.644400
+maya owner counts CUDA0 clock=546: residents=2437 duplicates=0 orphan_residents=0 competing_promotions=3 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=3 expert=36 slot=46 total=18
+maya promotion ownership CUDA0: retired superseded upload layer=8 expert=122 slot=68 total=19
+maya promotion ownership CUDA0: retired superseded upload layer=12 expert=199 slot=71 total=20
+verify call: repeat=0 step=4 width=2 position=6801 ms=62.735000
+maya owner counts CUDA0 clock=630: residents=2464 duplicates=0 orphan_residents=0 competing_promotions=7 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=7 expert=258 slot=51 total=21
+maya promotion ownership CUDA0: retired superseded upload layer=15 expert=262 slot=71 total=22
+maya promotion ownership CUDA0: retired superseded upload layer=8 expert=228 slot=68 total=23
+maya promotion ownership CUDA0: retired superseded upload layer=16 expert=33 slot=76 total=24
+maya promotion ownership CUDA0: retired superseded upload layer=11 expert=131 slot=50 total=25
+maya promotion ownership CUDA0: retired superseded upload layer=11 expert=175 slot=51 total=26
+maya promotion ownership CUDA0: retired superseded upload layer=20 expert=24 slot=78 total=27
+verify call: repeat=0 step=5 width=4 position=6803 ms=98.155300
+maya verify: 6 windows, 0 retries, 138 reused GPU expert rows
+maya verify HC CUDA0: 540 executed HC3 phase batches, 1620 token rows
+maya verify component fetch CUDA0: 252 full-layer groups, 0 fallback fronts, 252 prefix / 252 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+maya owner counts CUDA0 clock=798: residents=2494 duplicates=0 orphan_residents=0 competing_promotions=1 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=18 expert=4 slot=70 total=28
+maya owner counts CUDA0 clock=798: residents=2059 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+verify fixture: completed batched prefix 6793, repeat 1
+maya owner counts CUDA0 clock=840: residents=2069 duplicates=0 orphan_residents=0 competing_promotions=1 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=4 expert=0 slot=27 total=29
+verify call: repeat=1 step=0 width=2 position=6793 ms=42.172300
+maya owner counts CUDA0 clock=924: residents=2128 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+verify call: repeat=1 step=1 width=4 position=6794 ms=80.758000
+maya owner counts CUDA0 clock=1092: residents=2198 duplicates=0 orphan_residents=0 competing_promotions=3 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=3 expert=16 slot=38 total=30
+maya promotion ownership CUDA0: retired superseded upload layer=5 expert=278 slot=46 total=31
+maya promotion ownership CUDA0: retired superseded upload layer=6 expert=240 slot=45 total=32
+verify call: repeat=1 step=2 width=2 position=6798 ms=50.866600
+maya owner counts CUDA0 clock=1176: residents=2237 duplicates=0 orphan_residents=0 competing_promotions=1 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+maya promotion ownership CUDA0: retired superseded upload layer=7 expert=37 slot=48 total=33
+verify call: repeat=1 step=3 width=4 position=6800 ms=76.030000
+maya owner counts CUDA0 clock=1344: residents=2292 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+verify call: repeat=1 step=4 width=2 position=6801 ms=44.629800
+maya owner counts CUDA0 clock=1428: residents=2305 duplicates=0 orphan_residents=0 competing_promotions=0 invalid_promotion_sources=0 first_orphan_layer=-1 expert=-1 (host metadata, pre-boundary edits)
+verify call: repeat=1 step=5 width=4 position=6803 ms=81.967400
+maya verify: 6 windows, 0 retries, 43 reused GPU expert rows
+maya verify HC CUDA0: 540 executed HC3 phase batches, 1620 token rows
+maya verify component fetch CUDA0: 252 full-layer groups, 0 fallback fronts, 252 prefix / 252 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+maya reuse policy: observations=1596 changed_victims=48 horizon=1 matured_anchors=0
+maya CPU pipeline: 63 batches, 488 phase-gated callbacks
+PASS finite logits (mode=windows, 2 repeat(s), max 6 steps/repeat)
