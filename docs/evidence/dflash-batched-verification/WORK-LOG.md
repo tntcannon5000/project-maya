@@ -242,3 +242,10 @@ slots and current-layer live workspace protected. Unified causalLRU avoids
 gain claimed. Ordinary recency is insufficient to justify a substantial new
 path; next policy work must demonstrate practical reuse near the optimistic
 case on fixed routing before live integration. See SCRATCH-RETENTION-FEASIBILITY.md.
+
+## Causal retention follow-up
+
+Protected LRU, weighted frequency and GreedyDual screened without future data.
+Best T5 byte reduction8.78% falls to7.38% in later half; T3 does not beatLRU.
+Six causal/ownership/capacity toy checks pass; legacy figures reproduce.
+No serving integration orTPSclaim. See SCRATCH-CAUSAL-POLICIES.md.
