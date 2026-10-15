@@ -1,5 +1,5 @@
 """Short c=1 drafter-quant/width screen; no persistent launcher changes."""
-import argparse, hashlib, json, os, subprocess, sys, threading, time
+import argparse, hashlib, json, os, re, subprocess, sys, threading, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,12 +11,25 @@ DRAFT = Path('G:/Models/GLM-5.3-Flash-DFlash2')
 PROMPT = ('Write a complete Python FastAPI backend for a task dashboard with projects, tasks, '
           'status filters, SQLite persistence, validation and tests. Include the code for every file.')
 
+def mtp_result(log):
+    match = re.search(r'glm mtp: (\d+) rounds, ([\d.]+) tokens a round \| rounds by draft length([^\n]+)',log)
+    if not match:
+        raise RuntimeError('MTP did not engage; inspect engine.log')
+    lengths = {int(k):int(v) for k,v in re.findall(r'(\d+):(\d+)',match[3])}
+    # The initial token can be a zero-draft round even with a forced width.
+    if lengths.get(1,0) < 1 or any(k>1 and v for k,v in lengths.items()):
+        raise RuntimeError(f'Unexpected MTP draft lengths: {lengths}')
+    accepted,offered = map(int,re.findall(r'glm spec: (\d+) of (\d+) drafts accepted',log)[-1])
+    return dict(mtp_rounds=int(match[1]),tokens_per_round=float(match[2]),
+                draft_lengths=lengths,accepted=accepted,offered=offered,acceptance=accepted/offered)
+
 def main():
     global OUT
     ap=argparse.ArgumentParser()
     ap.add_argument('--out',type=Path,default=OUT)
     ap.add_argument('--exe',type=Path,default=ROOT/'build/strata.exe')
     ap.add_argument('--stock',action='store_true')
+    ap.add_argument('--mtp',type=Path,help='Use a NextN GGUF instead of DFlash; forced one-draft comparison only')
     ap.add_argument('--widths',default='4,1,7,2,6,3,5', help='Comma-separated forced draft widths; empty skips forced policies')
     ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
     ap.add_argument('--env',action='append',default=[])
@@ -26,6 +39,8 @@ def main():
     ap.add_argument('--confidence-max-drafts',type=int,default=0,
                     help='Append the upstream single-GPU confidence policy (0.95 cut, no mandatory drafts)')
     a=ap.parse_args();OUT=a.out.resolve()
+    if a.mtp and (a.widths != '1' or a.confidence_max_drafts or a.cancel_smoke):
+        ap.error('--mtp requires --widths 1, no confidence or cancellation schedule')
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
@@ -49,8 +64,12 @@ def main():
         env['STRATA_GLM_DFLASH_STATS'] = str(stats)
         env['STRATA_GLM_DFLASH_PROF'] = '1'
         env['PATH'] = ';'.join(cfg['lib_dirs'])+';'+env['PATH']
-        draft = DRAFT/f'GLM-5.3-Flash-DFlash2-{quant}.gguf'
-        cmd = [str(exe), '--serve', *cfg['args'], '--parallel', '1', '--dflash', str(draft),
+        draft = a.mtp.resolve() if a.mtp else DRAFT/f'GLM-5.3-Flash-DFlash2-{quant}.gguf'
+        if a.mtp:
+            env.pop('STRATA_GLM_NO_MTP',None)
+            env.update(STRATA_GLM_MTP_GGUF=str(draft),STRATA_GLM_MTP_DECODE='1',
+                       STRATA_GLM_MTP_DRAFT='1',STRATA_GLM_MTP_FIXED='1',STRATA_GLM_MTP_ADAPT='0')
+        cmd = [str(exe), '--serve', *cfg['args'], '--parallel', '1', *([] if a.mtp else ['--dflash',str(draft)]),
                '--spec-min-p', '0', '--short-read', '0', '--prompt-cache', '0', '--kv-streaming', 'off']
         manifest = dict(command=cmd, environment={k:v for k,v in env.items() if k.startswith(('STRATA_', 'MAYA_'))}, prompt=prompt, prompt_ids=ids,
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
@@ -91,7 +110,7 @@ def main():
                     if name=='cancel' and 'cancel' not in fields:raise RuntimeError('STOP did not cancel')
                     rounds=[list(map(float,x.split())) for x in stats.read_text().splitlines()[before:]] if stats.exists() else []
                     offered=sum(r[0] for r in rounds); accepted=sum(r[1] for r in rounds)
-                    if width and (not rounds or max(r[0] for r in rounds)>width or (name!='confidence' and max(r[0] for r in rounds)!=width)):
+                    if width and not a.mtp and (not rounds or max(r[0] for r in rounds)>width or (name!='confidence' and max(r[0] for r in rounds)!=width)):
                         raise RuntimeError(f'Width {width} did not engage: {rounds[:2]}')
                     row=dict(kind=name,width=width,draft_policy=policy,tokens=int(fields[1]),prompt_ms=float(fields[3]),decode_ms=float(fields[4]),
                              done=s.strip(),tps=int(fields[1])*1000/float(fields[4]),output_ids=output,
@@ -103,6 +122,9 @@ def main():
                 p.stdin.write('QUIT\n');p.stdin.flush()
                 wire.write(p.stdout.read())
                 if p.wait(timeout=120): raise RuntimeError('nonzero exit')
+                if a.mtp:
+                    rows[-1].update(mtp_result((out/'engine.log').read_text()))
+                    (out/'requests.json').write_text(json.dumps(rows,indent=2))
             finally:
                 watchdog.cancel()
                 if p.poll() is None: p.kill();p.wait()

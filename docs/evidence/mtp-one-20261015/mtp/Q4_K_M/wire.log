@@ -1,0 +1,874 @@
+INFO context=131072 kv=fp16 kv_resident=0 expert_slots=2487 expert_cache_mib=21273 engine_kind=glm-fast experts=12096 vram_slots=2487 vram_gb=20.8 ram_slots=11192 ram_gb=94.0 mtp=1 dflash=0 vision_lend=0 cpu_threads=16 pcie_share=0.40 logit_bias=1
+VRAM dev=0 pci=0000:01:00.0 total=34190458880 free=779264000 weights=5380411392 kv=2066153472 kv_ram=0 act=124354136 drafter=220295424 window=234881024 pool=22307366736 tail=10071977760 borrow=9908127744 vision=0 slots=2487 ctx=131072 layers=0-45
+READY 131072 stop pause
+PP 6792 6793 3115.9 2179.8 0
+PP 6793 6793 3164.6 2146.6 0
+T 785
+T 2053
+T 74809
+T 702
+T 11918
+T 5306
+T 23031
+T 13
+STAT tok_s=27.48 ms_tok=36.39 vram_hit=0.4303 ram_fetch=74.000 disk=0.000 promo=58.500 vram_used=2395 vram_slots=2487 ram_used=10395 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 6771
+T 752
+T 975
+T 1526
+T 279
+T 2884
+T 11176
+T 1573
+STAT tok_s=28.58 ms_tok=34.99 vram_hit=0.4998 ram_fetch=68.812 disk=0.000 promo=54.250 vram_used=2403 vram_slots=2487 ram_used=10799 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4378
+T 2038
+T 382
+T 334
+T 20427
+T 8387
+T 55798
+T 16
+STAT tok_s=29.96 ms_tok=33.38 vram_hit=0.5437 ram_fetch=63.083 disk=0.000 promo=50.792 vram_used=2397 vram_slots=2487 ram_used=11061 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13
+T 3070
+T 7423
+T 37125
+T 28552
+T 26936
+T 8225
+T 86060
+STAT tok_s=29.47 ms_tok=33.94 vram_hit=0.5240 ram_fetch=66.875 disk=0.062 promo=53.875 vram_used=2433 vram_slots=2487 ram_used=11031 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 7197
+T 63
+T 32151
+T 1959
+T 11727
+T 7375
+T 18014
+T 2841
+STAT tok_s=29.25 ms_tok=34.19 vram_hit=0.5227 ram_fetch=67.375 disk=0.225 promo=55.425 vram_used=2425 vram_slots=2487 ram_used=11032 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 320
+T 8511
+T 488
+T 1565
+T 77
+T 39877
+T 4668
+T 72
+STAT tok_s=28.77 ms_tok=34.76 vram_hit=0.5164 ram_fetch=68.521 disk=0.458 promo=57.188 vram_used=2412 vram_slots=2487 ram_used=11016 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 7808
+T 476
+T 264
+T 10141
+T 7868
+T 8
+T 323
+T 2176
+STAT tok_s=29.14 ms_tok=34.31 vram_hit=0.5249 ram_fetch=67.500 disk=0.482 promo=56.643 vram_used=2417 vram_slots=2487 ram_used=11049 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 614
+T 279
+T 1852
+T 7901
+T 3856
+T 25
+T 458
+T 4683
+STAT tok_s=29.45 ms_tok=33.95 vram_hit=0.5284 ram_fetch=67.000 disk=0.438 promo=56.578 vram_used=2416 vram_slots=2487 ram_used=11051 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 5099
+T 22912
+T 646
+T 12740
+T 2841
+T 13
+T 576
+T 4024
+STAT tok_s=29.57 ms_tok=33.82 vram_hit=0.5314 ram_fetch=66.639 disk=0.458 promo=56.583 vram_used=2403 vram_slots=2487 ram_used=11036 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 2038
+T 25166
+T 13460
+T 419
+T 448
+T 264
+T 1565
+T 38964
+STAT tok_s=29.82 ms_tok=33.54 vram_hit=0.5373 ram_fetch=65.850 disk=0.463 promo=56.138 vram_used=2417 vram_slots=2487 ram_used=11042 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 63
+T 2504
+T 11
+T 714
+T 279
+T 46623
+T 9018
+T 20545
+STAT tok_s=30.00 ms_tok=33.34 vram_hit=0.5410 ram_fetch=65.250 disk=0.455 promo=55.955 vram_used=2406 vram_slots=2487 ram_used=11053 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 448
+T 4622
+T 9750
+T 11
+T 1565
+T 77
+T 39877
+T 4668
+STAT tok_s=30.22 ms_tok=33.09 vram_hit=0.5455 ram_fetch=64.562 disk=0.448 promo=55.698 vram_used=2412 vram_slots=2487 ram_used=11030 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 72
+T 63
+T 374
+T 31141
+T 714
+T 2581
+T 29108
+T 11
+STAT tok_s=30.48 ms_tok=32.81 vram_hit=0.5499 ram_fetch=63.856 disk=0.433 promo=55.231 vram_used=2413 vram_slots=2487 ram_used=11061 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 323
+T 279
+T 10141
+T 5392
+T 702
+T 902
+T 21241
+T 518
+STAT tok_s=30.84 ms_tok=32.43 vram_hit=0.5573 ram_fetch=62.714 disk=0.402 promo=54.339 vram_used=2396 vram_slots=2487 ram_used=11060 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 678
+T 13
+T 358
+T 3278
+T 1936
+T 825
+T 37125
+T 429
+STAT tok_s=30.97 ms_tok=32.29 vram_hit=0.5604 ram_fetch=62.258 disk=0.392 promo=54.108 vram_used=2395 vram_slots=2487 ram_used=11054 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 510
+T 256
+T 481
+T 24187
+T 264
+T 1565
+T 1966
+T 4630
+STAT tok_s=30.99 ms_tok=32.27 vram_hit=0.5627 ram_fetch=61.875 disk=0.414 promo=53.938 vram_used=2428 vram_slots=2487 ram_used=11034 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 65063
+T 63
+T 448
+T 1555
+T 31220
+T 291
+T 20035
+T 11
+STAT tok_s=30.98 ms_tok=32.28 vram_hit=0.5647 ram_fetch=61.507 disk=0.441 promo=53.838 vram_used=2411 vram_slots=2487 ram_used=11050 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 264
+T 1487
+T 19273
+T 11
+T 323
+T 264
+T 46623
+T 9018
+STAT tok_s=31.32 ms_tok=31.93 vram_hit=0.5723 ram_fetch=60.278 disk=0.417 promo=52.938 vram_used=2390 vram_slots=2487 ram_used=11076 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 345
+T 256
+T 481
+T 35477
+T 34238
+T 304
+T 1565
+T 5552
+STAT tok_s=31.51 ms_tok=31.74 vram_hit=0.5762 ram_fetch=59.664 disk=0.401 promo=52.493 vram_used=2406 vram_slots=2487 ram_used=11023 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 53896
+T 14
+T 2147
+T 4869
+T 320
+T 10846
+T 11392
+T 3783
+STAT tok_s=31.63 ms_tok=31.61 vram_hit=0.5783 ram_fetch=59.375 disk=0.388 promo=52.244 vram_used=2416 vram_slots=2487 ram_used=11046 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 11
+T 448
+T 264
+T 20793
+T 9628
+T 1326
+T 256
+T 481
+STAT tok_s=31.89 ms_tok=31.35 vram_hit=0.5838 ram_fetch=58.494 disk=0.375 promo=51.565 vram_used=2388 vram_slots=2487 ram_used=11077 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 57883
+T 1565
+T 878
+T 1056
+T 53896
+T 429
+T 24810
+T 1565
+STAT tok_s=32.08 ms_tok=31.17 vram_hit=0.5868 ram_fetch=58.017 disk=0.364 promo=51.295 vram_used=2407 vram_slots=2487 ram_used=11062 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4571
+T 1454
+T 63
+T 389
+T 29347
+T 476
+T 1565
+T 2650
+STAT tok_s=32.04 ms_tok=31.21 vram_hit=0.5867 ram_fetch=57.962 disk=0.380 promo=51.391 vram_used=2417 vram_slots=2487 ram_used=11037 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 63
+T 5128
+T 320
+T 23558
+T 19468
+T 279
+T 4024
+T 52348
+STAT tok_s=32.04 ms_tok=31.21 vram_hit=0.5856 ram_fetch=58.156 disk=0.370 promo=51.589 vram_used=2414 vram_slots=2487 ram_used=11006 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 25
+T 29347
+T 1943
+T 5646
+T 279
+T 7085
+T 2038
+T 11
+STAT tok_s=32.02 ms_tok=31.23 vram_hit=0.5848 ram_fetch=58.295 disk=0.365 promo=51.760 vram_used=2424 vram_slots=2487 ram_used=11043 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1565
+T 2650
+T 63
+T 5128
+T 57027
+T 2739
+T 54382
+T 1326
+STAT tok_s=32.07 ms_tok=31.18 vram_hit=0.5861 ram_fetch=58.058 disk=0.375 promo=51.688 vram_used=2416 vram_slots=2487 ram_used=11046 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 256
+T 481
+T 57883
+T 1565
+T 6681
+T 53896
+T 369
+T 31238
+STAT tok_s=32.24 ms_tok=31.01 vram_hit=0.5894 ram_fetch=57.569 disk=0.366 promo=51.329 vram_used=2406 vram_slots=2487 ram_used=11047 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13905
+T 323
+T 1565
+T 11484
+T 53896
+T 369
+T 4869
+T 25183
+STAT tok_s=32.44 ms_tok=30.83 vram_hit=0.5928 ram_fetch=56.978 disk=0.357 promo=50.902 vram_used=2401 vram_slots=2487 ram_used=11032 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 12335
+T 345
+T 256
+T 481
+T 11549
+T 5248
+T 33870
+T 2841
+STAT tok_s=32.55 ms_tok=30.72 vram_hit=0.5945 ram_fetch=56.703 disk=0.345 promo=50.690 vram_used=2414 vram_slots=2487 ram_used=11050 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 320
+T 8511
+T 488
+T 22611
+T 41563
+T 8
+T 4566
+T 264
+STAT tok_s=32.58 ms_tok=30.69 vram_hit=0.5955 ram_fetch=56.542 disk=0.346 promo=50.562 vram_used=2401 vram_slots=2487 ram_used=11071 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 2613
+T 19387
+T 773
+T 1565
+T 5552
+T 53896
+T 23076
+T 1495
+STAT tok_s=32.71 ms_tok=30.58 vram_hit=0.5978 ram_fetch=56.129 disk=0.343 promo=50.246 vram_used=2408 vram_slots=2487 ram_used=11044 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 678
+T 315
+T 1105
+T 13
+T 358
+T 3278
+T 1281
+T 279
+STAT tok_s=32.68 ms_tok=30.60 vram_hit=0.5974 ram_fetch=56.215 disk=0.336 promo=50.281 vram_used=2401 vram_slots=2487 ram_used=11047 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+DONE 256 6793 3164.6 7832.7 length 0 0 0 51184 85680
+PP 6793 6793 43.1 23.2 6792
+T 785
+T 2053
+T 74809
+T 702
+T 1012
+T 11532
+T 13
+T 5692
+STAT tok_s=33.52 ms_tok=29.83 vram_hit=0.5051 ram_fetch=62.875 disk=0.250 promo=56.250 vram_used=2424 vram_slots=2487 ram_used=11031 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 594
+T 264
+T 12120
+T 315
+T 279
+T 2884
+T 323
+T 279
+STAT tok_s=33.31 ms_tok=30.02 vram_hit=0.5581 ram_fetch=58.812 disk=0.375 promo=53.688 vram_used=2393 vram_slots=2487 ram_used=11077 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4583
+T 2038
+T 382
+T 565
+T 6982
+T 34634
+T 271
+T 334
+STAT tok_s=34.14 ms_tok=29.29 vram_hit=0.5914 ram_fetch=54.667 disk=0.250 promo=50.083 vram_used=2388 vram_slots=2487 ram_used=11065 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13092
+T 6789
+T 334
+T 28552
+T 26936
+T 14
+T 63
+T 6328
+STAT tok_s=33.37 ms_tok=29.97 vram_hit=0.5839 ram_fetch=56.625 disk=0.219 promo=51.938 vram_used=2405 vram_slots=2487 ram_used=11022 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 5519
+T 1378
+T 43139
+T 7375
+T 7731
+T 13865
+T 3989
+T 26936
+STAT tok_s=33.20 ms_tok=30.12 vram_hit=0.5894 ram_fetch=56.050 disk=0.250 promo=51.425 vram_used=2405 vram_slots=2487 ram_used=11048 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 5894
+T 220
+T 1304
+T 2327
+T 18692
+T 3288
+T 198
+T 220
+STAT tok_s=32.35 ms_tok=30.91 vram_hit=0.5778 ram_fetch=57.938 disk=0.312 promo=52.958 vram_used=2420 vram_slots=2487 ram_used=11033 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 2193
+T 7197
+T 286
+T 671
+T 7304
+T 2193
+T 8276
+T 488
+STAT tok_s=32.42 ms_tok=30.85 vram_hit=0.5808 ram_fetch=57.643 disk=0.321 promo=52.429 vram_used=2402 vram_slots=2487 ram_used=11051 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 10514
+T 198
+T 220
+T 1882
+T 7197
+T 981
+T 671
+T 8602
+STAT tok_s=32.85 ms_tok=30.44 vram_hit=0.5900 ram_fetch=56.406 disk=0.281 promo=51.188 vram_used=2395 vram_slots=2487 ram_used=11073 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 10043
+T 31265
+T 25
+T 18014
+T 11
+T 46623
+T 11
+T 9118
+STAT tok_s=33.45 ms_tok=29.90 vram_hit=0.6022 ram_fetch=54.611 disk=0.250 promo=49.528 vram_used=2384 vram_slots=2487 ram_used=11085 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 11
+T 19287
+T 312
+T 14207
+T 198
+T 220
+T 34862
+T 7197
+STAT tok_s=33.84 ms_tok=29.55 vram_hit=0.6085 ram_fetch=53.650 disk=0.225 promo=48.725 vram_used=2410 vram_slots=2487 ram_used=11045 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 257
+T 671
+T 85372
+T 6492
+T 25
+T 24436
+T 4718
+T 19376
+STAT tok_s=34.11 ms_tok=29.32 vram_hit=0.6133 ram_fetch=52.943 disk=0.205 promo=48.091 vram_used=2410 vram_slots=2487 ram_used=11028 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13905
+T 11
+T 14445
+T 4752
+T 198
+T 220
+T 6358
+T 7197
+STAT tok_s=34.37 ms_tok=29.09 vram_hit=0.6187 ram_fetch=52.083 disk=0.208 promo=47.375 vram_used=2399 vram_slots=2487 ram_used=11060 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 414
+T 671
+T 71794
+T 6358
+T 315
+T 14538
+T 19494
+T 14
+STAT tok_s=34.43 ms_tok=29.05 vram_hit=0.6206 ram_fetch=51.885 disk=0.231 promo=47.250 vram_used=2411 vram_slots=2487 ram_used=11044 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1118
+T 18204
+T 198
+T 220
+T 22202
+T 7197
+T 286
+T 671
+STAT tok_s=34.66 ms_tok=28.86 vram_hit=0.6241 ram_fetch=51.375 disk=0.214 promo=46.848 vram_used=2386 vram_slots=2487 ram_used=11060 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 422
+T 23809
+T 84274
+T 25
+T 279
+T 2053
+T 531
+T 3018
+STAT tok_s=34.55 ms_tok=28.94 vram_hit=0.6231 ram_fetch=51.625 disk=0.233 promo=47.075 vram_used=2399 vram_slots=2487 ram_used=11060 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 6172
+T 28331
+T 198
+T 220
+T 1304
+T 3817
+T 18692
+T 3288
+STAT tok_s=34.52 ms_tok=28.97 vram_hit=0.6231 ram_fetch=51.648 disk=0.242 promo=47.133 vram_used=2403 vram_slots=2487 ram_used=11043 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 414
+T 671
+T 39065
+T 4343
+T 1459
+T 198
+T 15906
+T 5894
+STAT tok_s=34.69 ms_tok=28.82 vram_hit=0.6264 ram_fetch=51.118 disk=0.235 promo=46.721 vram_used=2405 vram_slots=2487 ram_used=11040 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 220
+T 23578
+T 12565
+T 51281
+T 7197
+T 256
+T 671
+T 34684
+STAT tok_s=34.77 ms_tok=28.76 vram_hit=0.6280 ram_fetch=50.882 disk=0.229 promo=46.528 vram_used=2382 vram_slots=2487 ram_used=11068 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 52348
+T 11
+T 2053
+T 531
+T 3018
+T 90266
+T 198
+T 220
+STAT tok_s=34.68 ms_tok=28.83 vram_hit=0.6256 ram_fetch=51.211 disk=0.224 promo=46.921 vram_used=2415 vram_slots=2487 ram_used=11033 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1779
+T 35460
+T 59314
+T 754
+T 7197
+T 256
+T 671
+T 2053
+STAT tok_s=34.68 ms_tok=28.84 vram_hit=0.6259 ram_fetch=51.175 disk=0.219 promo=46.956 vram_used=2386 vram_slots=2487 ram_used=11072 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 531
+T 3018
+T 311
+T 990
+T 6094
+T 37125
+T 14720
+T 198
+STAT tok_s=34.78 ms_tok=28.76 vram_hit=0.6280 ram_fetch=50.857 disk=0.214 promo=46.732 vram_used=2398 vram_slots=2487 ram_used=11076 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 23774
+T 5894
+T 220
+T 1273
+T 880
+T 19725
+T 7197
+T 1797
+STAT tok_s=34.83 ms_tok=28.71 vram_hit=0.6294 ram_fetch=50.659 disk=0.210 promo=46.619 vram_used=2409 vram_slots=2487 ram_used=11058 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 671
+T 37125
+T 11
+T 2193
+T 11
+T 34862
+T 11
+T 6358
+STAT tok_s=34.99 ms_tok=28.58 vram_hit=0.6338 ram_fetch=49.978 disk=0.201 promo=46.060 vram_used=2386 vram_slots=2487 ram_used=11081 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 11
+T 22202
+T 198
+T 220
+T 1273
+T 12002
+T 55481
+T 12565
+STAT tok_s=35.11 ms_tok=28.48 vram_hit=0.6362 ram_fetch=49.635 disk=0.208 promo=45.849 vram_used=2408 vram_slots=2487 ram_used=11058 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 51281
+T 7197
+T 220
+T 671
+T 33421
+T 52393
+T 7032
+T 198
+STAT tok_s=35.18 ms_tok=28.43 vram_hit=0.6378 ram_fetch=49.390 disk=0.215 promo=45.640 vram_used=2399 vram_slots=2487 ram_used=11056 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13865
+T 19288
+T 334
+T 1592
+T 11176
+T 25
+T 55798
+T 16
+STAT tok_s=35.07 ms_tok=28.52 vram_hit=0.6351 ram_fetch=49.822 disk=0.207 promo=45.986 vram_used=2408 vram_slots=2487 ram_used=11026 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13
+T 3070
+T 63
+T 7423
+T 10043
+T 31265
+T 63
+T 334
+STAT tok_s=35.14 ms_tok=28.46 vram_hit=0.6364 ram_fetch=49.611 disk=0.204 promo=45.787 vram_used=2396 vram_slots=2487 ram_used=11073 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1959
+T 279
+T 3175
+T 6372
+T 315
+T 1682
+T 1882
+T 47216
+STAT tok_s=35.09 ms_tok=28.50 vram_hit=0.6352 ram_fetch=49.817 disk=0.201 promo=45.929 vram_used=2395 vram_slots=2487 ram_used=11072 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13
+T 1084
+T 91897
+T 2841
+T 448
+T 31047
+T 11
+T 11709
+STAT tok_s=35.05 ms_tok=28.53 vram_hit=0.6347 ram_fetch=49.914 disk=0.194 promo=45.978 vram_used=2400 vram_slots=2487 ram_used=11047 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 264
+T 46623
+T 9018
+T 11
+T 323
+T 35477
+T 304
+T 264
+STAT tok_s=35.12 ms_tok=28.48 vram_hit=0.6353 ram_fetch=49.817 disk=0.188 promo=45.854 vram_used=2421 vram_slots=2487 ram_used=11040 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1565
+T 38964
+T 63
+T 2504
+T 429
+T 902
+T 1682
+T 81640
+STAT tok_s=35.02 ms_tok=28.56 vram_hit=0.6336 ram_fetch=50.129 disk=0.194 promo=46.081 vram_used=2412 vram_slots=2487 ram_used=11006 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 25
+T 5505
+T 11392
+T 3783
+T 11392
+T 56521
+T 13
+T 94695
+STAT tok_s=35.05 ms_tok=28.53 vram_hit=0.6341 ram_fetch=50.113 disk=0.188 promo=46.090 vram_used=2409 vram_slots=2487 ram_used=11036 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+DONE 256 6793 43.1 7303.5 length 0 0 6792 54328 85680
+PP 6793 6793 38.6 25.9 6792
+T 785
+T 2053
+T 74809
+T 702
+T 1012
+T 11532
+T 13
+T 5692
+STAT tok_s=25.94 ms_tok=38.55 vram_hit=0.5429 ram_fetch=84.250 disk=0.000 promo=51.625 vram_used=2442 vram_slots=2487 ram_used=10997 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 594
+T 264
+T 12120
+T 315
+T 279
+T 2884
+T 323
+T 279
+STAT tok_s=31.96 ms_tok=31.29 vram_hit=0.6056 ram_fetch=63.125 disk=0.000 promo=40.625 vram_used=2406 vram_slots=2487 ram_used=11071 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4583
+T 2038
+T 382
+T 565
+T 6982
+T 34634
+T 271
+T 334
+STAT tok_s=35.26 ms_tok=28.36 vram_hit=0.6369 ram_fetch=55.000 disk=0.042 promo=36.875 vram_used=2401 vram_slots=2487 ram_used=11071 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13092
+T 6789
+T 334
+T 28552
+T 26936
+T 14
+T 63
+T 6328
+STAT tok_s=34.53 ms_tok=28.96 vram_hit=0.6434 ram_fetch=56.250 disk=0.031 promo=38.156 vram_used=2420 vram_slots=2487 ram_used=11014 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 5519
+T 1378
+T 43139
+T 6358
+T 7375
+T 7731
+T 13865
+T 3989
+STAT tok_s=34.45 ms_tok=29.03 vram_hit=0.6513 ram_fetch=56.150 disk=0.025 promo=38.775 vram_used=2429 vram_slots=2487 ram_used=11023 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 26936
+T 5894
+T 220
+T 1304
+T 2327
+T 18692
+T 3288
+T 310
+STAT tok_s=35.21 ms_tok=28.40 vram_hit=0.6510 ram_fetch=54.896 disk=0.042 promo=38.000 vram_used=2421 vram_slots=2487 ram_used=10997 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 671
+T 584
+T 5333
+T 312
+T 12
+T 4986
+T 198
+T 220
+STAT tok_s=35.78 ms_tok=27.95 vram_hit=0.6503 ram_fetch=54.054 disk=0.036 promo=37.304 vram_used=2425 vram_slots=2487 ram_used=11050 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 2193
+T 7197
+T 1060
+T 671
+T 61190
+T 2648
+T 11
+T 11533
+STAT tok_s=35.45 ms_tok=28.21 vram_hit=0.6570 ram_fetch=53.594 disk=0.078 promo=37.594 vram_used=2433 vram_slots=2487 ram_used=11040 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 2648
+T 11
+T 7304
+T 10514
+T 198
+T 220
+T 37125
+T 7197
+STAT tok_s=35.42 ms_tok=28.24 vram_hit=0.6645 ram_fetch=52.986 disk=0.083 promo=37.514 vram_used=2404 vram_slots=2487 ram_used=11070 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 688
+T 671
+T 8199
+T 7423
+T 608
+T 23624
+T 2794
+T 30197
+STAT tok_s=35.19 ms_tok=28.42 vram_hit=0.6674 ram_fetch=52.962 disk=0.087 promo=37.550 vram_used=2419 vram_slots=2487 ram_used=11033 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 608
+T 8602
+T 10043
+T 31265
+T 198
+T 220
+T 34862
+T 7197
+STAT tok_s=36.01 ms_tok=27.77 vram_hit=0.6730 ram_fetch=51.261 disk=0.091 promo=36.682 vram_used=2416 vram_slots=2487 ram_used=11060 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1843
+T 671
+T 85372
+T 6492
+T 320
+T 42073
+T 82
+T 11
+STAT tok_s=36.71 ms_tok=27.24 vram_hit=0.6773 ram_fetch=49.948 disk=0.083 promo=35.750 vram_used=2418 vram_slots=2487 ram_used=11027 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 18392
+T 11
+T 7388
+T 4323
+T 340
+T 220
+T 22202
+T 7197
+STAT tok_s=37.26 ms_tok=26.84 vram_hit=0.6799 ram_fetch=48.952 disk=0.087 promo=35.106 vram_used=2407 vram_slots=2487 ram_used=11034 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1060
+T 671
+T 1598
+T 880
+T 39167
+T 368
+T 1959
+T 39065
+STAT tok_s=37.65 ms_tok=26.56 vram_hit=0.6809 ram_fetch=48.339 disk=0.098 promo=34.759 vram_used=2409 vram_slots=2487 ram_used=11065 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4343
+T 1459
+T 198
+T 220
+T 6358
+T 7197
+T 310
+T 671
+STAT tok_s=38.06 ms_tok=26.27 vram_hit=0.6828 ram_fetch=47.683 disk=0.100 promo=34.442 vram_used=2402 vram_slots=2487 ram_used=11069 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 4715
+T 29780
+T 82
+T 11
+T 61644
+T 10944
+T 11
+T 1936
+STAT tok_s=37.26 ms_tok=26.84 vram_hit=0.6831 ram_fetch=48.672 disk=0.117 promo=35.281 vram_used=2401 vram_slots=2487 ram_used=11036 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 14802
+T 198
+T 15906
+T 5894
+T 220
+T 23578
+T 12565
+T 51281
+STAT tok_s=37.13 ms_tok=26.93 vram_hit=0.6837 ram_fetch=48.831 disk=0.118 promo=35.559 vram_used=2422 vram_slots=2487 ram_used=11033 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 7197
+T 220
+T 671
+T 2053
+T 531
+T 3018
+T 54294
+T 320
+STAT tok_s=37.44 ms_tok=26.71 vram_hit=0.6844 ram_fetch=48.312 disk=0.118 promo=35.292 vram_used=2406 vram_slots=2487 ram_used=11051 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 23995
+T 52348
+T 11
+T 1273
+T 480
+T 340
+T 220
+T 1273
+STAT tok_s=37.53 ms_tok=26.65 vram_hit=0.6825 ram_fetch=48.329 disk=0.132 promo=35.237 vram_used=2425 vram_slots=2487 ram_used=11036 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 12002
+T 55481
+T 12565
+T 51281
+T 7197
+T 198
+T 220
+T 1779
+STAT tok_s=37.16 ms_tok=26.91 vram_hit=0.6799 ram_fetch=49.138 disk=0.144 promo=35.819 vram_used=2431 vram_slots=2487 ram_used=11034 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 35460
+T 59314
+T 754
+T 7197
+T 220
+T 671
+T 2053
+T 531
+STAT tok_s=37.46 ms_tok=26.70 vram_hit=0.6802 ram_fetch=48.839 disk=0.137 promo=35.696 vram_used=2438 vram_slots=2487 ram_used=11015 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 3018
+T 49297
+T 32262
+T 198
+T 23774
+T 5894
+T 220
+T 1273
+STAT tok_s=37.29 ms_tok=26.81 vram_hit=0.6800 ram_fetch=49.119 disk=0.136 promo=36.017 vram_used=2410 vram_slots=2487 ram_used=11024 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 23657
+T 31265
+T 7197
+T 198
+T 220
+T 1273
+T 54462
+T 7197
+STAT tok_s=37.67 ms_tok=26.55 vram_hit=0.6817 ram_fetch=48.565 disk=0.130 promo=35.766 vram_used=2419 vram_slots=2487 ram_used=11045 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 198
+T 13865
+T 19288
+T 334
+T 1592
+T 11176
+T 25
+T 55798
+STAT tok_s=37.71 ms_tok=26.52 vram_hit=0.6791 ram_fetch=48.865 disk=0.130 promo=35.891 vram_used=2438 vram_slots=2487 ram_used=11010 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 16
+T 13
+T 3070
+T 63
+T 7423
+T 10043
+T 31265
+T 63
+STAT tok_s=37.86 ms_tok=26.41 vram_hit=0.6788 ram_fetch=48.705 disk=0.130 promo=35.765 vram_used=2413 vram_slots=2487 ram_used=11058 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 334
+T 1959
+T 264
+T 3175
+T 2266
+T 6645
+T 40056
+T 1449
+STAT tok_s=37.65 ms_tok=26.56 vram_hit=0.6781 ram_fetch=49.101 disk=0.130 promo=36.000 vram_used=2424 vram_slots=2487 ram_used=11003 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1682
+T 1882
+T 320
+T 8511
+T 11
+T 22611
+T 8717
+T 11
+STAT tok_s=37.67 ms_tok=26.55 vram_hit=0.6764 ram_fetch=49.273 disk=0.125 promo=36.037 vram_used=2433 vram_slots=2487 ram_used=11033 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 46623
+T 568
+T 1084
+T 5711
+T 1565
+T 4528
+T 287
+T 40913
+STAT tok_s=37.69 ms_tok=26.53 vram_hit=0.6751 ram_fetch=49.348 disk=0.125 promo=36.036 vram_used=2432 vram_slots=2487 ram_used=10999 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 63
+T 369
+T 279
+T 21378
+T 11
+T 24664
+T 1565
+T 266
+STAT tok_s=37.30 ms_tok=26.81 vram_hit=0.6732 ram_fetch=49.905 disk=0.147 promo=36.362 vram_used=2440 vram_slots=2487 ram_used=11000 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 13643
+T 63
+T 323
+T 8285
+T 24015
+T 11
+T 323
+T 35477
+STAT tok_s=37.16 ms_tok=26.91 vram_hit=0.6738 ram_fetch=50.017 disk=0.142 promo=36.446 vram_used=2410 vram_slots=2487 ram_used=11025 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1565
+T 10846
+T 53896
+T 488
+T 1565
+T 11484
+T 53896
+T 304
+STAT tok_s=37.28 ms_tok=26.82 vram_hit=0.6735 ram_fetch=49.927 disk=0.137 promo=36.355 vram_used=2429 vram_slots=2487 ram_used=11017 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+T 1565
+T 5552
+T 53896
+T 1496
+T 389
+T 19548
+T 476
+T 35656
+STAT tok_s=36.85 ms_tok=27.14 vram_hit=0.6711 ram_fetch=50.715 disk=0.133 promo=36.797 vram_used=2404 vram_slots=2487 ram_used=11067 ram_slots=11192 ram_gb=94.0 vram_gb=20.8
+DONE 256 6793 38.6 6947.2 length 111 143 6792 65483 97576

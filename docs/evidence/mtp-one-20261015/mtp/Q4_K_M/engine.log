@@ -1,0 +1,43 @@
+glm mtp: CUDA0 the draft block from G:\Models\GLM-5.3-Flash-MTP\GLM-5.3-Flash-MTP-Q4_K.gguf
+glm mtp: CUDA0 the NextN block (blk.45) loaded: 210 MB dense, experts q4_K/q5_K
+glm mtp: CUDA0 the MTP decode drafts over 98741 of 154880 tokens (the ids below 98304 and 437 more: 217 of 340 MB a draft)
+maya verify scratch: 64 slots, 928.0 MiB reserved before expert-pool sizing
+glm fast: CUDA0 only 624 MiB free once the expert pool's 21.20 GB are written (reserve 700 MiB): 0.14 GB less
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 9449 MB of the expert pool while a prompt runs (activations 7015, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 10.24 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.92, activations 0.12, other (context, MTP, scratch, prompt path) 3.19
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 20.78 GB, 53-77 slots/layer, the draft layer 57 (2487 total)
+maya verify fetch staging: CUDA0 64 token-owned disk staging slots, 928.00 MiB extra pinned RAM
+glm fast: CUDA0 RAM tier 94.00 GB pinned, 11192 slots
+glm fast: CUDA0 warming the expert tiers 10% (11.2 of 111.6 GB, 3 s)
+glm fast: CUDA0 warming the expert tiers 20% (22.4 of 111.6 GB, 6 s)
+glm fast: CUDA0 warming the expert tiers 30% (33.5 of 111.6 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 40% (44.6 of 111.6 GB, 13 s)
+glm fast: CUDA0 warming the expert tiers 50% (55.8 of 111.6 GB, 16 s)
+glm fast: CUDA0 warming the expert tiers 60% (67.0 of 111.6 GB, 19 s)
+glm fast: CUDA0 warming the expert tiers 70% (78.1 of 111.6 GB, 23 s)
+glm fast: CUDA0 warming the expert tiers 80% (89.3 of 111.6 GB, 26 s)
+glm fast: CUDA0 warming the expert tiers 90% (100.4 of 111.6 GB, 29 s)
+glm fast: CUDA0 warming the expert tiers 100% (111.6 of 111.6 GB, 33 s)
+glm fast: CUDA0 tiers warm: 12384 experts (111.6 GB) in 33 s (3.43 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.186 ms on the CPU vs 0.247 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+maya serve: CUDA0: 743 MiB of VRAM free with everything loaded
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 30.60 ms/tok (32.68 tok/s) | vram hit 59.74% | ram fetches 56.21/tok | disk 0.34 reads/tok in 1.40 waits/tok, 0.75 ms/tok | promotions 50.28/tok | cpu lane 77.09/tok in 16.50 ms/tok | prompt 0.5 ms/tok | vram 2401/2487 ram 11047/11192
+glm stat: decode 28.53 ms/tok (35.05 tok/s) | vram hit 63.41% | ram fetches 50.11/tok | disk 0.19 reads/tok in 1.07 waits/tok, 0.43 ms/tok | promotions 46.09/tok | cpu lane 71.28/tok in 14.99 ms/tok | prompt 0.0 ms/tok | vram 2409/2487 ram 11036/11192
+maya verify: 143 windows, 0 retries, 67 reused GPU expert rows
+maya verify MoE graph CUDA0: 6006 eligible calls, 42 captures / 5964 replays, 12012 route credits, 756 nodes built, 42 cached keys; 0 capture failures / 0 disabled-key fallbacks / 0 launch failures / 0 invalidations
+maya verify MoE graph CUDA0 host totals: capture/build/instantiate 47.819 ms, first-launch submission 1.127 ms, replay submission 136.049 ms; ring-credit waits 1279 / 1869.836 ms / 0 timeouts (30 s bound); submission times are not GPU execution times
+maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging
+maya verify HC CUDA0: 12870 executed HC3 phase batches, 25740 token rows
+maya verify component fetch CUDA0: 6006 full-layer groups, 0 fallback fronts, 6006 prefix / 6006 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+glm mtp: a drafting round's host time - drafts 1.02 ms, verify 47.03 ms, commit + cache 0.32 ms (143 rounds)
+glm mtp: the draft vocabulary (98304 + 437 tokens) - 0 of 256 emitted tokens outside it, 0 of 143 drafting rounds on the whole head
+glm mtp: 144 rounds, 1.78 tokens a round | rounds by draft length 0:1 1:143
+glm stat: decode 27.14 ms/tok (36.85 tok/s) | vram hit 67.11% | ram fetches 50.71/tok | disk 0.13 reads/tok in 0.98 waits/tok, 0.32 ms/tok | promotions 36.80/tok | cpu lane 73.66/tok in 15.09 ms/tok | prompt 0.0 ms/tok | vram 2404/2487 ram 11067/11192
+glm spec: 111 of 143 drafts accepted (77.6%)
+maya reuse policy: observations=33743 changed_victims=23143 horizon=1 matured_anchors=0
+glm spec: 143 speculative positions, 77.6% accepted
+maya CPU pipeline: 12628 batches, 101015 phase-gated callbacks
