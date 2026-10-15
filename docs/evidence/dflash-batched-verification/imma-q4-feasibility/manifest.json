@@ -1,0 +1,11 @@
+{
+  "git_head": "691b75131cd273373704b3c2af582c97d295cfd4",
+  "sha256": {
+    "build-imma-q4/imma_q4_feasibility.exe": "854c95029a37a83901d09336bba099dacea94c173e35d563e2403a3bdf8d0aa9",
+    "build/strata_kernels.lib": "67417cd8c4f3d2200a999d41fbdee5f202718cd62b131af3eabf3a8bdae1f78a",
+    "tests/imma_q4/prototype.cu": "012f6b97e7a177fb9266437c23f57cacb3ae0d082757e08ac5b4ec7843575519",
+    "tests/imma_q4/feasibility.cu": "03dabce56f5a4529ed85fe7041b712a873510d3b42b8abf511a55d931ded0c9a"
+  },
+  "command": "build-imma-q4/imma_q4_feasibility.exe --bench",
+  "scope": "synthetic native Q4_K activations, isolated GPU; no full-model performance claim"
+}
