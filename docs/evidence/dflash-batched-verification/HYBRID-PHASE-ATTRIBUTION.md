@@ -26,3 +26,7 @@ The clean contemporary comparison remains45.23 versus44.70TPS (1.2%), insufficie
 - Test a standalone exact Q4_K integer tensor-core implementation against the actual existing multi-column kernel. Existing projections already reuse weights. Preserve original floating-point accumulation order; approximate MMA is not an acceptable substitute.
 - Dense candidate stage envelope is8.38ms including shared work;1-3ms saving is a hypothesis, not a prediction. Neither avenue currently supports a near-doubling expectation.
 - Keep component streaming opt-in. Broader lifecycle, longer occupied context and matched prefill qualification are required before recommending it.
+
+## Distance to 60 TPS on this exact sample
+
+128 emitted tokens over45 rounds means2.844 emitted tokens/round. At60TPS, the full generation allowance is47.407ms/round. The component-on sample uses2694.8/45=59.884ms/round: about12.48ms/round must still be removed, with the same emitted-token yield. Verification57.431ms plus draft2.054ms plus commit/injection~0.35ms explains nearly all of it. This is a sample-specific budget, not a universal ceiling; acceptance and routing vary by workload. Saving1-3ms in dense projections alone would not reach60TPS.

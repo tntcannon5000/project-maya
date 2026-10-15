@@ -202,5 +202,3 @@ Component-on expert sequence: prefix fetch17.15ms -> gate/up6.09ms (down transfe
 Host enqueue43.51/41.98ms overlaps device execution; adding it to GPU event times would double-count. Host final wait15.16/14.73ms similarly is not an additional independent GPU cost. The prior GPU-only T5/T8 capture's40.938ms overlap across four windows cannot be subtracted from these hybrid T3 rounds.
 
 The clean contemporary comparison remains45.23 versus44.70TPS (1.2%), insufficient for a robust default change. Diagnostic pair suggests a small benefit, not the earlier apparent10-11% gain. No60TPS claim. The interrupted hybrid-phase-off run produced no completed requests and is excluded.
-
-
