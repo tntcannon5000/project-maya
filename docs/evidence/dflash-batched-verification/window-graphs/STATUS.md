@@ -1,3 +1,7 @@
+# Current update: matched qualification passes, speed gate in progress
+
+The sections below retain the historical failure and investigation. The competing-promotion fix is now implemented opt-in. Current graph-off/on comparisons pass 7,434,240 logits each under controlled GPU and matched hybrid execution. Hybrid prefix sidecars are also exact. Neither result establishes the cause of the original intermittent mismatch. See PROMOTION-OWNERSHIP.md and hybrid-owner-fix/qualification.json. A bounded experimental serving comparison is now allowed; production sign-off remains open.
+
 # Native MoE CUDA graphs — correctness gate remains open
 
 Implemented opt-in `MAYA_WIN_MOE_GRAPH=1`, with dynamic routing, complete component stream fork/join, replay request/component credits, ring capacity guard, safe capture rollback, fatal state after uncertain live launch failure, diagnostic bypass and buffer-lifetime invalidation. Production defaults and launcher unchanged.
