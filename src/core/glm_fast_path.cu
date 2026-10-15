@@ -4354,6 +4354,9 @@ void Glm5Model::fast_ahead_reader() {
 // a few free slots for disk reads.  The table edits ride one small update kernel at the head of the next token.
 bool Glm5Model::fast_boundary(std::string& err) {
     FastState* F = fast_;
+    // A failed graph launch may have been accepted before its completion event
+    // failed. Never wait for uncertain route credits or retry this model state.
+    if (F && !F->win.moe_graph_error.empty()) { err = F->win.moe_graph_error; return false; }
     if (F == nullptr || F->lp.empty() || F->rc.empty()) return true;
     if (!F->bg_copy_error.empty()) { err = F->bg_copy_error; return false; }
     // Any alternate caller that has not entered fast_layers must issue pending

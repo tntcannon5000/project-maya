@@ -2,6 +2,7 @@
 #include "../src/core/glm_fast_state.hpp"
 #include <cuda_profiler_api.h>
 #include <cstdlib>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <fstream>
@@ -60,6 +61,7 @@ int main(int argc, char** argv) {
             if (trace && rep == 1 && step == 0) cudaProfilerStart();
             const int T = step % 2 == 0 ? width_a : width_b;
             int32_t picks[8];
+            const auto call_start = std::chrono::steady_clock::now();
             if (reference_mode == "forward") {
                 if (!m.forward({ids[(size_t)pos]}, logits, err)) {
                     std::fprintf(stderr, "%s\n", err.c_str()); return 6;
@@ -67,6 +69,10 @@ int main(int argc, char** argv) {
             } else if (!m.window(ids.data()+pos, T, picks, err)) {
                 std::fprintf(stderr, "%s\n", err.c_str()); return 6;
             }
+            const double call_ms = std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - call_start).count();
+            std::fprintf(stderr, "verify call: repeat=%d step=%d width=%d position=%d ms=%.6f\n",
+                         rep, step, reference_mode == "forward" ? 1 : T, pos, call_ms);
             const int rows = reference_mode == "windows" ? T : 1;
             if (reference_mode != "forward") {
                 logits.resize((size_t)rows*m.geometry().n_vocab);

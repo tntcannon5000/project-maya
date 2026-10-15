@@ -65,6 +65,18 @@ bool win_hc_batch_enabled() {
     return on;
 }
 
+bool win_moe_graph_enabled() {
+#if defined(STRATA_USE_HIP)
+    return false;
+#else
+    static const bool on = [] {
+        const char* v = getenv("MAYA_WIN_MOE_GRAPH");
+        return v != nullptr && std::atoi(v) != 0;
+    }();
+    return on;
+#endif
+}
+
 struct WinCpuPlanOverride {
     bool requested = false;
     unsigned long long plan = 0;
@@ -177,8 +189,11 @@ bool Glm5Model::win_alloc(int tmax, std::string& err) {
     FastState* F = fast_;
     auto& W = F->win;
     if (W.tmax >= tmax) return true;
-    if (W.fetch_stream && !glmfast::cuda_ok(cudaStreamSynchronize(F->cs), "window async fetch resize drain", err))
-        return false;
+    if ((W.fetch_stream || W.moe_graphs.size() != 0) &&
+        !glmfast::cuda_ok(cudaStreamSynchronize(F->cs), "window graph/fetch resize drain", err)) return false;
+    if (W.fetch_stream && !glmfast::cuda_ok(cudaStreamSynchronize(W.fetch_stream),
+                                          "window graph side-stream resize drain", err)) return false;
+    W.moe_graphs.clear();  // before any captured event, stream, arena or answer slot is freed
     W.release_fetch();
     if (W.arena) cudaFree(W.arena);
     if (W.tok_h) cudaFreeHost(W.tok_h);
@@ -407,7 +422,9 @@ void Glm5Model::win_free() {
     win_crew_stop();
     if (fast_ == nullptr) return;
     auto& W = fast_->win;
-    if (W.fetch_stream) cudaStreamSynchronize(fast_->cs);
+    if (W.fetch_stream || W.moe_graphs.size() != 0) cudaStreamSynchronize(fast_->cs);
+    if (W.fetch_stream) cudaStreamSynchronize(W.fetch_stream);
+    W.moe_graphs.clear();
     W.release_fetch();
     for (cudaEvent_t e : W.ev_tok)
         if (e) cudaEventDestroy(e);
@@ -579,6 +596,150 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
     const auto& Ly = F->L[(size_t) il];
     const int E = g.n_embd, FFs = g.n_ff_exp * g.n_shared;
     static const bool prof = getenv("STRATA_GLM_WIN_PROF") != nullptr;
+    if (!W.moe_graph_error.empty()) { err = W.moe_graph_error; return false; }
+    if (win_moe_graph_enabled() && !W.moe_graph_recording) {
+        using Graphs = glmfast::WindowMoeGraphs;
+        auto& graphs = W.moe_graphs;
+        const auto env_on = [](const char* name, bool fallback) {
+            const char* v = getenv(name);
+            return v ? std::atoi(v) != 0 : fallback;
+        };
+        const char* union_diag = getenv("MAYA_WIN_UNION_DIAG");
+        const auto native_type = [](int type) {
+            return type == GGML_TYPE_Q2_K || type == GGML_TYPE_Q3_K || type == GGML_TYPE_Q4_K;
+        };
+        const int keep = il == mtp_il_ ? 8 : glmfast::trunk_skip_from(il);
+        const bool lane = F->cpu_plan != 0ull && F->cpu_fmt[(size_t) il].n_ff > 0;
+        unsigned long long plan = F->cpu_plan;
+        if (env_on("STRATA_GLM_WIN_ALLCPU", true) && plan != 0ull && F->win_lane[0] && F->win_lane[1]) {
+            plan = 0ull;
+            for (int f = 1; f <= 8; ++f) plan |= (unsigned long long) f << (4 * f);
+        }
+        if (cpu_override.requested) plan = cpu_override.plan;
+        const char* bypass = nullptr;
+        if (n_parts_ != 1 || split_next_ || part != 0 || gid != 0 || t0 != 0 || T != W.T ||
+            (T != 3 && T != 5) || W.per_token || W.pipe_t >= 0 || W.from != nullptr || F->md.skip != nullptr ||
+            !env_on("STRATA_GLM_WIN_BATCH", true) || keep < g.n_exp_used || F->spec_gate) {
+            ++graphs.stats.bypass_scope;
+            bypass = "scope (requires complete T3/T5, single-device nonstaggered/nonpipeline native batch)";
+        } else if (prof || F->prof_on || env_on("MAYA_WIN_GROUP_DIAG", false) ||
+                   (union_diag && *union_diag) || F->window_weight_verify_active || W.uid) {
+            ++graphs.stats.bypass_diag;
+            bypass = "diagnostic/profiler active (unset STRATA_GLM_WIN_PROF, including value 0)";
+        } else if (Ly.exl3 || !native_type(Ly.gu_type) || !native_type(Ly.d_type) || g.n_exp_used != 8) {
+            ++graphs.stats.bypass_format;
+            bypass = "format (requires native Q2_K/Q3_K/Q4_K complete top-8)";
+        } else if (!W.arena || !W.mplan_ptr || F->scratch_count < T * 8 ||
+                   !F->win_fetch_stage || F->win_fetch_stage_n < (size_t) T * 8 ||
+                   !F->svc.joinable() || !F->md.seq || !F->md.ring || !F->md.resp ||
+                   (lane && (!F->md.cpu_seq || !F->md.cpu_ans || !W.ans_d[T - 1]))) {
+            ++graphs.stats.bypass_storage;
+            bypass = "storage/service (requires row scratch and token-owned disk staging; MAYA_WIN_FETCH_STAGE=1)";
+        } else if (win_async_fetch_enabled()) {
+            ++graphs.stats.bypass_async;
+            bypass = "MAYA_WIN_ASYNC_FETCH schedule excluded from initial graph experiment";
+        }
+        if (bypass) {
+            // One reason per model/report interval; complete reason counts are
+            // always printed by win_prof_report, even with phase profiling off.
+            if (graphs.stats.bypass_scope + graphs.stats.bypass_diag + graphs.stats.bypass_format +
+                graphs.stats.bypass_storage + graphs.stats.bypass_async == 1)
+                std::fprintf(stderr, "maya verify MoE graph CUDA%d: enabled but bypassed: %s (layer=%d T=%d part=%d)\n",
+                             dev_, bypass, il, T, part);
+        } else {
+            // Credits cover the whole graph's T immutable ring requests, not
+            // just the next route. Driver polling also flushes WDDM submission.
+            const auto wait_start = std::chrono::steady_clock::now();
+            bool waited = false;
+            for (;;) {
+                const uint64_t processed = F->processed.load(std::memory_order_acquire);
+                if (processed <= F->expected && F->expected - processed <= (uint64_t) gf::kRingSize - (uint64_t) T)
+                    break;
+                if (!waited) { ++graphs.stats.credit_waits; waited = true; }
+                if (processed > F->expected || F->quit.load(std::memory_order_relaxed) || !F->route_ok(err)) {
+                    if (err.empty()) err = "window MoE graph request-credit accounting/service failure";
+                    W.moe_graph_error = err;
+                    return false;
+                }
+                const cudaError_t q = cudaStreamQuery(s);
+                if (q != cudaSuccess && q != cudaErrorNotReady) {
+                    err = std::string("window MoE graph credit poll: ") + cudaGetErrorString(q);
+                    W.moe_graph_error = err;
+                    return false;
+                }
+                if (std::chrono::steady_clock::now() - wait_start >= std::chrono::seconds(30)) {
+                    ++graphs.stats.credit_timeouts;
+                    err = "window MoE graph request-credit wait exceeded 30 seconds";
+                    W.moe_graph_error = err;
+                    return false;
+                }
+                std::this_thread::yield();
+            }
+            if (waited) graphs.stats.credit_ms += std::chrono::duration<double, std::milli>(
+                std::chrono::steady_clock::now() - wait_start).count();
+            Graphs::Key key{};
+            size_t ki = 0;
+            const auto ptr = [&](const void* p) { key[ki++] = (uint64_t) (uintptr_t) p; };
+            const auto val = [&](uint64_t v) { key[ki++] = v; };
+            ptr(W.arena); ptr(F->arena); ptr(F->scratch); ptr(F->md.scratch); ptr(F->md.tab);
+            ptr(F->md.seq); ptr(F->md.wait_seq); ptr(F->md.ring); ptr(F->md.resp);
+            ptr(F->md.cpu_seq); ptr(F->md.cpu_ans); ptr(F->md.dcnt); ptr((const void*) F->md.route_error);
+            ptr(F->pf_buf[il & 1]); ptr(F->pf_n_buf[il & 1]);
+            ptr(F->win_fetch_stage); ptr(W.fetch_stream); ptr(W.fetch_ready[0]); ptr(W.fetch_done); ptr(F->cs);
+            ptr(Ly.router); ptr(Ly.router_bias); ptr(Ly.sh_gate.q); ptr(Ly.sh_up.q); ptr(Ly.sh_down.q);
+            ptr(W.cpu_seq_w); ptr(W.mplan_ptr); ptr(W.mfetch);
+            for (int t = 1; t < T; ++t) ptr(W.ans_d[t]);
+            ptr(F->md.win_prev_ptr); ptr(F->md.win_prev_id); ptr(F->md.win_reuses);
+            val(lane ? plan : 0ull); val(lane); val(keep); val(F->scratch_count); val(F->md.n_keys);
+            val(Ly.gu_type); val(Ly.d_type); val(Ly.blob); val(Ly.down_off);
+            val(Ly.sh_gate.type); val(Ly.sh_up.type); val(Ly.sh_down.type);
+            val(win_component_fetch_enabled()); val(F->win_fetch_stage_n);
+            val(F->md.gu_phase); val(F->md.gu_row_first); val(F->md.gu_row_count);
+            val(F->md.down_row_first); val(F->md.down_row_count); val(F->md.cpu_phase_on); val(F->md.win_prev_n);
+            // Grouping/exact-column/reuse/promotion options and geometry are
+            // process/model constants. W/F allocation changes clear the cache.
+            const auto read_counts = [&]() -> Graphs::Accounts {
+                return {F->expected, W.component_layers, W.component_fallback_layers,
+                        W.component_prefix_launches, W.component_down_launches};
+            };
+            Graphs::Accounts counts = read_counts();
+            const int prior_launch_errors = gf::launch_errors();
+            const uint64_t prior_capture_failures = graphs.stats.capture_failures;
+            const auto result = graphs.enqueue(il, T, key, s, W.fetch_stream, counts, [&] {
+                struct RecordingScope {
+                    bool& flag;
+                    explicit RecordingScope(bool& f) : flag(f) { flag = true; }
+                    ~RecordingScope() { flag = false; }
+                } recording(W.moe_graph_recording);
+                bool ok = fast_moe_window(il, t0, T, part, gid, err);
+                if (gf::launch_errors() != prior_launch_errors) {
+                    err = "window MoE capture body reported a sticky kernel launch error";
+                    ok = false;
+                }
+                counts = read_counts();
+                return ok;
+            }, err);
+            F->expected = counts[0];
+            W.component_layers = counts[1]; W.component_fallback_layers = counts[2];
+            W.component_prefix_launches = counts[3]; W.component_down_launches = counts[4];
+            if (result == Graphs::Result::Enqueued) return true;
+            if (result == Graphs::Result::Failed || gf::launch_errors() != prior_launch_errors) {
+                W.moe_graph_error = "window MoE graph stopped; reload model before retry: " + err;
+                err = W.moe_graph_error;
+                // Never enqueue a second body after a possibly accepted launch.
+                // If capture cleanup failed, leave its streams untouched.
+                cudaStreamCaptureStatus status = cudaStreamCaptureStatusNone;
+                if (cudaStreamIsCapturing(s, &status) == cudaSuccess && status == cudaStreamCaptureStatusNone) {
+                    (void) cudaStreamSynchronize(s);
+                    if (W.fetch_stream) (void) cudaStreamSynchronize(W.fetch_stream);
+                }
+                return false;
+            }
+            if (graphs.stats.capture_failures > prior_capture_failures)
+                std::fprintf(stderr, "maya verify MoE graph CUDA%d: capture failed; normal enqueue retained: %s\n",
+                             dev_, graphs.last_capture_error.c_str());
+        }
+    }
     if (part != 2) {
         gf::MvJob j[3];
         const void* xq0 = (const uint8_t*) W.xq + (size_t) t0 * W.xq_s;
@@ -691,9 +852,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
         }();
         struct FetchDrainOnError {
             cudaStream_t stream;
+            bool capturing;
             bool joined = false;
-            ~FetchDrainOnError() { if (stream && !joined) cudaStreamSynchronize(stream); }
-        } fetch_drain{async_fetch || component_fetch ? W.fetch_stream : nullptr};
+            ~FetchDrainOnError() { if (stream && !joined && !capturing) cudaStreamSynchronize(stream); }
+        } fetch_drain{async_fetch || component_fetch ? W.fetch_stream : nullptr, W.moe_graph_recording};
         static const bool reuse = [] {
             const char* v = getenv("MAYA_WIN_REUSE");
             return v != nullptr && std::atoi(v) != 0;
@@ -2283,6 +2445,35 @@ void Glm5Model::win_prof_report() {
     for (Glm5Model* m = this; m != nullptr; m = m->split_next_.get()) {
         if (m->fast_ == nullptr) continue;
         auto& W = m->fast_->win;
+        if (win_moe_graph_enabled()) {
+            auto& d = W.moe_graphs.stats;
+            std::fprintf(stderr, "maya verify MoE graph CUDA%d: %llu eligible calls, %llu captures / %llu replays, "
+                                 "%llu route credits, %llu nodes built, %zu cached keys; %llu capture failures / "
+                                 "%llu disabled-key fallbacks / %llu launch failures / %llu invalidations\n",
+                         m->dev_, (unsigned long long) d.eligible, (unsigned long long) d.captures,
+                         (unsigned long long) d.replays, (unsigned long long) d.requests,
+                         (unsigned long long) d.nodes, W.moe_graphs.size(), (unsigned long long) d.capture_failures,
+                         (unsigned long long) d.disabled_fallbacks, (unsigned long long) d.launch_failures,
+                         (unsigned long long) d.invalidations);
+            std::fprintf(stderr, "maya verify MoE graph CUDA%d host totals: capture/build/instantiate %.3f ms, "
+                                 "first-launch submission %.3f ms, replay submission %.3f ms; "
+                                 "ring-credit waits %llu / %.3f ms / %llu timeouts (30 s bound); "
+                                 "submission times are not GPU execution times\n", m->dev_, d.build_ms,
+                         d.first_submit_ms, d.replay_submit_ms, (unsigned long long) d.credit_waits,
+                         d.credit_ms, (unsigned long long) d.credit_timeouts);
+            std::fprintf(stderr, "maya verify MoE graph CUDA%d bypass reasons: scope=%llu diagnostics=%llu "
+                                 "format=%llu storage/service=%llu async-fetch=%llu; "
+                                 "requires full T3/T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging\n",
+                         m->dev_, (unsigned long long) d.bypass_scope, (unsigned long long) d.bypass_diag,
+                         (unsigned long long) d.bypass_format, (unsigned long long) d.bypass_storage,
+                         (unsigned long long) d.bypass_async);
+            if (d.capture_failures > 0)
+                std::fprintf(stderr, "maya verify MoE graph CUDA%d last capture failure: %s\n",
+                             m->dev_, W.moe_graphs.last_capture_error.c_str());
+            if (!W.moe_graph_error.empty())
+                std::fprintf(stderr, "maya verify MoE graph CUDA%d fatal error: %s\n", m->dev_, W.moe_graph_error.c_str());
+            d = glmfast::WindowMoeGraphs::Stats{};  // cache and disabled keys persist across reports
+        }
         if (win_hc_batch_enabled()) {
             std::fprintf(stderr, "maya verify HC CUDA%d: %llu executed HC3 phase batches, %llu token rows\n",
                          m->dev_, (unsigned long long) W.hc_batch_calls, (unsigned long long) W.hc_batch_tokens);

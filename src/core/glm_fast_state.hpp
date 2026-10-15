@@ -9,6 +9,7 @@
 #include "strata/kernels/cpu/native_expert.hpp"
 #include "glm_memory.hpp"
 #include "glm_layer_graphs.hpp"
+#include "glm_window_graphs.hpp"
 #include "glm_reuse_policy.hpp"
 
 #include "ggml.h"
@@ -568,6 +569,9 @@ struct Glm5Model::FastState {
         void* ans_d[16] = {};
         bool per_token = false;             // the batched MoE off for this pass (the redo after a scratch clash)
         uint64_t windows = 0, retries = 0, reuses = 0;
+        glmfast::WindowMoeGraphs moe_graphs;
+        bool moe_graph_recording = false;  // only the host capture body, never a replay
+        std::string moe_graph_error;       // live-launch failure poisons this model until reload
         cudaStream_t fetch_stream = nullptr;  // dedicated full-layer verification fetches/component down copies
         cudaEvent_t fetch_ready[16] = {}, fetch_done = nullptr;
         uint64_t async_fetch_layers = 0, async_fetch_submissions = 0, async_fetch_each_joins = 0;

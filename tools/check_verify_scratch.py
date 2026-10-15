@@ -9,8 +9,9 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--cases',default='legacy,candidate')
     ap.add_argument('--out',type=Path,default=OUT)
     ap.add_argument('--env',action='append',default=[])
+    ap.add_argument('--require-exact',action='store_true',help='Fail unless both outputs are finite and bitwise equal')
     ap.add_argument('--tokens-file',type=Path,help='Fixed prompt plus continuation IDs, one integer per line')
-    a=ap.parse_args();OUT=a.out.resolve()
+    a=ap.parse_args();args=a;OUT=a.out.resolve()
     OUT.mkdir(parents=True,exist_ok=True)
     cfg=json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     if a.tokens_file:
@@ -20,7 +21,7 @@ def main():
         ids=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/manifest.json').read_text())['prompt_ids']+q['output_ids']
     tokenfile=OUT/'tokens.txt';tokenfile.write_text('\n'.join(map(str,ids)))
     records=[]
-    for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1),('async-off',64,1),('async-on',64,1)]:
+    for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1),('async-off',64,1),('async-on',64,1),('graph-off',64,1),('graph-on',64,1)]:
         if label not in a.cases.split(','):continue
         env={k:v for k,v in os.environ.items() if not k.startswith(('MAYA_','STRATA_'))}
         env.update(cfg['env']);env.update(STRATA_GLM_CPU_PLAN='000000000',STRATA_GLM_POOL_GB='16',
@@ -30,6 +31,8 @@ def main():
             key,value=setting.split('=',1);env[key]=value
         if label.startswith('grouped-'):
             env['MAYA_WIN_GROUPED']='1' if label=='grouped-on' else '0'
+        if label.startswith('graph-'):
+            env['MAYA_WIN_MOE_GRAPH']='1' if label=='graph-on' else '0'
         if label.startswith('async-'):
             env['MAYA_WIN_ASYNC_FETCH']='1' if label=='async-on' else '0'
         if label=='token-path':env['STRATA_GLM_WIN_BATCH']='0'
@@ -48,9 +51,11 @@ def main():
     if len(cases)!=2:return
     left,right=cases
     a=np.fromfile(OUT/(left+'.f32'),dtype=np.float32);b=np.fromfile(OUT/(right+'.f32'),dtype=np.float32)
-    assert a.shape==b.shape
+    assert a.shape==b.shape and a.size>0
+    assert np.isfinite(a).all() and np.isfinite(b).all()
     delta=np.abs(a-b)
-    result=dict(left=left,right=right,values=int(a.size),exact=bool(np.array_equal(a,b)),max_abs=float(delta.max()),mean_abs=float(delta.mean()),
+    result=dict(left=left,right=right,values=int(a.size),exact=bool(np.array_equal(a.view(np.uint32),b.view(np.uint32))),max_abs=float(delta.max()),mean_abs=float(delta.mean()),
       mismatched_values=int(np.count_nonzero(a!=b)),greedy_matches=int(np.sum(a.reshape(-1,154880).argmax(1)==b.reshape(-1,154880).argmax(1))),rows=int(a.size//154880))
     (OUT/(left+'-vs-'+right+'.json')).write_text(json.dumps(result,indent=2));print(result,flush=True)
+    if getattr(args, 'require_exact', False) and not result['exact']:raise RuntimeError('exact logit comparison failed')
 if __name__=='__main__':main()

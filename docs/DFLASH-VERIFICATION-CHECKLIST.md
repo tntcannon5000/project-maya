@@ -52,3 +52,8 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Compare ordinary forward against verification first rows/partial commits on one occupied coding input: controlled GPU exact.
 - [x] Attribute first hybrid divergence through actual route masks and a two-step cold-ranking ablation; counter and residency history change placement.
 - [ ] Any future claim of full ordinary/hybrid equivalence requires consistent backend placement/quantization, not current GPU-only evidence.
+
+- [x] Validate all gap-ending CUDA API correlations and explicitly test missing-correlation handling.
+- [ ] Implement complete opt-in native MoE layer graphs with safe replay credits, capture cleanup and teardown.
+- [ ] Verify graph engagement and exact GPU/matched-hybrid fixed-input logits with partial commits/reset.
+- [ ] Gate further graph work on one bounded coding throughput comparison.

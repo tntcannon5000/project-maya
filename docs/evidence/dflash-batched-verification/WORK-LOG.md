@@ -274,3 +274,7 @@ clean hybrid GPU-idle/host-submission attribution for per-layer CUDAgraphs.
 ## Correlated submission-gap checkpoint
 
 Validated all 7,130 gap-ending activities against completed CUDA runtime calls: zero missing correlations or late APIs. Four warm windows contain 3.25–4.04 ms of MoE gaps; this is a modest device-dispatch opportunity, not 42 ms of removable host overhead. Added missing-data accounting and three synthetic tests. Authorized a bounded opt-in full-MoE layer graph implementation with replay credits, side-stream join, lifetime and diagnostics safeguards. No new throughput claim. See hybrid-submission-trace/RESULTS.md.
+
+## Native MoE graph implementation checkpoint — not qualified
+
+Added complete opt-in capture and replay with ownership/lifetime/error guards. Small actual-CUDA graph test passes. Original full-model GPU-only comparison fails 7,434,240 logits (max abs 2.01294, all 48 greedy choices still agree). Narrow prefix/first-window check and unchanged full graph-on recheck pass exactly. Do not discard the failure or declare parity. No serving TPS runs started. Investigate timing-dependent ownership; candidate remains disabled by default. See window-graphs/STATUS.md.

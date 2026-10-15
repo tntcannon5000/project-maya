@@ -97,3 +97,11 @@ The first gate is complete copied versus direct GU/down arithmetic on actual
 recorded sources with identical outputs and CPU co-execution. No serving-path
 integration unless that decisive feasibility test shows worthwhile headroom.
 See DIRECT-RAM-FEASIBILITY.md.
+
+## Bounded full-MoE graph experiment
+
+The direct-RAM experiment is complete and rejected. Causal scratch-retention policies have not justified integration. The clean hybrid trace now contains complete CUDA API correlation: all observed device gaps begin after the next launch API returned. No late host submission is established.
+
+Test one complete native per-layer MoE graph with live route tables and full component-stream fork/join. Keep attention, positional drafter captures, HC and deferred-demotion submission outside. Target the measured 3.25–4.04 ms of MoE gaps per T3/T5 round; do not credit overlapping host enqueue time. Opt in only; preserve the retained baseline.
+
+Gates: source review of request credits/ring safety, capture failure and buffer lifetime; build; exact graph-off/on GPU and matched hybrid fixed-input comparisons with partial commits and two resets; verify actual capture/replay counters; one short coding serving A/B at widths 2 and 4, including cancellation/recovery. If the speed gate passes, use a bounded repeat or trace to establish mechanism. No broad suite or parameter sweep. Keep cold graph creation separate from warm replay and report any graph memory/cache change.
