@@ -260,3 +260,17 @@ commit does not rewind them. Ranking-off ablation removeslayer3difference but
 residency changes cause CPU-placement difference atlayer6. No thresholds
 relaxed, nohybridexact claim orperformance recommendation. See
 forward-window-diagnostic/RESULTS.md. No new serving changes.
+
+## Layer-phase retention screen
+
+Added one causal phase-frequency policy: expected byte benefit estimated from
+past demand frequency divided by distance to the expert's next layer visit.
+No future routes/parameter sweep. Saves9.36%T3/9.17%T5 bytes overall,8.84%/7.01%
+in the second half; no material advance over previous causal policies. Six
+capacity/ownership/causality checks pass, including prefix independence for
+this new policy. Defer serving cache implementation. Next evidence gate is
+clean hybrid GPU-idle/host-submission attribution for per-layer CUDAgraphs.
+
+## Correlated submission-gap checkpoint
+
+Validated all 7,130 gap-ending activities against completed CUDA runtime calls: zero missing correlations or late APIs. Four warm windows contain 3.25–4.04 ms of MoE gaps; this is a modest device-dispatch opportunity, not 42 ms of removable host overhead. Added missing-data accounting and three synthetic tests. Authorized a bounded opt-in full-MoE layer graph implementation with replay credits, side-stream join, lifetime and diagnostics safeguards. No new throughput claim. See hybrid-submission-trace/RESULTS.md.

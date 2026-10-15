@@ -12,7 +12,7 @@ def entry(layer, keys, *, permanent=(), ready=True, resident=(), window=0):
 class ScratchPolicyTests(unittest.TestCase):
     def test_prefix_independent_of_future(self):
         prefix = [entry(0,[0]), entry(1,[1]), entry(0,[0])]
-        for policy in ('lru','frequency','gdsf'):
+        for policy in ('lru','frequency','gdsf','phase_frequency'):
             self.assertEqual(simulate(prefix,policy,2), simulate(prefix+[entry(2,[2])],policy,2)[:3])
 
     def test_promotion_needs_copy_and_retires_cache(self):

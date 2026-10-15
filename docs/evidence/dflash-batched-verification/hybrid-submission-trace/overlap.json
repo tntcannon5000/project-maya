@@ -1,0 +1,298 @@
+{
+  "kernel_count": 7928,
+  "stream_ids": [
+    13,
+    16
+  ],
+  "captured_kernel_span_ms": 345.594667,
+  "fetch_union_ms": 161.669911,
+  "fetch_overlap_any_kernel_ms": 19.23312,
+  "fetch_overlap_route_ms": 0.0,
+  "fetch_overlap_window_gu_ms": 19.119616,
+  "fetch_overlap_window_down_ms": 0.0,
+  "window_gu_union_ms": 25.135719,
+  "window_down_union_ms": 13.138258,
+  "kernel_totals": [
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_component_kernel<(int)1>(strata::kernels::glmf::MoeDev, int, unsigned long long, unsigned long long)",
+      "calls": 336,
+      "sum_ms": 161.6699109999999,
+      "max_ms": 4.812583,
+      "mean_ms": 0.4811604494047616
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_cpu_wait_kernel(strata::kernels::glmf::MoeDev, int, float *)",
+      "calls": 672,
+      "sum_ms": 31.659563,
+      "max_ms": 8.100364,
+      "mean_ms": 0.047112444940476186
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)10>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 14.051122999999999,
+      "max_ms": 0.347488,
+      "mean_ms": 0.09757724305555554
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mla_split_kernel(const float *, const unsigned short *, const int *, int, int, int, int, float *, bool)",
+      "calls": 176,
+      "sum_ms": 10.589297,
+      "max_ms": 0.302209,
+      "mean_ms": 0.060166460227272726
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1, (bool)1>(strata::kernels::glmf::<unnamed>::RouteArgs)",
+      "calls": 504,
+      "sum_ms": 10.192715999999992,
+      "max_ms": 0.046848,
+      "mean_ms": 0.02022364285714284
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::mvc_kernel_t<(int)12, (int)5, (int)2>(strata::kernels::glmf::<unnamed>::MvBatch)",
+      "calls": 384,
+      "sum_ms": 9.960468000000004,
+      "max_ms": 0.286465,
+      "mean_ms": 0.02593871875000001
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::mvc_kernel_t<(int)12, (int)3, (int)4>(strata::kernels::glmf::<unnamed>::MvBatch)",
+      "calls": 384,
+      "sum_ms": 9.419853999999996,
+      "max_ms": 0.260673,
+      "mean_ms": 0.024530869791666656
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mvc_kernel_bf16(strata::kernels::glmf::<unnamed>::MvBatch)",
+      "calls": 392,
+      "sum_ms": 6.888906000000007,
+      "max_ms": 0.022752,
+      "mean_ms": 0.017573739795918385
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)10, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 6.550510000000002,
+      "max_ms": 0.335073,
+      "mean_ms": 0.04548965277777779
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)10, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 5.568714000000003,
+      "max_ms": 0.062944,
+      "mean_ms": 0.038671625000000015
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)10>(strata::kernels::glmf::MoeWin)",
+      "calls": 144,
+      "sum_ms": 5.389796999999999,
+      "max_ms": 0.061984,
+      "mean_ms": 0.03742914583333332
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)2, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 4.954217000000001,
+      "max_ms": 0.014272,
+      "mean_ms": 0.013761713888888891
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_select_kernel(const float *, int, int, int, int, int, int *)",
+      "calls": 176,
+      "sum_ms": 3.8881669999999997,
+      "max_ms": 0.246273,
+      "mean_ms": 0.022091857954545453
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::kda_prep_kernel(strata::kernels::glmf::KdaPrepArgs)",
+      "calls": 612,
+      "sum_ms": 3.4465959999999853,
+      "max_ms": 0.007936,
+      "mean_ms": 0.0056316928104574926
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::kda_rec_kernel(const float *, const float *, const float *, const float *, const float *, float *, const float *, const float *, float, int, block_q8_1 *)",
+      "calls": 612,
+      "sum_ms": 3.369603999999992,
+      "max_ms": 0.243425,
+      "mean_ms": 0.005505888888888875
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_route_kernel<(bool)1, (bool)0>(strata::kernels::glmf::<unnamed>::RouteArgs)",
+      "calls": 168,
+      "sum_ms": 3.302785999999999,
+      "max_ms": 0.032256,
+      "mean_ms": 0.01965944047619047
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::mla_combine_kernel(const float *, int, int, int, float *)",
+      "calls": 176,
+      "sum_ms": 2.5689320000000007,
+      "max_ms": 0.281184,
+      "mean_ms": 0.01459620454545455
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_score_kernel(const float *, const float *, const float *, int, int, int, float *)",
+      "calls": 176,
+      "sum_ms": 2.0774110000000006,
+      "max_ms": 0.012448,
+      "mean_ms": 0.011803471590909094
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_win_group_kernel(strata::kernels::glmf::MoeWin)",
+      "calls": 168,
+      "sum_ms": 2.0351700000000004,
+      "max_ms": 0.026464,
+      "mean_ms": 0.012114107142857145
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::headwise_gemv_cols_kernel(const unsigned short *, const float *, long long, int, int, int, float *, long long, block_q8_1 *, long long)",
+      "calls": 88,
+      "sum_ms": 1.8542130000000006,
+      "max_ms": 0.023808,
+      "mean_ms": 0.02107060227272728
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_wait_kernel(strata::kernels::glmf::MoeDev, int)",
+      "calls": 672,
+      "sum_ms": 1.854116,
+      "max_ms": 0.936897,
+      "mean_ms": 0.0027591011904761907
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)11>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 1.5773460000000001,
+      "max_ms": 0.212577,
+      "mean_ms": 0.13144550000000002
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)11, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 1.1605789999999998,
+      "max_ms": 0.13712,
+      "mean_ms": 0.09671491666666665
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)1, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 1.0298900000000002,
+      "max_ms": 0.003712,
+      "mean_ms": 0.002860805555555556
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)11, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.9426579999999999,
+      "max_ms": 0.104992,
+      "mean_ms": 0.07855483333333332
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_kernel<(int)12, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.9218560000000001,
+      "max_ms": 0.123616,
+      "mean_ms": 0.07682133333333334
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_gu_pairs_kernel<(int)12>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.874305,
+      "max_ms": 0.240736,
+      "mean_ms": 0.07285875
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_kernel<(int)12, (bool)0, (bool)1>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.5820810000000001,
+      "max_ms": 0.06816,
+      "mean_ms": 0.04850675000000001
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::hc3_kernel<(int)3, (bool)1>(strata::kernels::glmf::HcArgs, unsigned long long)",
+      "calls": 360,
+      "sum_ms": 0.5341119999999995,
+      "max_ms": 0.001856,
+      "mean_ms": 0.001483644444444443
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::dsa_prep_kernel(strata::kernels::glmf::DsaPrepArgs)",
+      "calls": 176,
+      "sum_ms": 0.5076480000000005,
+      "max_ms": 0.004256,
+      "mean_ms": 0.0028843636363636393
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::moe_win_combine_kernel(strata::kernels::glmf::MoeWin)",
+      "calls": 168,
+      "sum_ms": 0.37337599999999976,
+      "max_ms": 0.002592,
+      "mean_ms": 0.002222476190476189
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)11>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.35417600000000005,
+      "max_ms": 0.049888,
+      "mean_ms": 0.02951466666666667
+    },
+    {
+      "name": "void strata::kernels::glmf::<unnamed>::moe_win_down_pairs_kernel<(int)12>(strata::kernels::glmf::MoeWin)",
+      "calls": 12,
+      "sum_ms": 0.300832,
+      "max_ms": 0.042784,
+      "mean_ms": 0.025069333333333332
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::argmax_kernel(const float *, int, int *)",
+      "calls": 16,
+      "sum_ms": 0.18057600000000001,
+      "max_ms": 0.013248,
+      "mean_ms": 0.011286000000000001
+    },
+    {
+      "name": "strata::core::<unnamed>::hc_mean_kernel(const float *, int, int, float *)",
+      "calls": 20,
+      "sum_ms": 0.08748800000000001,
+      "max_ms": 0.004768,
+      "mean_ms": 0.0043744000000000005
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::head_prep_kernel(const float *, const float *, float, int, float *, block_q8_1 *)",
+      "calls": 16,
+      "sum_ms": 0.066176,
+      "max_ms": 0.005216,
+      "mean_ms": 0.004136
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::swiglu_q8_kernel(const float *, const float *, float, int, block_q8_1 *)",
+      "calls": 48,
+      "sum_ms": 0.046527999999999986,
+      "max_ms": 0.001248,
+      "mean_ms": 0.000969333333333333
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::hc_post_kernel(const float *, const float *, const float *, const float *, int, float *)",
+      "calls": 16,
+      "sum_ms": 0.017024,
+      "max_ms": 0.001184,
+      "mean_ms": 0.001064
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::embed_streams_kernel(const float *, float *, int)",
+      "calls": 16,
+      "sum_ms": 0.012416,
+      "max_ms": 0.000992,
+      "mean_ms": 0.000776
+    },
+    {
+      "name": "strata::kernels::glmf::<unnamed>::tab_update_kernel(unsigned long long *, const int *, const unsigned long long *, int)",
+      "calls": 4,
+      "sum_ms": 0.003616,
+      "max_ms": 0.00096,
+      "mean_ms": 0.000904
+    }
+  ],
+  "note": "Diagnostic four-window capture; interval unions avoid double counting. Other kernels include waits. No CPU overlap or throughput claim."
+}

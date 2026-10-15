@@ -123,3 +123,7 @@ commit does not rewind them. Ranking-off ablation removeslayer3difference but
 residency changes cause CPU-placement difference atlayer6. No thresholds
 relaxed, nohybridexact claim orperformance recommendation. See
 forward-window-diagnostic/RESULTS.md. No new serving changes.
+
+## Current next experiment
+
+The layer-position causal scratch policy saves only 9.36%/9.17% of replay bytes (T3/T5), declining on the later half; no serving cache integration. A clean warm trace rules out late host submission for all measured gaps. Proceed with a bounded native MoE layer-graph experiment targeting device dispatch gaps; see hybrid-submission-trace/RESULTS.md.

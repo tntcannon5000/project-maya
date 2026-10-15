@@ -34,13 +34,15 @@ def simulate(layers, policy, capacity=64, protect_current=True):
     destinations stay live through completion; promotions still require D2D.
     No inference between recorded layers, no lookup/copy cost modeled.
     """
-    assert policy in ('lru', 'frequency', 'gdsf')
+    assert policy in ('lru', 'frequency', 'gdsf', 'phase_frequency')
     cache, frequency = {}, defaultdict(int)
+    visits, blobs = defaultdict(int), {}
     clock = 0
     age = 0
     events = []
     for entry in layers:
         layer, records, owners = entry['layer'], entry['records'], entry['owners']
+        visits[layer] += 1
         for r in records:
             if r['initial_gpu']:
                 cache.pop((layer, r['id']), None)
@@ -52,6 +54,7 @@ def simulate(layers, policy, capacity=64, protect_current=True):
                      saved_bytes=0, promotion_D2D_bytes=0, hits=0, evictions=0, peak_slots=len(cache))
         for r in owners:
             key = layer, r['id']
+            blobs[key] = r['blob']
             clock += 1
             eligible = bool(r['ram_ready'])
             if eligible:
@@ -74,7 +77,15 @@ def simulate(layers, policy, capacity=64, protect_current=True):
                 while len(cache) + workspaces >= capacity:
                     available = set(cache) - pinned
                     assert available, 'active workspace exceeds capacity'
-                    victim = min(available, key=lambda k: (*cache[k], k))
+                    def retention_priority(k):
+                        if policy == 'phase_frequency':
+                            # GLM's 42 MoE layers form a known execution cycle.
+                            # Estimate repeat probability from past demand only;
+                            # favour byte savings needed sooner in that cycle.
+                            distance = (k[0] - layer) % 42 or 42
+                            return blobs[k] * frequency[k] / visits[k[0]] / distance, cache[k][1], k
+                        return *cache[k], k
+                    victim = min(available, key=retention_priority)
                     if policy == 'gdsf':
                         age = max(age, cache[victim][0])
                         score = age + frequency[key] * r['blob']
@@ -118,7 +129,7 @@ def main():
         layers = load_layers(rows, width)
         split = (max(e['window'] for e in layers) + 1) // 2
         result[f'T{width}'] = {}
-        for policy, protect in [('lru', False), ('lru', True), ('frequency', True), ('gdsf', True)]:
+        for policy, protect in [('lru', False), ('lru', True), ('frequency', True), ('gdsf', True), ('phase_frequency', True)]:
             name = policy + ('_protect_current' if protect else '_legacy')
             events = simulate(layers, policy, protect_current=protect)
             result[f'T{width}'][name] = dict(all=summarize(events),
