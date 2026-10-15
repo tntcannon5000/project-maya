@@ -67,4 +67,6 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Evaluate existing confidence policy on short/long coding; extend graphs to all adaptive widths with exact qualification and verified engagement. No60TPSclaim.
 
 - [x] Complete T2/T4 hybrid exact checks, prefix checks and adaptive-policy STOP/recovery.
-- [ ] Qualify current complete adaptive candidate on one writing task and close unresolved ownership/numerical gates before any production recommendation.
+- [x] Qualify complete adaptive candidate on one writing task; paired histories/counts match, bounded prefill smoke passes.
+- [x] Force24production metadata transition cases and qualify extraction against full-model logits; not DMA race stress.
+- [ ] Close historical numerical attribution and any required DMA-specific ownership gates before production recommendation.

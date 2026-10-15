@@ -320,3 +320,11 @@ Actual CUDA graph test passes8captures/16replays withT2..T5, dynamic pointer tab
 ## Adaptive graph coverage and confidence result
 
 Implemented and qualified T2..T5graph coverage. Exact hybrid qualification:5,575,680logits/36rows and309,760prefix values; zero sampled ownership failures. Confidence policy now has zero graph bypasses. Short coding56.78TPS versus44.04ordinary; longer39.64versus40.83ordinary. Old graph coverage gave57.06/39.05TPS: small changes, no robust claim from this single pair. All paired old/new output IDs and acceptance counts match; prefill smoke and cancellation/recovery pass. Keep opt-in. High longer-task acceptance(47/48) conceals48zero-draft rounds out of83; it does not imply near2xgain. See window-graphs/CONFIDENCE-RESULTS.md. Next: bounded writing/lifecycle and ownership attribution, not a repeated matrix.
+
+## Writing and ownership qualification (2026-10-15)
+
+One3239-token writing prompt,128output cap, same complete candidate and confidence policy with graph flagoff/on. Ordinary40.22/40.57TPS; confidence40.10/40.96TPS (+2.15%graph pair, ordinary control varied+0.87%). Every paired output ID and acceptance count matches (41/45drafts accepted). Cold prefill2266.1/2265.4ms. This is a bounded workload check, not a statistical guarantee.
+
+Extracted the existing opt-in promotion-retirement metadata transition for direct production-code tests:24cases pass, including evicted/reused GPU winner, ready/pending/absent replacement RAM, invalid reservations, no-mutation failures, sticky errors and double retirement. Full-model integration matches prior5,575,680window logits and309,760prefix values exactly;33superseded retirements, zero sampled ownership errors. DMA timing is outside the unit cases' scope. Background demotion audit found no valid competing-promotion path; no demotion change. See window-graphs/OWNER-TRANSITION-TESTS.md.
+
+The previous turn is concrete progress: implemented shared transition tests, qualified integration and writing. Historical numerical failure remains unattributed; current exact checks do not erase it. Next targeted numerical investigation must compare pre-verification state rather than repeat TPS tests. Do not restart quant/width screening.

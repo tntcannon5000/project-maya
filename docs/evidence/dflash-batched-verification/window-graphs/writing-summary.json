@@ -1,0 +1,120 @@
+{
+  "scope": "One short coding prompt; repeated requests, not independent trials. No profiler. Raw per-round drafter timing is enabled equally.",
+  "off": {
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tokens": 128,
+        "tps": 34.3688746878608,
+        "prompt_ms": 2266.1,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tokens": 128,
+        "tps": 40.21995286724273,
+        "prompt_ms": 39.0,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "confidence",
+        "width": 4,
+        "tokens": 128,
+        "tps": 40.09648216019797,
+        "prompt_ms": 37.5,
+        "acceptance": 0.9111111111111111,
+        "draft_ms": 194.2,
+        "verify_ms": 2947.831
+      }
+    ],
+    "captures": 0,
+    "replays": 0,
+    "memory_and_graph_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)",
+      "glm fast: CUDA0 RAM tier 93.99 GB pinned, 11365 slots"
+    ]
+  },
+  "on": {
+    "rows": [
+      {
+        "kind": "warmup",
+        "width": 0,
+        "tokens": 128,
+        "tps": 34.25665729961194,
+        "prompt_ms": 2265.4,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "control",
+        "width": 0,
+        "tokens": 128,
+        "tps": 40.57180893213731,
+        "prompt_ms": 39.7,
+        "acceptance": null,
+        "draft_ms": 0,
+        "verify_ms": 0
+      },
+      {
+        "kind": "confidence",
+        "width": 4,
+        "tokens": 128,
+        "tps": 40.9586893219417,
+        "prompt_ms": 37.5,
+        "acceptance": 0.9111111111111111,
+        "draft_ms": 199.491,
+        "verify_ms": 2878.366
+      }
+    ],
+    "captures": 126,
+    "replays": 1218,
+    "memory_and_graph_lines": [
+      "glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)",
+      "glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)",
+      "glm fast: CUDA0 RAM tier 93.99 GB pinned, 11365 slots",
+      "maya verify MoE graph CUDA0 host totals: capture/build/instantiate 87.731 ms, first-launch submission 3.212 ms, replay submission 30.462 ms; ring-credit waits 367 / 475.694 ms / 0 timeouts (30 s bound); submission times are not GPU execution times",
+      "maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging"
+    ]
+  },
+  "paired": [
+    {
+      "kind": "warmup",
+      "width": 0,
+      "off_tps": 34.3688746878608,
+      "on_tps": 34.25665729961194,
+      "change_percent": -0.3265087648869125,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    },
+    {
+      "kind": "control",
+      "width": 0,
+      "off_tps": 40.21995286724273,
+      "on_tps": 40.57180893213731,
+      "change_percent": 0.8748296300992164,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    },
+    {
+      "kind": "confidence",
+      "width": 4,
+      "off_tps": 40.09648216019797,
+      "on_tps": 40.9586893219417,
+      "change_percent": 2.150331189401955,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true
+    }
+  ],
+  "occupied_prompt_tokens": 3239
+}
