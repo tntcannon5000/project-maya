@@ -45,3 +45,5 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Audit transient mapped-RAM arithmetic ownership and prior experiments.
 - [x] Measure complete direct-RAM arithmetic versus staged arithmetic, with exact outputs and CPU co-execution: reject substantial slowdown across all quant classes.
 - [x] Apply direct-RAM integration gate: no headroom demonstrated, no serving integration.
+
+- [x] Screen cross-window transient scratch retention with capacity/live-workspace accounting; defer serving integration pending a practical policy with material headroom.

@@ -102,3 +102,13 @@ GPU timeline7.872->14.318ms and wall10.705->16.496ms per token-equivalent.
 AllQ2/Q3/Q4 classes lose; do not integrate or sweep. Logical225.56MB remains
 host-read traffic even with no explicit copy. This is replay, not servingTPS.
 See direct-ram-probe/RESULTS.md. Retained candidate/defaults unchanged.
+
+## Cross-window scratch retention screen
+
+Saved and reproduced bounded CPU-only trace simulation with64physicalscratch
+slots and current-layer live workspace protected. Unified causalLRU avoids
+10.40%/3.21%ofT3/T5H2Dbytes; optimistic weighted future interval bounds reach
+18.47%/21.74%before lookup/admission/D2D costs. No serving implementation orTPS
+gain claimed. Ordinary recency is insufficient to justify a substantial new
+path; next policy work must demonstrate practical reuse near the optimistic
+case on fixed routing before live integration. See SCRATCH-RETENTION-FEASIBILITY.md.
