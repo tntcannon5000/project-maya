@@ -1,0 +1,135 @@
+{
+  "values": 7434240,
+  "exact": true,
+  "max_abs": 0.0,
+  "owner_observations": [
+    {
+      "clock": 0,
+      "residents": 1813,
+      "duplicates": 0,
+      "orphan_residents": 0,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 0,
+      "residents": 1422,
+      "duplicates": 0,
+      "orphan_residents": 0,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 42,
+      "residents": 1547,
+      "duplicates": 0,
+      "orphan_residents": 0,
+      "competing_promotions": 1,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 168,
+      "residents": 1574,
+      "duplicates": 1,
+      "orphan_residents": 1,
+      "competing_promotions": 2,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 378,
+      "residents": 1720,
+      "duplicates": 3,
+      "orphan_residents": 3,
+      "competing_promotions": 16,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 504,
+      "residents": 1739,
+      "duplicates": 19,
+      "orphan_residents": 19,
+      "competing_promotions": 1,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 714,
+      "residents": 1871,
+      "duplicates": 20,
+      "orphan_residents": 20,
+      "competing_promotions": 2,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 840,
+      "residents": 1840,
+      "duplicates": 22,
+      "orphan_residents": 22,
+      "competing_promotions": 5,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1050,
+      "residents": 1902,
+      "duplicates": 27,
+      "orphan_residents": 27,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1050,
+      "residents": 1451,
+      "duplicates": 24,
+      "orphan_residents": 25,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1092,
+      "residents": 1460,
+      "duplicates": 24,
+      "orphan_residents": 25,
+      "competing_promotions": 1,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1218,
+      "residents": 1600,
+      "duplicates": 25,
+      "orphan_residents": 26,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1428,
+      "residents": 1636,
+      "duplicates": 25,
+      "orphan_residents": 26,
+      "competing_promotions": 8,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1554,
+      "residents": 1750,
+      "duplicates": 33,
+      "orphan_residents": 34,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1764,
+      "residents": 1778,
+      "duplicates": 34,
+      "orphan_residents": 34,
+      "competing_promotions": 0,
+      "invalid_promotion_sources": 0
+    },
+    {
+      "clock": 1890,
+      "residents": 1878,
+      "duplicates": 34,
+      "orphan_residents": 34,
+      "competing_promotions": 7,
+      "invalid_promotion_sources": 0
+    }
+  ]
+}

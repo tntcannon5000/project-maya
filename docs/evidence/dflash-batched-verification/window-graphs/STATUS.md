@@ -19,3 +19,13 @@ The first failed comparison matched all 48 greedy picks but is still a failure. 
 Graph engagement in the original full run: 84 captures, 420 replays, no capture/launch failures or bypasses. The 1,680 captured nodes equal 42 layers × (18 T3 + 22 T5 nodes). Ring-credit waits are substantial host throttling (427.284 ms and 411.842 ms across each six-window repeat); they overlap GPU work and are not additive GPU costs. Saved fixed-input call times are diagnostic only while numerical failure remains unresolved.
 
 Read-only audit found no captured host job-array lifetime or missing component join. A possible background-versus-demand duplicate promotion ownership case is under investigation; it is a hypothesis, not an attributed root cause. Next step is targeted ownership evidence, not throughput reruns. Raw logits remain local.
+
+## Targeted host ownership observation
+
+Added opt-in `MAYA_WIN_OWNER_COUNTS=1`: after compute and service drain, under the existing metadata lock and before boundary edits, count duplicate residents, residents not matching `slot_of`, competing background/demand promotions, and invalid pinned promotion sources. It performs no extra GPU readback and does not change placement. It is diagnostic and remains off by default.
+
+One original six-window/two-reset graph-on fixture demonstrated competing promotions followed by accumulating duplicates: 0 initially, 1/3/19/20/22/27 during the first sequence, and up to 34 in the second. Up to 16 pending promotions simultaneously competed with another mapped GPU slot. No invalid promotion sources were observed. This run's 7,434,240 logits exactly match the original graph-off reference, so duplication alone does not establish the numerical root cause.
+
+Source mechanism: the background H2D destination is Landing while the source remains routeable RAM. A demand route can promote the same expert into another spare. Background retirement then unconditionally assigns `slot_of[key]` to its own destination, orphaning the demand copy. Existing published-pointer checks explicitly did not reject duplicate unreferenced residents. Both copies can contain correct bytes, but this wastes capacity and complicates subsequent demotion ownership.
+
+Next work should preserve one authoritative owner through competing promotion retirement and conditional table clearing, including in-flight demotions and retained RAM backing. Do not blindly free a duplicate that remains a live transfer source. Diagnose the original numerical failure separately; do not label this discovered ownership case as its cause. Graph performance remains unqualified; no serving A/B was run.

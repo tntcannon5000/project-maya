@@ -278,3 +278,7 @@ Validated all 7,130 gap-ending activities against completed CUDA runtime calls: 
 ## Native MoE graph implementation checkpoint — not qualified
 
 Added complete opt-in capture and replay with ownership/lifetime/error guards. Small actual-CUDA graph test passes. Original full-model GPU-only comparison fails 7,434,240 logits (max abs 2.01294, all 48 greedy choices still agree). Narrow prefix/first-window check and unchanged full graph-on recheck pass exactly. Do not discard the failure or declare parity. No serving TPS runs started. Investigate timing-dependent ownership; candidate remains disabled by default. See window-graphs/STATUS.md.
+
+## Measured competing-promotion ownership case
+
+The new host-only, pre-boundary audit found actual duplicate/orphan residents rising to 34 slots and up to 16 competing pending promotions on the fixed fixture. Zero invalid pinned promotion sources. All 7,434,240 logits in this diagnostic run are exact versus original off, so this is established cache bookkeeping/capacity waste, not proven numerical corruption. Graphs remain unqualified. Preserved the diagnostic and all failed/passing evidence; no performance default changed. Next: ownership-safe retirement design and original failure attribution, not more throughput tests.

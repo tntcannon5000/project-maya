@@ -127,3 +127,7 @@ forward-window-diagnostic/RESULTS.md. No new serving changes.
 ## Current next experiment
 
 The layer-position causal scratch policy saves only 9.36%/9.17% of replay bytes (T3/T5), declining on the later half; no serving cache integration. A clean warm trace rules out late host submission for all measured gaps. Proceed with a bounded native MoE layer-graph experiment targeting device dispatch gaps; see hybrid-submission-trace/RESULTS.md.
+
+## Current checkpoint: graph parity failure and ownership evidence
+
+Native MoE graphs are implemented opt-in with actual CUDA unit coverage. Original full GPU-only parity failed; unchanged repeated and narrow checks passed. Do not accept passing reruns as a fix. Host-only owner diagnostics prove competing background/demand promotions leave up to 34 duplicate/orphan resident slots on the fixture, but that diagnostic's logits are exact, so numerical causation remains open. No serving graph TPS comparison has been run. See window-graphs/STATUS.md. Baseline/defaults remain intact; goal is not achieved.

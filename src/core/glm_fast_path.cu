@@ -4385,6 +4385,50 @@ bool Glm5Model::fast_boundary(std::string& err) {
         std::fprintf(stderr, "%s: mismatch; stopped before further ownership changes\n", b);
         return false;
     };
+    // Host metadata only, after compute/service drain and before boundary edits.
+    // Count competing owners without declaring them corrupt: two immutable
+    // copies can be legitimate, but retirement must not clobber another owner.
+    static const bool owner_counts = [] {
+        const char* v = getenv("MAYA_WIN_OWNER_COUNTS");
+        return v && std::atoi(v) != 0;
+    }();
+    if (owner_counts) {
+        uint64_t residents = 0, duplicates = 0, orphans = 0, competing = 0, bad_sources = 0;
+        int first_layer = -1, first_expert = -1;
+        for (int il = l0_; il < lt_; ++il) {
+            const auto& P = F->lp[(size_t) il];
+            std::vector<int> seen((size_t) g.n_expert, -1);
+            for (int slot = 0; slot < P.n; ++slot) {
+                if (P.st[(size_t) slot] != FastState::kResident) continue;
+                ++residents;
+                const int expert = P.key[(size_t) slot];
+                if (expert < 0 || expert >= g.n_expert) { ++orphans; continue; }
+                const size_t key = (size_t) il * g.n_expert + expert;
+                if (seen[(size_t) expert] >= 0) ++duplicates;
+                seen[(size_t) expert] = slot;
+                if (F->slot_of[key] != slot) {
+                    ++orphans;
+                    if (first_layer < 0) { first_layer = il; first_expert = expert; }
+                }
+            }
+        }
+        for (const auto& move : F->bg) {
+            if (!move.up) continue;
+            const auto& R = F->rc[(size_t) move.rclass];
+            const int current = F->slot_of[(size_t) move.key];
+            if (current >= 0 && current != move.vslot) ++competing;
+            if (move.rslot < 0 || move.rslot >= R.n ||
+                R.key[(size_t) move.rslot] != move.key ||
+                R.st[(size_t) move.rslot] != FastState::kRPin ||
+                F->ram_of[(size_t) move.key] != move.rslot) ++bad_sources;
+        }
+        std::fprintf(stderr, "maya owner counts CUDA%d clock=%llu: residents=%llu duplicates=%llu "
+                             "orphan_residents=%llu competing_promotions=%llu invalid_promotion_sources=%llu "
+                             "first_orphan_layer=%d expert=%d (host metadata, pre-boundary edits)\n",
+                     dev_, (unsigned long long) F->clock, (unsigned long long) residents,
+                     (unsigned long long) duplicates, (unsigned long long) orphans,
+                     (unsigned long long) competing, (unsigned long long) bad_sources, first_layer, first_expert);
+    }
     // Experiment H3: publish small routing-table updates before submitting bulk
     // D2H work. Ownership still reserves BOTH slots until the recorded event.
     // This tests copy-queue ordering, not an assumption that Async means overlap.
