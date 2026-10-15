@@ -30,3 +30,8 @@
 - [ ] Commit report, results table, limitations and recommended settings.
 
 Current stage: corrected control and HC/paired pass exact qualification; bounded RAM64/GPU16 pressure replay passes 6,040,320 exact logits. Component streaming passes repeated-window exactness and bounded pressure with verified copied bytes. Latest hybrid diagnostics show only about1.5ms removed from fetch/expert stages; contemporary clean gain remains1.2%, not a robust recommendation. Broader union-placement instrumentation and standalone exact Q4_K tensor-core feasibility are next. Full pressure/lifecycle and longer-context qualification remain conditional on a justified performance candidate.
+
+- [x] Capture corrected initial residency, RAM readiness, backend masks and copy owners.
+- [x] Validate relaxed fixed-CPU-budget placement ceiling with metadata checks and exhaustive toy cases.
+- [x] Implement complete isolated exact Q4_K IMMA tile and pass246 strict numerical cases.
+- [x] Test actual model shapes; reject production integration for immaterial estimated savings.

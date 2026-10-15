@@ -202,3 +202,9 @@ Component-on expert sequence: prefix fetch17.15ms -> gate/up6.09ms (down transfe
 Host enqueue43.51/41.98ms overlaps device execution; adding it to GPU event times would double-count. Host final wait15.16/14.73ms similarly is not an additional independent GPU cost. The prior GPU-only T5/T8 capture's40.938ms overlap across four windows cannot be subtracted from these hybrid T3 rounds.
 
 The clean contemporary comparison remains45.23 versus44.70TPS (1.2%), insufficient for a robust default change. Diagnostic pair suggests a small benefit, not the earlier apparent10-11% gain. No60TPS claim. The interrupted hybrid-phase-off run produced no completed requests and is excluded.
+
+## Corrected placement and exact tensor-core feasibility
+
+Implemented opt-in pre-route residency/ownership snapshots and actual route/copy-owner metadata. Corrected64-token T3/T5 sample validated1008/714layer records. All available corresponding output IDs match contemporary corrected histories. Fixed-CPU-budget oracle ceilings are4.29%/9.62% of total fetched bytes; this ignores planning costs and relaxed per-token quotas. Pending unpublished demotions require host responses, not necessarily disk reads. Raw trace stays local; compact summary includes its hash.
+
+Built complete standalone exact Q4_K IMMA kernel.240 varied cases plus6actual model-shape cases pass bit-exactly. T3 slower; actual T5 model-shape gains extrapolate to only~0.098ms/round. Defer production integration. Checkpoint source/harness/evidence; no daily/default changes.

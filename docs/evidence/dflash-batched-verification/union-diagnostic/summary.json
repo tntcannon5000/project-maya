@@ -1,0 +1,491 @@
+{
+  "schema": "maya-window-union-analysis-v1",
+  "diagnostic": true,
+  "time_savings_predicted": false,
+  "mask_semantics": {
+    "miss": "host response required; not proof of disk I/O",
+    "fetch_mask": "source present in the published RAM table at route time",
+    "fetch_src": "actual GPU copy source, including host-response sources",
+    "ram_ready": "published, independently owned RAM backing in a ready state with no unretired demotion",
+    "actual_disk_io_recorded": false
+  },
+  "assumptions": [
+    "initial residents stay GPU",
+    "all selected experts evaluated",
+    "eligible layers require all nonresident groups initially ready in RAM",
+    "CPU row budget may move freely among tokens within one layer",
+    "no increase in aggregate CPU rows per layer",
+    "fixed selected routes/cache state",
+    "ignores CPU/GPU cost, overlap, admission changes and planner overhead"
+  ],
+  "window_totals": {
+    "T3": {
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 19,
+        "host_response_required": 19
+      },
+      "multiplicity": {
+        "GPU_only_fetched": {
+          "1": 1783,
+          "2": 165,
+          "3": 6
+        },
+        "all_fetched": {
+          "1": 1783,
+          "2": 241,
+          "3": 11
+        },
+        "permanent_fetch": {
+          "1": 1207,
+          "2": 194,
+          "3": 10
+        },
+        "resident": {
+          "3": 1046,
+          "1": 9152,
+          "2": 3138
+        },
+        "CPU_only": {
+          "1": 3204,
+          "2": 59,
+          "3": 2
+        },
+        "transient_fetch": {
+          "1": 576,
+          "2": 47,
+          "3": 1
+        },
+        "mixed": {
+          "2": 76,
+          "3": 5
+        }
+      },
+      "layers": 1008,
+      "rows": 24192,
+      "logical_groups": 18636,
+      "cpu_rows": 3410,
+      "fetched_groups": 2035,
+      "fetched_bytes": 19860946944,
+      "eligible_layers": 989,
+      "eligible_fetched_bytes": 19176947712,
+      "fixed_budget_removable_bytes_upper": 851902464,
+      "fixed_budget_rows_bound_bytes": 1275592704,
+      "cpu_only_repeated_groups": 61,
+      "cpu_only_repeated_rows": 124,
+      "mixed_groups": 81,
+      "eligible_copy_reduction_fraction_upper": 0.044423256338490244,
+      "all_copy_reduction_fraction_upper": 0.042893345740363104
+    },
+    "T5": {
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 30,
+        "host_response_required": 30
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 3736,
+          "2": 142,
+          "3": 6
+        },
+        "resident": {
+          "4": 688,
+          "1": 7553,
+          "2": 2867,
+          "3": 1253,
+          "5": 339
+        },
+        "GPU_only_fetched": {
+          "1": 2059,
+          "2": 243,
+          "3": 38,
+          "4": 4
+        },
+        "all_fetched": {
+          "1": 2059,
+          "3": 58,
+          "2": 386,
+          "4": 6
+        },
+        "permanent_fetch": {
+          "1": 976,
+          "2": 228,
+          "3": 44,
+          "4": 3
+        },
+        "transient_fetch": {
+          "1": 1083,
+          "3": 14,
+          "2": 158,
+          "4": 3
+        },
+        "mixed": {
+          "3": 20,
+          "2": 143,
+          "4": 2
+        }
+      },
+      "layers": 714,
+      "rows": 28560,
+      "logical_groups": 19093,
+      "cpu_rows": 4211,
+      "fetched_groups": 2509,
+      "fetched_bytes": 24438374400,
+      "eligible_layers": 684,
+      "eligible_fetched_bytes": 22932357120,
+      "fixed_budget_removable_bytes_upper": 2351824896,
+      "fixed_budget_rows_bound_bytes": 2946367488,
+      "cpu_only_repeated_groups": 148,
+      "cpu_only_repeated_rows": 302,
+      "mixed_groups": 165,
+      "eligible_copy_reduction_fraction_upper": 0.10255486968449931,
+      "all_copy_reduction_fraction_upper": 0.09623491552695093
+    }
+  },
+  "totals": {
+    "T3/GU12/D12": {
+      "layers": 72,
+      "rows": 1728,
+      "logical_groups": 1606,
+      "cpu_rows": 513,
+      "fetched_groups": 390,
+      "fetched_bytes": 5520752640,
+      "eligible_layers": 69,
+      "eligible_fetched_bytes": 5294260224,
+      "fixed_budget_removable_bytes_upper": 141557760,
+      "fixed_budget_rows_bound_bytes": 141557760,
+      "cpu_only_repeated_groups": 4,
+      "cpu_only_repeated_rows": 8,
+      "mixed_groups": 6,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 3,
+        "host_response_required": 3
+      },
+      "multiplicity": {
+        "GPU_only_fetched": {
+          "1": 369,
+          "2": 15
+        },
+        "all_fetched": {
+          "1": 369,
+          "2": 20,
+          "3": 1
+        },
+        "permanent_fetch": {
+          "1": 150,
+          "2": 9
+        },
+        "resident": {
+          "3": 10,
+          "1": 627,
+          "2": 76
+        },
+        "CPU_only": {
+          "1": 499,
+          "2": 4
+        },
+        "transient_fetch": {
+          "1": 219,
+          "2": 11,
+          "3": 1
+        },
+        "mixed": {
+          "2": 5,
+          "3": 1
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.026737967914438502,
+      "all_copy_reduction_fraction_upper": 0.02564102564102564
+    },
+    "T3/GU11/D11": {
+      "layers": 72,
+      "rows": 1728,
+      "logical_groups": 1535,
+      "cpu_rows": 389,
+      "fetched_groups": 296,
+      "fetched_bytes": 3200778240,
+      "eligible_layers": 70,
+      "eligible_fetched_bytes": 3081830400,
+      "fixed_budget_removable_bytes_upper": 140574720,
+      "fixed_budget_rows_bound_bytes": 151388160,
+      "cpu_only_repeated_groups": 6,
+      "cpu_only_repeated_rows": 12,
+      "mixed_groups": 8,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 2,
+        "host_response_required": 2
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 369,
+          "2": 6
+        },
+        "resident": {
+          "1": 713,
+          "2": 135,
+          "3": 16
+        },
+        "GPU_only_fetched": {
+          "1": 276,
+          "2": 12
+        },
+        "all_fetched": {
+          "1": 276,
+          "2": 20
+        },
+        "permanent_fetch": {
+          "1": 131,
+          "2": 13
+        },
+        "transient_fetch": {
+          "1": 145,
+          "2": 7
+        },
+        "mixed": {
+          "2": 8
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.0456140350877193,
+      "all_copy_reduction_fraction_upper": 0.04391891891891892
+    },
+    "T3/GU10/D10": {
+      "layers": 864,
+      "rows": 20736,
+      "logical_groups": 15495,
+      "cpu_rows": 2508,
+      "fetched_groups": 1349,
+      "fetched_bytes": 11139416064,
+      "eligible_layers": 850,
+      "eligible_fetched_bytes": 10800857088,
+      "fixed_budget_removable_bytes_upper": 569769984,
+      "fixed_budget_rows_bound_bytes": 982646784,
+      "cpu_only_repeated_groups": 51,
+      "cpu_only_repeated_rows": 104,
+      "mixed_groups": 67,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 14,
+        "host_response_required": 14
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 2336,
+          "2": 49,
+          "3": 2
+        },
+        "resident": {
+          "1": 7812,
+          "2": 2927,
+          "3": 1020
+        },
+        "GPU_only_fetched": {
+          "1": 1138,
+          "2": 138,
+          "3": 6
+        },
+        "all_fetched": {
+          "1": 1138,
+          "2": 201,
+          "3": 10
+        },
+        "permanent_fetch": {
+          "1": 926,
+          "2": 172,
+          "3": 10
+        },
+        "transient_fetch": {
+          "1": 212,
+          "2": 29
+        },
+        "mixed": {
+          "2": 63,
+          "3": 4
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.052752293577981654,
+      "all_copy_reduction_fraction_upper": 0.05114899925871016
+    },
+    "T5/GU12/D12": {
+      "layers": 51,
+      "rows": 2040,
+      "logical_groups": 1774,
+      "cpu_rows": 622,
+      "fetched_groups": 473,
+      "fetched_bytes": 6695682048,
+      "eligible_layers": 48,
+      "eligible_fetched_bytes": 6299320320,
+      "fixed_budget_removable_bytes_upper": 481296384,
+      "fixed_budget_rows_bound_bytes": 481296384,
+      "cpu_only_repeated_groups": 13,
+      "cpu_only_repeated_rows": 26,
+      "mixed_groups": 22,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 3,
+        "host_response_required": 3
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 574,
+          "2": 13
+        },
+        "resident": {
+          "4": 3,
+          "1": 565,
+          "2": 125,
+          "3": 20,
+          "5": 1
+        },
+        "GPU_only_fetched": {
+          "1": 405,
+          "2": 43,
+          "3": 3
+        },
+        "all_fetched": {
+          "1": 405,
+          "3": 5,
+          "2": 62,
+          "4": 1
+        },
+        "permanent_fetch": {
+          "1": 93,
+          "2": 28,
+          "3": 2
+        },
+        "transient_fetch": {
+          "1": 312,
+          "3": 3,
+          "2": 34,
+          "4": 1
+        },
+        "mixed": {
+          "3": 2,
+          "2": 19,
+          "4": 1
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.07640449438202247,
+      "all_copy_reduction_fraction_upper": 0.07188160676532769
+    },
+    "T5/GU11/D11": {
+      "layers": 51,
+      "rows": 2040,
+      "logical_groups": 1679,
+      "cpu_rows": 503,
+      "fetched_groups": 364,
+      "fetched_bytes": 3936092160,
+      "eligible_layers": 45,
+      "eligible_fetched_bytes": 3503554560,
+      "fixed_budget_removable_bytes_upper": 367656960,
+      "fixed_budget_rows_bound_bytes": 367656960,
+      "cpu_only_repeated_groups": 15,
+      "cpu_only_repeated_rows": 30,
+      "mixed_groups": 18,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 6,
+        "host_response_required": 6
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 454,
+          "2": 15
+        },
+        "resident": {
+          "1": 625,
+          "3": 44,
+          "4": 9,
+          "2": 164,
+          "5": 4
+        },
+        "GPU_only_fetched": {
+          "1": 317,
+          "2": 27,
+          "3": 2
+        },
+        "all_fetched": {
+          "1": 317,
+          "2": 43,
+          "3": 4
+        },
+        "permanent_fetch": {
+          "1": 83,
+          "2": 16,
+          "3": 2
+        },
+        "transient_fetch": {
+          "1": 234,
+          "2": 27,
+          "3": 2
+        },
+        "mixed": {
+          "2": 16,
+          "3": 2
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.10493827160493827,
+      "all_copy_reduction_fraction_upper": 0.09340659340659341
+    },
+    "T5/GU10/D10": {
+      "layers": 612,
+      "rows": 24480,
+      "logical_groups": 15640,
+      "cpu_rows": 3086,
+      "fetched_groups": 1672,
+      "fetched_bytes": 13806600192,
+      "eligible_layers": 591,
+      "eligible_fetched_bytes": 13129482240,
+      "fixed_budget_removable_bytes_upper": 1502871552,
+      "fixed_budget_rows_bound_bytes": 2097414144,
+      "cpu_only_repeated_groups": 120,
+      "cpu_only_repeated_rows": 246,
+      "mixed_groups": 125,
+      "veto_layers": {
+        "initial_RAM_pending_demotion": 21,
+        "host_response_required": 21
+      },
+      "multiplicity": {
+        "CPU_only": {
+          "1": 2708,
+          "2": 114,
+          "3": 6
+        },
+        "resident": {
+          "3": 1189,
+          "1": 6363,
+          "2": 2578,
+          "5": 334,
+          "4": 676
+        },
+        "GPU_only_fetched": {
+          "1": 1337,
+          "2": 173,
+          "3": 33,
+          "4": 4
+        },
+        "all_fetched": {
+          "1": 1337,
+          "2": 281,
+          "3": 49,
+          "4": 5
+        },
+        "permanent_fetch": {
+          "1": 800,
+          "2": 184,
+          "3": 40,
+          "4": 3
+        },
+        "transient_fetch": {
+          "1": 537,
+          "2": 97,
+          "4": 2,
+          "3": 9
+        },
+        "mixed": {
+          "2": 108,
+          "3": 16,
+          "4": 1
+        }
+      },
+      "eligible_copy_reduction_fraction_upper": 0.11446540880503145,
+      "all_copy_reduction_fraction_upper": 0.10885167464114832
+    }
+  },
+  "raw_trace_sha256": "3b996057506d3bc073491f8e860045fc7d1de450da06f9be6c68a9a35bffba49"
+}

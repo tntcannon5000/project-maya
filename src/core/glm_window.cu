@@ -722,6 +722,65 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             }
             return mt;
         };
+        // Deliberately synchronous metadata capture, never a runtime planner.
+        // Snapshot device tiers BEFORE the first route can promote an expert.
+        // Ring requests are immutable until a later route reuses their slots;
+        // this full-layer scope has at most eight requests and no intervening
+        // layer, so the post-route drain below can read their actual masks.
+        static const char* union_diag_prefix = getenv("MAYA_WIN_UNION_DIAG");
+        const bool union_diag = union_diag_prefix != nullptr && union_diag_prefix[0] != '\0';
+        std::vector<unsigned long long> union_gpu, union_ram;
+        std::vector<int> union_ram_state, union_ram_owned, union_ram_pending, union_ram_ready;
+        unsigned int union_seq = 0;
+        if (union_diag) {
+            if (part != 0 || t0 != 0 || T != W.T || T < 2 || T > kWinMax || !row_scratch ||
+                !reuse || keep < g.n_exp_used || W.pipe_t >= 0 || g.n_exp_used != 8) {
+                err = "MAYA_WIN_UNION_DIAG requires full-layer complete top-8 windows, row scratch and reuse";
+                return false;
+            }
+            union_gpu.resize((size_t) g.n_expert);
+            union_ram.resize((size_t) g.n_expert);
+            const size_t first = (size_t) il * g.n_expert;
+            if (!glmfast::cuda_ok(cudaMemcpyAsync(union_gpu.data(), md.tab + first,
+                                                  union_gpu.size() * sizeof(union_gpu[0]),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic initial GPU tier", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(union_ram.data(), md.tab + md.n_keys + first,
+                                                  union_ram.size() * sizeof(union_ram[0]),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic initial RAM tier", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(&union_seq, md.seq, sizeof(union_seq),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic initial sequence", err) ||
+                !glmfast::cuda_ok(cudaStreamSynchronize(s), "union diagnostic initial tier drain", err)) return false;
+            union_ram_state.assign((size_t) g.n_expert, -1);
+            union_ram_owned.assign((size_t) g.n_expert, 0);
+            union_ram_pending.assign((size_t) g.n_expert, 0);
+            union_ram_ready.assign((size_t) g.n_expert, 0);
+            // A published/requestable pointer is not evidence that a D2H has
+            // finished. Only independently owned, ready states qualify here;
+            // pending demotions remain explicit and do not become RAM-ready
+            // just because the diagnostic delayed the following routes.
+            std::lock_guard<std::mutex> lk(F->mu);
+            const int cls = F->layer_rc[(size_t) il];
+            if (cls >= 0) {
+                const auto& R = F->rc[(size_t) cls];
+                for (int e = 0; e < g.n_expert; ++e) {
+                    const size_t key = first + (size_t) e;
+                    const int rs = F->ram_of[key];
+                    if (rs >= 0 && rs < R.n) {
+                        union_ram_state[(size_t) e] = (int) R.st[(size_t) rs];
+                        union_ram_owned[(size_t) e] = R.key[(size_t) rs] == (int) key &&
+                            union_ram[(size_t) e] == (unsigned long long) (R.base + (size_t) rs * R.stride);
+                    }
+                    for (const auto& d : F->draining)
+                        if (d.key == (int) key) union_ram_pending[(size_t) e] = 1;
+                    for (const auto& b : F->bg)
+                        if (!b.up && b.key == (int) key) union_ram_pending[(size_t) e] = 1;
+                    const int state = union_ram_state[(size_t) e];
+                    union_ram_ready[(size_t) e] = union_ram[(size_t) e] != 0ull &&
+                        union_ram_owned[(size_t) e] && !union_ram_pending[(size_t) e] &&
+                        (state == FastState::kRHold || state == FastState::kRPin || state == FastState::kRRelease);
+                }
+            }
+        }
         // this layer's scratch claims (word 1 stays sticky): all 8 slots free, or the group's 4 (words 8 / 9 hold the
         // claim words that leave a group only its own slots free)
         unsigned int* scr = W.scr + (gid == 1 ? 2 : 0);
@@ -770,6 +829,63 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             if (W.uid != nullptr)
                 cudaMemcpyAsync(W.uid + ((size_t) (il - l0_) * kWinMax + t) * 8, mt.plan_id, 8 * sizeof(int),
                                 cudaMemcpyDeviceToDevice, s);
+        }
+        if (union_diag) {
+            constexpr int cap = kWinMax * 8;
+            std::array<int, cap> ids{};
+            std::array<unsigned long long, cap> ptr{}, source{};
+            const size_t entries = (size_t) T * 8;
+            if (!glmfast::cuda_ok(cudaMemcpyAsync(ids.data(), W.mplan_id, entries * sizeof(ids[0]),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic IDs", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(ptr.data(), W.mplan_ptr, entries * sizeof(ptr[0]),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic GPU plans", err) ||
+                !glmfast::cuda_ok(cudaMemcpyAsync(source.data(), W.mfetch, entries * sizeof(source[0]),
+                                                  cudaMemcpyDeviceToHost, s), "union diagnostic copy owners", err) ||
+                !glmfast::cuda_ok(cudaStreamSynchronize(s), "union diagnostic route drain", err)) return false;
+            static thread_local std::unique_ptr<FILE, int (*)(FILE*)> file(nullptr, std::fclose);
+            if (!file) {
+                const std::string path = std::string(union_diag_prefix) + ".cuda" + std::to_string(dev_) + ".csv";
+                file.reset(std::fopen(path.c_str(), "w"));
+                if (!file) { err = "union diagnostic cannot open " + path; return false; }
+                std::fprintf(file.get(), "device,p0,layer,T,gu_type,down_type,blob,seq,token,rank,id,"
+                             "initial_gpu,initial_ram,ram_state,ram_owned,ram_pending,ram_ready,"
+                             "cpu,miss,skip,promo,fetch_mask,gpu_ptr,fetch_src,cpu_src,copy_owner,permanent\n");
+                std::fprintf(stderr, "maya union diagnostic CUDA%d: %s; synchronous tier/route snapshots, "
+                                     "not throughput evidence\n", dev_, path.c_str());
+            }
+            for (int t = 0; t < T; ++t) {
+                const unsigned int sequence = union_seq + 1u + (unsigned int) t;
+                const auto& rq = F->ring_h[sequence % gf::kRingSize];
+                if (rq.seq != sequence || rq.layer != il || rq.win != t || rq.win_n != T || rq.error != 0) {
+                    err = "union diagnostic request identity/retirement mismatch"; return false;
+                }
+                for (int i = 0; i < 8; ++i) {
+                    const int at = 8 * t + i, id = ids[(size_t) at];
+                    if (id < 0 || id >= g.n_expert || rq.ids[i] != id) {
+                        err = "union diagnostic selected ID mismatch"; return false;
+                    }
+                    int owner = -1;
+                    if (ptr[(size_t) at] != 0ull)
+                        for (int j = 0; j < T * 8; ++j)
+                            if (ptr[(size_t) j] == ptr[(size_t) at] && source[(size_t) j] != 0ull) {
+                                if (owner >= 0) { err = "union diagnostic duplicate copy owner"; return false; }
+                                owner = j;
+                            }
+                    std::fprintf(file.get(), "%d,%lld,%d,%d,%d,%d,%llu,%u,%d,%d,%d,"
+                                 "%llu,%llu,%d,%d,%d,%d,%u,%u,%u,%u,%u,%llu,%llu,%llu,%d,%d\n",
+                                 dev_, (long long) W.p0, il, T, Ly.exl3 ? -1 : Ly.gu_type, Ly.exl3 ? -1 : Ly.d_type,
+                                 (unsigned long long) Ly.blob, sequence, t, i, id,
+                                 union_gpu[(size_t) id], union_ram[(size_t) id], union_ram_state[(size_t) id],
+                                 union_ram_owned[(size_t) id], union_ram_pending[(size_t) id], union_ram_ready[(size_t) id],
+                                 (rq.cpu_mask >> i) & 1u, (rq.miss_mask >> i) & 1u, (rq.skip_mask >> i) & 1u,
+                                 (rq.promo_mask >> i) & 1u, (rq.fetch_mask >> i) & 1u,
+                                 ptr[(size_t) at], source[(size_t) at], rq.cpu_src[i], owner,
+                                 F->lp[(size_t) il].slot_index(ptr[(size_t) at]) >= 0 ? 1 : 0);
+                }
+            }
+            if (std::fflush(file.get()) != 0 || std::ferror(file.get())) {
+                err = "union diagnostic write failed"; return false;
+            }
         }
         if (component_fetch) {
             // mfetch and mplan_ptr are [T][8] arrays. The existing component

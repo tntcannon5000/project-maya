@@ -158,7 +158,9 @@ void timing(int ni, int no, int nc, const cudaDeviceProp& prop) {
 
 int main(int argc, char** argv) try {
     const bool bench = argc > 1 && std::string(argv[1]) == "--bench";
-    if (argc > 1 && !bench) throw std::runtime_error("usage: imma_q4_feasibility [--bench]");
+    const bool model_shapes = argc > 1 && std::string(argv[1]) == "--model-shapes";
+    if (argc > 1 && !bench && !model_shapes)
+        throw std::runtime_error("usage: imma_q4_feasibility [--bench|--model-shapes]");
 #ifdef _WIN32
     _putenv_s("STRATA_GLM_MV_TILED", "1");
     _putenv_s("STRATA_GLM_MV_GENERIC", "");
@@ -182,6 +184,12 @@ int main(int argc, char** argv) try {
     if (gf::launch_errors()) throw std::runtime_error("linked engine recorded launch errors");
     std::printf("PASS %d cases: all valid floats and padding bitwise equal to mvc and singleton mv\n", count);
     if (bench) for (int ni : {4096, 8192, 12288}) for (int nc : {3, 5}) timing(ni, 8192, nc, prop);
+    if (model_shapes) {
+        for (int ni : {8192, 12288, 16384}) for (int seed : {2, 3})
+            if (!parity(ni, 4096, 5, seed)) return 1;
+        std::printf("PASS six additional exact model-shape cases (T5, N4096)\n");
+        for (int ni : {8192, 12288, 16384}) timing(ni, 4096, 5, prop);
+    }
     check(cudaDeviceSynchronize());
     return 0;
 } catch (const std::exception& e) {

@@ -1,0 +1,7 @@
+{
+  "binary_sha256": "fd8040c058498fc6e0307fa2e0b04e7e5d8c6007cdbd00ce9f08abaf25c0b937",
+  "command": "build-imma-q4/imma_q4_feasibility.exe --model-shapes",
+  "synthetic_cases": 246,
+  "bit_exact": true,
+  "whole_model_integration": false
+}

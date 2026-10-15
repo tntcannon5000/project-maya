@@ -1,0 +1,6 @@
+Device NVIDIA GeForce RTX 5090 sm_120, strict bitwise comparison against linked engine archive
+PASS 240 cases: all valid floats and padding bitwise equal to mvc and singleton mv
+PASS six additional exact model-shape cases (T5, N4096)
+TIMING 4096x8192 nc=5 ring=11 198.0MiB L2=96.0MiB engine_us=30.042/30.148 trial_us=28.356/28.401
+TIMING 4096x12288 nc=5 ring=8 216.0MiB L2=96.0MiB engine_us=41.565/46.285 trial_us=44.157/45.325
+TIMING 4096x16384 nc=5 ring=6 216.0MiB L2=96.0MiB engine_us=53.671/58.919 trial_us=48.444/56.315
