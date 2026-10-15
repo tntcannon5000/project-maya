@@ -696,6 +696,10 @@ bool Glm5Model::fast_moe_window(int il, int t0, int T, int part, int gid, std::s
             val(win_component_fetch_enabled()); val(F->win_fetch_stage_n);
             val(F->md.gu_phase); val(F->md.gu_row_first); val(F->md.gu_row_count);
             val(F->md.down_row_first); val(F->md.down_row_count); val(F->md.cpu_phase_on); val(F->md.win_prev_n);
+            // Upstream can omit transfers while all experts are resident. A
+            // later prompt may lend pool slots, so that captured schedule must
+            // be invalidated when residency changes at a boundary.
+            val(F->all_resident);
             // Grouping/exact-column/reuse/promotion options and geometry are
             // process/model constants. W/F allocation changes clear the cache.
             const auto read_counts = [&]() -> Graphs::Accounts {
