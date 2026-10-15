@@ -178,3 +178,10 @@ Captured layer3 last-row route weights, expert outputs, initial/final FFN and ch
 - Reconciled recorded confidence-policy round totals against wall time. Short coding needs 5.6% of verification time removed for 60 TPS; longer coding needs 36.7% across verification/ordinary fallback, or 65.1% if only nonzero-draft windows improve. Removing all drafter time gives optimistic ceilings of 58.58/42.19 TPS, not measured results.
 - Source confirms zero-draft rounds already take ordinary forward. No redundant one-token window to remove. No new inference matrix, arithmetic/default change, or numerical threshold change.
 - See window-graphs/REMAINING-BUDGET.md and remaining-budget.json. Historical numerical attribution remains open; goal remains active.
+
+## 2026-10-15: MMQ down-stage localization
+
+- Added bounded selected-expert input/post-SwiGLU capture and MMQ geometry. One GPU-only fixture with two resets completed; all eight inputs and hidden vectors exact, five down outputs differ (max 1.788e-7).
+- Captured expert group sizes/max rows change with residency. Source distinguishes fused tiled GU from potentially Stream-K down reductions. This supports, but does not causally prove, shape-dependent down reduction as the source.
+- Both complete combined captures are byte-identical to the previous diagnostic. Actual production combine replay remains exact. No TPS rerun or numerical-threshold/default change.
+- Next discriminator, if needed for attribution: replay one captured down matrix and quantized input with both recorded group geometries. Historical graph failure remains unproven. See window-graphs/MMQ-PRODUCT-LOCALIZATION.md.

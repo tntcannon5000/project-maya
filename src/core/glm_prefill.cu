@@ -2235,6 +2235,8 @@ bool Glm5Model::prefill_half(int64_t p0, int T, std::string& err, const int32_t*
                         S->mq->run(gu, s);
                         gb::swiglu_rows(GU, GU, nrows, nff, g.swiglu_exp, s, 2 * nff);   // (in place: no T x K x n_ff buffer)
                     }
+                    moe_capture.product(GU, S->x+(size_t)(T-1)*E, r0+a, nrows, max_rows,
+                                        i1-i0, Ly.gu_type, Ly.d_type, glu, nff, 2*nff);
                     mmq::quantize(GU, nullptr, M.Hq, Ly.d_type, nff, 2 * nff, nrows, s);
                     mmq::Product dn;
                     dn.w = wbase + (size_t) i0 * stride + Ly.down_off;

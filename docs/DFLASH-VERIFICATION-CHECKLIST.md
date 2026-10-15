@@ -80,3 +80,6 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 
 - [x] Exercise four actual asynchronous upload/CPU-read/retirement/slot-reuse cases; distinguish from full scheduler stress.
 - [x] Reconcile recorded timing budgets and rule out zero-draft window duplication as a performance opportunity.
+
+- [x] Localize selected expert differences after down: all eight prefill input/post-SwiGLU vectors exact; five down outputs differ; actual dispatch geometry recorded.
+- [ ] If claiming Stream-K cause, replay captured down weights/quantized inputs under both geometries; source consistency alone is insufficient.

@@ -1,0 +1,304 @@
+{
+  "cold_sha256": "2e6fa758935e5b24fff17dad6ff5e48a9c2b638030eda8dafe512eaa6a603e28",
+  "warm_sha256": "cc3eed580ee9d660c7c78621a9cffcbc2f4232945b9e2d2a0910b95ae7f82eaf",
+  "shape_fields": [
+    "total_rows",
+    "max_rows",
+    "experts",
+    "gu_type",
+    "down_type",
+    "fused_glu",
+    "nff",
+    "embedding"
+  ],
+  "routes": [
+    {
+      "route": 0,
+      "expert": 61,
+      "cold_shape": [
+        21588,
+        418,
+        124,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        337,
+        93,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 1.7881393432617188e-07,
+        "different_bits": 3349
+      }
+    },
+    {
+      "route": 1,
+      "expert": 237,
+      "cold_shape": [
+        903,
+        262,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        21803,
+        477,
+        79,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 1.4901161193847656e-07,
+        "different_bits": 1177
+      }
+    },
+    {
+      "route": 2,
+      "expert": 217,
+      "cold_shape": [
+        613,
+        250,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        536,
+        156,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 2.9802322387695312e-08,
+        "different_bits": 167
+      }
+    },
+    {
+      "route": 3,
+      "expert": 10,
+      "cold_shape": [
+        6691,
+        477,
+        24,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        5487,
+        391,
+        24,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      }
+    },
+    {
+      "route": 4,
+      "expert": 121,
+      "cold_shape": [
+        21588,
+        418,
+        124,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        14886,
+        209,
+        81,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      }
+    },
+    {
+      "route": 5,
+      "expert": 5,
+      "cold_shape": [
+        6691,
+        477,
+        24,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        14886,
+        209,
+        81,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      }
+    },
+    {
+      "route": 6,
+      "expert": 214,
+      "cold_shape": [
+        718,
+        210,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        536,
+        156,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 5.960464477539063e-08,
+        "different_bits": 3108
+      }
+    },
+    {
+      "route": 7,
+      "expert": 44,
+      "cold_shape": [
+        21588,
+        418,
+        124,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "warm_shape": [
+        460,
+        144,
+        4,
+        12,
+        12,
+        1,
+        2048,
+        4096
+      ],
+      "input": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "post_swiglu": {
+        "max_abs": 0.0,
+        "different_bits": 0
+      },
+      "down_output": {
+        "max_abs": 7.450580596923828e-08,
+        "different_bits": 2042
+      }
+    }
+  ]
+}
