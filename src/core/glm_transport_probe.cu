@@ -2,6 +2,7 @@
 #include "glm_fast_state.hpp"
 #include "strata/kernels/glm_fast.hpp"
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -15,6 +16,10 @@ bool Glm5Model::transport_probe(const std::string&,std::string& err) {
 #else
 __global__ void probe_stamp(unsigned long long* values,int index) {
     unsigned long long t;asm volatile("mov.u64 %0, %%globaltimer;" : "=l"(t));values[index]=t;
+}
+__global__ void probe_scrub(unsigned int* memory,size_t count) {
+    for(size_t at=(size_t)blockIdx.x*blockDim.x+threadIdx.x;at<count;at+=(size_t)gridDim.x*blockDim.x)
+        memory[at]+=1u;
 }
 bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
     auto* F=fast_;
@@ -65,6 +70,112 @@ bool Glm5Model::transport_probe(const std::string& output,std::string& err) {
     gf::MoeDev d{};d.fetch_src=arrays;d.plan_ptr=arrays+8;d.plan_w=weights;d.cpu_flag=flag;d.cpu_part=out;
     FILE* raw=std::fopen(output.c_str(),"w");if(!raw){err="probe output open";return false;}
     std::unique_ptr<FILE,decltype(&std::fclose)> file(raw,&std::fclose);
+    const char* direct_env=std::getenv("MAYA_TRANSFER_DIRECT_ONLY");
+    if(direct_env && std::atoi(direct_env)!=0) {
+        // Isolated actual-address/current-quant-class replay. These records
+        // are decode singleton groups, not a batched-window routing replay.
+        // GPU output is the complete weighted GPU contribution; CPU experts
+        // run concurrently as real contention but are not added to that output.
+        int l2=0;PC(cudaDeviceGetAttribute(&l2,cudaDevAttrL2CacheSize,dev_));
+        const size_t scrub_bytes=2*std::max<size_t>((size_t)std::max(l2,0),96ull<<20);
+        auto* scrub=(unsigned int*)alloc(scrub_bytes);
+        if(!scrub){err="direct probe L2 scrub allocation failed";return false;}
+        PC(cudaMemset(scrub,0,scrub_bytes));
+        const size_t hbytes=(size_t)8*g_.n_ff_exp/32*36;
+        struct Reference {std::vector<float> output;std::vector<unsigned char> hq;};
+        std::vector<Reference> reference(records.size());
+        const auto setup=[&](const FastState::TransferProbe& r,bool direct)->bool {
+            unsigned long long pointers[8]{};
+            for(int i=0;i<r.k;++i)
+                pointers[i]=r.src[i]?(direct?r.src[i]:(unsigned long long)(target+i*maxblob)):r.resident[i];
+            PC(cudaMemcpyAsync(arrays,r.src,sizeof(r.src),cudaMemcpyHostToDevice,z.s));
+            PC(cudaMemcpyAsync(arrays+8,pointers,sizeof(pointers),cudaMemcpyHostToDevice,z.s));
+            PC(cudaMemcpyAsync(weights,r.w,sizeof(r.w),cudaMemcpyHostToDevice,z.s));
+            PC(cudaMemcpyAsync(x,r.x,sizeof(r.x),cudaMemcpyHostToDevice,z.s));
+            PC(cudaMemsetAsync(hq,0,hbytes,z.s));
+            gf::quantize_q8_1(x,xq,4096,z.s);
+            // The stack pointer array remains alive until its upload finishes.
+            PC(cudaStreamSynchronize(z.s));
+            return true;
+        };
+        const auto math=[&](const FastState::TransferProbe& r)->bool {
+            const auto& L=F->L[(size_t)r.layer];
+            if(L.exl3 || (L.gu_type!=10 && L.gu_type!=11 && L.gu_type!=12) ||
+               (L.d_type!=10 && L.d_type!=11 && L.d_type!=12)) {
+                err="direct probe requires native Q2_K/Q3_K/Q4_K";return false;
+            }
+            gf::moe_gate_up(L.gu_type,d,r.k,4096,g_.n_ff_exp,g_.swiglu_exp,xq,hq,nullptr,0,nullptr,0,nullptr,z.s);
+            gf::moe_down(L.d_type,d,r.k,4096,g_.n_ff_exp,r.prefix,hq,nullptr,out,z.s);
+            return true;
+        };
+        // Reference and all validation/readback are outside measured intervals.
+        for(size_t index=0;index<records.size();++index) {
+            const auto& r=records[index];
+            if(!setup(r,false))return false;
+            gf::moe_fetch(d,r.k,r.blob,z.s);
+            if(!math(r))return false;
+            PC(cudaStreamSynchronize(z.s));
+            auto& ref=reference[index];ref.output.resize(4096);ref.hq.resize(hbytes);
+            PC(cudaMemcpy(ref.output.data(),out,4096*sizeof(float),cudaMemcpyDeviceToHost));
+            PC(cudaMemcpy(ref.hq.data(),hq,hbytes,cudaMemcpyDeviceToHost));
+            for(float value:ref.output)if(!std::isfinite(value)) {
+                err="direct probe staged reference has non-finite output at seq="+std::to_string(r.seq);return false;
+            }
+        }
+        std::fprintf(raw,"mode,pass,seq,layer,bytes,cpu_experts,fetch_ms,gpu_window_ms,cpu_ms,wall_ms,split,verified,"
+                         "gu_type,down_type,explicit_copy_bytes,cpu_enabled,exact_hq,l2_scrub_bytes\n");
+        std::fprintf(stderr,"maya direct-RAM probe: current address/quant-class replay, %zu singleton route records, "
+                            "%zu-byte L2 scrub outside timing; CPU output remains separate\n",records.size(),scrub_bytes);
+        for(int mode=0;mode<4;++mode) {
+            const bool direct=(mode&1)!=0,cpu=mode>=2;
+            const char* name=mode==0?"stage_gpu":mode==1?"direct_gpu":mode==2?"stage_cpu_gpu":"direct_cpu_gpu";
+            // Whole history between repetitions limits CPU-source hot-cache bias.
+            for(int pass=-1;pass<2;++pass)for(size_t index=0;index<records.size();++index) {
+                const auto& r=records[index];const auto& L=F->L[(size_t)r.layer];
+                if(!setup(r,direct))return false;
+                probe_scrub<<<256,256,0,z.s>>>(scrub,scrub_bytes/sizeof(*scrub));
+                PC(cudaStreamSynchronize(z.s));
+                PC(cudaStreamBeginCapture(z.s,cudaStreamCaptureModeThreadLocal));
+                probe_stamp<<<1,1,0,z.s>>>(stamps,0);
+                if(!direct)gf::moe_fetch(d,r.k,r.blob,z.s);
+                probe_stamp<<<1,1,0,z.s>>>(stamps,1);
+                if(!math(r))return false;
+                probe_stamp<<<1,1,0,z.s>>>(stamps,4);
+                PC(cudaStreamEndCapture(z.s,&z.graph));
+                PC(cudaGraphInstantiate(&z.exec,z.graph,nullptr,nullptr,0));
+                int nc=0;size_t bytes=0;const uint8_t* cb[8];float cw[8];
+                for(int i=0;i<r.k;++i) {
+                    if(r.src[i])bytes+=r.blob;
+                    if((r.cpu_mask>>i)&1u){cb[nc]=(const uint8_t*)r.cpu_src[i];cw[nc++]=r.w[i];}
+                }
+                float cpu_out[4096]{};
+                const auto begin=std::chrono::steady_clock::now();
+                PC(cudaGraphLaunch(z.exec,z.s));
+                const auto c0=std::chrono::steady_clock::now();
+                if(cpu && nc)fast_cpu_experts(r.layer,nc,cb,cw,r.x,cpu_out);
+                const double cpu_ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-c0).count();
+                PC(cudaStreamSynchronize(z.s));
+                const double wall=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-begin).count();
+                unsigned long long ts[5]{};PC(cudaMemcpy(ts,stamps,sizeof(ts),cudaMemcpyDeviceToHost));
+                std::vector<float> actual(4096);std::vector<unsigned char> actual_hq(hbytes);
+                PC(cudaMemcpy(actual.data(),out,4096*sizeof(float),cudaMemcpyDeviceToHost));
+                PC(cudaMemcpy(actual_hq.data(),hq,hbytes,cudaMemcpyDeviceToHost));
+                for(float value:actual)if(!std::isfinite(value)){err="direct probe non-finite GPU output";return false;}
+                if(cpu && nc)for(float value:cpu_out)if(!std::isfinite(value)){err="direct probe non-finite CPU output";return false;}
+                if(std::memcmp(actual.data(),reference[index].output.data(),4096*sizeof(float)) ||
+                   std::memcmp(actual_hq.data(),reference[index].hq.data(),hbytes)) {
+                    err=std::string("direct probe exact output/hq mismatch mode=")+name+" seq="+std::to_string(r.seq);return false;
+                }
+                if(pass>=0)std::fprintf(raw,"%s,%d,%u,%d,%zu,%d,%.6f,%.6f,%.6f,%.6f,0,1,%d,%d,%zu,%d,1,%zu\n",
+                    name,pass,r.seq,r.layer,bytes,nc,direct?0.0:(ts[1]-ts[0])/1e6,
+                    (ts[4]-ts[0])/1e6,cpu_ms,wall,L.gu_type,L.d_type,direct?size_t(0):bytes,cpu?1:0,scrub_bytes);
+                PC(cudaGraphExecDestroy(z.exec));z.exec=nullptr;
+                PC(cudaGraphDestroy(z.graph));z.graph=nullptr;
+            }
+            if(std::fflush(raw)!=0 || std::ferror(raw)){err="direct probe write failed";return false;}
+        }
+        return true;
+    }
     std::fprintf(raw,"mode,pass,seq,layer,bytes,cpu_experts,fetch_ms,gpu_window_ms,cpu_ms,wall_ms,split,verified\n");
     // Each mode uses the identical sequence, pinned addresses and quant types.
     // GPU work reproduces routed gate/up and down, not whole-layer attention.

@@ -222,3 +222,13 @@ Completed one 6,793-token coding task with corrected control and grouped/HC/comp
 Added an explicit upstream-confidence policy request to the benchmark tool and configurable fixed-prefix/batched-prefill support to the logit fixture. The initial long fixture used serial forward and was deliberately interrupted before logits; its replacement uses serving prefill semantics. Combined candidate passes7,434,240 exact controlled-GPU logits after the6793-token prefix, including partial commits/repeats.
 
 Confidence policy engaged (42/42 drafts accepted;53of86 rounds skipped drafting), but differs from ordinary output history; its37.65TPS is not matched speed evidence. VRAM audit finds only~1.4GiB potentially lendable futureKV at short contexts, requiring coordinated ownership rather than a safe isolated allocation change. Direct mapped-RAM arithmetic for transient experts is now under source review; this does not eliminate PCIe traffic.
+
+## Direct mapped-RAM expert arithmetic: measured and rejected
+
+Implemented isolated full native arithmetic replay, four staged/direct x CPU
+contention modes, exact output/HQ checks outside timing. One16-token fixed
+coding fixture, two repeats;2688 measured layer records exact. With CPU work,
+GPU timeline7.872->14.318ms and wall10.705->16.496ms per token-equivalent.
+AllQ2/Q3/Q4 classes lose; do not integrate or sweep. Logical225.56MB remains
+host-read traffic even with no explicit copy. This is replay, not servingTPS.
+See direct-ram-probe/RESULTS.md. Retained candidate/defaults unchanged.

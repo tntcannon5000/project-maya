@@ -92,3 +92,13 @@ The first gate is complete copied versus direct GU/down arithmetic on actual
 recorded sources with identical outputs and CPU co-execution. No serving-path
 integration unless that decisive feasibility test shows worthwhile headroom.
 See DIRECT-RAM-FEASIBILITY.md.
+
+## Direct mapped-RAM expert arithmetic: measured and rejected
+
+Implemented isolated full native arithmetic replay, four staged/direct x CPU
+contention modes, exact output/HQ checks outside timing. One16-token fixed
+coding fixture, two repeats;2688 measured layer records exact. With CPU work,
+GPU timeline7.872->14.318ms and wall10.705->16.496ms per token-equivalent.
+AllQ2/Q3/Q4 classes lose; do not integrate or sweep. Logical225.56MB remains
+host-read traffic even with no explicit copy. This is replay, not servingTPS.
+See direct-ram-probe/RESULTS.md. Retained candidate/defaults unchanged.

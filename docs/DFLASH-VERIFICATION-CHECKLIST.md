@@ -43,5 +43,5 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Qualify full combination after 6,793 occupied tokens: 7,434,240 exact GPU logits.
 - [x] Record longer coding cold-prefill/ordinary/forced-width/lifecycle comparison.
 - [x] Audit transient mapped-RAM arithmetic ownership and prior experiments.
-- [ ] Measure complete direct-RAM arithmetic versus staged arithmetic, with exact outputs and CPU co-execution.
-- [ ] Integrate only if this bounded feasibility gate identifies material headroom.
+- [x] Measure complete direct-RAM arithmetic versus staged arithmetic, with exact outputs and CPU co-execution: reject substantial slowdown across all quant classes.
+- [x] Apply direct-RAM integration gate: no headroom demonstrated, no serving integration.
