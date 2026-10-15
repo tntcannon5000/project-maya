@@ -243,6 +243,7 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
                           src/kernels/cuda/glm_fast.cu
                           src/kernels/cuda/glm_batch.cu
                           src/kernels/cuda/exl3.cu
+                          src/kernels/cuda/exl3_legacy.cu
                           src/kernels/cuda/glm_kv_stream.cu
                           src/kernels/ngram.cpp
                           src/ngram/ple_reader.cpp
@@ -337,7 +338,7 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
   add_library(strata_engine STATIC src/core/layer.cpp src/core/session.cpp src/core/expert_source.cpp src/core/remote_experts.cpp
     src/core/expert_cache.cpp src/core/native_head.cpp src/core/native_dense.cpp src/core/verify.cpp src/core/mtp.cpp
     src/core/glm_model.cu src/core/glm_fast_path.cu src/core/glm_prefill.cu src/core/glm_multi.cu src/core/glm_rows.cu
-    src/core/glm_window.cu src/core/glm_dflash.cu src/core/glm_transport_probe.cu)
+    src/core/glm_window.cu src/core/glm_dflash.cu src/core/glm_transport_probe.cu src/core/glm_mtp.cu)
   target_include_directories(strata_engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
   target_link_libraries(strata_engine PUBLIC strata_core strata_kernels strata_kernels_cpu ${_strata_gpu_runtime_target})
   option(MAYA_TRANSFER_LAB "Build the fixed-input transfer investigation driver" OFF)
@@ -992,8 +993,10 @@ if(STRATA_NATIVE_EXPERTS)
     endif()
     set(_strata_mmq_sources
       src/prefill/moe_mmq.cu
+      src/prefill/moe_fused_rdna4.cu
       src/prefill/ggml_cuda_host.cu
       "${_strata_mmq}/quantize.cu")
+    target_compile_definitions(strata_engine PRIVATE STRATA_HIP_PREFILL_FUSED=1)
     foreach(_t q2_0 iq2_xxs iq2_xs iq2_s iq3_xxs iq3_s iq4_nl iq4_xs q8_0 iq1_s q2_k q3_k q4_k q5_k q6_k)
       list(APPEND _strata_mmq_sources "${_strata_mmq}/template-instances/mmq-instance-${_t}.cu")
     endforeach()
@@ -1016,6 +1019,12 @@ if(STRATA_NATIVE_EXPERTS)
     add_test(NAME hip_prefill_mmq_parity COMMAND hip_prefill_mmq_parity)
     set_tests_properties(hip_prefill_mmq_parity PROPERTIES TIMEOUT 120)
     list(APPEND _strata_hip_tests hip_prefill_mmq_parity)
+    add_executable(hip_prefill_fused_parity tests/hip/prefill_fused_parity.cpp)
+    target_include_directories(hip_prefill_fused_parity PRIVATE "${_strata_gg}/include")
+    target_link_libraries(hip_prefill_fused_parity PRIVATE strata_prefill strata_kernels)
+    add_test(NAME hip_prefill_fused_parity COMMAND hip_prefill_fused_parity)
+    set_tests_properties(hip_prefill_fused_parity PROPERTIES TIMEOUT 180 SKIP_RETURN_CODE 77)
+    list(APPEND _strata_hip_tests hip_prefill_fused_parity)
   endif()
   if(STRATA_ENABLE_HIP)
     # Optional real-model diagnostic: pass the GGUF shard containing the native PLE key.
@@ -1061,6 +1070,10 @@ if(STRATA_BUILD_TESTS)
   add_executable(pool_stress src/kernels/cpu/pool_stress.cpp)
   target_link_libraries(pool_stress PRIVATE strata_kernels_cpu)
   add_test(NAME pool_stress COMMAND pool_stress 20)
+  # the EXL3 CPU lane's tiers on random experts: a band's compute speed, and an expert's time on T threads from DRAM
+  # in the engine's jobs (what the start-up timing compares with a copy over PCIe) - a benchmark, not a test
+  add_executable(exl3_cpu_bench src/kernels/cpu/exl3_cpu_bench.cpp)
+  target_link_libraries(exl3_cpu_bench PRIVATE strata_kernels_cpu)
 
   if(UNIX AND NOT APPLE)
     add_executable(direct_file_async_test tests/platform/direct_file_async.cpp src/platform/direct_file.cpp)

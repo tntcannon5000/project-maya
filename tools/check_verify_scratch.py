@@ -8,6 +8,8 @@ def main():
     global OUT
     ap=argparse.ArgumentParser();ap.add_argument('--cases',default='legacy,candidate')
     ap.add_argument('--out',type=Path,default=OUT)
+    ap.add_argument('--exe',type=Path,default=ROOT/'build/maya_verify_scratch_test.exe',
+                    help='Preserved or current diagnostic binary for cross-revision checks')
     ap.add_argument('--env',action='append',default=[])
     ap.add_argument('--require-exact',action='store_true',help='Fail unless both outputs are finite and bitwise equal')
     ap.add_argument('--tokens-file',type=Path,help='Fixed prompt plus continuation IDs, one integer per line')
@@ -40,7 +42,7 @@ def main():
             env.update(STRATA_GLM_CPU_PLAN='012345678',STRATA_GLM_WIN_ALLCPU='1',
               STRATA_GLM_DFLASH='G:/Models/GLM-5.3-Flash-DFlash2/GLM-5.3-Flash-DFlash2-Q4_K_M.gguf',
               MAYA_WIN_SINGLE_NODE_BATCH='1' if label=='cpu-merged' else '0')
-        cmd=[str(ROOT/'build/maya_verify_scratch_test.exe'),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(tokenfile),str(OUT/(label+'.f32'))]
+        cmd=[str(args.exe.resolve()),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(tokenfile),str(OUT/(label+'.f32'))]
         with (OUT/(label+'.log')).open('w') as log:
             r=subprocess.run(cmd,env=env,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,timeout=600)
         records.append(dict(label=label,returncode=r.returncode,binary_sha256=hashlib.sha256(Path(cmd[0]).read_bytes()).hexdigest(),token_file_sha256=hashlib.sha256(tokenfile.read_bytes()).hexdigest(),token_count=len(ids),env={k:v for k,v in env.items() if k.startswith(('MAYA_','STRATA_','GLM_'))}))
