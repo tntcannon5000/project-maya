@@ -1,10 +1,14 @@
-// Exercise the exact production metadata transition; no model or inference.
-// Event readiness, drained consumers and the metadata lock are caller contracts.
+// Exercise the production metadata transition and bounded actual DMA/slot reuse.
+// No model/inference. The full scheduler and lock interleavings are not exercised.
 #include "../src/core/glm_fast_state.hpp"
 #include <array>
 #include <cstdio>
 #include <cstdlib>
 #include <tuple>
+#include <atomic>
+#include <chrono>
+#include <thread>
+#include <cstring>
 
 using State = strata::core::Glm5Model::FastState;
 using Result = State::PromotionRetirement;
@@ -47,6 +51,78 @@ struct Fixture {
             tables, writes, state.bg_superseded);
     }
 };
+
+static void cuda_check(cudaError_t result) { require(result == cudaSuccess, cudaGetErrorString(result)); }
+struct CopyGate {
+    std::atomic<bool> entered{false}, release{false}, timed_out{false};
+    static void CUDART_CB hold(void* arg) {
+        auto& gate = *static_cast<CopyGate*>(arg);
+        gate.entered.store(true, std::memory_order_release);
+        const auto until = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+        while (!gate.release.load(std::memory_order_acquire)) {
+            if (std::chrono::steady_clock::now() > until) { gate.timed_out = true; break; }
+            std::this_thread::yield();
+        }
+    }
+};
+// Real DMA with bounded host-side gating. Exercises the production retirement
+// method after the caller's event-ready/drained contract, not the whole scheduler.
+static int dma_cases() {
+    constexpr size_t bytes = 1024*1024;
+    uint8_t *host = nullptr, *gpu = nullptr;
+    cudaStream_t stream; cudaEvent_t done;
+    cuda_check(cudaMallocHost(&host, bytes*3)); cuda_check(cudaMalloc(&gpu, bytes*3));
+    cuda_check(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));
+    cuda_check(cudaEventCreateWithFlags(&done, cudaEventDisableTiming));
+    std::vector<uint8_t> observed(bytes), cpu_copy(bytes);
+    for (int scenario=0; scenario<4; ++scenario) {
+        Fixture f;
+        auto& r = f.state.rc[0]; r.base=host;r.stride=bytes;
+        std::memset(host,0x31,bytes);std::memset(host+bytes,0x31,bytes);std::memset(host+2*bytes,0xA6,bytes);
+        f.tables[1]=(unsigned long long)(gpu+bytes);f.tables[5]=(unsigned long long)host;
+        // Demand's newer owner is complete before the older reserved upload.
+        cuda_check(cudaMemcpyAsync(gpu+bytes,host,bytes,cudaMemcpyHostToDevice,stream));
+        cuda_check(cudaStreamSynchronize(stream));
+        if(scenario>0) {
+            f.state.ram_of[1]=1;r.key[1]=1;
+            r.st[1]=scenario==2?State::kRDemote:State::kRHold;
+        }
+        if(scenario==3) {
+            f.evict_winner();f.tables[2]=(unsigned long long)(gpu+bytes);
+            cuda_check(cudaMemcpyAsync(gpu+bytes,host+2*bytes,bytes,cudaMemcpyHostToDevice,stream));
+            cuda_check(cudaStreamSynchronize(stream));
+        }
+        CopyGate gate;
+        cuda_check(cudaLaunchHostFunc(stream,CopyGate::hold,&gate));
+        cuda_check(cudaMemcpyAsync(gpu,host,bytes,cudaMemcpyHostToDevice,stream));
+        cuda_check(cudaEventRecord(done,stream));f.move.ev=done;
+        const auto until=std::chrono::steady_clock::now()+std::chrono::seconds(2);
+        while(!gate.entered.load(std::memory_order_acquire) && std::chrono::steady_clock::now()<until)
+            std::this_thread::yield();
+        require(gate.entered,"copy gate did not engage");
+        const auto before=f.ownership();
+        require(cudaEventQuery(done)==cudaErrorNotReady,"copy event unexpectedly ready");
+        // A CPU consumer still sees immutable old backing while upload is queued.
+        std::thread reader([&]{std::memcpy(cpu_copy.data(),host,bytes);});reader.join();
+        require(std::all_of(cpu_copy.begin(),cpu_copy.end(),[](uint8_t v){return v==0x31;}),"CPU source corrupted");
+        require(f.ownership()==before,"pending upload changed reservations");
+        gate.release.store(true,std::memory_order_release);
+        cuda_check(cudaEventSynchronize(done));require(!gate.timed_out,"gate timed out");
+        cuda_check(cudaMemcpy(observed.data(),gpu,bytes,cudaMemcpyDeviceToHost));
+        require(observed==cpu_copy,"upload bytes do not match pinned source");
+        require(f.run()==Result::Superseded,"DMA-backed retirement failed");
+        require(f.tables[5]==(scenario==2?0ull:(unsigned long long)(host+(scenario?bytes:0))),"RAM publication mismatch");
+        if(scenario)std::memset(host,0xDD,bytes); // released old source can now be reused
+        cuda_check(cudaMemsetAsync(gpu,0xEE,bytes,stream)); // losing destination can now be reused
+        cuda_check(cudaStreamSynchronize(stream));
+        cuda_check(cudaMemcpy(observed.data(),gpu+bytes,bytes,cudaMemcpyDeviceToHost));
+        const uint8_t wanted=scenario==3?0xA6:0x31;
+        require(std::all_of(observed.begin(),observed.end(),[&](uint8_t v){return v==wanted;}),"new GPU owner corrupted by slot reuse");
+    }
+    // Teardown only after the final event/stream is drained above.
+    cuda_check(cudaEventDestroy(done));cuda_check(cudaStreamDestroy(stream));
+    cuda_check(cudaFree(gpu));cuda_check(cudaFreeHost(host));return 4;
+}
 
 int main() {
     int cases = 0;
@@ -116,5 +192,5 @@ int main() {
         require(f.run() == Result::Failed && f.ownership() == before, "double retirement changed ownership");
         ++cases;
     }
-    std::printf("PASS %d production promotion metadata cases; DMA ordering is not covered by this unit test\n", cases);
+    std::printf("PASS %d production promotion metadata cases and %d bounded DMA/slot-reuse cases; full scheduler race stress is not covered\n", cases, dma_cases());
 }

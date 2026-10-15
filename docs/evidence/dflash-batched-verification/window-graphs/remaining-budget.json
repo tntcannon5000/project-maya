@@ -1,0 +1,115 @@
+{
+  "caveat": "Optimistic subtraction budgets on observed histories, not measured counterfactual runs; no routing, acceptance, cache or graph-warmup invariance claim.",
+  "tasks": [
+    {
+      "source": "docs\\evidence\\dflash-batched-verification\\window-graphs\\confidence-expanded-short\\Q4_K_M\\requests.json",
+      "sha256": "6808c5e772c7555bf868e2d7e37c6fd7d8813d8ae97ce103512ad98f256dee1a",
+      "measured_tps": 56.775338212463964,
+      "tokens": 128,
+      "wall_ms": 2254.5,
+      "target_tps": 60,
+      "required_saving_ms": 121.16666666666652,
+      "draft_ms": 69.337,
+      "verify_ms": 2171.137,
+      "other_ms": 14.02599999999984,
+      "zero_draft_overhead_ms": 5.85,
+      "ceiling_if_zero_draft_attempts_free": 56.9230427145176,
+      "ceiling_if_all_drafting_free": 58.576865890553705,
+      "required_fraction_all_verification_removed": 0.055807932280029546,
+      "required_fraction_nonzero_verification_removed": 0.057962999992664854,
+      "widths": [
+        {
+          "drafts": 0,
+          "rounds": 3,
+          "accepted": 0.0,
+          "draft_ms": 5.85,
+          "verify_ms": 80.723,
+          "mean_verify_ms": 26.907666666666668
+        },
+        {
+          "drafts": 1,
+          "rounds": 6,
+          "accepted": 5.0,
+          "draft_ms": 11.635,
+          "verify_ms": 244.61,
+          "mean_verify_ms": 40.76833333333334
+        },
+        {
+          "drafts": 2,
+          "rounds": 4,
+          "accepted": 8.0,
+          "draft_ms": 8.02,
+          "verify_ms": 197.157,
+          "mean_verify_ms": 49.28925
+        },
+        {
+          "drafts": 3,
+          "rounds": 5,
+          "accepted": 15.0,
+          "draft_ms": 10.693999999999999,
+          "verify_ms": 329.315,
+          "mean_verify_ms": 65.863
+        },
+        {
+          "drafts": 4,
+          "rounds": 17,
+          "accepted": 64.0,
+          "draft_ms": 33.138,
+          "verify_ms": 1319.332,
+          "mean_verify_ms": 77.60776470588236
+        }
+      ]
+    },
+    {
+      "source": "docs\\evidence\\dflash-batched-verification\\window-graphs\\confidence-expanded-long\\Q4_K_M\\requests.json",
+      "sha256": "8b29892fcb05a9d497f1edc5650f1144791199668ac6ad529d8f394a10a2ee03",
+      "measured_tps": 39.63584566792593,
+      "tokens": 128,
+      "wall_ms": 3229.4,
+      "target_tps": 60,
+      "required_saving_ms": 1096.0666666666666,
+      "draft_ms": 195.851,
+      "verify_ms": 2988.302,
+      "other_ms": 45.246999999999844,
+      "zero_draft_overhead_ms": 101.776,
+      "ceiling_if_zero_draft_attempts_free": 40.92563556233102,
+      "ceiling_if_all_drafting_free": 42.19480219373414,
+      "required_fraction_all_verification_removed": 0.36678577555637504,
+      "required_fraction_nonzero_verification_removed": 0.650965262583573,
+      "widths": [
+        {
+          "drafts": 0,
+          "rounds": 48,
+          "accepted": 0.0,
+          "draft_ms": 101.776,
+          "verify_ms": 1304.546,
+          "mean_verify_ms": 27.17804166666667
+        },
+        {
+          "drafts": 1,
+          "rounds": 26,
+          "accepted": 25.0,
+          "draft_ms": 74.203,
+          "verify_ms": 1077.423,
+          "mean_verify_ms": 41.43934615384615
+        },
+        {
+          "drafts": 2,
+          "rounds": 5,
+          "accepted": 10.0,
+          "draft_ms": 10.814,
+          "verify_ms": 308.211,
+          "mean_verify_ms": 61.6422
+        },
+        {
+          "drafts": 3,
+          "rounds": 4,
+          "accepted": 12.0,
+          "draft_ms": 9.058,
+          "verify_ms": 298.122,
+          "mean_verify_ms": 74.5305
+        }
+      ]
+    }
+  ]
+}

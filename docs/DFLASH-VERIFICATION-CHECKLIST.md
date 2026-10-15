@@ -77,3 +77,6 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 
 - [x] Replay captured layer3combines with the production CUDA kernel: both exact. Partition changes and individual expert-output changes both contribute; historical failure remains separate.
 - [x] Test replay partition sensitivity and reject unsafe K>8/truncated captures (3tests).
+
+- [x] Exercise four actual asynchronous upload/CPU-read/retirement/slot-reuse cases; distinguish from full scheduler stress.
+- [x] Reconcile recorded timing budgets and rule out zero-draft window duplication as a performance opportunity.
