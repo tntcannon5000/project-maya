@@ -52,6 +52,14 @@ int main(int argc, char** argv) {
             if (!m.forward({ids[prefix-1]}, logits, err)) return 5;
             std::fprintf(stderr, "verify fixture: completed batched prefix %d, repeat %d\n", prefix, rep);
         } else if (!m.forward(std::vector<int32_t>(ids.begin(), ids.begin()+prefix), logits, err)) return 5;
+        if (std::getenv("MAYA_VERIFY_PREFIX_LOGITS") != nullptr) {
+            const std::string prefix_path = std::string(argv[3]) + ".prefix.f32";
+            FILE* pf = std::fopen(prefix_path.c_str(), rep == 0 ? "wb" : "ab");
+            if (!pf || logits.size() != (size_t)m.geometry().n_vocab) return 11;
+            const bool written = std::fwrite(logits.data(), sizeof(float), logits.size(), pf) == logits.size();
+            std::fclose(pf);
+            if (!written) return 11;
+        }
         if (reference_mode != "windows") {
             if (logits.size() != (size_t)m.geometry().n_vocab) return 7;
             for (float v : logits) if (!std::isfinite(v)) return 8;

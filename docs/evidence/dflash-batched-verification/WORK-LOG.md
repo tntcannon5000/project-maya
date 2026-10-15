@@ -282,3 +282,9 @@ Added complete opt-in capture and replay with ownership/lifetime/error guards. S
 ## Measured competing-promotion ownership case
 
 The new host-only, pre-boundary audit found actual duplicate/orphan residents rising to 34 slots and up to 16 competing pending promotions on the fixed fixture. Zero invalid pinned promotion sources. All 7,434,240 logits in this diagnostic run are exact versus original off, so this is established cache bookkeeping/capacity waste, not proven numerical corruption. Graphs remain unqualified. Preserved the diagnostic and all failed/passing evidence; no performance default changed. Next: ownership-safe retirement design and original failure attribution, not more throughput tests.
+
+## Superseded promotion retirement implementation
+
+Implemented opt-in MAYA_PROMOTION_OWNER_FIX: demand/predicted commits latch losing background uploads; source and destination remain reserved until their completion event; retirement preserves the authoritative GPU owner and republishes ready replacement RAM backing before releasing old pinned bytes. Owner-validation failures latch the copy error. Review caught the distinction between ram_of metadata and the currently published device pointer; addressed before running.
+
+Current GPU-only graph-off/on each retired 51 superseded uploads, with zero duplicate/orphan residents or invalid sources and 7,434,240 exact logits. The first request matches the older ownership policy; reset/prefill then diverges, so new prefix-logit recording will separate prefill from verification. Full objective remains open; no default or launcher change.

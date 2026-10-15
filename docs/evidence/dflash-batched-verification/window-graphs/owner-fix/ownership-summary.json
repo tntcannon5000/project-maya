@@ -1,0 +1,274 @@
+{
+  "graph-off": {
+    "observations": [
+      {
+        "clock": 0,
+        "residents": 1813,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 0,
+        "residents": 1422,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 42,
+        "residents": 1547,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 168,
+        "residents": 1573,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 2,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 378,
+        "residents": 1717,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 17,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 504,
+        "residents": 1723,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 714,
+        "residents": 1852,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 2,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 840,
+        "residents": 1843,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 9,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1050,
+        "residents": 1881,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1050,
+        "residents": 1439,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1092,
+        "residents": 1448,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1218,
+        "residents": 1588,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1428,
+        "residents": 1624,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 10,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1554,
+        "residents": 1737,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1764,
+        "residents": 1759,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1890,
+        "residents": 1871,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 7,
+        "invalid_promotion_sources": 0
+      }
+    ],
+    "superseded_retirements": 51,
+    "max_duplicates": 0,
+    "max_orphan_residents": 0,
+    "max_invalid_sources": 0
+  },
+  "graph-on": {
+    "observations": [
+      {
+        "clock": 0,
+        "residents": 1813,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 0,
+        "residents": 1422,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 42,
+        "residents": 1547,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 168,
+        "residents": 1573,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 2,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 378,
+        "residents": 1717,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 17,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 504,
+        "residents": 1723,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 714,
+        "residents": 1852,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 2,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 840,
+        "residents": 1843,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 9,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1050,
+        "residents": 1881,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1050,
+        "residents": 1439,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1092,
+        "residents": 1448,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1218,
+        "residents": 1588,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1428,
+        "residents": 1624,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 10,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1554,
+        "residents": 1737,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 0,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1764,
+        "residents": 1759,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 1,
+        "invalid_promotion_sources": 0
+      },
+      {
+        "clock": 1890,
+        "residents": 1871,
+        "duplicates": 0,
+        "orphan_residents": 0,
+        "competing_promotions": 7,
+        "invalid_promotion_sources": 0
+      }
+    ],
+    "superseded_retirements": 51,
+    "max_duplicates": 0,
+    "max_orphan_residents": 0,
+    "max_invalid_sources": 0
+  }
+}

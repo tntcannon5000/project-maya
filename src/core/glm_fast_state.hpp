@@ -441,12 +441,13 @@ struct Glm5Model::FastState {
         int il, vslot, key, rclass, rslot;
         bool up;
         cudaEvent_t ev;
+        bool superseded = false; // demand promotion won; retain both copy owners until event completes
     };
     std::vector<BgMove> bg;
     bool bg_hold = false;   // lend_tail: no new moves while the pool's tail is lent
     std::string bg_copy_error;  // failed tier copy submission: no more boundaries until the model is reloaded
     volatile int* route_error_h = nullptr;   // in the mapped ring allocation, visible after compute completion
-    uint64_t bg_up = 0, bg_down = 0;
+    uint64_t bg_up = 0, bg_down = 0, bg_superseded = 0;
     std::vector<cudaEvent_t> ev_free;
     int* upd_key_h = nullptr;
     unsigned long long* upd_val_h = nullptr;

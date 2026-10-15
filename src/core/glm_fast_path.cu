@@ -37,6 +37,13 @@ static bool maya_timeline_on() {
     static const bool on = std::getenv("MAYA_TIMELINE") != nullptr;
     return on;
 }
+static bool maya_promotion_owner_fix() {
+    static const bool enabled = [] {
+        const char* v = std::getenv("MAYA_PROMOTION_OWNER_FIX");
+        return v && std::atoi(v) != 0;
+    }();
+    return enabled;
+}
 static bool maya_shadow_expansion_on() {
     const char* expand=std::getenv("MAYA_RAM_SHADOW_EXPAND");
     const char* budget=std::getenv("MAYA_RAM_SHADOW_MB");
@@ -3891,6 +3898,14 @@ void Glm5Model::fast_service() {
                         P.key[(size_t) s] = ids[i];
                         P.tick[(size_t) s] = F->clock;
                         F->slot_of[(size_t) key] = s;
+                        if (maya_promotion_owner_fix()) {
+                            // mu is held. Mark the losing upload now, before
+                            // this demand resident can itself be evicted. Do
+                            // not release its destination or source mid-copy.
+                            for (auto& move : F->bg)
+                                if (move.up && move.key == key && move.vslot != s)
+                                    move.superseded = true;
+                        }
                         for (int j = 0; j < gf::kSpares; ++j)
                             if (P.spare[j] == s) P.spare[j] = -1;
                         F->promotions.fetch_add(1, std::memory_order_relaxed);
@@ -3949,6 +3964,11 @@ void Glm5Model::fast_service() {
                     P1.key[(size_t) s] = e;
                     P1.tick[(size_t) s] = F->clock;
                     F->slot_of[(size_t) key] = s;
+                    if (maya_promotion_owner_fix()) {
+                        for (auto& move : F->bg)
+                            if (move.up && move.key == key && move.vslot != s)
+                                move.superseded = true;
+                    }
                     for (int j = 0; j < gf::kSpares; ++j)
                         if (P1.spare[j] == s) P1.spare[j] = -1;
                     const int rs = F->ram_of[(size_t) key];
@@ -4420,7 +4440,7 @@ bool Glm5Model::fast_boundary(std::string& err) {
             if (move.rslot < 0 || move.rslot >= R.n ||
                 R.key[(size_t) move.rslot] != move.key ||
                 R.st[(size_t) move.rslot] != FastState::kRPin ||
-                F->ram_of[(size_t) move.key] != move.rslot) ++bad_sources;
+                (!move.superseded && F->ram_of[(size_t) move.key] != move.rslot)) ++bad_sources;
         }
         std::fprintf(stderr, "maya owner counts CUDA%d clock=%llu: residents=%llu duplicates=%llu "
                              "orphan_residents=%llu competing_promotions=%llu invalid_promotion_sources=%llu "
@@ -4805,6 +4825,52 @@ bool Glm5Model::fast_boundary(std::string& err) {
             }
             auto& P = F->lp[(size_t) m.il];
             auto& R = F->rc[(size_t) m.rclass];
+            if (m.up && maya_promotion_owner_fix()) {
+                const int current_gpu = F->slot_of[(size_t) m.key];
+                if (!m.superseded && current_gpu >= 0 && current_gpu != m.vslot) {
+                    err = "background promotion has an unmarked competing GPU owner";
+                    F->bg_copy_error = err;
+                    return false;
+                }
+                if (P.st[(size_t) m.vslot] != FastState::kLanding ||
+                    R.st[(size_t) m.rslot] != FastState::kRPin || R.key[(size_t) m.rslot] != m.key) {
+                    err = "background promotion lost a reserved source/destination before retirement";
+                    F->bg_copy_error = err; // do not retry partially retired metadata/events
+                    return false;
+                }
+                if (m.superseded) {
+                    // Copy is complete and cs/service are drained. The losing
+                    // Landing slot has never been published or consumed. Keep
+                    // the demand owner's GPU mapping, even if it has since
+                    // been evicted or entered a separate demotion.
+                    P.st[(size_t) m.vslot] = FastState::kFree;
+                    P.key[(size_t) m.vslot] = -1;
+                    if (F->ram_of[(size_t) m.key] == m.rslot) {
+                        R.st[(size_t) m.rslot] = FastState::kRHold;
+                        upd(F->rtab_key((size_t) m.key),
+                            (unsigned long long) (R.base + (size_t) m.rslot * R.stride));
+                    } else {
+                        // ram_of may already name a pending demotion while
+                        // rtab still publishes this old pinned source. Publish
+                        // the current ready owner, or zero if it is not ready,
+                        // before releasing the old bytes. Preserve newer data.
+                        const int rs = F->ram_of[(size_t) m.key];
+                        const bool ready = rs >= 0 && rs < R.n && R.key[(size_t) rs] == m.key &&
+                            (R.st[(size_t) rs] == FastState::kRHold || R.st[(size_t) rs] == FastState::kRPin);
+                        upd(F->rtab_key((size_t) m.key), ready ?
+                            (unsigned long long) (R.base + (size_t) rs * R.stride) : 0ull);
+                        R.st[(size_t) m.rslot] = FastState::kRFree;
+                        R.key[(size_t) m.rslot] = -1;
+                    }
+                    ++F->bg_superseded;
+                    if (owner_counts)
+                        std::fprintf(stderr, "maya promotion ownership CUDA%d: retired superseded upload "
+                                             "layer=%d expert=%d slot=%d total=%llu\n", dev_, m.il,
+                                     m.key % NE, m.vslot, (unsigned long long) F->bg_superseded);
+                    F->ev_free.push_back(m.ev);
+                    continue;
+                }
+            }
             if (m.up) {
                 P.st[(size_t) m.vslot] = FastState::kResident;
                 P.key[(size_t) m.vslot] = m.key % NE;
@@ -4815,8 +4881,18 @@ bool Glm5Model::fast_boundary(std::string& err) {
                     R.st[(size_t) m.rslot] = FastState::kRFree;
                     R.key[(size_t) m.rslot] = -1;
                 }
-                if (F->ram_of[(size_t) m.key] == m.rslot) F->ram_of[(size_t) m.key] = -1;
-                upd(F->rtab_key((size_t) m.key), 0ull);
+                if (F->ram_of[(size_t) m.key] == m.rslot) {
+                    F->ram_of[(size_t) m.key] = -1;
+                    upd(F->rtab_key((size_t) m.key), 0ull);
+                } else if (maya_promotion_owner_fix()) {
+                    const int rs = F->ram_of[(size_t) m.key];
+                    const bool ready = rs >= 0 && rs < R.n && R.key[(size_t) rs] == m.key &&
+                        (R.st[(size_t) rs] == FastState::kRHold || R.st[(size_t) rs] == FastState::kRPin);
+                    upd(F->rtab_key((size_t) m.key), ready ?
+                        (unsigned long long) (R.base + (size_t) rs * R.stride) : 0ull);
+                } else {
+                    upd(F->rtab_key((size_t) m.key), 0ull);
+                }
                 ++F->bg_up;
             } else {
                 upd(F->tab_key((size_t) m.key), 0ull);

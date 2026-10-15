@@ -1,0 +1,11 @@
+{
+  "left": "graph-off",
+  "right": "graph-on",
+  "values": 7434240,
+  "exact": true,
+  "max_abs": 0.0,
+  "mean_abs": 0.0,
+  "mismatched_values": 0,
+  "greedy_matches": 48,
+  "rows": 48
+}
