@@ -65,3 +65,7 @@ not a confirmed gain. Raw profiler artifacts remain local.
 - After a justified candidate exists, check writing, longer occupied context, prefill and cancellation/recovery.
 
 Detailed chronology: `WORK-LOG.md`. Long-term plan: `docs/DFLASH-VERIFICATION-PLAN.md`. Checklist: `docs/DFLASH-VERIFICATION-CHECKLIST.md`.
+
+## Latest phase attribution (supersedes pending-test wording above)
+
+Corrected bounded pressure passes; prior unresolved pre-fix pressure observations are historical. Hybrid component-off/on diagnostics measure59.417/57.431ms verification, with83/90 accepted drafts and identical output IDs. Fetch/expert span34.50/33.02ms;6.56ms remains exposed at down readiness. These are profiled runs, not clean speed qualification. See HYBRID-PHASE-ATTRIBUTION.md. Broader union metadata and standalone exact IMMA feasibility are in progress.

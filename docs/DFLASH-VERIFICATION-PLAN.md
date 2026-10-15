@@ -70,3 +70,7 @@ intersection. Full-blob diagnostics join early by design and are not timing
 evidence. Test exact logits then one clean width-2/4 screen; only qualify more
 widely if total round time improves. Stream failure and next-layer slot reuse
 must preserve ownership. No parameter sweep.
+
+## Current gate update — 2026-10-15
+
+The HC, moderate-CPU and component experiments above have completed. Bounded corrected pressure qualification passes. Moderate CPU allocation failed its speed gate; component streaming is exact but only1.2% ahead in the contemporary clean comparison. Follow HYBRID-PHASE-ATTRIBUTION.md for current attribution. Next: corrected route/ownership metadata to bound broader placement, plus standalone exact Q4_K tensor-core feasibility. Do not repeat old pending gates or presume these experiments justify production defaults.

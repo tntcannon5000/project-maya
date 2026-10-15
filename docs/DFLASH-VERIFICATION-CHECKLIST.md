@@ -19,7 +19,7 @@
 - [x] Localize first mismatch to stale RAM bytes, not HC arithmetic or GPU fetch corruption.
 - [x] Identify missing deferred-demotion submission in batched verification.
 - [x] Validate window submission fix against immutable pack, exact logits and bounded pressure replay.
-- [ ] Resolve or bound existing disk-pressure non-reproducibility with ownership diagnostics.
+- [x] Bound the demonstrated pressure failure after deferred-demotion fix (six-window exact pressure replay; not exhaustive stress).
 - [ ] Measure refinements and async scheduling combinations.
 - [ ] Investigate supporting combinations when justified by evidence.
 - [x] Screen moderate CPU allocation with merged rows; reject performance recommendation.
@@ -29,4 +29,4 @@
 - [x] Check cancellation/recovery and clean teardown on corrected HC/paired writing case.
 - [ ] Commit report, results table, limitations and recommended settings.
 
-Current stage: missing deferred-demotion submission fixed. Immutable-pack audit passes 42 layers and HC/paired versus corrected control passes 28,188,160 exact logits. Corrected clean throughput comparison is underway. Pressure replay remains outstanding. Async overlap did not materially reduce verification round time. No substantial performance gain claimed; performance candidates remain opt-in research.
+Current stage: corrected control and HC/paired pass exact qualification; bounded RAM64/GPU16 pressure replay passes 6,040,320 exact logits. Component streaming passes repeated-window exactness and bounded pressure with verified copied bytes. Latest hybrid diagnostics show only about1.5ms removed from fetch/expert stages; contemporary clean gain remains1.2%, not a robust recommendation. Broader union-placement instrumentation and standalone exact Q4_K tensor-core feasibility are next. Full pressure/lifecycle and longer-context qualification remain conditional on a justified performance candidate.
