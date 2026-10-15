@@ -1,0 +1,31 @@
+{
+  "confidence-short": {
+    "ordinary_tps": 44.926468007440945,
+    "confidence_tps": 57.06134094151213,
+    "acceptance": 0.9484536082474226,
+    "offered_width_histogram": {
+      "0": 3,
+      "3": 5,
+      "1": 6,
+      "4": 17,
+      "2": 4
+    },
+    "draft_ms": 67.976,
+    "verify_ms": 2161.791,
+    "scope": "Existing policy with T3/T5 graph coverage only; one request. Historical before adaptive-width integration."
+  },
+  "confidence-long": {
+    "ordinary_tps": 40.78251449690945,
+    "confidence_tps": 39.05296558457408,
+    "acceptance": 0.9791666666666666,
+    "offered_width_histogram": {
+      "1": 26,
+      "0": 48,
+      "2": 5,
+      "3": 4
+    },
+    "draft_ms": 193.522,
+    "verify_ms": 3038.295,
+    "scope": "Existing policy with T3/T5 graph coverage only; one request. Historical before adaptive-width integration."
+  }
+}
