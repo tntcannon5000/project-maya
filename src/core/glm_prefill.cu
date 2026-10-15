@@ -2253,6 +2253,7 @@ bool Glm5Model::prefill_half(int64_t p0, int T, std::string& err, const int32_t*
                     dn.dst = M.OUTP + (size_t) (o - a) * E;
                     dn.ld_dst = E;
                     S->mq->run(dn, s);
+                    moe_capture.down(dn, M.Hq, r0+a, a);
                 }
                 i0 = i1;
             }

@@ -83,3 +83,6 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 
 - [x] Localize selected expert differences after down: all eight prefill input/post-SwiGLU vectors exact; five down outputs differ; actual dispatch geometry recorded.
 - [ ] If claiming Stream-K cause, replay captured down weights/quantized inputs under both geometries; source consistency alone is insufficient.
+
+- [x] Replay captured down matrices and quantized input: both engine outputs exact; unchanged after unrelated data zeroing. Dispatch-geometry dependence established, specific Stream-K attribution not claimed.
+- [x] Check padded replay identity indices under Compute Sanitizer: zero errors.

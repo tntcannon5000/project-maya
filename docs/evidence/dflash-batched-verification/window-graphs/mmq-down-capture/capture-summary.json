@@ -1,0 +1,11 @@
+{
+  "0": {
+    "down_sha256": "7fa718411858ffd8d54ec1623a8b8b0a03fbf6c69da4fb6c76b4fbe6b2222bcd",
+    "combined_exact_to_prior": true
+  },
+  "1": {
+    "down_sha256": "7da5bfc42ad3fdd9d1d2ce3385e8c1018c1fb1546a0d34e7982edc3b42ac5076",
+    "combined_exact_to_prior": true
+  },
+  "replay_binary_sha256": "5ef51df7249d647aa77b5a731c537e645884bec5e25a8cea48aba2d5958dbac5"
+}

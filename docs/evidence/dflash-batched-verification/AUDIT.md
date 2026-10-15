@@ -92,3 +92,9 @@ for the requested cheaper complete multi-token verification.
 ## 2026-10-15: first-MoE production replay
 
 Captured layer3 last-row route weights, expert outputs, initial/final FFN and chronological combine groups on the same6793-token occupied prefix across two resets. Both outputs replay bitwise exactly through the production CUDA combine. Groups change3->4; swapping only partitions changes2135float bit patterns (max5.96e-8). Five/eight expert vectors also differ (max1.788e-7); combine order is not the sole source. Three focused replay tests pass. Diagnostic only, no TPS/threshold/default change. Historical failed graph run remains unattributed. See window-graphs/MOE-COMBINE-INVESTIGATION.md. Next, only if attribution requires it: selected MMQ intermediate/dispatch capture; no new throughput matrix.
+
+## 2026-10-15: causal MMQ group-geometry reproduction
+
+Captured the actual layer3/expert61 down batch and replayed both dispatch geometries through production MMQ. Selected weights and quantized input bytes match. Both original outputs reproduce bitwise; zeroing unrelated batch data preserves each result. Between geometries, 3349 float bit patterns differ (max 1.788139e-7). This establishes dispatch/group-geometry dependence, without narrowing it to Stream-K versus tile choice. Corrected tail-ID padding from source review; CUDA memcheck reports zero errors. Combined captures remain byte-identical to preceding diagnostics.
+
+The sampled repeat-prefill mechanism is now explained jointly with combine replay. Stop expanding this standalone diagnostic; return to campaign qualification/performance decisions. Historical graph failure remains separately unattributed because its starting state was not captured. No arithmetic/default/threshold change or TPS claim. See window-graphs/MMQ-DOWN-REPLAY.md.

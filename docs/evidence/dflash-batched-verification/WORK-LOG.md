@@ -352,3 +352,9 @@ Captured layer3 last-row route weights, expert outputs, initial/final FFN and ch
 - Captured expert group sizes/max rows change with residency. Source distinguishes fused tiled GU from potentially Stream-K down reductions. This supports, but does not causally prove, shape-dependent down reduction as the source.
 - Both complete combined captures are byte-identical to the previous diagnostic. Actual production combine replay remains exact. No TPS rerun or numerical-threshold/default change.
 - Next discriminator, if needed for attribution: replay one captured down matrix and quantized input with both recorded group geometries. Historical graph failure remains unproven. See window-graphs/MMQ-PRODUCT-LOCALIZATION.md.
+
+## 2026-10-15: causal MMQ group-geometry reproduction
+
+Captured the actual layer3/expert61 down batch and replayed both dispatch geometries through production MMQ. Selected weights and quantized input bytes match. Both original outputs reproduce bitwise; zeroing unrelated batch data preserves each result. Between geometries, 3349 float bit patterns differ (max 1.788139e-7). This establishes dispatch/group-geometry dependence, without narrowing it to Stream-K versus tile choice. Corrected tail-ID padding from source review; CUDA memcheck reports zero errors. Combined captures remain byte-identical to preceding diagnostics.
+
+The sampled repeat-prefill mechanism is now explained jointly with combine replay. Stop expanding this standalone diagnostic; return to campaign qualification/performance decisions. Historical graph failure remains separately unattributed because its starting state was not captured. No arithmetic/default/threshold change or TPS claim. See window-graphs/MMQ-DOWN-REPLAY.md.

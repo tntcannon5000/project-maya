@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <cuda_runtime.h>
+#include "strata/prefill/moe_mmq.hpp"
 namespace strata::core {
 class PrefillMoeCapture {
     FILE* file_ = nullptr;
@@ -76,6 +77,34 @@ public:
         if(selected.empty()) return;
         const int n = (int)selected.size(); write(&n,sizeof n);
         for(int j:selected) { write(&j,sizeof j); vector(output+(size_t)(positions_[j]-base)*e_); }
+    }
+    void down(const strata::prefill::mmq::Product& p, const void* quantized, int first, int row_base) {
+        static const bool enabled=std::getenv("MAYA_PREFILL_DOWN_CAPTURE")!=nullptr;
+        if(!file_ || !enabled || positions_[0]<first || positions_[0]>=first+p.total_rows) return;
+        namespace mmq=strata::prefill::mmq;
+        const size_t matrix=mmq::matrix_bytes(p.type,p.w_rows,p.w_cols);
+        const size_t qbytes=mmq::q8_bytes(p.total_rows,p.w_cols);
+        FILE* out=std::fopen((path_+".down").c_str(),"wb");
+        if(!out) throw std::runtime_error("down capture open failed");
+        struct Close { FILE* f; ~Close(){std::fclose(f);} } close{out};
+        const auto put=[&](const void* src,size_t bytes) {
+            if(std::fwrite(src,1,bytes,out)!=bytes)throw std::runtime_error("down capture write failed");
+        };
+        const int64_t h[11]={0x444f574e,p.type,p.w_rows,p.w_cols,p.n,p.total_rows,p.max_rows,
+            positions_[0]-first,(int64_t)mmq::q8_block_bytes(),(int64_t)qbytes,(int64_t)matrix};
+        put(h,sizeof h);
+        std::vector<int> bounds(p.n+1);copy(bounds.data(),p.bounds,bounds.size()*sizeof(int));
+        for(int& value:bounds)value-=row_base;
+        put(bounds.data(),bounds.size()*sizeof(int));
+        // Copy one matrix at a time: bounded host overhead, not a second model copy.
+        std::vector<uint8_t> buffer(std::max(matrix,qbytes));
+        for(int i=0;i<p.n;++i) {
+            copy(buffer.data(),(const uint8_t*)p.w+(size_t)i*p.expert_bytes,matrix);put(buffer.data(),matrix);
+        }
+        copy(buffer.data(),quantized,qbytes);put(buffer.data(),qbytes);
+        std::vector<float> result(p.w_rows);
+        copy(result.data(),p.dst+(row_base+positions_[0]-first)*p.ld_dst,p.w_rows*sizeof(float));
+        put(result.data(),result.size()*sizeof(float));
     }
     void finish(const float* final, int t) {
         if (!file_) return;

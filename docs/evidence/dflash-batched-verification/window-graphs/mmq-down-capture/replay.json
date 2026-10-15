@@ -1,0 +1,9 @@
+{
+  "selected_weight_exact": true,
+  "selected_quantized_input_exact": true,
+  "cold_replay": {"max_abs": 0, "different_bits": 0},
+  "warm_replay": {"max_abs": 0, "different_bits": 0},
+  "cold_unrelated_data_zeroed": {"max_abs": 0, "different_bits": 0},
+  "warm_unrelated_data_zeroed": {"max_abs": 0, "different_bits": 0},
+  "between_dispatches": {"max_abs": 1.78813934326e-07, "different_bits": 3349}
+}
