@@ -4826,43 +4826,9 @@ bool Glm5Model::fast_boundary(std::string& err) {
             auto& P = F->lp[(size_t) m.il];
             auto& R = F->rc[(size_t) m.rclass];
             if (m.up && maya_promotion_owner_fix()) {
-                const int current_gpu = F->slot_of[(size_t) m.key];
-                if (!m.superseded && current_gpu >= 0 && current_gpu != m.vslot) {
-                    err = "background promotion has an unmarked competing GPU owner";
-                    F->bg_copy_error = err;
-                    return false;
-                }
-                if (P.st[(size_t) m.vslot] != FastState::kLanding ||
-                    R.st[(size_t) m.rslot] != FastState::kRPin || R.key[(size_t) m.rslot] != m.key) {
-                    err = "background promotion lost a reserved source/destination before retirement";
-                    F->bg_copy_error = err; // do not retry partially retired metadata/events
-                    return false;
-                }
-                if (m.superseded) {
-                    // Copy is complete and cs/service are drained. The losing
-                    // Landing slot has never been published or consumed. Keep
-                    // the demand owner's GPU mapping, even if it has since
-                    // been evicted or entered a separate demotion.
-                    P.st[(size_t) m.vslot] = FastState::kFree;
-                    P.key[(size_t) m.vslot] = -1;
-                    if (F->ram_of[(size_t) m.key] == m.rslot) {
-                        R.st[(size_t) m.rslot] = FastState::kRHold;
-                        upd(F->rtab_key((size_t) m.key),
-                            (unsigned long long) (R.base + (size_t) m.rslot * R.stride));
-                    } else {
-                        // ram_of may already name a pending demotion while
-                        // rtab still publishes this old pinned source. Publish
-                        // the current ready owner, or zero if it is not ready,
-                        // before releasing the old bytes. Preserve newer data.
-                        const int rs = F->ram_of[(size_t) m.key];
-                        const bool ready = rs >= 0 && rs < R.n && R.key[(size_t) rs] == m.key &&
-                            (R.st[(size_t) rs] == FastState::kRHold || R.st[(size_t) rs] == FastState::kRPin);
-                        upd(F->rtab_key((size_t) m.key), ready ?
-                            (unsigned long long) (R.base + (size_t) rs * R.stride) : 0ull);
-                        R.st[(size_t) m.rslot] = FastState::kRFree;
-                        R.key[(size_t) m.rslot] = -1;
-                    }
-                    ++F->bg_superseded;
+                const auto retired = F->retire_promotion_owner(m, upd, err);
+                if (retired == FastState::PromotionRetirement::Failed) return false;
+                if (retired == FastState::PromotionRetirement::Superseded) {
                     if (owner_counts)
                         std::fprintf(stderr, "maya promotion ownership CUDA%d: retired superseded upload "
                                              "layer=%d expert=%d slot=%d total=%llu\n", dev_, m.il,

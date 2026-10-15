@@ -443,6 +443,55 @@ struct Glm5Model::FastState {
         cudaEvent_t ev;
         bool superseded = false; // demand promotion won; retain both copy owners until event completes
     };
+    enum class PromotionRetirement { Publish, Superseded, Failed };
+    // Caller has observed the copy event complete, drained compute/service and
+    // holds mu. This is the production metadata transition, not an event wait.
+    // Publish means the ordinary upload-publication path still has work to do.
+    template<class Update>
+    PromotionRetirement retire_promotion_owner(const BgMove& m, Update&& upd, std::string& err) {
+        const auto fail = [&](const char* why) {
+            bg_copy_error = why;
+            err = bg_copy_error;
+            return PromotionRetirement::Failed;
+        };
+        if (!bg_copy_error.empty()) { err = bg_copy_error; return PromotionRetirement::Failed; }
+        if (!m.up || m.il < 0 || (size_t)m.il >= lp.size() || m.rclass < 0 ||
+            (size_t)m.rclass >= rc.size() || m.key < 0 || (size_t)m.key >= slot_of.size() ||
+            (size_t)m.key >= ram_of.size())
+            return fail("background promotion has invalid ownership indices");
+        auto& P = lp[(size_t)m.il];
+        auto& R = rc[(size_t)m.rclass];
+        if (m.vslot < 0 || (size_t)m.vslot >= P.st.size() || (size_t)m.vslot >= P.key.size() ||
+            m.rslot < 0 || (size_t)m.rslot >= R.st.size() || (size_t)m.rslot >= R.key.size())
+            return fail("background promotion has invalid reserved slots");
+        const int current_gpu = slot_of[(size_t)m.key];
+        if (!m.superseded && current_gpu >= 0 && current_gpu != m.vslot)
+            return fail("background promotion has an unmarked competing GPU owner");
+        if (P.st[(size_t)m.vslot] != kLanding || R.st[(size_t)m.rslot] != kRPin ||
+            R.key[(size_t)m.rslot] != m.key)
+            return fail("background promotion lost a reserved source/destination before retirement");
+        if (!m.superseded) return PromotionRetirement::Publish;
+
+        // Never change the newer GPU owner, including if it has been evicted.
+        P.st[(size_t)m.vslot] = kFree;
+        P.key[(size_t)m.vslot] = -1;
+        const int rs = ram_of[(size_t)m.key];
+        if (rs == m.rslot) {
+            R.st[(size_t)m.rslot] = kRHold;
+            upd(rtab_key(m.key), (unsigned long long)(R.base + (size_t)m.rslot * R.stride));
+        } else {
+            // ram_of may name a pending demotion while RTAB still publishes
+            // the old pinned source. Republish before releasing its storage.
+            const bool ready = rs >= 0 && rs < R.n && (size_t)rs < R.st.size() &&
+                (size_t)rs < R.key.size() && R.key[(size_t)rs] == m.key &&
+                (R.st[(size_t)rs] == kRHold || R.st[(size_t)rs] == kRPin);
+            upd(rtab_key(m.key), ready ? (unsigned long long)(R.base + (size_t)rs * R.stride) : 0ull);
+            R.st[(size_t)m.rslot] = kRFree;
+            R.key[(size_t)m.rslot] = -1;
+        }
+        ++bg_superseded;
+        return PromotionRetirement::Superseded;
+    }
     std::vector<BgMove> bg;
     bool bg_hold = false;   // lend_tail: no new moves while the pool's tail is lent
     std::string bg_copy_error;  // failed tier copy submission: no more boundaries until the model is reloaded
