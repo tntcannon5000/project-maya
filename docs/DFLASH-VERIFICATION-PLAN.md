@@ -163,3 +163,11 @@ Captured layer3 last-row route weights, expert outputs, initial/final FFN and ch
 Captured the actual layer3/expert61 down batch and replayed both dispatch geometries through production MMQ. Selected weights and quantized input bytes match. Both original outputs reproduce bitwise; zeroing unrelated batch data preserves each result. Between geometries, 3349 float bit patterns differ (max 1.788139e-7). This establishes dispatch/group-geometry dependence, without narrowing it to Stream-K versus tile choice. Corrected tail-ID padding from source review; CUDA memcheck reports zero errors. Combined captures remain byte-identical to preceding diagnostics.
 
 The sampled repeat-prefill mechanism is now explained jointly with combine replay. Stop expanding this standalone diagnostic; return to campaign qualification/performance decisions. Historical graph failure remains separately unattributed because its starting state was not captured. No arithmetic/default/threshold change or TPS claim. See window-graphs/MMQ-DOWN-REPLAY.md.
+
+## 2026-10-15: consolidated experimental qualification
+
+Completed a requirement-by-requirement evidence audit and consolidated DFLASH-VERIFICATION-RESULTS.md. Corrected the serving summarizer's hard-coded short-coding label and regenerated writing/long summaries from existing raw evidence. Recorded whole-device memory samples with explicit lack of isolated graph-allocation attribution. Reconciled stale checklist entries; production-specific historical attribution gates remain unchecked.
+
+Final current build, one short coding workload: ordinary44.85TPS, confidence57.76TPS,92/97drafts accepted. All output IDs/acceptance counts match the earlier run;168captures/1806replays, zero graph failures/bypasses, STOP/recovery and clean teardown. Diagnostic capture flags disabled. Previous explicit WIN_ALLCPU=0 was omitted in this smoke, recorded in comparison.json; do not call this a strict same-config speed A/B. Both ordinary and confidence rates moved similarly, so no new optimisation gain claimed.
+
+Bounded experimental outcome is now documented, with no60TPSor production/default/PR claim. No engine left running. See EXPERIMENTAL-QUALIFICATION-AUDIT.md and the consolidated results report.

@@ -7,7 +7,7 @@ from summarize_window_graphs import COUNTS
 
 
 def summarize(off, on):
-    result = {"scope": "One short coding prompt; repeated requests, not independent trials. No profiler. Raw per-round drafter timing is enabled equally."}
+    result = {"scope": "One matched prompt; bounded repeated requests, not independent trials. Serving measurements include per-round drafter timing; consult manifests for instrumentation and workload."}
     manifests = []
     requests = []
     for label, directory in (("off", off), ("on", on)):
@@ -48,6 +48,9 @@ def summarize(off, on):
                            accepted_equal=a["accepted"] == b["accepted"]))
     result["paired"] = paired
     result["occupied_prompt_tokens"] = manifests[0]["occupied_prompt_tokens"]
+    result["context_capacity"] = manifests[0]["context_capacity"]
+    result["output_cap"] = manifests[0]["output_cap"]
+    result["binary_sha256"] = manifests[0]["binary_sha256"]
     return result
 
 

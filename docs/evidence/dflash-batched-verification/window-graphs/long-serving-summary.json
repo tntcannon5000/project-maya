@@ -1,5 +1,5 @@
 {
-  "scope": "One short coding prompt; repeated requests, not independent trials. No profiler. Raw per-round drafter timing is enabled equally.",
+  "scope": "One matched prompt; bounded repeated requests, not independent trials. Serving measurements include per-round drafter timing; consult manifests for instrumentation and workload.",
   "off": {
     "rows": [
       {
@@ -148,5 +148,8 @@
       "accepted_equal": true
     }
   ],
-  "occupied_prompt_tokens": 6793
+  "occupied_prompt_tokens": 6793,
+  "context_capacity": 131072,
+  "output_cap": 128,
+  "binary_sha256": "0f4fee4abf9273d5601098dbbf6019d7aac09f5640af001750ff7c2aa452949e"
 }

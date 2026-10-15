@@ -20,16 +20,16 @@
 - [x] Identify missing deferred-demotion submission in batched verification.
 - [x] Validate window submission fix against immutable pack, exact logits and bounded pressure replay.
 - [x] Bound the demonstrated pressure failure after deferred-demotion fix (six-window exact pressure replay; not exhaustive stress).
-- [ ] Measure refinements and async scheduling combinations.
-- [ ] Investigate supporting combinations when justified by evidence.
+- [x] Measure refinements and async scheduling combinations (paired, HC, component and full-graph evidence).
+- [x] Investigate supporting combinations when justified by evidence (including rejected CPU, placement and mapped-RAM paths).
 - [x] Screen moderate CPU allocation with merged rows; reject performance recommendation.
 - [x] Implement and qualify full-layer component fetch with grouped GU overlap (GPU exact and bounded disk pressure).
 - [x] Verify component byte accounting and actual GPU overlap before judging speed; narrow confirmation shows only 1.2% TPS difference.
-- [ ] Confirm retained changes on coding/writing, prefill and longer occupied context.
+- [x] Confirm retained changes on coding/writing, prefill and longer occupied context (bounded scope in DFLASH-VERIFICATION-RESULTS.md).
 - [x] Check cancellation/recovery and clean teardown on corrected HC/paired writing case.
-- [ ] Commit report, results table, limitations and recommended settings.
+- [x] Prepare consolidated report, results table, limitations and opt-in candidate settings in DFLASH-VERIFICATION-RESULTS.md; no default recommendation.
 
-Current stage: corrected ownership fix and component/narrow-column arithmetic have controlled exact qualification. Corrected placement ceiling and complete exact IMMA feasibility have been measured; neither justifies a substantial new implementation. Exact-column coding improves only about 1% in a short matched sample. Performance flags remain opt-in; no robust new default gain. Next work must identify a materially larger opportunity before broad qualification or more combinations.
+Current stage: bounded experimental qualification is consolidated in DFLASH-VERIFICATION-RESULTS.md. Later entries below supersede historical pending wording. Performance flags remain opt-in; no60TPSor unconditional production/default/PR claim. Production-only historical attribution gates remain open and are not silently checked off.
 
 - [x] Capture corrected initial residency, RAM readiness, backend masks and copy owners.
 - [x] Validate relaxed fixed-CPU-budget placement ceiling with metadata checks and exhaustive toy cases.
@@ -73,7 +73,7 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 
 - [x] Capture and compare serialized pre-verification state; localize repeat-prefill divergence before verification.
 - [x] Locate first sampled prefill seam difference at layer3FFNoutput using existing diagnostics, with instrumentation caveat recorded.
-- [ ] Distinguish layer3combine grouping from MMQ product differences using captured values; historical failure remains unattributed.
+- [x] Distinguish layer3combine grouping from MMQ product differences using captured values and production replay; historical failure remains unattributed.
 
 - [x] Replay captured layer3combines with the production CUDA kernel: both exact. Partition changes and individual expert-output changes both contribute; historical failure remains separate.
 - [x] Test replay partition sensitivity and reject unsafe K>8/truncated captures (3tests).
@@ -82,7 +82,7 @@ Current stage: corrected ownership fix and component/narrow-column arithmetic ha
 - [x] Reconcile recorded timing budgets and rule out zero-draft window duplication as a performance opportunity.
 
 - [x] Localize selected expert differences after down: all eight prefill input/post-SwiGLU vectors exact; five down outputs differ; actual dispatch geometry recorded.
-- [ ] If claiming Stream-K cause, replay captured down weights/quantized inputs under both geometries; source consistency alone is insufficient.
+- [x] Replay captured down weights/quantized inputs under both geometries; dispatch-geometry dependence established. Specific Stream-K causation is not claimed.
 
 - [x] Replay captured down matrices and quantized input: both engine outputs exact; unchanged after unrelated data zeroing. Dispatch-geometry dependence established, specific Stream-K attribution not claimed.
 - [x] Check padded replay identity indices under Compute Sanitizer: zero errors.

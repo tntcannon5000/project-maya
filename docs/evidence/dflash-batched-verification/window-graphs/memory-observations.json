@@ -1,0 +1,33 @@
+{
+  "scope": "Whole-run device-wide nvidia-smi samples, including loading/prefill/other applications; not isolated incremental graph memory. One-second sampling may miss peaks.",
+  "runs": {
+    "writing-off": {
+      "source_sha256": "b1e58b25f922ad0bbc0150449cf2656656204d1373c60315af813bbc721b3925",
+      "samples": 64,
+      "peak_device_mib": 31857,
+      "peak_graphics_mhz": 2632,
+      "peak_temperature_c": 52
+    },
+    "writing-on": {
+      "source_sha256": "9a7eac6a5a4c31d276f163e0b5bc7db8f188bff288a212a0dd545a6a5f106eb2",
+      "samples": 62,
+      "peak_device_mib": 31805,
+      "peak_graphics_mhz": 2632,
+      "peak_temperature_c": 52
+    },
+    "long-serving-off": {
+      "source_sha256": "ee5e13959b377fa11de2bd098319a4a9379b332c4cd1d3220bd56218b0d09843",
+      "samples": 70,
+      "peak_device_mib": 31849,
+      "peak_graphics_mhz": 2632,
+      "peak_temperature_c": 56
+    },
+    "long-serving-on": {
+      "source_sha256": "89a1fae158415ac7e983d814cea525ce41596feca45fe4273123032190349996",
+      "samples": 70,
+      "peak_device_mib": 31808,
+      "peak_graphics_mhz": 2632,
+      "peak_temperature_c": 56
+    }
+  }
+}

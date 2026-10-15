@@ -1,0 +1,60 @@
+glm dflash: MTP off - the NextN draft block is not loaded, DFlash drafts instead
+maya verify scratch: 64 slots, 864.0 MiB reserved before expert-pool sizing
+glm prefill: CUDA0 chunks of 32768 tokens (--prefill auto, up to 32768; mixer sub-batches of 2048), borrowing 7567 MB of the expert pool while a prompt runs (activations 5133, weight scratch 96, expert staging 162, prestage 2160: 160 experts); disk landing ring 96 experts (1296 MB pinned)
+glm fast: CUDA0 VRAM before the expert pool: 10.52 of 31.84 GB in use - dense weights 5.01, state/KV (131072 ctx) 1.78, activations 0.11, other (context, MTP, scratch, prompt path) 3.63
+glm fast: the expert profile C:\Users\niran\Documents\Code Projects\LocalLLMs\project-maya\data\expert-profile-glm.bin ranks 13248 (layer, expert) pairs
+maya reuse policy: causal transition, smoothing=16, row aging=2048
+glm fast: CUDA0 layers [0,45) expert pool 20.63 GB, 49-83 slots/layer (2523 total)
+maya verify fetch staging: CUDA0 64 token-owned disk staging slots, 864.00 MiB extra pinned RAM
+glm fast: CUDA0 RAM tier 93.99 GB pinned, 11365 slots
+glm fast: CUDA0 warming the expert tiers 10% (10.8 of 107.2 GB, 4 s)
+glm fast: CUDA0 warming the expert tiers 20% (21.5 of 107.2 GB, 9 s)
+glm fast: CUDA0 warming the expert tiers 30% (32.2 of 107.2 GB, 12 s)
+glm fast: CUDA0 warming the expert tiers 40% (42.9 of 107.2 GB, 15 s)
+glm fast: CUDA0 warming the expert tiers 50% (53.6 of 107.2 GB, 18 s)
+glm fast: CUDA0 warming the expert tiers 60% (64.3 of 107.2 GB, 21 s)
+glm fast: CUDA0 warming the expert tiers 70% (75.1 of 107.2 GB, 24 s)
+glm fast: CUDA0 warming the expert tiers 80% (85.8 of 107.2 GB, 27 s)
+glm fast: CUDA0 warming the expert tiers 90% (96.5 of 107.2 GB, 30 s)
+glm fast: CUDA0 warming the expert tiers 100% (107.2 of 107.2 GB, 32 s)
+glm fast: CUDA0 tiers warm: 12096 experts (107.2 GB) in 32 s (3.30 GB/s)
+glm fast: CUDA0 CPU lane: 16 threads, an expert 0.190 ms on the CPU vs 0.249 ms over PCIe -> of 0..8 RAM-tier experts the CPU takes 0 1 1 2 2 3 3 4 4
+glm dflash: 5 layers, hidden 4096, 32 heads (8 kv), block 8, window 2048, selector top-16 rank 256, reads trunk layers 6,15,25,34,43; 717 MB on CUDA0
+maya generate: glm5-next serve (M3.1): GEN <max_new> [keys] <ids>, GENI <max_new> [keys] <embeddings> <ids>; QUIT to end
+glm_batch: CUDA0 prompt attention on the tensor cores (mma.sync, 32 heads a block)
+glm stat: decode 26.64 ms/tok (37.53 tok/s) | vram hit 66.15% | ram fetches 45.83/tok | disk 0.00 reads/tok in 0.45 waits/tok, 0.00 ms/tok | promotions 42.45/tok | cpu lane 66.57/tok in 13.57 ms/tok | prompt 18.1 ms/tok | vram 2433/2523 ram 11262/11365
+glm stat: decode 22.30 ms/tok (44.85 tok/s) | vram hit 74.62% | ram fetches 32.18/tok | disk 0.00 reads/tok in 0.05 waits/tok, 0.00 ms/tok | promotions 30.94/tok | cpu lane 52.39/tok in 10.79 ms/tok | prompt 0.8 ms/tok | vram 2430/2523 ram 11276/11365
+maya mv exact cols: selected type=14 columns=5 rows_per_warp=4 jobs=1 blocks=32 (host dispatch, including capture)
+maya mv exact cols: selected type=12 columns=5 rows_per_warp=2 jobs=3 blocks=1536 (host dispatch, including capture)
+maya mv exact cols: selected type=12 columns=3 rows_per_warp=4 jobs=3 blocks=768 (host dispatch, including capture)
+maya mv exact cols: selected type=14 columns=3 rows_per_warp=4 jobs=1 blocks=32 (host dispatch, including capture)
+maya verify: 32 windows, 0 retries, 110 reused GPU expert rows
+maya verify MoE graph CUDA0: 1344 eligible calls, 168 captures / 1176 replays, 5418 route credits, 3780 nodes built, 168 cached keys; 0 capture failures / 0 disabled-key fallbacks / 0 launch failures / 0 invalidations
+maya verify MoE graph CUDA0 host totals: capture/build/instantiate 127.235 ms, first-launch submission 5.256 ms, replay submission 28.513 ms; ring-credit waits 714 / 1025.330 ms / 0 timeouts (30 s bound); submission times are not GPU execution times
+maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging
+maya verify HC CUDA0: 2880 executed HC3 phase batches, 11610 token rows
+maya verify component fetch CUDA0: 1344 full-layer groups, 0 fallback fronts, 1344 prefix / 1344 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+glm dflash prof (35 rounds, 3 of them no draft: 2.77 drafts, 2.63 accepted a round): draft 1.95 ms | verify window (or the token) 60.96 ms | commit + inject 0.35 ms
+glm stat: decode 17.31 ms/tok (57.76 tok/s) | vram hit 75.12% | ram fetches 32.55/tok | disk 0.00 reads/tok in 0.43 waits/tok, 0.00 ms/tok | promotions 18.23/tok | cpu lane 53.23/tok in 10.43 ms/tok | prompt 0.8 ms/tok | vram 2492/2523 ram 11194/11365
+glm spec: 92 of 97 drafts accepted (94.8%)
+maya verify: 3 windows, 0 retries, 63 reused GPU expert rows
+maya verify MoE graph CUDA0: 126 eligible calls, 0 captures / 126 replays, 630 route credits, 0 nodes built, 168 cached keys; 0 capture failures / 0 disabled-key fallbacks / 0 launch failures / 0 invalidations
+maya verify MoE graph CUDA0 host totals: capture/build/instantiate 0.000 ms, first-launch submission 0.000 ms, replay submission 3.082 ms; ring-credit waits 88 / 162.550 ms / 0 timeouts (30 s bound); submission times are not GPU execution times
+maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging
+maya verify HC CUDA0: 270 executed HC3 phase batches, 1350 token rows
+maya verify component fetch CUDA0: 126 full-layer groups, 0 fallback fronts, 126 prefix / 126 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+glm dflash prof (3 rounds, 0 of them no draft: 4.00 drafts, 1.33 accepted a round): draft 1.80 ms | verify window (or the token) 83.49 ms | commit + inject 0.93 ms
+glm stat: decode 32.39 ms/tok (30.87 tok/s) | vram hit 71.05% | ram fetches 70.62/tok | disk 0.12 reads/tok in 0.25 waits/tok, 0.37 ms/tok | promotions 32.38/tok | cpu lane 111.50/tok in 21.76 ms/tok | prompt 0.8 ms/tok | vram 2475/2523 ram 11225/11365
+glm spec: 4 of 12 drafts accepted (33.3%)
+maya verify: 12 windows, 0 retries, 24 reused GPU expert rows
+maya verify MoE graph CUDA0: 504 eligible calls, 0 captures / 504 replays, 1512 route credits, 0 nodes built, 168 cached keys; 0 capture failures / 0 disabled-key fallbacks / 0 launch failures / 0 invalidations
+maya verify MoE graph CUDA0 host totals: capture/build/instantiate 0.000 ms, first-launch submission 0.000 ms, replay submission 11.663 ms; ring-credit waits 245 / 303.987 ms / 0 timeouts (30 s bound); submission times are not GPU execution times
+maya verify MoE graph CUDA0 bypass reasons: scope=0 diagnostics=0 format=0 storage/service=0 async-fetch=0; requires full T2..T5 native Q2/Q3/Q4 top-8, c1, row scratch and token-owned disk staging
+maya verify HC CUDA0: 1080 executed HC3 phase batches, 3240 token rows
+maya verify component fetch CUDA0: 504 full-layer groups, 0 fallback fronts, 504 prefix / 504 down copy launches submitted, down grid cap 32 CTAs, 0 serialized weight-audit joins, 0 token-owned disk staging uses; launches do not imply nonzero traffic
+glm dflash prof (12 rounds, 0 of them no draft: 2.00 drafts, 1.58 accepted a round): draft 1.96 ms | verify window (or the token) 52.23 ms | commit + inject 0.52 ms
+glm stat: decode 20.54 ms/tok (48.69 tok/s) | vram hit 74.21% | ram fetches 36.75/tok | disk 0.00 reads/tok in 0.44 waits/tok, 0.00 ms/tok | promotions 23.53/tok | cpu lane 60.28/tok in 11.93 ms/tok | prompt 0.7 ms/tok | vram 2468/2523 ram 11236/11365
+glm spec: 19 of 24 drafts accepted (79.2%)
+maya reuse policy: observations=18564 changed_victims=7252 horizon=1 matured_anchors=0
+glm spec: 133 speculative positions, 86.5% accepted
+maya CPU pipeline: 4629 batches, 37024 phase-gated callbacks

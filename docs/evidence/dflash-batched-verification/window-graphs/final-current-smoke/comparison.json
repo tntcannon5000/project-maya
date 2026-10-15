@@ -1,0 +1,60 @@
+{
+  "environment_equal": false,
+  "environment_differences": {
+    "STRATA_GLM_WIN_ALLCPU": [
+      "0",
+      null
+    ]
+  },
+  "schedule_equal": true,
+  "prompt_ids_exact": true,
+  "old_binary_sha256": "4bb79c79121fa56a67955e688dd182e6ffb49ba13e6d6d30ecf0ebe9a3180ffa",
+  "current_binary_sha256": "f5861fb80602f59905ff9d8ec4d5dbdd14de9b1a9c7e4ddd2271cb1b5691fef4",
+  "rows": [
+    {
+      "kind": "warmup",
+      "old_tps": 37.51135597690707,
+      "current_tps": 37.53335483681787,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true,
+      "current_prompt_ms": 725.2
+    },
+    {
+      "kind": "control",
+      "old_tps": 44.03770728686438,
+      "current_tps": 44.85247739855631,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true,
+      "current_prompt_ms": 30.2
+    },
+    {
+      "kind": "confidence",
+      "old_tps": 56.775338212463964,
+      "current_tps": 57.75912639321331,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true,
+      "current_prompt_ms": 30.1
+    },
+    {
+      "kind": "cancel",
+      "old_tps": 27.68166089965398,
+      "current_tps": 30.876109610189115,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true,
+      "current_prompt_ms": 31.7
+    },
+    {
+      "kind": "recovery",
+      "old_tps": 44.156202566579275,
+      "current_tps": 48.69141813755325,
+      "output_ids_exact": true,
+      "offered_equal": true,
+      "accepted_equal": true,
+      "current_prompt_ms": 26.5
+    }
+  ]
+}
