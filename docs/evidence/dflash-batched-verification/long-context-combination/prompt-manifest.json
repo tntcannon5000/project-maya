@@ -1,0 +1,11 @@
+{
+  "source_files": [
+    "tools/bench_dflash_matrix.py",
+    "tools/analyze_window_union.py",
+    "tools/test_analyze_window_union.py",
+    "tools/check_verify_scratch.py"
+  ],
+  "occupied_tokens": 6793,
+  "prompt_sha256": "7ef8b633aba26b3a6ec040187eb43ae171fc3a10f49d9cd8d9031491bd589b30",
+  "purpose": "one realistic longer coding task; fixed prompt across configurations; allocated capacity128K"
+}

@@ -1,0 +1,3 @@
+# Intentionally interrupted diagnostic
+
+The fixture sent the 6,793-token prefix through `forward`, which runs sequential decode rather than the serving batched prefill path. Parent verified live process identity and GPU activity, then stopped only `maya_verify_scratch_test` PID32384 to avoid wasting time on an unrepresentative fixture. No logit rows had been written. The nonzero exit is an intentional interruption, not a numerical failure or timeout. The replacement runs use the same model `prefill(head, next_token)` path as serving, then forward the last prompt token, with identical settings for control and candidate. Raw incomplete evidence is retained locally.

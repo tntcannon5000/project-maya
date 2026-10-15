@@ -1,0 +1,10 @@
+{
+  "occupied_prefix_tokens": 6793,
+  "batched_prefill": true,
+  "values": 7434240,
+  "rows": 48,
+  "exact": true,
+  "max_abs": 0.0,
+  "mismatches": 0,
+  "finite": true
+}

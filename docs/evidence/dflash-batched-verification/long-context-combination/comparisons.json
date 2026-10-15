@@ -1,0 +1,39 @@
+{
+  "matched_requests": {
+    "warmup/0": {
+      "same_output_ids": true,
+      "same_acceptance": true
+    },
+    "control/0": {
+      "same_output_ids": true,
+      "same_acceptance": true
+    },
+    "matrix/2": {
+      "same_output_ids": true,
+      "same_acceptance": true
+    },
+    "matrix/4": {
+      "same_output_ids": true,
+      "same_acceptance": true
+    },
+    "cancel/4": {
+      "same_output_ids": false,
+      "same_acceptance": false
+    },
+    "recovery/2": {
+      "same_output_ids": false,
+      "same_acceptance": false
+    }
+  },
+  "confidence_offered_histogram": {
+    "1": 26,
+    "0": 53,
+    "2": 5,
+    "3": 2
+  },
+  "confidence_accepted": 42.0,
+  "confidence_offered": 42.0,
+  "confidence_matches_ordinary_output": false,
+  "confidence_is_matched_speed_comparison": false,
+  "lifecycle_requests_succeeded": true
+}

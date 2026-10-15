@@ -214,3 +214,11 @@ Built complete standalone exact Q4_K IMMA kernel.240 varied cases plus6actual mo
 Implemented complete opt-in three/five-column instantiations, retaining legacy row geometry and mixed-job block accounting. Baseline and candidate each pass 587 strict native/mixed-column cases; full-model T3/T5 verification passes 7,434,240 exact logits. Compiled registers fall (Q4: 103 to 80 for T3, 80 to 75 for T5).
 
 Contemporary four-draft coding A/B: 47.82 to 48.32 TPS, verification 86.393 to 85.417 ms/round, identical output IDs and 97/120 accepted drafts. Ordinary control 44.32 to 44.66 TPS. Small result is not a robust default recommendation; keep opt-in. Do not launch a larger suite or claim additive component gains. No inference remains running after the checks.
+
+## Longer-context combination qualification
+
+Completed one 6,793-token coding task with corrected control and grouped/HC/component/exact-column combination. Forced two/four-draft TPS29.27/19.39 versus29.88/19.62; corresponding output IDs and acceptance match. Ordinary36.27/36.75, cold-prefill3224.4/3212.7ms. Lifecycle checks pass; candidate extra confidence request means later cache/history sequence differs. No robust speed/default claim.
+
+Added an explicit upstream-confidence policy request to the benchmark tool and configurable fixed-prefix/batched-prefill support to the logit fixture. The initial long fixture used serial forward and was deliberately interrupted before logits; its replacement uses serving prefill semantics. Combined candidate passes7,434,240 exact controlled-GPU logits after the6793-token prefix, including partial commits/repeats.
+
+Confidence policy engaged (42/42 drafts accepted;53of86 rounds skipped drafting), but differs from ordinary output history; its37.65TPS is not matched speed evidence. VRAM audit finds only~1.4GiB potentially lendable futureKV at short contexts, requiring coordinated ownership rather than a safe isolated allocation change. Direct mapped-RAM arithmetic for transient experts is now under source review; this does not eliminate PCIe traffic.

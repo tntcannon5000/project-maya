@@ -23,12 +23,15 @@ def main():
     ap.add_argument('--cancel-smoke',action='store_true')
     ap.add_argument('--prompt-file',type=Path)
     ap.add_argument('--tokens',type=int,default=192)
+    ap.add_argument('--confidence-max-drafts',type=int,default=0,
+                    help='Append the upstream single-GPU confidence policy (0.95 cut, no mandatory drafts)')
     a=ap.parse_args();OUT=a.out.resolve()
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
     tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
     prompt=a.prompt_file.read_text(encoding='utf-8') if a.prompt_file else PROMPT
     if a.tokens < 1:ap.error('--tokens must be positive')
+    if not 0 <= a.confidence_max_drafts <= 7:ap.error('--confidence-max-drafts must be 0..7')
     ids = tok.encode('[gMASK]<sop><|user|>\n'+prompt+'<|assistant|>\n</think>', parse_special=True)
     exe = a.exe.resolve()
     for quant in a.quant:
@@ -51,7 +54,8 @@ def main():
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
                         context_capacity=131072, occupied_prompt_tokens=len(ids), output_cap=a.tokens,
-                        width_order=list(map(int,a.widths.split(','))), stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
+                        width_order=list(map(int,a.widths.split(','))), confidence_max_drafts=a.confidence_max_drafts,
+                        stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]
         with (out/'engine.log').open('w') as log, (out/'wire.log').open('w') as wire, (out/'gpu.csv').open('w') as glog:
@@ -67,11 +71,13 @@ def main():
                 while not read().startswith('READY'): pass
                 print(quant,'READY',flush=True)
                 requests=[('warmup',0,a.tokens),('control',0,a.tokens)]+[('matrix',w,a.tokens) for w in manifest['width_order']]
+                if a.confidence_max_drafts:requests.append(('confidence',a.confidence_max_drafts,a.tokens))
                 if a.cancel_smoke:requests += [('cancel',4,192),('recovery',2,32)]
                 for name,width,n in requests:
                     before=len(stats.read_text().splitlines()) if stats.exists() else 0
                     start=time.perf_counter(); output=[]; arrivals=[]
-                    p.stdin.write(f'GEN {n} temperature=0 spec={width+1} spec_min_p=0 spec_n_min={width} spec_cum=0 '+','.join(map(str,ids))+'\n');p.stdin.flush()
+                    policy = 'spec_min_p=0.95 spec_n_min=0 spec_cum=0' if name=='confidence' else f'spec_min_p=0 spec_n_min={width} spec_cum=0'
+                    p.stdin.write(f'GEN {n} temperature=0 spec={width+1} {policy} '+','.join(map(str,ids))+'\n');p.stdin.flush()
                     while True:
                         s=read()
                         if s.startswith('T '):
@@ -83,9 +89,9 @@ def main():
                     if name=='cancel' and 'cancel' not in fields:raise RuntimeError('STOP did not cancel')
                     rounds=[list(map(float,x.split())) for x in stats.read_text().splitlines()[before:]] if stats.exists() else []
                     offered=sum(r[0] for r in rounds); accepted=sum(r[1] for r in rounds)
-                    if width and (not rounds or max(r[0] for r in rounds)!=width):
+                    if width and (not rounds or max(r[0] for r in rounds)>width or (name!='confidence' and max(r[0] for r in rounds)!=width)):
                         raise RuntimeError(f'Width {width} did not engage: {rounds[:2]}')
-                    row=dict(kind=name,width=width,tokens=int(fields[1]),prompt_ms=float(fields[3]),decode_ms=float(fields[4]),
+                    row=dict(kind=name,width=width,draft_policy=policy,tokens=int(fields[1]),prompt_ms=float(fields[3]),decode_ms=float(fields[4]),
                              done=s.strip(),tps=int(fields[1])*1000/float(fields[4]),output_ids=output,
                              text=tok.decode(output),arrivals_ms=arrivals,rounds=rounds,offered=offered,accepted=accepted,
                              acceptance=accepted/offered if offered else None,

@@ -9,11 +9,15 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--cases',default='legacy,candidate')
     ap.add_argument('--out',type=Path,default=OUT)
     ap.add_argument('--env',action='append',default=[])
+    ap.add_argument('--tokens-file',type=Path,help='Fixed prompt plus continuation IDs, one integer per line')
     a=ap.parse_args();OUT=a.out.resolve()
     OUT.mkdir(parents=True,exist_ok=True)
     cfg=json.loads((ROOT/'maya-retained-v117.local.json').read_text())
-    q=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/requests.json').read_text())[1]
-    ids=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/manifest.json').read_text())['prompt_ids']+q['output_ids']
+    if a.tokens_file:
+        ids=[int(value) for value in a.tokens_file.read_text().split()]
+    else:
+        q=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/requests.json').read_text())[1]
+        ids=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/manifest.json').read_text())['prompt_ids']+q['output_ids']
     tokenfile=OUT/'tokens.txt';tokenfile.write_text('\n'.join(map(str,ids)))
     records=[]
     for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1),('async-off',64,1),('async-on',64,1)]:
@@ -36,7 +40,7 @@ def main():
         cmd=[str(ROOT/'build/maya_verify_scratch_test.exe'),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(tokenfile),str(OUT/(label+'.f32'))]
         with (OUT/(label+'.log')).open('w') as log:
             r=subprocess.run(cmd,env=env,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,timeout=600)
-        records.append(dict(label=label,returncode=r.returncode,binary_sha256=hashlib.sha256(Path(cmd[0]).read_bytes()).hexdigest(),env={k:v for k,v in env.items() if k.startswith(('MAYA_','STRATA_'))}))
+        records.append(dict(label=label,returncode=r.returncode,binary_sha256=hashlib.sha256(Path(cmd[0]).read_bytes()).hexdigest(),token_file_sha256=hashlib.sha256(tokenfile.read_bytes()).hexdigest(),token_count=len(ids),env={k:v for k,v in env.items() if k.startswith(('MAYA_','STRATA_'))}))
         (OUT/(label+'-manifest.json')).write_text(json.dumps(records[-1],indent=2))
         print(label,'exit',r.returncode,flush=True)
         if r.returncode:raise RuntimeError(label)

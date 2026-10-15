@@ -1,0 +1,506 @@
+You are reviewing a Python inference benchmarking toolkit. Refactor it into a small maintainable package with shared process lifecycle management, strict configuration validation, reusable artifact writing and deterministic analysis tests. Preserve the existing measurement semantics, distinguish diagnostic runs from throughput results, and ensure cancellation and failures cannot leave child processes running. Explain the design briefly, then provide complete replacement Python modules and tests. Use the following current files as the source material.
+
+FILE: tools/bench_dflash_matrix.py
+```python
+"""Short c=1 drafter-quant/width screen; no persistent launcher changes."""
+import argparse, hashlib, json, os, subprocess, sys, threading, time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+import strata_tokenizer as ST
+
+OUT = ROOT / 'docs/evidence/dflash-quant-width'
+DRAFT = Path('G:/Models/GLM-5.3-Flash-DFlash2')
+PROMPT = ('Write a complete Python FastAPI backend for a task dashboard with projects, tasks, '
+          'status filters, SQLite persistence, validation and tests. Include the code for every file.')
+
+def main():
+    global OUT
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--out',type=Path,default=OUT)
+    ap.add_argument('--exe',type=Path,default=ROOT/'build/strata.exe')
+    ap.add_argument('--stock',action='store_true')
+    ap.add_argument('--widths',default='4,1,7,2,6,3,5')
+    ap.add_argument('--quant',nargs='+',default=['Q4_K_M','Q5_K_M','Q8_0'])
+    ap.add_argument('--env',action='append',default=[])
+    ap.add_argument('--cancel-smoke',action='store_true')
+    ap.add_argument('--prompt-file',type=Path)
+    ap.add_argument('--tokens',type=int,default=192)
+    a=ap.parse_args();OUT=a.out.resolve()
+    OUT.mkdir(parents=True, exist_ok=True)
+    cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
+    tok = ST.Tokenizer.from_dir(Path(cfg['tokenizer']))
+    prompt=a.prompt_file.read_text(encoding='utf-8') if a.prompt_file else PROMPT
+    if a.tokens < 1:ap.error('--tokens must be positive')
+    ids = tok.encode('[gMASK]<sop><|user|>\n'+prompt+'<|assistant|>\n</think>', parse_special=True)
+    exe = a.exe.resolve()
+    for quant in a.quant:
+        out = OUT/quant
+        out.mkdir(exist_ok=False)
+        stats = out/'rounds.txt'
+        env = {k:v for k,v in os.environ.items() if not k.startswith(('MAYA_', 'STRATA_'))}
+        env.update(cfg['env'])
+        if a.stock:
+            env={k:v for k,v in env.items() if not k.startswith('MAYA_')}
+        for setting in a.env:
+            k,v=setting.split('=',1);env[k]=v
+        env['STRATA_GLM_DFLASH_STATS'] = str(stats)
+        env['STRATA_GLM_DFLASH_PROF'] = '1'
+        env['PATH'] = ';'.join(cfg['lib_dirs'])+';'+env['PATH']
+        draft = DRAFT/f'GLM-5.3-Flash-DFlash2-{quant}.gguf'
+        cmd = [str(exe), '--serve', *cfg['args'], '--parallel', '1', '--dflash', str(draft),
+               '--spec-min-p', '0', '--short-read', '0', '--prompt-cache', '0', '--kv-streaming', 'off']
+        manifest = dict(command=cmd, environment={k:v for k,v in env.items() if k.startswith(('STRATA_', 'MAYA_'))}, prompt=prompt, prompt_ids=ids,
+                        binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
+                        drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
+                        context_capacity=131072, occupied_prompt_tokens=len(ids), output_cap=a.tokens,
+                        width_order=list(map(int,a.widths.split(','))), stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
+        (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
+        rows=[]
+        with (out/'engine.log').open('w') as log, (out/'wire.log').open('w') as wire, (out/'gpu.csv').open('w') as glog:
+            gpu = subprocess.Popen(['nvidia-smi','--query-gpu=timestamp,memory.used,utilization.gpu,clocks.gr,clocks.mem,temperature.gpu,power.draw','--format=csv','-l','1'], stdout=glog, stderr=subprocess.DEVNULL)
+            p = subprocess.Popen(cmd,cwd=ROOT,env=env,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=log,text=True,bufsize=1)
+            watchdog=threading.Timer(900, p.kill); watchdog.start()
+            def read():
+                s=p.stdout.readline(); wire.write(s); wire.flush()
+                if not s: raise RuntimeError(f'{quant}: engine exited {p.poll()}')
+                if s.startswith('ERR'): raise RuntimeError(s)
+                return s
+            try:
+                while not read().startswith('READY'): pass
+                print(quant,'READY',flush=True)
+                requests=[('warmup',0,a.tokens),('control',0,a.tokens)]+[('matrix',w,a.tokens) for w in manifest['width_order']]
+                if a.cancel_smoke:requests += [('cancel',4,192),('recovery',2,32)]
+                for name,width,n in requests:
+                    before=len(stats.read_text().splitlines()) if stats.exists() else 0
+                    start=time.perf_counter(); output=[]; arrivals=[]
+                    p.stdin.write(f'GEN {n} temperature=0 spec={width+1} spec_min_p=0 spec_n_min={width} spec_cum=0 '+','.join(map(str,ids))+'\n');p.stdin.flush()
+                    while True:
+                        s=read()
+                        if s.startswith('T '):
+                            output.append(int(s.split()[1]));arrivals.append((time.perf_counter()-start)*1000)
+                            if name=='cancel' and len(output)==8:
+                                p.stdin.write('STOP\n');p.stdin.flush()
+                        if s.startswith('DONE'): break
+                    fields=s.split()
+                    if name=='cancel' and 'cancel' not in fields:raise RuntimeError('STOP did not cancel')
+                    rounds=[list(map(float,x.split())) for x in stats.read_text().splitlines()[before:]] if stats.exists() else []
+                    offered=sum(r[0] for r in rounds); accepted=sum(r[1] for r in rounds)
+                    if width and (not rounds or max(r[0] for r in rounds)!=width):
+                        raise RuntimeError(f'Width {width} did not engage: {rounds[:2]}')
+                    row=dict(kind=name,width=width,tokens=int(fields[1]),prompt_ms=float(fields[3]),decode_ms=float(fields[4]),
+                             done=s.strip(),tps=int(fields[1])*1000/float(fields[4]),output_ids=output,
+                             text=tok.decode(output),arrivals_ms=arrivals,rounds=rounds,offered=offered,accepted=accepted,
+                             acceptance=accepted/offered if offered else None,
+                             draft_ms=sum(r[2] for r in rounds),verify_ms=sum(r[3] for r in rounds))
+                    rows.append(row);(out/'requests.json').write_text(json.dumps(rows,indent=2))
+                    print(quant,name,width,round(row['tps'],2),'TPS',row['acceptance'],flush=True)
+                p.stdin.write('QUIT\n');p.stdin.flush()
+                wire.write(p.stdout.read())
+                if p.wait(timeout=120): raise RuntimeError('nonzero exit')
+            finally:
+                watchdog.cancel()
+                if p.poll() is None: p.kill();p.wait()
+                gpu.terminate();gpu.wait()
+
+if __name__ == '__main__': main()
+
+```
+
+FILE: tools/analyze_window_union.py
+```python
+"""Validate opt-in corrected window metadata and bound fixed-CPU-budget copies.
+
+This consumes MAYA_WIN_UNION_DIAG=<prefix> output (<prefix>.cudaN.csv).
+It never runs inference and predicts no time savings. Its oracle holds initial
+residents on GPU and uses no more CPU rows than the observed layer, ignoring
+per-token CPU quotas, CPU cost, overlap and future cache admission.
+"""
+
+import argparse
+from collections import Counter, defaultdict
+import csv
+import json
+from pathlib import Path
+
+
+def analyze_rows(rows):
+    layers = defaultdict(list)
+    for row in rows:
+        row = {key: int(value) for key, value in row.items()}
+        layers[(row["device"], row["seq"] - row["token"], row["layer"])].append(row)
+    totals = {}
+    details = []
+    for key, records in sorted(layers.items()):
+        first = records[0]
+        width = first["T"]
+        identity = f"device={key[0]} first_seq={key[1]} layer={key[2]}"
+
+        def require(ok, message):
+            if not ok:
+                raise ValueError(f"{identity}: {message}")
+
+        require(2 <= width <= 8 and len(records) == width * 8, "incomplete layer")
+        require({(r["token"], r["rank"]) for r in records} ==
+                {(t, rank) for t in range(width) for rank in range(8)}, "duplicate/missing token ranks")
+        for field in ("T", "p0", "gu_type", "down_type", "blob"):
+            require(len({r[field] for r in records}) == 1, f"inconsistent {field}")
+        records.sort(key=lambda r: (r["token"], r["rank"]))
+        experts = defaultdict(list)
+        for row in records:
+            experts[row["id"]].append(row)
+            require(row["seq"] == key[1] + row["token"], "request sequence mismatch")
+            require(row["id"] >= 0 and row["blob"] > 0, "invalid ID/blob")
+            for field in ("cpu", "miss", "skip", "promo", "fetch_mask", "ram_owned", "ram_pending", "ram_ready"):
+                require(row[field] in (0, 1), f"invalid {field}")
+            require(row["cpu"] + bool(row["gpu_ptr"]) + row["skip"] == 1,
+                    "entry is omitted or assigned to multiple backends")
+            require(not row["cpu"] or row["cpu_src"] != 0, "CPU row has no backing")
+            require(not row["fetch_src"] or row["gpu_ptr"] != 0, "copy source has no destination")
+            require(not row["fetch_mask"] or row["fetch_src"] != 0, "RAM-fetch mask has no source")
+            require(not row["promo"] or (row["gpu_ptr"] and row["permanent"]), "promotion has no permanent GPU plan")
+            if row["gpu_ptr"]:
+                owners = [i for i, item in enumerate(records)
+                          if item["gpu_ptr"] == row["gpu_ptr"] and item["fetch_src"]]
+                require(len(owners) <= 1, "duplicate GPU copy owners")
+                require(row["copy_owner"] == (owners[0] if owners else -1), "copy owner mismatch")
+                if owners:
+                    require(records[owners[0]]["id"] == row["id"], "different IDs share a GPU copy")
+            else:
+                require(row["copy_owner"] == -1, "non-GPU entry has a copy owner")
+        for uses in experts.values():
+            require(len({r["token"] for r in uses}) == len(uses), "expert repeated within one token")
+            for field in ("initial_gpu", "initial_ram", "ram_state", "ram_owned", "ram_pending", "ram_ready"):
+                require(len({r[field] for r in uses}) == 1, f"inconsistent initial {field}")
+            gpu_uses = [r for r in uses if r["gpu_ptr"]]
+            require(len({r["gpu_ptr"] for r in gpu_uses}) <= 1, "one expert has multiple GPU destinations")
+            if uses[0]["initial_gpu"]:
+                require(all(r["gpu_ptr"] == uses[0]["initial_gpu"] for r in uses),
+                        "initial resident changed backend/destination")
+
+        label = f"T{width}/GU{first['gu_type']}/D{first['down_type']}"
+        if label not in totals:
+            totals[label] = dict(layers=0, rows=0, logical_groups=0, cpu_rows=0,
+                                 fetched_groups=0, fetched_bytes=0, eligible_layers=0,
+                                 eligible_fetched_bytes=0, fixed_budget_removable_bytes_upper=0,
+                                 fixed_budget_rows_bound_bytes=0, cpu_only_repeated_groups=0,
+                                 cpu_only_repeated_rows=0, mixed_groups=0,
+                                 veto_layers=Counter(), multiplicity=defaultdict(Counter))
+        total = totals[label]
+        total["layers"] += 1
+        total["rows"] += len(records)
+        total["logical_groups"] += len(experts)
+        cpu_rows = sum(r["cpu"] for r in records)
+        copies = sum(bool(r["fetch_src"]) for r in records)
+        total["cpu_rows"] += cpu_rows
+        total["fetched_groups"] += copies
+        total["fetched_bytes"] += copies * first["blob"]
+        veto = set()
+        nonresident_multiplicities = []
+        cpu_only_groups = 0
+        for uses in experts.values():
+            representative = uses[0]
+            multiplicity = len(uses)
+            cpu = sum(r["cpu"] for r in uses)
+            fetched = sum(bool(r["fetch_src"]) for r in uses)
+            require(fetched <= 1, "one expert copied more than once")
+            resident = bool(representative["initial_gpu"])
+            if resident:
+                require(not fetched, "initial resident copied again")
+                category = "resident"
+            else:
+                nonresident_multiplicities.append(multiplicity)
+                if not representative["ram_ready"]:
+                    if representative["ram_pending"]:
+                        veto.add("initial_RAM_pending_demotion")
+                    elif representative["initial_ram"] and not representative["ram_owned"]:
+                        veto.add("initial_RAM_owner_mismatch")
+                    else:
+                        veto.add("initial_RAM_not_ready_or_unpublished")
+                if any(r["miss"] for r in uses):
+                    # The device could not obtain a published source. The host
+                    # can answer from a pending demotion/lookahead RAM slot;
+                    # this bit does not establish an actual disk read.
+                    veto.add("host_response_required")
+                if representative["ram_ready"]:
+                    require(representative["initial_ram"] and representative["ram_owned"] and
+                            not representative["ram_pending"] and representative["ram_state"] in (1, 2, 6),
+                            "contradictory RAM-ready metadata")
+                    require(all(not r["cpu"] or r["cpu_src"] == representative["initial_ram"] for r in uses),
+                            "CPU backing differs from initial ready RAM")
+                    require(all(not r["fetch_src"] or r["fetch_src"] == representative["initial_ram"] for r in uses),
+                            "fetch backing differs from initial ready RAM")
+                if cpu == multiplicity:
+                    category = "CPU_only"
+                    cpu_only_groups += 1
+                    if multiplicity > 1:
+                        total["cpu_only_repeated_groups"] += 1
+                        total["cpu_only_repeated_rows"] += multiplicity
+                elif cpu and not any(r["skip"] for r in uses):
+                    category = "mixed"
+                    total["mixed_groups"] += 1
+                    require(fetched == 1, "mixed nonresident group has no copy")
+                else:
+                    category = "GPU_only_fetched"
+                    if not any(r["skip"] for r in uses):
+                        require(fetched == 1, "nonresident GPU group has no copy")
+            if any(r["skip"] for r in uses):
+                veto.add("skipped_expert")
+                category = "skipped"
+            total["multiplicity"][category][multiplicity] += 1
+            if fetched:
+                total["multiplicity"]["all_fetched"][multiplicity] += 1
+                total["multiplicity"]["permanent_fetch" if any(r["promo"] for r in uses)
+                                      else "transient_fetch"][multiplicity] += 1
+
+        # Every group has the same packed bytes within this layer. Sorting its
+        # CPU row cost (multiplicity) yields the maximum possible number of
+        # all-CPU groups under this aggregate row budget. This is an exact
+        # cardinality oracle for that relaxed budget, not a time optimizer.
+        best_cpu_groups, used_rows = 0, 0
+        for multiplicity in sorted(nonresident_multiplicities):
+            if used_rows + multiplicity > cpu_rows:
+                break
+            used_rows += multiplicity
+            best_cpu_groups += 1
+        require(best_cpu_groups >= cpu_only_groups, "fixed-budget oracle lost baseline CPU-only groups")
+        removable = best_cpu_groups - cpu_only_groups
+        relaxed = cpu_rows - cpu_only_groups
+        if not veto:
+            require(0 <= removable <= copies and removable <= relaxed, "invalid copy ceiling")
+        if veto:
+            for reason in veto:
+                total["veto_layers"][reason] += 1
+        else:
+            total["eligible_layers"] += 1
+            total["eligible_fetched_bytes"] += copies * first["blob"]
+            total["fixed_budget_removable_bytes_upper"] += removable * first["blob"]
+            total["fixed_budget_rows_bound_bytes"] += relaxed * first["blob"]
+        details.append(dict(device=key[0], first_seq=key[1], p0=first["p0"], layer=key[2],
+                            T=width, gu_type=first["gu_type"], blob=first["blob"], cpu_rows=cpu_rows,
+                            logical_groups=len(experts), fetched_groups=copies,
+                            cpu_only_groups=cpu_only_groups, oracle_CPU_groups=best_cpu_groups,
+                            oracle_CPU_rows=used_rows, removable_blobs_upper=removable if not veto else None,
+                            veto=sorted(veto)))
+    if not layers:
+        raise ValueError("empty diagnostic trace")
+    for total in totals.values():
+        denominator = total["eligible_fetched_bytes"]
+        total["eligible_copy_reduction_fraction_upper"] = (
+            total["fixed_budget_removable_bytes_upper"] / denominator if denominator else None)
+        total["all_copy_reduction_fraction_upper"] = (
+            total["fixed_budget_removable_bytes_upper"] / total["fetched_bytes"] if total["fetched_bytes"] else None)
+    by_width = {}
+    for label, total in totals.items():
+        width = label.split("/")[0]
+        combined = by_width.setdefault(width, dict(veto_layers=Counter(), multiplicity=defaultdict(Counter)))
+        for name, value in total.items():
+            if isinstance(value, int):
+                combined[name] = combined.get(name, 0) + value
+        combined["veto_layers"].update(total["veto_layers"])
+        for category, histogram in total["multiplicity"].items():
+            combined["multiplicity"][category].update(histogram)
+    for total in by_width.values():
+        denominator = total["eligible_fetched_bytes"]
+        total["eligible_copy_reduction_fraction_upper"] = (
+            total["fixed_budget_removable_bytes_upper"] / denominator if denominator else None)
+        total["all_copy_reduction_fraction_upper"] = (
+            total["fixed_budget_removable_bytes_upper"] / total["fetched_bytes"] if total["fetched_bytes"] else None)
+    return dict(schema="maya-window-union-analysis-v1", diagnostic=True,
+                time_savings_predicted=False,
+                mask_semantics={"miss": "host response required; not proof of disk I/O",
+                                "fetch_mask": "source present in the published RAM table at route time",
+                                "fetch_src": "actual GPU copy source, including host-response sources",
+                                "ram_ready": "published, independently owned RAM backing in a ready state with no unretired demotion",
+                                "actual_disk_io_recorded": False},
+                assumptions=["initial residents stay GPU", "all selected experts evaluated",
+                             "eligible layers require all nonresident groups initially ready in RAM",
+                             "CPU row budget may move freely among tokens within one layer",
+                             "no increase in aggregate CPU rows per layer", "fixed selected routes/cache state",
+                             "ignores CPU/GPU cost, overlap, admission changes and planner overhead"],
+                window_totals=by_width, totals=totals, layers=details)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("traces", nargs="+", type=Path)
+    parser.add_argument("--out", required=True, type=Path)
+    args = parser.parse_args()
+    rows = []
+    for path in args.traces:
+        with path.open(newline="", encoding="utf-8") as stream:
+            rows.extend(csv.DictReader(stream))
+    result = analyze_rows(rows)
+    args.out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    for label, total in result["window_totals"].items():
+        fraction = total["eligible_copy_reduction_fraction_upper"]
+        percent = f"{100 * fraction:.3f}%" if fraction is not None else "n/a"
+        print(f"{label}: {total['eligible_layers']}/{total['layers']} RAM-ready layers, "
+              f"copy ceiling {percent} eligible bytes; {total['veto_layers']}")
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+FILE: tools/test_analyze_window_union.py
+```python
+"""CPU-only integrity/oracle checks; no model, CUDA, or inference dependency."""
+
+from copy import deepcopy
+from itertools import combinations
+import random
+import unittest
+
+from analyze_window_union import analyze_rows
+
+
+def trace(ids, cpu, residents):
+    rows, owners = [], {}
+    for token, route in enumerate(ids):
+        for rank, expert in enumerate(route):
+            host = int((token, expert) in cpu)
+            pointer = 0 if host else 500000 + expert * 100
+            source = 0
+            if not host and expert not in residents and expert not in owners:
+                source = 100000 + expert * 100
+                owners[expert] = 8 * token + rank
+            rows.append(dict(device=0, p0=40, layer=3, T=len(ids), gu_type=10, down_type=10,
+                             blob=1000, seq=10 + token, token=token, rank=rank, id=expert,
+                             initial_gpu=500000 + expert * 100 if expert in residents else 0,
+                             initial_ram=100000 + expert * 100, ram_state=1, ram_owned=1,
+                             ram_pending=0, ram_ready=1, cpu=host, miss=0, skip=0, promo=0,
+                             fetch_mask=int(bool(source)), gpu_ptr=pointer, fetch_src=source,
+                             cpu_src=100000 + expert * 100 if host else 0, copy_owner=-1,
+                             permanent=int(expert in residents)))
+    for row in rows:
+        if row["gpu_ptr"]:
+            row["copy_owner"] = owners.get(row["id"], -1)
+    return rows
+
+
+class WindowUnionTests(unittest.TestCase):
+    def setUp(self):
+        self.rows = trace([list(range(8)), [0, 1, 2, 8, 9, 10, 11, 12]],
+                          {(0, 1), (0, 2), (1, 2), (0, 3)}, {0})
+
+    def total(self, rows):
+        return analyze_rows(rows)["window_totals"]["T2"]
+
+    def test_actual_backends_residency_and_bound(self):
+        result = self.total(self.rows)
+        self.assertEqual((result["cpu_rows"], result["cpu_only_repeated_groups"],
+                          result["cpu_only_repeated_rows"], result["mixed_groups"]), (4, 1, 2, 1))
+        self.assertEqual(result["fetched_groups"], 10)
+        self.assertEqual(result["fixed_budget_removable_bytes_upper"], 2000)
+        self.assertEqual(result["multiplicity"]["resident"][2], 1)
+        self.assertEqual(result["multiplicity"]["all_fetched"][2], 1)
+
+    def test_pending_pointer_is_not_ready_backing(self):
+        rows = deepcopy(self.rows)
+        for row in rows:
+            if row["id"] == 4:
+                # An unpublished pending-D2H source goes through the host
+                # response path even when no storage read is necessary.
+                row.update(initial_ram=0, ram_ready=0, ram_owned=0, ram_pending=1,
+                           ram_state=3, miss=1, fetch_mask=0)
+        result = self.total(rows)
+        self.assertEqual(result["eligible_layers"], 0)
+        self.assertEqual(result["veto_layers"]["initial_RAM_pending_demotion"], 1)
+        self.assertEqual(result["veto_layers"]["host_response_required"], 1)
+        self.assertNotIn("disk_miss", result["veto_layers"])
+        self.assertEqual(result["fixed_budget_removable_bytes_upper"], 0)
+
+    def test_bad_owner_and_missing_rank_fail_validation(self):
+        rows = deepcopy(self.rows)
+        rows[-1]["copy_owner"] = -1
+        with self.assertRaisesRegex(ValueError, "copy owner mismatch"):
+            self.total(rows)
+        with self.assertRaisesRegex(ValueError, "incomplete layer"):
+            self.total(self.rows[:-1])
+
+    def test_cardinality_oracle_against_exhaustive_subsets(self):
+        rng = random.Random(1701)
+        for _ in range(25):
+            ids = [rng.sample(range(12), 8), rng.sample(range(12), 8)]
+            residents = {expert for expert in range(12) if rng.random() < 0.2}
+            cpu, on_gpu = set(), set(residents)
+            for token, route in enumerate(ids):
+                for expert in route:
+                    if expert not in on_gpu and rng.random() < 0.6:
+                        cpu.add((token, expert))
+                    else:
+                        on_gpu.add(expert)
+            result = analyze_rows(trace(ids, cpu, residents))
+            costs = [sum(expert in route for route in ids)
+                     for expert in set(ids[0] + ids[1]) - residents]
+            best = max((len(subset) for count in range(len(costs) + 1)
+                        for subset in combinations(costs, count) if sum(subset) <= len(cpu)), default=0)
+            self.assertEqual(result["layers"][0]["oracle_CPU_groups"], best)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+```
+
+FILE: tools/check_verify_scratch.py
+```python
+"""Two controlled-GPU fixed-input window runs; record exact logits and lifecycle outcomes."""
+import argparse,hashlib,json,os,subprocess
+from pathlib import Path
+import numpy as np
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'docs/evidence/dflash-investigation/parity'
+def main():
+    global OUT
+    ap=argparse.ArgumentParser();ap.add_argument('--cases',default='legacy,candidate')
+    ap.add_argument('--out',type=Path,default=OUT)
+    ap.add_argument('--env',action='append',default=[])
+    a=ap.parse_args();OUT=a.out.resolve()
+    OUT.mkdir(parents=True,exist_ok=True)
+    cfg=json.loads((ROOT/'maya-retained-v117.local.json').read_text())
+    q=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/requests.json').read_text())[1]
+    ids=json.loads((ROOT/'docs/evidence/dflash-quant-width/Q4_K_M/manifest.json').read_text())['prompt_ids']+q['output_ids']
+    tokenfile=OUT/'tokens.txt';tokenfile.write_text('\n'.join(map(str,ids)))
+    records=[]
+    for label,slots,reuse in [('legacy',8,0),('candidate',64,1),('no-reuse',64,0),('token-path',8,0),('cpu-serial',64,1),('cpu-merged',64,1),('grouped-off',64,1),('grouped-on',64,1),('async-off',64,1),('async-on',64,1)]:
+        if label not in a.cases.split(','):continue
+        env={k:v for k,v in os.environ.items() if not k.startswith(('MAYA_','STRATA_'))}
+        env.update(cfg['env']);env.update(STRATA_GLM_CPU_PLAN='000000000',STRATA_GLM_POOL_GB='16',
+           MAYA_WIN_SCRATCH=str(slots),MAYA_WIN_REUSE=str(reuse),STRATA_GLM_WIN_STAGGER='0')
+        env['PATH']=';'.join(cfg['lib_dirs'])+';'+env['PATH']
+        for setting in a.env:
+            key,value=setting.split('=',1);env[key]=value
+        if label.startswith('grouped-'):
+            env['MAYA_WIN_GROUPED']='1' if label=='grouped-on' else '0'
+        if label.startswith('async-'):
+            env['MAYA_WIN_ASYNC_FETCH']='1' if label=='async-on' else '0'
+        if label=='token-path':env['STRATA_GLM_WIN_BATCH']='0'
+        if label.startswith('cpu-'):
+            env.update(STRATA_GLM_CPU_PLAN='012345678',STRATA_GLM_WIN_ALLCPU='1',
+              STRATA_GLM_DFLASH='G:/Models/GLM-5.3-Flash-DFlash2/GLM-5.3-Flash-DFlash2-Q4_K_M.gguf',
+              MAYA_WIN_SINGLE_NODE_BATCH='1' if label=='cpu-merged' else '0')
+        cmd=[str(ROOT/'build/maya_verify_scratch_test.exe'),'G:/Models/GLM-5.3-Flash-3.0bit-Q4Kattn/pack-maya',str(tokenfile),str(OUT/(label+'.f32'))]
+        with (OUT/(label+'.log')).open('w') as log:
+            r=subprocess.run(cmd,env=env,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,timeout=600)
+        records.append(dict(label=label,returncode=r.returncode,binary_sha256=hashlib.sha256(Path(cmd[0]).read_bytes()).hexdigest(),env={k:v for k,v in env.items() if k.startswith(('MAYA_','STRATA_'))}))
+        (OUT/(label+'-manifest.json')).write_text(json.dumps(records[-1],indent=2))
+        print(label,'exit',r.returncode,flush=True)
+        if r.returncode:raise RuntimeError(label)
+    cases=a.cases.split(',')
+    if len(cases)!=2:return
+    left,right=cases
+    a=np.fromfile(OUT/(left+'.f32'),dtype=np.float32);b=np.fromfile(OUT/(right+'.f32'),dtype=np.float32)
+    assert a.shape==b.shape
+    delta=np.abs(a-b)
+    result=dict(left=left,right=right,values=int(a.size),exact=bool(np.array_equal(a,b)),max_abs=float(delta.max()),mean_abs=float(delta.mean()),
+      mismatched_values=int(np.count_nonzero(a!=b)),greedy_matches=int(np.sum(a.reshape(-1,154880).argmax(1)==b.reshape(-1,154880).argmax(1))),rows=int(a.size//154880))
+    (OUT/(left+'-vs-'+right+'.json')).write_text(json.dumps(result,indent=2));print(result,flush=True)
+if __name__=='__main__':main()
+
+```
+
+Implement the refactoring now. Start with the shared process supervisor and the benchmark command.
