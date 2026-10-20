@@ -38,8 +38,9 @@ def main():
     ap.add_argument('--tokens',type=int,default=192)
     ap.add_argument('--confidence-max-drafts',type=int,default=0,
                     help='Append the upstream single-GPU confidence policy (0.95 cut, no mandatory drafts)')
+    ap.add_argument('--confidence-caps',default='',help='Comma-separated adaptive caps to compare in one process')
     a=ap.parse_args();OUT=a.out.resolve()
-    if a.mtp and (a.widths != '1' or a.confidence_max_drafts or a.cancel_smoke):
+    if a.mtp and (a.widths != '1' or a.confidence_max_drafts or a.confidence_caps or a.cancel_smoke):
         ap.error('--mtp requires --widths 1, no confidence or cancellation schedule')
     OUT.mkdir(parents=True, exist_ok=True)
     cfg = json.loads((ROOT/'maya-retained-v117.local.json').read_text())
@@ -47,6 +48,9 @@ def main():
     prompt=a.prompt_file.read_text(encoding='utf-8') if a.prompt_file else PROMPT
     if a.tokens < 1:ap.error('--tokens must be positive')
     if not 0 <= a.confidence_max_drafts <= 7:ap.error('--confidence-max-drafts must be 0..7')
+    confidence_caps=[int(v) for v in a.confidence_caps.split(',') if v.strip()]
+    if any(v<1 or v>7 for v in confidence_caps):ap.error('--confidence-caps must be 1..7')
+    if a.confidence_max_drafts:confidence_caps.append(a.confidence_max_drafts)
     widths = [int(x) for x in a.widths.split(',') if x.strip()]
     if any(w < 1 or w > 7 for w in widths):ap.error('--widths entries must be 1..7')
     ids = tok.encode('[gMASK]<sop><|user|>\n'+prompt+'<|assistant|>\n</think>', parse_special=True)
@@ -75,7 +79,7 @@ def main():
                         binary_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(),
                         drafter_sha256=hashlib.file_digest(draft.open('rb'), 'sha256').hexdigest(),
                         context_capacity=131072, occupied_prompt_tokens=len(ids), output_cap=a.tokens,
-                        width_order=widths, confidence_max_drafts=a.confidence_max_drafts,
+                        width_order=widths, confidence_max_drafts=a.confidence_max_drafts, confidence_caps=confidence_caps,
                         stats_columns=['offered','accepted','draft_ms','verify_ms','cpu_experts','vram_misses','confidence...'])
         (out/'manifest.json').write_text(json.dumps(manifest, indent=2))
         rows=[]
@@ -92,7 +96,7 @@ def main():
                 while not read().startswith('READY'): pass
                 print(quant,'READY',flush=True)
                 requests=[('warmup',0,a.tokens),('control',0,a.tokens)]+[('matrix',w,a.tokens) for w in manifest['width_order']]
-                if a.confidence_max_drafts:requests.append(('confidence',a.confidence_max_drafts,a.tokens))
+                requests += [('confidence',cap,a.tokens) for cap in confidence_caps]
                 if a.cancel_smoke:requests += [('cancel',4,192),('recovery',2,32)]
                 for name,width,n in requests:
                     before=len(stats.read_text().splitlines()) if stats.exists() else 0

@@ -1,0 +1,7 @@
+{
+  "checkpoint": "https://huggingface.co/RedHatAI/GLM-5.3-Flash-speculator.dspark-preview",
+  "method": "https://github.com/deepseek-ai/DeepSpec",
+  "dflash2": "https://huggingface.co/incoai/GLM-5.3-Flash-DFlash2",
+  "checked": "2026-10-15",
+  "status": "Maya loader supports only DFlash2 selector/convolution GGUF; DSpark checkpoint is BF16 safetensors, no compatible execution path. No DSpark throughput test performed."
+}

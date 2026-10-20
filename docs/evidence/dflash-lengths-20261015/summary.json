@@ -1,0 +1,192 @@
+[
+  {
+    "phase": "Q4_K_M",
+    "kind": "warmup",
+    "drafts": 0,
+    "tps": 35.70681358532673,
+    "acceptance": null,
+    "offered": 0,
+    "accepted": 0,
+    "round_histogram": {}
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "control",
+    "drafts": 0,
+    "tps": 38.3773573591581,
+    "acceptance": null,
+    "offered": 0,
+    "accepted": 0,
+    "round_histogram": {}
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 2,
+    "tps": 29.648503098036944,
+    "acceptance": 0.49224806201550386,
+    "offered": 258.0,
+    "accepted": 127.0,
+    "round_histogram": {
+      "2": 129
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 4,
+    "tps": 23.57665174706673,
+    "acceptance": 0.3163716814159292,
+    "offered": 452.0,
+    "accepted": 143.0,
+    "round_histogram": {
+      "4": 113
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 7,
+    "tps": 17.644707277063258,
+    "acceptance": 0.227994227994228,
+    "offered": 693.0,
+    "accepted": 158.0,
+    "round_histogram": {
+      "7": 99
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 3,
+    "tps": 25.591043134902783,
+    "acceptance": 0.371900826446281,
+    "offered": 363.0,
+    "accepted": 135.0,
+    "round_histogram": {
+      "3": 121
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 5,
+    "tps": 23.167420814479637,
+    "acceptance": 0.3389473684210526,
+    "offered": 475.0,
+    "accepted": 161.0,
+    "round_histogram": {
+      "5": 95
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "matrix",
+    "drafts": 6,
+    "tps": 18.601812223425203,
+    "acceptance": 0.2358490566037736,
+    "offered": 636.0,
+    "accepted": 150.0,
+    "round_histogram": {
+      "6": 106
+    }
+  },
+  {
+    "phase": "Q4_K_M",
+    "kind": "confidence",
+    "drafts": 7,
+    "tps": 40.64976102386586,
+    "acceptance": 0.946236559139785,
+    "offered": 93.0,
+    "accepted": 88.0,
+    "round_histogram": {
+      "0": 105,
+      "1": 44,
+      "2": 11,
+      "3": 4,
+      "4": 2,
+      "7": 1
+    }
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "warmup",
+    "drafts": 0,
+    "tps": 35.36448907983257,
+    "acceptance": null,
+    "offered": 0,
+    "accepted": 0,
+    "round_histogram": {}
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "control",
+    "drafts": 0,
+    "tps": 35.37866224433389,
+    "acceptance": null,
+    "offered": 0,
+    "accepted": 0,
+    "round_histogram": {}
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "confidence",
+    "drafts": 1,
+    "tps": 37.8748649968191,
+    "acceptance": 0.9696969696969697,
+    "offered": 66.0,
+    "accepted": 64.0,
+    "round_histogram": {
+      "0": 125,
+      "1": 66
+    }
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "confidence",
+    "drafts": 4,
+    "tps": 34.36379988455911,
+    "acceptance": 0.9666666666666667,
+    "offered": 60.0,
+    "accepted": 58.0,
+    "round_histogram": {
+      "0": 158,
+      "1": 26,
+      "2": 7,
+      "3": 4,
+      "4": 2
+    }
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "confidence",
+    "drafts": 2,
+    "tps": 38.057859840038056,
+    "acceptance": 0.9080459770114943,
+    "offered": 87.0,
+    "accepted": 79.0,
+    "round_histogram": {
+      "0": 112,
+      "1": 43,
+      "2": 22
+    }
+  },
+  {
+    "phase": "adaptive/Q4_K_M",
+    "kind": "confidence",
+    "drafts": 7,
+    "tps": 36.904092606207385,
+    "acceptance": 0.8602150537634409,
+    "offered": 93.0,
+    "accepted": 80.0,
+    "round_histogram": {
+      "0": 127,
+      "1": 31,
+      "2": 6,
+      "3": 2,
+      "4": 4,
+      "5": 2,
+      "6": 3
+    }
+  }
+]
